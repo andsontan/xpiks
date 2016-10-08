@@ -679,6 +679,10 @@ void Commands::CommandManager::afterConstructionCallback() {
 #if !defined(CORE_TESTS) && !defined(INTEGRATION_TESTS)
     Helpers::performCleanLogs();
 #endif
+
+#if !defined(CORE_TESTS)
+    m_WarningsService->initWarningsSettings();
+#endif
 }
 
 void Commands::CommandManager::beforeDestructionCallback() const {

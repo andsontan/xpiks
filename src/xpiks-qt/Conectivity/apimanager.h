@@ -58,6 +58,10 @@ namespace Conectivity {
             return m_BaseUrl + "stocks_ftp.json";
         }
 
+        QString getWarningSettingsAddr() const {
+            return m_BaseUrl + "warning_settings.json";
+        }
+
     private:
         ApiManager() {
 #ifdef QT_DEBUG

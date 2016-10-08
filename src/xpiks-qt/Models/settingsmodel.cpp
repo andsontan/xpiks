@@ -34,9 +34,6 @@
 #endif
 
 #define DEFAULT_DICT_PATH ""
-#define DEFAULT_MAX_KEYWORDS 50
-#define DEFAULT_MAX_DESCRIPTION 200
-#define DEFAULT_MIN_MEGAPIXELS 4.0
 #define DEFAULT_USE_MASTERPASSWORD false
 #define DEFAULT_UPLOAD_TIMEOUT 10
 #define DEFAULT_USE_CONFIRMATIONS false
@@ -74,11 +71,8 @@ namespace Models {
         m_ExifToolPath(DEFAULT_EXIFTOOL),
         m_DictPath(DEFAULT_DICT_PATH),
         m_SelectedLocale(DEFAULT_LOCALE),
-        m_MinMegapixelCount(DEFAULT_MIN_MEGAPIXELS),
         m_KeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE),
         m_ScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE),
-        m_MaxDescriptionLength(DEFAULT_MAX_DESCRIPTION),
-        m_MaxKeywordsCount(DEFAULT_MAX_KEYWORDS),
         m_UploadTimeout(DEFAULT_UPLOAD_TIMEOUT),
         m_DismissDuration(DEFAULT_DISMISS_DURATION),
         m_MaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS),
@@ -136,9 +130,6 @@ namespace Models {
         Helpers::AppSettings appSettings;
         appSettings.setValue(appSettings.getExifToolPathKey(), m_ExifToolPath);
         appSettings.setValue(appSettings.getDictionaryPathKey(), m_DictPath);
-        appSettings.setValue(appSettings.getMinMegapixelCountKey(), m_MinMegapixelCount);
-        appSettings.setValue(appSettings.getMaxDescriptionLengthKey(), m_MaxDescriptionLength);
-        appSettings.setValue(appSettings.getMaxKeywordsCountKey(), m_MaxKeywordsCount);
         appSettings.setValue(appSettings.getOneUploadSecondsTimeoutKey(), m_UploadTimeout);
         appSettings.setValue(appSettings.getMustUseMasterPasswordKey(), m_MustUseMasterPassword);
         appSettings.setValue(appSettings.getUseConfirmationDialogsKey(), m_MustUseConfirmations);
@@ -203,9 +194,6 @@ namespace Models {
         Helpers::AppSettings appSettings;
         setExifToolPath(appSettings.value(appSettings.getExifToolPathKey(), DEFAULT_EXIFTOOL).toString());
         setDictionaryPath(appSettings.value(appSettings.getDictionaryPathKey(), DEFAULT_DICT_PATH).toString());
-        setMinMegapixelCount(appSettings.doubleValue(appSettings.getMinMegapixelCountKey(), DEFAULT_MIN_MEGAPIXELS));
-        setMaxDescriptionLength(appSettings.value(appSettings.getMaxDescriptionLengthKey(), DEFAULT_MAX_DESCRIPTION).toInt());
-        setMaxKeywordsCount(appSettings.value(appSettings.getMaxKeywordsCountKey(), DEFAULT_MAX_KEYWORDS).toInt());
         setUploadTimeout(appSettings.value(appSettings.getOneUploadSecondsTimeoutKey(), DEFAULT_UPLOAD_TIMEOUT).toInt());
         setMustUseMasterPassword(appSettings.boolValue(appSettings.getMustUseMasterPasswordKey(), DEFAULT_USE_MASTERPASSWORD));
         setMustUseConfirmations(appSettings.boolValue(appSettings.getUseConfirmationDialogsKey(), DEFAULT_USE_CONFIRMATIONS));
@@ -237,9 +225,6 @@ namespace Models {
 
         setExifToolPath(DEFAULT_EXIFTOOL);
         setDictionaryPath(DEFAULT_DICT_PATH);
-        setMinMegapixelCount(DEFAULT_MIN_MEGAPIXELS);
-        setMaxDescriptionLength(DEFAULT_MAX_DESCRIPTION);
-        setMaxKeywordsCount(DEFAULT_MAX_KEYWORDS);
         setUploadTimeout(DEFAULT_UPLOAD_TIMEOUT);
         setMustUseMasterPassword(DEFAULT_USE_MASTERPASSWORD);
         setMustUseConfirmations(DEFAULT_USE_CONFIRMATIONS);

@@ -25,17 +25,16 @@
 #include <QObject>
 #include "../Common/itemprocessingworker.h"
 #include "warningsitem.h"
-
-namespace Models{
-    class SettingsModel;
-}
+#include "../AutoComplete/warningssettingsmodel.h"
 
 namespace Warnings {
-    class WarningsCheckingWorker: public QObject, public Common::ItemProcessingWorker<WarningsItem>
+    class WarningsCheckingWorker:
+        public QObject, public Common::ItemProcessingWorker<WarningsItem>
     {
-        Q_OBJECT
+    Q_OBJECT
+
     public:
-        WarningsCheckingWorker(Models::SettingsModel *settingsModel, QObject *parent=0);
+        WarningsCheckingWorker(AutoComplete::WarningsSettingsModel *warningsSettingsModel, QObject *parent=0);
 
     protected:
         virtual bool initWorker();
@@ -65,11 +64,7 @@ namespace Warnings {
         Common::WarningFlags checkDuplicates(std::shared_ptr<WarningsItem> &wi) const;
 
     private:
-        Models::SettingsModel *m_SettingsModel;
-        QString m_AllowedFilenameCharacters;
-        double m_MinimumMegapixels;
-        int m_MaximumKeywordsCount;
-        int m_MaximumDescriptionLength;
+        AutoComplete::WarningsSettingsModel *m_WarningsSettingsModel;
     };
 }
 

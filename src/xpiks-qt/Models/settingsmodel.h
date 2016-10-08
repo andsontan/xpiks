@@ -39,9 +39,6 @@ namespace Models {
     {
         Q_OBJECT
         Q_PROPERTY(QString exifToolPath READ getExifToolPath WRITE setExifToolPath NOTIFY exifToolPathChanged)
-        Q_PROPERTY(double minMegapixelCount READ getMinMegapixelCount WRITE setMinMegapixelCount NOTIFY minMegapixelCountChanged)
-        Q_PROPERTY(int maxDescriptionLength READ getMaxDescriptionLength WRITE setMaxDescriptionLength NOTIFY maxDescriptionLengthChanged)
-        Q_PROPERTY(int maxKeywordsCount READ getMaxKeywordsCount WRITE setMaxKeywordsCount NOTIFY maxKeywordsCountChanged)
         Q_PROPERTY(int uploadTimeout READ getUploadTimeout WRITE setUploadTimeout NOTIFY uploadTimeoutChanged)
         Q_PROPERTY(bool mustUseMasterPassword READ getMustUseMasterPassword WRITE setMustUseMasterPassword NOTIFY mustUseMasterPasswordChanged)
         Q_PROPERTY(bool mustUseConfirmations READ getMustUseConfirmations WRITE setMustUseConfirmations NOTIFY mustUseConfirmationsChanged)
@@ -92,9 +89,6 @@ namespace Models {
 
     public:
         QString getExifToolPath() const { return m_ExifToolPath; }
-        double getMinMegapixelCount() const { return m_MinMegapixelCount; }
-        int getMaxDescriptionLength() const { return m_MaxDescriptionLength; }
-        int getMaxKeywordsCount() const { return m_MaxKeywordsCount; }
         int getUploadTimeout() const { return m_UploadTimeout; }
         bool getMustUseMasterPassword() const { return m_MustUseMasterPassword; }
         bool getMustUseConfirmations() const { return m_MustUseConfirmations; }
@@ -126,9 +120,6 @@ namespace Models {
     signals:
         void settingsReset();
         void exifToolPathChanged(QString exifToolPath);
-        void minMegapixelCountChanged(double minMegapixelCount);
-        void maxDescriptionLengthChanged(int maxDescriptionLength);
-        void maxKeywordsCountChanged(int maxKeywordsCount);
         void uploadTimeoutChanged(int uploadTimeout);
         void mustUseMasterPasswordChanged(bool mustUseMasterPassword);
         void mustUseConfirmationsChanged(bool mustUseConfirmations);
@@ -163,30 +154,6 @@ namespace Models {
 
             m_ExifToolPath = exifToolPath;
             emit exifToolPathChanged(exifToolPath);
-        }
-
-        void setMinMegapixelCount(double minMegapixelCount) {
-            if (qAbs(m_MinMegapixelCount - minMegapixelCount) <= SETTINGS_EPSILON)
-                return;
-
-            m_MinMegapixelCount = ensureInBounds(minMegapixelCount, 0.0, 100.0);
-            emit minMegapixelCountChanged(m_MinMegapixelCount);
-        }
-
-        void setMaxDescriptionLength(int maxDescriptionLength) {
-            if (m_MaxDescriptionLength == maxDescriptionLength)
-                return;
-
-            m_MaxDescriptionLength = ensureInBounds(maxDescriptionLength, 0, 500);
-            emit maxDescriptionLengthChanged(m_MaxDescriptionLength);
-        }
-
-        void setMaxKeywordsCount(int maxKeywordsCount) {
-            if (m_MaxKeywordsCount == maxKeywordsCount)
-                return;
-
-            m_MaxKeywordsCount = ensureInBounds(maxKeywordsCount, 0, 1000);
-            emit maxKeywordsCountChanged(m_MaxKeywordsCount);
         }
 
         void setUploadTimeout(int uploadTimeout) {
@@ -372,11 +339,8 @@ namespace Models {
         QString m_ExifToolPath;
         QString m_DictPath;
         QString m_SelectedLocale;
-        double m_MinMegapixelCount;
         double m_KeywordSizeScale;
         double m_ScrollSpeedScale;
-        int m_MaxDescriptionLength;
-        int m_MaxKeywordsCount;
         int m_UploadTimeout; // in seconds
         int m_DismissDuration;
         int m_MaxParallelUploads;

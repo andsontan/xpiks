@@ -113,6 +113,7 @@ SOURCES += main.cpp \
     Helpers/keywordshelpers.cpp \
     Conectivity/uploadwatcher.cpp \
     Conectivity/telemetryworker.cpp \
+    AutoComplete/warningssettingsmodel.cpp \
     Conectivity/simplecurlrequest.cpp \
     Conectivity/curlinithelper.cpp \
     MetadataIO/exiv2inithelper.cpp \
@@ -287,6 +288,7 @@ HEADERS += \
     Conectivity/uploadwatcher.h \
     Common/iflagsprovider.h \
     Conectivity/telemetryworker.h \
+    AutoComplete/warningssettingsmodel.h \
     Conectivity/simplecurlrequest.h \
     Conectivity/curlinithelper.h \
     MetadataIO/exiv2inithelper.h \

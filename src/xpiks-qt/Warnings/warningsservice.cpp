@@ -28,14 +28,16 @@
 #include "../Common/flags.h"
 
 namespace Warnings {
-    WarningsService::WarningsService(QObject *parent) :
+    WarningsService::WarningsService(QObject *parent):
         QObject(parent),
-        m_WarningsWorker(NULL)
-    {
+        m_WarningsWorker(NULL) {}
+
+    void WarningsService::initWarningsSettings() {
+        QTimer::singleShot(1000, this, SLOT(updateWarningsSettings()));
     }
 
     void WarningsService::startService() {
-        m_WarningsWorker = new WarningsCheckingWorker(m_CommandManager->getSettingsModel());
+        m_WarningsWorker = new WarningsCheckingWorker(&m_WarningsSettingsModel);
 
         QThread *thread = new QThread();
         m_WarningsWorker->moveToThread(thread);
@@ -46,8 +48,8 @@ namespace Warnings {
         QObject::connect(m_WarningsWorker, SIGNAL(stopped()), m_WarningsWorker, SLOT(deleteLater()));
         QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
 
-        QObject::connect(m_WarningsWorker, SIGNAL(destroyed(QObject*)),
-                         this, SLOT(workerDestoyed(QObject*)));
+        QObject::connect(m_WarningsWorker, SIGNAL(destroyed(QObject *)),
+                         this, SLOT(workerDestoyed(QObject *)));
 
         QObject::connect(m_WarningsWorker, SIGNAL(stopped()),
                          this, SLOT(workerStopped()));
@@ -73,11 +75,14 @@ namespace Warnings {
 
     bool WarningsService::isBusy() const {
         bool isBusy = (m_WarningsWorker != NULL) && (m_WarningsWorker->hasPendingJobs());
+
         return isBusy;
     }
 
     void WarningsService::submitItem(Models::ArtworkMetadata *item) {
-        if (m_WarningsWorker == NULL) { return; }
+        if (m_WarningsWorker == NULL) {
+            return;
+        }
 
         LOG_INFO << "Submitting one item";
 
@@ -86,7 +91,10 @@ namespace Warnings {
     }
 
     void WarningsService::submitItem(Models::ArtworkMetadata *item, Common::WarningsCheckFlags flags) {
-        if (m_WarningsWorker == NULL) { return; }
+        if (m_WarningsWorker == NULL) {
+            return;
+        }
+
         LOG_INFO << "Submitting one item with flags" << Common::warningsFlagToString(flags);
 
         std::shared_ptr<WarningsItem> wItem(new WarningsItem(item, flags));
@@ -94,7 +102,9 @@ namespace Warnings {
     }
 
     void WarningsService::submitItems(const QVector<Models::ArtworkMetadata *> &items) {
-        if (m_WarningsWorker == NULL) { return; }
+        if (m_WarningsWorker == NULL) {
+            return;
+        }
 
         int length = items.length();
 
@@ -110,6 +120,12 @@ namespace Warnings {
         m_WarningsWorker->submitItems(itemsToSubmit);
     }
 
+    void WarningsService::setCommandManager(Commands::CommandManager *commandManager) {
+        Common::BaseEntity::setCommandManager(commandManager);
+
+        m_WarningsSettingsModel.setCommandManager(commandManager);
+    }
+
     void WarningsService::workerDestoyed(QObject *object) {
         Q_UNUSED(object);
         LOG_DEBUG << "#";
@@ -118,5 +134,9 @@ namespace Warnings {
 
     void WarningsService::workerStopped() {
         LOG_DEBUG << "#";
+    }
+
+    void WarningsService::updateWarningsSettings() {
+        m_WarningsSettingsModel.initializeConfigs();
     }
 }

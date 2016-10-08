@@ -27,18 +27,22 @@
 #include "../Common/iservicebase.h"
 #include "../Models/artworkmetadata.h"
 #include "../Common/flags.h"
+#include "../AutoComplete/warningssettingsmodel.h"
 
 namespace Warnings {
     class WarningsCheckingWorker;
 
-    class WarningsService :
-            public QObject,
-            public Common::BaseEntity,
-            public Common::IServiceBase<Models::ArtworkMetadata, Common::WarningsCheckFlags>
+    class WarningsService:
+        public QObject,
+        public Common::BaseEntity,
+        public Common::IServiceBase<Models::ArtworkMetadata, Common::WarningsCheckFlags>
     {
-        Q_OBJECT
+    Q_OBJECT
+
     public:
-        explicit WarningsService(QObject *parent = 0);
+        explicit WarningsService(QObject *parent=0);
+        void initWarningsSettings();
+
         virtual ~WarningsService() {}
 
     public:
@@ -50,19 +54,24 @@ namespace Warnings {
 
         virtual void submitItem(Models::ArtworkMetadata *item);
         virtual void submitItem(Models::ArtworkMetadata *item, Common::WarningsCheckFlags flags);
-        virtual void submitItems(const QVector<Models::ArtworkMetadata*> &items);
+        virtual void submitItems(const QVector<Models::ArtworkMetadata *> &items);
+        virtual void setCommandManager(Commands::CommandManager *commandManager);
 
     private slots:
         void workerDestoyed(QObject *object);
         void workerStopped();
+        void updateWarningsSettings();
 
 #ifdef INTEGRATION_TESTS
+
     signals:
         void queueIsEmpty();
+
 #endif
 
     private:
         WarningsCheckingWorker *m_WarningsWorker;
+        AutoComplete::WarningsSettingsModel m_WarningsSettingsModel;
     };
 }
 

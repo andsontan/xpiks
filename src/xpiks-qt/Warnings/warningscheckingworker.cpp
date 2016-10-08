@@ -25,7 +25,6 @@
 #include <QSize>
 #include "../Common/defines.h"
 #include "../Common/flags.h"
-#include "../Models/settingsmodel.h"
 #include "../Models/artworkmetadata.h"
 #include "../Models/imageartwork.h"
 
@@ -39,14 +38,10 @@ namespace Warnings {
         return result;
     }
 
-    WarningsCheckingWorker::WarningsCheckingWorker(Models::SettingsModel *settingsModel, QObject *parent):
+    WarningsCheckingWorker::WarningsCheckingWorker(AutoComplete::WarningsSettingsModel *warningsSettingsModel, QObject *parent):
         QObject(parent),
-        m_SettingsModel(settingsModel),
-        m_AllowedFilenameCharacters(".,_-@ "),
-        m_MinimumMegapixels(4),
-        m_MaximumKeywordsCount(50),
-        m_MaximumDescriptionLength(200)
-    {
+        m_WarningsSettingsModel(warningsSettingsModel) {
+        Q_ASSERT(m_WarningsSettingsModel != nullptr);
     }
 
     bool WarningsCheckingWorker::initWorker() {
@@ -57,8 +52,6 @@ namespace Warnings {
     void WarningsCheckingWorker::processOneItem(std::shared_ptr<WarningsItem> &item) {
         Common::WarningFlags warningsFlags = Common::WarningFlags::None;
 
-        initValuesFromSettings();
-
         if (item->needCheckAll()) {
             warningsFlags |= checkDimensions(item);
             warningsFlags |= checkDescription(item);
@@ -67,36 +60,32 @@ namespace Warnings {
         } else {
             auto checkingFlags = item->getCheckingFlags();
             switch (checkingFlags) {
-            case Common::WarningsCheckFlags::Description:
-                warningsFlags |= checkDescription(item);
-                break;
-            case Common::WarningsCheckFlags::Keywords:
-                warningsFlags |= checkKeywords(item);
-                warningsFlags |= checkDuplicates(item);
-                break;
-            case Common::WarningsCheckFlags::Title:
-                warningsFlags |= checkTitle(item);
-                break;
-            case Common::WarningsCheckFlags::Spelling:
-                warningsFlags |= checkSpelling(item);
-                break;
-            case Common::WarningsCheckFlags::All:
-                // to make compiler happy
-                break;
+                case Common::WarningsCheckFlags::Description:
+                    warningsFlags |= checkDescription(item);
+                    break;
+                case Common::WarningsCheckFlags::Keywords:
+                    warningsFlags |= checkKeywords(item);
+                    warningsFlags |= checkDuplicates(item);
+                    break;
+                case Common::WarningsCheckFlags::Title:
+                    warningsFlags |= checkTitle(item);
+                    break;
+                case Common::WarningsCheckFlags::Spelling:
+                    warningsFlags |= checkSpelling(item);
+                    break;
+                case Common::WarningsCheckFlags::All:
+                    // to make compiler happy
+                    break;
             }
         }
 
         item->submitWarnings(warningsFlags);
     }
 
-    void WarningsCheckingWorker::initValuesFromSettings() {
-        m_MaximumDescriptionLength = m_SettingsModel->getMaxDescriptionLength();
-        m_MinimumMegapixels = m_SettingsModel->getMinMegapixelCount();
-        m_MaximumKeywordsCount = m_SettingsModel->getMaxKeywordsCount();
-    }
-
     Common::WarningFlags WarningsCheckingWorker::checkDimensions(std::shared_ptr<WarningsItem> &wi) const {
         LOG_INTEGRATION_TESTS << "#";
+        QString allowedFilenameCharacters = m_WarningsSettingsModel->getAllowedFilenameCharacters();
+        double minimumMegapixels = m_WarningsSettingsModel->getMinMegapixels();
         Models::ArtworkMetadata *item = wi->getCheckableItem();
         Common::WarningFlags warningsInfo = Common::WarningFlags::None;
 
@@ -105,7 +94,7 @@ namespace Warnings {
             QSize size = image->getImageSize();
 
             double currentProd = size.width() * size.height() / 1000000.0;
-            if (currentProd < m_MinimumMegapixels) {
+            if (currentProd < minimumMegapixels) {
                 Common::SetFlag(warningsInfo, Common::WarningFlags::SizeLessThanMinimum);
             }
         }
@@ -122,7 +111,7 @@ namespace Warnings {
         for (int i = 0; i < length; ++i) {
             QChar c = filename[i];
             bool isOk = c.isLetter() || c.isDigit() ||
-                    m_AllowedFilenameCharacters.contains(c);
+                        allowedFilenameCharacters.contains(c);
             if (!isOk) {
                 Common::SetFlag(warningsInfo, Common::WarningFlags::FilenameSymbols);
                 break;
@@ -134,6 +123,7 @@ namespace Warnings {
 
     Common::WarningFlags WarningsCheckingWorker::checkKeywords(std::shared_ptr<WarningsItem> &wi) const {
         LOG_INTEGRATION_TESTS << "#";
+        int maximumKeywordsCount = m_WarningsSettingsModel->getMaxKeywordsCount();
         Common::WarningFlags warningsInfo = Common::WarningFlags::None;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
         Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
@@ -147,7 +137,7 @@ namespace Warnings {
                 Common::SetFlag(warningsInfo, Common::WarningFlags::TooFewKeywords);
             }
 
-            if (keywordsCount > m_MaximumKeywordsCount) {
+            if (keywordsCount > maximumKeywordsCount) {
                 Common::SetFlag(warningsInfo, Common::WarningFlags::TooManyKeywords);
             }
 
@@ -161,7 +151,7 @@ namespace Warnings {
 
     Common::WarningFlags WarningsCheckingWorker::checkDescription(std::shared_ptr<WarningsItem> &wi) const {
         LOG_INTEGRATION_TESTS << "#";
-
+        int maximumDescriptionLength = m_WarningsSettingsModel->getMaxDescriptionLength();
         Common::WarningFlags warningsInfo = Common::WarningFlags::None;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
 
@@ -172,7 +162,7 @@ namespace Warnings {
         } else {
             Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
 
-            if (descriptionLength > m_MaximumDescriptionLength) {
+            if (descriptionLength > maximumDescriptionLength) {
                 Common::SetFlag(warningsInfo, Common::WarningFlags::DescriptionTooBig);
             }
 
@@ -267,7 +257,9 @@ namespace Warnings {
         Models::ArtworkMetadata *item = wi->getCheckableItem();
         Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
 
-        if (keywordsModel->getKeywordsCount() == 0) { return warningsInfo; }
+        if (keywordsModel->getKeywordsCount() == 0) {
+            return warningsInfo;
+        }
 
         const QSet<QString> &keywordsSet = wi->getKeywordsSet();
 
@@ -294,4 +286,3 @@ namespace Warnings {
         return warningsInfo;
     }
 }
-
