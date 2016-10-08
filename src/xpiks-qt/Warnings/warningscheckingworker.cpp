@@ -176,7 +176,8 @@ namespace Warnings {
             QStringList descriptionWords = wi->getDescriptionWords();
 
             int wordsLength = descriptionWords.length();
-            if (wordsLength < 3) {
+            int minWordsCount = m_WarningsSettingsModel->getMinWordsCount();
+            if (wordsLength < minWordsCount) {
                 Common::SetFlag(warningsInfo, Common::WarningFlags::DescriptionNotEnoughWords);
             }
 
@@ -211,7 +212,8 @@ namespace Warnings {
             QStringList titleWords = wi->getTitleWords();
             int partsLength = titleWords.length();
 
-            if (partsLength < 3) {
+            int minWordsCount = m_WarningsSettingsModel->getMinWordsCount();
+            if (partsLength < minWordsCount) {
                 Common::SetFlag(warningsInfo, Common::WarningFlags::TitleNotEnoughWords);
             }
 
