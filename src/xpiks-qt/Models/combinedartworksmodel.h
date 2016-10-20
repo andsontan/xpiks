@@ -144,7 +144,7 @@ namespace Models {
         void generateAboutToBeRemoved();
 
 #ifdef INTEGRATION_TESTS
-        Common::BasicMetadataModel *getBasicModel() { return &m_CommonKeywordsModel; }
+        Common::BasicMetadataModel *getBasicMetadataModel() { return &m_CommonKeywordsModel; }
 #endif
 
 #ifdef CORE_TESTS

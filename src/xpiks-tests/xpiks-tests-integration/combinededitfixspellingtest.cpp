@@ -52,7 +52,7 @@ int CombinedEditFixSpellingTest::doTest() {
     QString wrongWord = "abbreviatioe";
 
     Models::FilteredArtItemsProxyModel *filteredModel = m_CommandManager->getFilteredArtItemsModel();
-    Common::BasicMetadataModel *basicModel = qobject_cast<Common::BasicMetadataModel*>(filteredModel->getKeywordsModel(0));
+    Common::BasicMetadataModel *basicModel = qobject_cast<Common::BasicMetadataModel*>(filteredModel->getBasicModel(0));
 
     QString nextDescription = basicModel->getDescription() + ' ' + wrongWord;
     basicModel->setDescription(nextDescription);
@@ -90,7 +90,7 @@ int CombinedEditFixSpellingTest::doTest() {
         suggestionsItem->setReplacementIndex(0);
     }
 
-    auto *combinedKeywordsModel = combinedModel->getBasicModel();
+    auto *combinedKeywordsModel = combinedModel->getBasicMetadataModel();
     VERIFY(combinedKeywordsModel->hasDescriptionSpellError(), "Description spell error was not propagated");
 
     SignalWaiter combinedEditWaiter;
