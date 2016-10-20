@@ -275,7 +275,7 @@ void CombinedModelTests::recombineAfterRemoveAllButOneTest() {
     QCOMPARE(combinedModel.getArtworksCount(), 1);
     QCOMPARE(combinedModel.getTitle(), first->getTitle());
     QCOMPARE(combinedModel.getDescription(), first->getDescription());
-    QCOMPARE(combinedModel.getKeywordsCount(), first->getKeywordsModel()->getKeywordsCount());
+    QCOMPARE(combinedModel.getKeywordsCount(), first->getBasicModel()->getKeywordsCount());
     QCOMPARE(combinedModel.getKeywords(), first->getKeywords());
     QCOMPARE(combinedModel.areKeywordsModified(), false);
 
@@ -305,7 +305,7 @@ void CombinedModelTests::recombineAfterChangesTest() {
     QCOMPARE(combinedModel.getArtworksCount(), 1);
     QVERIFY(combinedModel.getTitle() != first->getTitle());
     QVERIFY(combinedModel.getDescription() != first->getDescription());
-    QVERIFY(combinedModel.getKeywordsCount() != first->getKeywordsModel()->getKeywordsCount());
+    QVERIFY(combinedModel.getKeywordsCount() != first->getBasicModel()->getKeywordsCount());
     QVERIFY(combinedModel.getKeywords() != first->getKeywords());
     QCOMPARE(combinedModel.areKeywordsModified(), true);
 

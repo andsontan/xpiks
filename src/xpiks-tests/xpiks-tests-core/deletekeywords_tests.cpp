@@ -37,7 +37,7 @@ void DeleteKeywordsTests::smokeTest() {
 
     artItemsModelMock.foreachArtwork([&](int, Mocks::ArtworkMetadataMock *metadata) {
         QCOMPARE(metadata->rowCount(), keywords.length() - 1);
-        auto *keywordsModel = metadata->getKeywordsModel();
+        auto *keywordsModel = metadata->getBasicModel();
         QVERIFY(!keywordsModel->containsKeyword(keywordToDelete));
     });
 }
@@ -62,7 +62,7 @@ void DeleteKeywordsTests::keywordsCombinedTest() {
     deleteKeywordsModel.deleteKeywords();
 
     artItemsModelMock.foreachArtwork([&](int, Mocks::ArtworkMetadataMock *metadata) {
-        auto *keywordsModel = metadata->getKeywordsModel();
+        auto *keywordsModel = metadata->getBasicModel();
         QVERIFY(!keywordsModel->containsKeyword(keywordToDelete));
     });
 }
@@ -85,7 +85,7 @@ void DeleteKeywordsTests::doesNotDeleteOtherCaseTest() {
     deleteKeywordsModel.deleteKeywords();
 
     artItemsModelMock.foreachArtwork([&](int, Mocks::ArtworkMetadataMock *metadata) {
-        auto *keywordsModel = metadata->getKeywordsModel();
+        auto *keywordsModel = metadata->getBasicModel();
         QCOMPARE(keywordsModel->getKeywordsCount(), 2);
         QVERIFY(keywordsModel->containsKeyword(keywordToDelete));
     });
@@ -107,7 +107,7 @@ void DeleteKeywordsTests::doesNotDeleteNoKeywordsTest() {
     deleteKeywordsModel.deleteKeywords();
 
     artItemsModelMock.foreachArtwork([&](int, Mocks::ArtworkMetadataMock *metadata) {
-        auto *keywordsModel = metadata->getKeywordsModel();
+        auto *keywordsModel = metadata->getBasicModel();
         QCOMPARE(keywordsModel->getKeywordsCount(), 2);
         QVERIFY(keywordsModel->containsKeyword(keywordToDelete));
     });
@@ -131,7 +131,7 @@ void DeleteKeywordsTests::deleteCaseInsensitiveTest() {
     deleteKeywordsModel.deleteKeywords();
 
     artItemsModelMock.foreachArtwork([&](int, Mocks::ArtworkMetadataMock *metadata) {
-        auto *keywordsModel = metadata->getKeywordsModel();
+        auto *keywordsModel = metadata->getBasicModel();
         QCOMPARE(keywordsModel->getKeywordsCount(), 1);
         QVERIFY(!keywordsModel->containsKeyword(keywordToDelete));
     });

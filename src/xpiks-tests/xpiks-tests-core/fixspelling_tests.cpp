@@ -1,7 +1,7 @@
 #include "fixspelling_tests.h"
 #include <QSignalSpy>
 #include "../../xpiks-qt/SpellCheck/spellchecksuggestionmodel.h"
-#include "../../xpiks-qt/Common/basickeywordsmodel.h"
+#include "../../xpiks-qt/Common/basicmetadatamodel.h"
 #include "../../xpiks-qt/Common/flags.h"
 #include "Mocks/commandmanagermock.h"
 #include "../../xpiks-qt/SpellCheck/spellsuggestionsitem.h"
@@ -14,7 +14,7 @@
     commandManager.InjectDependency(&spellCheckService); \
     SpellCheck::SpellCheckSuggestionModel suggestionModel; \
     commandManager.InjectDependency(&suggestionModel); \
-    Common::BasicKeywordsModel basicModel(m_FakeHold); \
+    Common::BasicMetadataModel basicModel(m_FakeHold); \
     SpellCheck::SpellCheckItemInfo spellCheckInfo; \
     basicModel.setSpellCheckInfo(&spellCheckInfo);
 

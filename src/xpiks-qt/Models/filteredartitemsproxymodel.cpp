@@ -276,7 +276,7 @@ namespace Models {
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
             if (metadata != NULL) {
-                auto *keywordsModel = metadata->getKeywordsModel();
+                auto *keywordsModel = metadata->getBasicModel();
 
                 if (!metadata->getDescription().trimmed().isEmpty()) {
                     m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckFlags::Description);
@@ -297,7 +297,7 @@ namespace Models {
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
             if (metadata != NULL) {
-                auto *keywordsModel = metadata->getKeywordsModel();
+                auto *keywordsModel = metadata->getBasicModel();
 
                 if (!metadata->getTitle().trimmed().isEmpty()) {
                     m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckFlags::Title);
@@ -345,10 +345,10 @@ namespace Models {
         return item;
     }
 
-    QObject *FilteredArtItemsProxyModel::getKeywordsModel(int index) {
+    QObject *FilteredArtItemsProxyModel::getBasicModel(int index) {
         int originalIndex = getOriginalIndex(index);
         ArtItemsModel *artItemsModel = getArtItemsModel();
-        QObject *item = artItemsModel->getKeywordsModel(originalIndex);
+        QObject *item = artItemsModel->getBasicModel(originalIndex);
 
         return item;
     }
@@ -361,7 +361,7 @@ namespace Models {
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
             if (metadata != NULL) {
-                auto *keywordsModel = metadata->getKeywordsModel();
+                auto *keywordsModel = metadata->getBasicModel();
                 result = keywordsModel->hasTitleWordSpellError(word);
             }
         }
@@ -378,7 +378,7 @@ namespace Models {
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
             if (metadata != NULL) {
-                auto *keywordsModel = metadata->getKeywordsModel();
+                auto *keywordsModel = metadata->getBasicModel();
                 result = keywordsModel->hasDescriptionWordSpellError(word);
             }
         }

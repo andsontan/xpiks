@@ -54,7 +54,7 @@ int AutoCompleteBasicTest::doTest() {
 
     VERIFY(acModel->getCount() == 0, "AC model was not empty");
 
-    m_CommandManager->autoCompleteKeyword("tes", metadata->getKeywordsModel());
+    m_CommandManager->autoCompleteKeyword("tes", metadata->getBasicModel());
 
     if (!completionWaiter.wait(10)) {
         VERIFY(false, "Timeout while waiting for the completion");
@@ -66,7 +66,7 @@ int AutoCompleteBasicTest::doTest() {
     VERIFY(acModel->getCount() > 0, "AC model didn't receive the completions");
     VERIFY(acModel->containsWord("test"), "AC model has irrelevant results");
 
-    m_CommandManager->autoCompleteKeyword("Tes", metadata->getKeywordsModel());
+    m_CommandManager->autoCompleteKeyword("Tes", metadata->getBasicModel());
 
     if (!completionWaiter.wait(10)) {
         VERIFY(false, "Timeout while waiting for the completion");

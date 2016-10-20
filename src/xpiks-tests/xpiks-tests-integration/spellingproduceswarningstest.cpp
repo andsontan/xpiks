@@ -88,7 +88,7 @@ int SpellingProducesWarningsTest::doTest() {
                 Common::HasFlag(metadata->getWarningsFlags(), Common::WarningFlags::SpellErrorsInKeywords);
     });
 
-    Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+    auto *keywordsModel = metadata->getBasicModel();
 
     VERIFY(keywordsModel->hasDescriptionSpellError(), "Description spell error not detected");
     VERIFY(keywordsModel->hasTitleSpellError(), "Title spell error not detected");

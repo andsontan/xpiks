@@ -33,7 +33,7 @@ namespace MetadataIO {
 
     void BackupSaverWorker::processOneItem(std::shared_ptr<SaverWorkerJobItem> &item) {
         Models::ArtworkMetadata *metadata = item->getMetadata();
-        MetadataSavingCopy copy(metadata->getKeywordsModel());
+        MetadataSavingCopy copy(metadata->getBasicModel());
         copy.saveToFile(metadata->getFilepath());
     }
 }

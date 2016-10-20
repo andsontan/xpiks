@@ -513,7 +513,7 @@ void Commands::CommandManager::submitForSpellCheck(const QVector<Models::Artwork
 
         for (int i = 0; i < count; ++i) {
             Models::ArtworkMetadata *metadata = items.at(i);
-            itemsToSubmit << metadata->getKeywordsModel();
+            itemsToSubmit << metadata->getBasicModel();
         }
 
         this->submitForSpellCheck(itemsToSubmit);

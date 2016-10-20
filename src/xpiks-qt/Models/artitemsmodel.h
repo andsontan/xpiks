@@ -39,7 +39,7 @@
 #include "../Helpers/ifilenotavailablemodel.h"
 
 namespace Common {
-    class BasicKeywordsModel;
+    class BasicMetadataModel;
 }
 
 namespace Models {
@@ -113,7 +113,7 @@ namespace Models {
 
         /*Q_INVOKABLE*/ ArtworkMetadata *getArtworkMetadata(int index) const;
 
-        /*Q_INVOKABLE*/ Common::BasicKeywordsModel *getKeywordsModel(int index) const;
+        /*Q_INVOKABLE*/ Common::BasicMetadataModel *getBasicModel(int index) const;
 
         Q_INVOKABLE QSize retrieveImageSize(int metadataIndex) const;
         Q_INVOKABLE QString retrieveFileSize(int metadataIndex) const;

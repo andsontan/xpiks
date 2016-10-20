@@ -69,7 +69,7 @@ int SpellCheckUndoTest::doTest() {
 
     // wait for finding suggestions
     QThread::sleep(1);
-    Common::BasicKeywordsModel *basicKeywordsModel = metadata->getKeywordsModel();
+    auto *basicKeywordsModel = metadata->getBasicModel();
 
     VERIFY(basicKeywordsModel->hasDescriptionSpellError(), "Description spell error not detected");
     VERIFY(basicKeywordsModel->hasTitleSpellError(), "Title spell error not detected");

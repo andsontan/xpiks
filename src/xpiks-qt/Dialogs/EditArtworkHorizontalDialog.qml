@@ -145,7 +145,7 @@ Item {
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
-            property var keywordsModel: combinedArtworks.getKeywordsModel()
+            property var keywordsModel: combinedArtworks.getBasicModel()
             property var autoCompleteBox
 
             function onAutoCompleteClose() {
@@ -519,7 +519,7 @@ Item {
                     EditableTags {
                         id: flv
                         anchors.fill: parent
-                        model: combinedArtworks.getKeywordsModel()
+                        model: combinedArtworks.getBasicModel()
                         property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
                         scrollStep: keywordHeight
 
@@ -547,7 +547,7 @@ Item {
                                                         callbackObject: callbackObject,
                                                         previousKeyword: keyword,
                                                         keywordIndex: kw.delegateIndex,
-                                                        keywordsModel: combinedArtworks.getKeywordsModel()
+                                                        keywordsModel: combinedArtworks.getBasicModel()
                                                     })
                             }
 
@@ -717,7 +717,7 @@ Item {
                                                         {
                                                             callbackObject: callbackObject,
                                                             keywordsText: combinedArtworks.getKeywordsString(),
-                                                            keywordsModel: combinedArtworks.getKeywordsModel()
+                                                            keywordsModel: combinedArtworks.getBasicModel()
                                                         });
                                 }
                             }

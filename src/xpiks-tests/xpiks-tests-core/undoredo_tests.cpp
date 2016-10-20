@@ -301,7 +301,7 @@ void UndoRedoTests::undoClearAllTest() {
     QCOMPARE(indices.length(), itemsToAdd);
 
     for (int i = 0; i < itemsToAdd; ++i) {
-        Common::BasicKeywordsModel *keywordsModel = artItemsMock.getArtwork(i)->getKeywordsModel();
+        auto *keywordsModel = artItemsMock.getArtwork(i)->getBasicModel();
         QVERIFY(keywordsModel->isDescriptionEmpty());
         QVERIFY(keywordsModel->isTitleEmpty());
         QVERIFY(keywordsModel->areKeywordsEmpty());
@@ -346,7 +346,7 @@ void UndoRedoTests::undoClearKeywordsTest() {
     for (int i = 0; i < itemsToAdd; ++i) {
         QCOMPARE(artItemsMock.getArtwork(i)->getDescription(), originalDescription);
         QCOMPARE(artItemsMock.getArtwork(i)->getTitle(), originalTitle);
-        QVERIFY(artItemsMock.getArtwork(i)->getKeywordsModel()->areKeywordsEmpty());
+        QVERIFY(artItemsMock.getArtwork(i)->getBasicModel()->areKeywordsEmpty());
         QVERIFY(artItemsMock.getArtwork(i)->isModified());
     }
 

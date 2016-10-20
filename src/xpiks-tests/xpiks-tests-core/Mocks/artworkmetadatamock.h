@@ -12,13 +12,13 @@ namespace Mocks {
         {
         }
 
-        QString retrieveKeyword(int index) { return getKeywordsModel()->retrieveKeyword(index); }
-        int rowCount() const { return getKeywordsModel()->rowCount(); }
+        QString retrieveKeyword(int index) { return getBasicModel()->retrieveKeyword(index); }
+        int rowCount() const { return getBasicModel()->rowCount(); }
 
-        bool isTitleEmpty() { return getKeywordsModel()->isTitleEmpty(); }
-        bool isDescriptionEmpty() { return getKeywordsModel()->isDescriptionEmpty(); }
+        bool isTitleEmpty() { return getBasicModel()->isTitleEmpty(); }
+        bool isDescriptionEmpty() { return getBasicModel()->isDescriptionEmpty(); }
 
-        bool areKeywordsEmpty() { return getKeywordsModel()->areKeywordsEmpty(); }
+        bool areKeywordsEmpty() { return getBasicModel()->areKeywordsEmpty(); }
 
         //virtual QString getDirectory() const { return "somedirectory"; }
     };

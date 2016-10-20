@@ -144,7 +144,7 @@ namespace Models {
         void generateAboutToBeRemoved();
 
 #ifdef INTEGRATION_TESTS
-        Common::BasicKeywordsModel *getBasicKeywordsModel() { return &m_CommonKeywordsModel; }
+        Common::BasicMetadataModel *getBasicModel() { return &m_CommonKeywordsModel; }
 #endif
 
 #ifdef CORE_TESTS
@@ -162,7 +162,7 @@ namespace Models {
         Q_INVOKABLE void clearKeywords();
 
         Q_INVOKABLE QString getKeywordsString() { return m_CommonKeywordsModel.getKeywordsString(); }
-        Q_INVOKABLE QObject *getKeywordsModel() {
+        Q_INVOKABLE QObject *getBasicModel() {
             QObject *item = &m_CommonKeywordsModel;
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
 

@@ -47,7 +47,7 @@ int AddToUserDictionaryTest::doTest() {
     // wait for after-add spellchecking
     QThread::sleep(1);
 
-    Common::BasicKeywordsModel *basicKeywordsModel = metadata->getKeywordsModel();
+    auto *basicKeywordsModel = metadata->getBasicModel();
 
     QString wrongWord = "abbreviatioe";
     metadata->setDescription(metadata->getDescription() + ' ' + wrongWord);

@@ -94,8 +94,8 @@ namespace Models {
         void dropWarningsFlags(Common::WarningFlags flagsToDrop) { Common::UnsetFlag(m_WarningsFlags, flagsToDrop); }
 
     public:
-        Common::BasicMetadataModel *getKeywordsModel() { return &m_MetadataModel; }
-        const Common::BasicMetadataModel *getKeywordsModel() const { return &m_MetadataModel; }
+        Common::BasicMetadataModel *getBasicModel() { return &m_MetadataModel; }
+        const Common::BasicMetadataModel *getBasicModel() const { return &m_MetadataModel; }
 
         virtual void clearModel();
         virtual bool clearKeywords();

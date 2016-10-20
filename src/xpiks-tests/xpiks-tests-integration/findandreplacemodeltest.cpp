@@ -60,13 +60,13 @@ int FindAndReplaceModelTest::doTest() {
     VERIFY(findAndReplaceModel->getArtworksCount() == 2, "Items are missing!");
     findAndReplaceModel->setItemSelected(1, false);
 
-    int keywordsCount = artItemsModel->getKeywordsModel(0)->getKeywordsCount();
+    int keywordsCount = artItemsModel->getBasicModel(0)->getKeywordsCount();
 
     findAndReplaceModel->replace();
 
-    VERIFY(artItemsModel->getKeywordsModel(0)->getKeywordsCount() == (keywordsCount - 1), "Keyword duplicate wasn't removed");
-    VERIFY(artItemsModel->getKeywordsModel(0)->getKeywords().last() == "wallpaper", "Keyword wasn't replaced");
-    VERIFY(artItemsModel->getKeywordsModel(0)->getDescription() == "wallpaper inside the Wall is not a wallpaper", "Description wasn't replaced");
+    VERIFY(artItemsModel->getBasicModel(0)->getKeywordsCount() == (keywordsCount - 1), "Keyword duplicate wasn't removed");
+    VERIFY(artItemsModel->getBasicModel(0)->getKeywords().last() == "wallpaper", "Keyword wasn't replaced");
+    VERIFY(artItemsModel->getBasicModel(0)->getDescription() == "wallpaper inside the Wall is not a wallpaper", "Description wasn't replaced");
 
     return 0;
 }

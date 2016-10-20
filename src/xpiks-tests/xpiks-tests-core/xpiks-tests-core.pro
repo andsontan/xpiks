@@ -110,9 +110,9 @@ SOURCES += main.cpp \
     ../../xpiks-qt/SpellCheck/spellcheckiteminfo.cpp \
     ../../xpiks-qt/SpellCheck/spellsuggestionsitem.cpp \
     ../../xpiks-qt/Common/basickeywordsmodel.cpp \
+    ../../xpiks-qt/Common/basicmetadatamodel.cpp \
     ../../xpiks-qt/SpellCheck/spellcheckerrorshighlighter.cpp \
     artworkmetadata_tests.cpp \
-    basickeywordsmodel_tests.cpp \
     combinedmodel_tests.cpp \
     ../../xpiks-qt/Models/settingsmodel.cpp \
     stringhelpers_tests.cpp \
@@ -151,7 +151,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Models/deletekeywordsviewmodel.cpp \
     ../../xpiks-qt/Commands/deletekeywordscommand.cpp \
     ../../xpiks-qt/Conectivity/uploadwatcher.cpp \
-    ../../xpiks-qt/Helpers/updatehelpers.cpp
+    ../../xpiks-qt/Helpers/updatehelpers.cpp \
+    basicmetadatamodel_tests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -186,6 +187,7 @@ HEADERS += \
     Mocks/artworkmetadatamock.h \
     removecommand_tests.h \
     ../../xpiks-qt/Common/basickeywordsmodel.h \
+    ../../xpiks-qt/Common/basicmetadatamodel.h \
     vectorfilenames_tests.h \
     ../../xpiks-qt/Helpers/filenameshelpers.h \
     ../../xpiks-qt/Helpers/helpersqmlwrapper.h \
@@ -204,7 +206,6 @@ HEADERS += \
     ../../xpiks-qt/SpellCheck/spellsuggestionsitem.h \
     ../../xpiks-qt/SpellCheck/spellcheckerrorshighlighter.h \
     artworkmetadata_tests.h \
-    basickeywordsmodel_tests.h \
     combinedmodel_tests.h \
     ../../xpiks-qt/Models/settingsmodel.h \
     ../../xpiks-qt/Helpers/appsettings.h \
@@ -259,5 +260,6 @@ HEADERS += \
     ../../xpiks-qt/Commands/deletekeywordscommand.h \
     ../../xpiks-qt/Common/iflagsprovider.h \
     ../../xpiks-qt/Conectivity/uploadwatcher.h \
-    ../../xpiks-qt/Helpers/updatehelpers.h
+    ../../xpiks-qt/Helpers/updatehelpers.h \
+    basicmetadatamodel_tests.h
 

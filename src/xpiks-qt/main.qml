@@ -1522,7 +1522,7 @@ ApplicationWindow {
                                     property bool isHighlighted: isselected || wrappersScope.GridView.isCurrentItem
                                     color: isHighlighted ? Colors.selectedImageBackground : Colors.artworkImageBackground
                                     property var artworkModel: filteredArtItemsModel.getArtworkMetadata(index)
-                                    property var keywordsModel: filteredArtItemsModel.getKeywordsModel(index)
+                                    property var keywordsModel: filteredArtItemsModel.getBasicModel(index)
                                     property int delegateIndex: index
                                     property bool isItemSelected: isselected
                                     anchors.fill: parent
@@ -2126,7 +2126,7 @@ ApplicationWindow {
                                                                                         callbackObject: callbackObject,
                                                                                         previousKeyword: keyword,
                                                                                         keywordIndex: kw.delegateIndex,
-                                                                                        keywordsModel: filteredArtItemsModel.getKeywordsModel(rowWrapper.delegateIndex)
+                                                                                        keywordsModel: filteredArtItemsModel.getBasicModel(rowWrapper.delegateIndex)
                                                                                     })
                                                             }
 
@@ -2225,7 +2225,7 @@ ApplicationWindow {
                                                                                     {
                                                                                         callbackObject: callbackObject,
                                                                                         keywordsText: keywordsstring,
-                                                                                        keywordsModel: filteredArtItemsModel.getKeywordsModel(rowWrapper.delegateIndex)
+                                                                                        keywordsModel: filteredArtItemsModel.getBasicModel(rowWrapper.delegateIndex)
 
                                                                                     });
                                                             }

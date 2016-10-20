@@ -49,7 +49,7 @@ int SaveFileBasicTest::doTest() {
     QStringList keywords; keywords << "picture" << "seagull" << "bird";
     metadata->setDescription("Brand new description");
     metadata->setTitle("Brand new title");
-    metadata->getKeywordsModel()->setKeywords(keywords);
+    metadata->getBasicModel()->setKeywords(keywords);
     metadata->setIsSelected(true);
 
     bool doOverwrite = true, dontSaveBackups = false;

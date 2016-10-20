@@ -133,7 +133,7 @@ namespace Warnings {
         int maximumKeywordsCount = m_WarningsSettingsModel->getMaxKeywordsCount();
         Common::WarningFlags warningsInfo = Common::WarningFlags::None;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
-        Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
+        Common::BasicKeywordsModel *keywordsModel = item->getBasicModel();
 
         int keywordsCount = keywordsModel->getKeywordsCount();
 
@@ -167,7 +167,7 @@ namespace Warnings {
         if (descriptionLength == 0) {
             Common::SetFlag(warningsInfo, Common::WarningFlags::DescriptionIsEmpty);
         } else {
-            auto *keywordsModel = item->getKeywordsModel();
+            auto *keywordsModel = item->getBasicModel();
 
             if (descriptionLength > maximumDescriptionLength) {
                 Common::SetFlag(warningsInfo, Common::WarningFlags::DescriptionTooBig);
@@ -207,7 +207,7 @@ namespace Warnings {
         if (titleLength == 0) {
             Common::SetFlag(warningsInfo, Common::WarningFlags::TitleIsEmpty);
         } else {
-            auto *keywordsModel = item->getKeywordsModel();
+            auto *keywordsModel = item->getBasicModel();
 
             QStringList titleWords = wi->getTitleWords();
             int partsLength = titleWords.length();
@@ -241,7 +241,7 @@ namespace Warnings {
 
         Common::WarningFlags warningsInfo = Common::WarningFlags::None;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
-        auto *keywordsModel = item->getKeywordsModel();
+        auto *keywordsModel = item->getBasicModel();
 
         if (keywordsModel->hasKeywordsSpellError()) {
             LOG_INTEGRATION_TESTS << "Detected keywords spell error";
@@ -264,7 +264,7 @@ namespace Warnings {
     Common::WarningFlags WarningsCheckingWorker::checkDuplicates(std::shared_ptr<WarningsItem> &wi) const {
         Common::WarningFlags warningsInfo = Common::WarningFlags::None;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
-        Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
+        Common::BasicKeywordsModel *keywordsModel = item->getBasicModel();
 
         if (keywordsModel->getKeywordsCount() == 0) {
             return warningsInfo;

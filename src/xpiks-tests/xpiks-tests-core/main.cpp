@@ -8,7 +8,7 @@
 #include "removecommand_tests.h"
 #include "vectorfilenames_tests.h"
 #include "artworkmetadata_tests.h"
-#include "basickeywordsmodel_tests.h"
+#include "basicmetadatamodel_tests.h"
 #include "combinedmodel_tests.h"
 #include "stringhelpers_tests.h"
 #include "keywordvalidation_tests.h"

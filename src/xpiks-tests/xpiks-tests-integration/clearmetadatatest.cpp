@@ -82,9 +82,9 @@ int ClearMetadataTest::doTest() {
 
     metadata = artItemsModel->getArtwork(0);
 
-    VERIFY(metadata->getKeywordsModel()->isDescriptionEmpty(), "Description was not empty");
-    VERIFY(metadata->getKeywordsModel()->isTitleEmpty(), "Title was not empty");
-    VERIFY(metadata->getKeywordsModel()->areKeywordsEmpty(), "Keywords were not empty");
+    VERIFY(metadata->getBasicModel()->isDescriptionEmpty(), "Description was not empty");
+    VERIFY(metadata->getBasicModel()->isTitleEmpty(), "Title was not empty");
+    VERIFY(metadata->getBasicModel()->areKeywordsEmpty(), "Keywords were not empty");
 
     return 0;
 }

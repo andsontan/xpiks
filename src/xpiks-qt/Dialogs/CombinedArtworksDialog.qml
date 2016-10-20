@@ -835,7 +835,7 @@ CloseRequested")
                                 anchors.rightMargin: 20
                                 Layout.fillWidth: true
                                 color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
-                                property var keywordsModel: combinedArtworks.getKeywordsModel()
+                                property var keywordsModel: combinedArtworks.getBasicModel()
 
                                 function removeKeyword(index) {
                                     combinedArtworks.removeKeywordAt(index)
@@ -976,7 +976,7 @@ CloseRequested")
                                                                     {
                                                                         callbackObject: callbackObject,
                                                                         keywordsText: combinedArtworks.getKeywordsString(),
-                                                                        keywordsModel: combinedArtworks.getKeywordsModel()
+                                                                        keywordsModel: combinedArtworks.getBasicModel()
                                                                     });
                                             }
                                         }

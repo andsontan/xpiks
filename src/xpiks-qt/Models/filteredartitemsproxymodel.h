@@ -95,7 +95,7 @@ namespace Models {
         Q_INVOKABLE void toggleSorted();
         Q_INVOKABLE void detachVectorFromSelected();
         Q_INVOKABLE QObject *getArtworkMetadata(int index);
-        Q_INVOKABLE QObject *getKeywordsModel(int index);
+        Q_INVOKABLE QObject *getBasicModel(int index);
 
         Q_INVOKABLE bool hasTitleWordSpellError(int index, const QString &word);
         Q_INVOKABLE bool hasDescriptionWordSpellError(int index, const QString &word);

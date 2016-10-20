@@ -31,6 +31,7 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Commands/pastekeywordscommand.cpp \
     ../../xpiks-qt/Commands/removeartworkscommand.cpp \
     ../../xpiks-qt/Common/basickeywordsmodel.cpp \
+    ../../xpiks-qt/Common/basicmetadatamodel.cpp \
     ../../xpiks-qt/Conectivity/conectivityhelpers.cpp \
     ../../xpiks-qt/Conectivity/curlftpuploader.cpp \
     ../../xpiks-qt/Conectivity/ftpcoordinator.cpp \
@@ -174,6 +175,7 @@ HEADERS += \
     ../../xpiks-qt/Commands/removeartworkscommand.h \
     ../../xpiks-qt/Common/baseentity.h \
     ../../xpiks-qt/Common/basickeywordsmodel.h \
+    ../../xpiks-qt/Common/basicmetadatamodel.h \
     ../../xpiks-qt/Common/defines.h \
     ../../xpiks-qt/Common/flags.h \
     ../../xpiks-qt/Common/iartworkssource.h \

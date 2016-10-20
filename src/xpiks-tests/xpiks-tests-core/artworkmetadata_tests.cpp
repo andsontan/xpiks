@@ -202,7 +202,7 @@ void ArtworkMetadataTests::addNewKeywordsEmitsModifiedTest() {
     Mocks::ArtworkMetadataMock metadata("file.jpg");
 
     QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
-    QSignalSpy addedSpy(metadata.getKeywordsModel(), SIGNAL(rowsInserted(QModelIndex,int,int)));
+    QSignalSpy addedSpy(metadata.getBasicModel(), SIGNAL(rowsInserted(QModelIndex,int,int)));
 
     int addedCount = metadata.appendKeywords(QStringList() << "keyword1" << "keyword2");
 
@@ -225,7 +225,7 @@ void ArtworkMetadataTests::addExistingKeywordsDoesNotEmitModifiedTest() {
     QCOMPARE(addedCount, 2);
 
     QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
-    QSignalSpy addedSpy(metadata.getKeywordsModel(), SIGNAL(rowsInserted(QModelIndex,int,int)));
+    QSignalSpy addedSpy(metadata.getBasicModel(), SIGNAL(rowsInserted(QModelIndex,int,int)));
 
     addedCount = metadata.appendKeywords(QStringList() << "keyword1" << "keyword2");
 
@@ -239,7 +239,7 @@ void ArtworkMetadataTests::addOneNewKeywordEmitsModifiedTest() {
     Mocks::ArtworkMetadataMock metadata("file.jpg");
 
     QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
-    QSignalSpy addedSpy(metadata.getKeywordsModel(), SIGNAL(rowsInserted(QModelIndex,int,int)));
+    QSignalSpy addedSpy(metadata.getBasicModel(), SIGNAL(rowsInserted(QModelIndex,int,int)));
 
     bool added = metadata.appendKeyword("keyword1");
 
@@ -261,7 +261,7 @@ void ArtworkMetadataTests::addOneExistingKeywordDoesNotEmitModifiedTest() {
     QCOMPARE(added, true);
 
     QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
-    QSignalSpy addedSpy(metadata.getKeywordsModel(), SIGNAL(rowsInserted(QModelIndex,int,int)));
+    QSignalSpy addedSpy(metadata.getBasicModel(), SIGNAL(rowsInserted(QModelIndex,int,int)));
 
     added = metadata.appendKeyword("keyword2");
 
@@ -274,7 +274,7 @@ void ArtworkMetadataTests::addOneExistingKeywordDoesNotEmitModifiedTest() {
 void ArtworkMetadataTests::removeKeywordFromEmptyTest() {
     Mocks::ArtworkMetadataMock metadata("file.jpg");
     QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
-    QSignalSpy removedSpy(metadata.getKeywordsModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)));
+    QSignalSpy removedSpy(metadata.getBasicModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)));
 
     bool removed = metadata.removeKeywordAt(0);
 
@@ -286,7 +286,7 @@ void ArtworkMetadataTests::removeKeywordFromEmptyTest() {
 void ArtworkMetadataTests::removeLastKeywordFromEmptyTest() {
     Mocks::ArtworkMetadataMock metadata("file.jpg");
     QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
-    QSignalSpy removedSpy(metadata.getKeywordsModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)));
+    QSignalSpy removedSpy(metadata.getBasicModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)));
 
     bool removed = metadata.removeLastKeyword();
 
@@ -298,7 +298,7 @@ void ArtworkMetadataTests::removeLastKeywordFromEmptyTest() {
 void ArtworkMetadataTests::removeActualKeywordTest() {
     Mocks::ArtworkMetadataMock metadata("file.jpg");
     QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
-    QSignalSpy removedSpy(metadata.getKeywordsModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)));
+    QSignalSpy removedSpy(metadata.getBasicModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)));
 
     metadata.appendKeyword("keyword1");
 
@@ -319,7 +319,7 @@ void ArtworkMetadataTests::removeActualKeywordTest() {
 void ArtworkMetadataTests::removeLastActualKeywordTest() {
     Mocks::ArtworkMetadataMock metadata("file.jpg");
     QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
-    QSignalSpy removedSpy(metadata.getKeywordsModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)));
+    QSignalSpy removedSpy(metadata.getBasicModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)));
 
     metadata.appendKeyword("keyword1");
 
