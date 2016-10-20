@@ -74,9 +74,9 @@ namespace Models {
                 LOG_WARNING << "Metadata at index" << i << "is locked. Postponing destruction...";
 
                 metadata->disconnect();
-                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-                keywordsModel->disconnect();
-                keywordsModel->clearModel();
+                auto *metadataModel = metadata->getKeywordsModel();
+                metadataModel->disconnect();
+                metadataModel->clearModel();
 
                 m_FinalizationList.push_back(metadata);
             }
@@ -210,7 +210,7 @@ namespace Models {
             if (metadata->appendKeyword(keyword)) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
-                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                auto *keywordsModel = metadata->getKeywordsModel();
 
                 m_CommandManager->submitKeywordForSpellCheck(keywordsModel, keywordsModel->getKeywordsCount() - 1);
                 m_CommandManager->submitKeywordsForWarningsCheck(metadata);
@@ -276,7 +276,7 @@ namespace Models {
             Common::SetFlag(flags, SuggestionFlags::Title);
             Common::SetFlag(flags, SuggestionFlags::Keywords);
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            auto *keywordsModel = metadata->getKeywordsModel();
             m_CommandManager->setupSpellCheckSuggestions(keywordsModel, metadataIndex, (SuggestionFlags)flags);
         }
     }
@@ -487,22 +487,22 @@ namespace Models {
     void ArtItemsModel::initDescriptionHighlighting(int metadataIndex, QQuickTextDocument *document) {
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-            SpellCheck::SpellCheckItemInfo *info = keywordsModel->getSpellCheckInfo();
+            auto *metadataModel = metadata->getKeywordsModel();
+            SpellCheck::SpellCheckItemInfo *info = metadataModel->getSpellCheckInfo();
             QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
-            info->createHighlighterForDescription(document->textDocument(), colorsModel, keywordsModel);
-            keywordsModel->notifyDescriptionSpellCheck();
+            info->createHighlighterForDescription(document->textDocument(), colorsModel, metadataModel);
+            metadataModel->notifyDescriptionSpellCheck();
         }
     }
 
     void ArtItemsModel::initTitleHighlighting(int metadataIndex, QQuickTextDocument *document) {
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-            SpellCheck::SpellCheckItemInfo *info = keywordsModel->getSpellCheckInfo();
+            auto *metadataModel = metadata->getKeywordsModel();
+            SpellCheck::SpellCheckItemInfo *info = metadataModel->getSpellCheckInfo();
             QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
-            info->createHighlighterForTitle(document->textDocument(), colorsModel, keywordsModel);
-            keywordsModel->notifyTitleSpellCheck();
+            info->createHighlighterForTitle(document->textDocument(), colorsModel, metadataModel);
+            metadataModel->notifyTitleSpellCheck();
         }
     }
 
@@ -511,7 +511,7 @@ namespace Models {
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             if (metadata->editKeyword(keywordIndex, replacement)) {
-                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                auto *keywordsModel = metadata->getKeywordsModel();
                 m_CommandManager->submitKeywordForSpellCheck(keywordsModel, keywordIndex);
                 m_CommandManager->submitKeywordsForWarningsCheck(metadata);
                 metadata->requestBackup();
@@ -1018,9 +1018,9 @@ namespace Models {
             LOG_DEBUG << "Metadata is locked. Postponing destruction...";
 
             metadata->disconnect();
-            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-            keywordsModel->disconnect();
-            keywordsModel->clearModel();
+            auto *metadataModel = metadata->getKeywordsModel();
+            metadataModel->disconnect();
+            metadataModel->clearModel();
 
             m_FinalizationList.push_back(metadata);
         }
@@ -1118,10 +1118,10 @@ namespace Models {
 
         for (size_t i = 0; i < size; i++) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
-            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-            SpellCheck::SpellCheckItemInfo *info = keywordsModel->getSpellCheckInfo();
+            auto *metadataModel = metadata->getKeywordsModel();
+            SpellCheck::SpellCheckItemInfo *info = metadataModel->getSpellCheckInfo();
             info->removeWordsFromErrors(keywords);
-            itemsToCheck.append(keywordsModel);
+            itemsToCheck.append(metadataModel);
         }
 
         m_CommandManager->submitForSpellCheck(itemsToCheck, keywords);
@@ -1134,7 +1134,7 @@ namespace Models {
 
         for (size_t i = 0; i < size; i++) {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
-            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+            auto *keywordsModel = metadata->getKeywordsModel();
             itemsToCheck.append(keywordsModel);
         }
 

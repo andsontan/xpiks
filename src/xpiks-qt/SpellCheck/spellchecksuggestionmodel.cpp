@@ -134,7 +134,7 @@ namespace SpellCheck {
         }
     }
 
-    void SpellCheckSuggestionModel::setupModel(Common::BasicKeywordsModel *item, int index, Common::SuggestionFlags flags) {
+    void SpellCheckSuggestionModel::setupModel(Common::BasicMetadataModel *item, int index, Common::SuggestionFlags flags) {
         Q_ASSERT(item != NULL);
         LOG_INFO << "flags =" << (int)flags;
         auto requests = createSuggestionsRequests(item, flags);
@@ -160,7 +160,7 @@ namespace SpellCheck {
         m_ItemIndex = index;
     }
 
-    SuggestionsVector SpellCheckSuggestionModel::createSuggestionsRequests(Common::BasicKeywordsModel *item, Common::SuggestionFlags flags) {
+    SuggestionsVector SpellCheckSuggestionModel::createSuggestionsRequests(Common::BasicMetadataModel *item, Common::SuggestionFlags flags) {
         SuggestionsVector requests;
 
         using namespace Common;

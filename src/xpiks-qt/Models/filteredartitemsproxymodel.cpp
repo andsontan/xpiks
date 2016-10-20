@@ -276,7 +276,7 @@ namespace Models {
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
             if (metadata != NULL) {
-                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                auto *keywordsModel = metadata->getKeywordsModel();
 
                 if (!metadata->getDescription().trimmed().isEmpty()) {
                     m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckFlags::Description);
@@ -297,7 +297,7 @@ namespace Models {
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
             if (metadata != NULL) {
-                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                auto *keywordsModel = metadata->getKeywordsModel();
 
                 if (!metadata->getTitle().trimmed().isEmpty()) {
                     m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckFlags::Title);
@@ -361,7 +361,7 @@ namespace Models {
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
             if (metadata != NULL) {
-                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                auto *keywordsModel = metadata->getKeywordsModel();
                 result = keywordsModel->hasTitleWordSpellError(word);
             }
         }
@@ -378,7 +378,7 @@ namespace Models {
             ArtItemsModel *artItemsModel = getArtItemsModel();
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
             if (metadata != NULL) {
-                Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
+                auto *keywordsModel = metadata->getKeywordsModel();
                 result = keywordsModel->hasDescriptionWordSpellError(word);
             }
         }

@@ -118,7 +118,8 @@ SOURCES += main.cpp \
     Conectivity/curlinithelper.cpp \
     MetadataIO/exiv2inithelper.cpp \
     Conectivity/simplecurldownloader.cpp \
-    Helpers/updatehelpers.cpp
+    Helpers/updatehelpers.cpp \
+    Common/basicmetadatamodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -294,7 +295,8 @@ HEADERS += \
     MetadataIO/exiv2inithelper.h \
     Conectivity/simplecurldownloader.h \
     Conectivity/apimanager.h \
-    Helpers/updatehelpers.h
+    Helpers/updatehelpers.h \
+    Common/basicmetadatamodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

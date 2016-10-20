@@ -72,8 +72,8 @@ namespace Models {
     void DeleteKeywordsViewModel::doResetModel() {
         ArtworksViewModel::doResetModel();
 
-        m_CommonKeywordsModel.clearModel();
-        m_KeywordsToDeleteModel.clearModel();
+        m_CommonKeywordsModel.clearKeywords();
+        m_KeywordsToDeleteModel.clearKeywords();
 
         setCaseSensitive(false);
     }

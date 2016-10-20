@@ -36,18 +36,8 @@
 namespace Common {
     BasicKeywordsModel::BasicKeywordsModel(Hold &hold, QObject *parent):
         AbstractListModel(parent),
-        m_Hold(hold),
-        m_SpellCheckInfo(NULL)
+        m_Hold(hold)
     {}
-
-#ifdef CORE_TESTS
-    void BasicKeywordsModel::initialize(const QString &title, const QString &description, const QString &rawKeywords) {
-        setTitle(title);
-        setDescription(description);
-        setKeywords(rawKeywords.split(',', QString::SkipEmptyParts));
-    }
-
-#endif
 
     void BasicKeywordsModel::removeItemsAtIndices(const QVector<QPair<int, int> > &ranges) {
         LOG_INFO << "#";
@@ -98,22 +88,6 @@ namespace Common {
             default:
                 return QVariant();
         }
-    }
-
-    QString BasicKeywordsModel::getDescription() {
-        QReadLocker readLocker(&m_DescriptionLock);
-
-        Q_UNUSED(readLocker);
-
-        return m_Description;
-    }
-
-    QString BasicKeywordsModel::getTitle() {
-        QReadLocker readLocker(&m_TitleLock);
-
-        Q_UNUSED(readLocker);
-
-        return m_Title;
     }
 
     int BasicKeywordsModel::getKeywordsCount() {
@@ -258,20 +232,6 @@ namespace Common {
         Q_ASSERT(!replaceTo.isEmpty());
         Q_ASSERT(((int)flags & (int)Common::SearchFlags::Metadata) != 0);
         bool anyChanged = false;
-
-        const bool needToCheckDescription = Common::HasFlag(flags, Common::SearchFlags::Description);
-        if (needToCheckDescription) {
-            if (this->replaceInDescription(replaceWhat, replaceTo, flags)) {
-                anyChanged = true;
-            }
-        }
-
-        const bool needToCheckTitle = Common::HasFlag(flags, Common::SearchFlags::Title);
-        if (needToCheckTitle) {
-            if (this->replaceInTitle(replaceWhat, replaceTo, flags)) {
-                anyChanged = true;
-            }
-        }
 
         const bool needToCheckKeywords = Common::HasFlag(flags, Common::SearchFlags::Keywords);
         if (needToCheckKeywords) {
@@ -534,42 +494,6 @@ namespace Common {
         AbstractListModel::removeItemsAtIndices(rangesToRemove);
     }
 
-    bool BasicKeywordsModel::replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
-                                                  Common::SearchFlags flags) {
-        LOG_DEBUG << "#";
-        const bool wholeWords = Common::HasFlag(flags, Common::SearchFlags::ExactMatch);
-        const bool caseSensitive = Common::HasFlag(flags, Common::SearchFlags::CaseSensitive);
-        const Qt::CaseSensitivity caseSensivity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
-
-        QString description = getDescription();
-        if (!wholeWords) {
-            description.replace(replaceWhat, replaceTo, caseSensivity);
-        } else {
-            description = Helpers::replaceWholeWords(description, replaceWhat, replaceTo, caseSensivity);
-        }
-
-        bool result = setDescription(description);
-        return result;
-    }
-
-    bool BasicKeywordsModel::replaceInTitle(const QString &replaceWhat, const QString &replaceTo,
-                                            Common::SearchFlags flags) {
-        LOG_DEBUG << "#";
-        const bool wholeWords = Common::HasFlag(flags, Common::SearchFlags::ExactMatch);
-        const bool caseSensitive = Common::HasFlag(flags, Common::SearchFlags::CaseSensitive);
-        const Qt::CaseSensitivity caseSensivity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
-
-        QString title = getTitle();
-        if (!wholeWords) {
-            title.replace(replaceWhat, replaceTo, caseSensivity);
-        } else {
-            title = Helpers::replaceWholeWords(title, replaceWhat, replaceTo, caseSensivity);
-        }
-
-        bool result = setTitle(title);
-        return result;
-    }
-
     bool BasicKeywordsModel::replaceInKeywordsUnsafe(const QString &replaceWhat, const QString &replaceTo,
                                                      Common::SearchFlags flags) {
         bool anyChanged = false;
@@ -614,65 +538,20 @@ namespace Common {
         return anyChanged;
     }
 
-    bool BasicKeywordsModel::setDescription(const QString &value) {
-        QWriteLocker writeLocker(&m_DescriptionLock);
-
-        Q_UNUSED(writeLocker);
-
-        bool result = value != m_Description;
-        if (result) {
-            m_Description = value;
-        }
-
-        return result;
-    }
-
-    bool BasicKeywordsModel::setTitle(const QString &value) {
-        QWriteLocker writeLocker(&m_TitleLock);
-
-        Q_UNUSED(writeLocker);
-
-        bool result = value != m_Title;
-        if (result) {
-            m_Title = value;
-        }
-
-        return result;
-    }
-
-    bool BasicKeywordsModel::isEmpty() {
-        QReadLocker readKeywordsLock(&m_KeywordsLock);
-
-        Q_UNUSED(readKeywordsLock);
-
-        QReadLocker readDescriptionLock(&m_DescriptionLock);
-        Q_UNUSED(readDescriptionLock);
-
-        return m_KeywordsList.isEmpty() || m_Description.trimmed().isEmpty();
-    }
-
-    bool BasicKeywordsModel::isTitleEmpty() {
-        QReadLocker readLocker(&m_TitleLock);
-
-        Q_UNUSED(readLocker);
-
-        return m_Title.trimmed().isEmpty();
-    }
-
-    bool BasicKeywordsModel::isDescriptionEmpty() {
-        QReadLocker readLocker(&m_DescriptionLock);
-
-        Q_UNUSED(readLocker);
-
-        return m_Description.trimmed().isEmpty();
-    }
-
     bool BasicKeywordsModel::containsKeyword(const QString &searchTerm, Common::SearchFlags searchFlags) {
         QReadLocker readLocker(&m_KeywordsLock);
 
         Q_UNUSED(readLocker);
 
         return containsKeywordUnsafe(searchTerm, searchFlags);
+    }
+
+    bool BasicKeywordsModel::isEmpty() {
+        QReadLocker readLocker(&m_KeywordsLock);
+
+        Q_UNUSED(readLocker);
+
+        return m_KeywordsList.isEmpty();
     }
 
     bool BasicKeywordsModel::hasKeywordsSpellError() {
@@ -683,49 +562,8 @@ namespace Common {
         return hasKeywordsSpellErrorUnsafe();
     }
 
-    bool BasicKeywordsModel::hasDescriptionSpellError() {
-        bool anyError = false;
-
-        const QStringList &descriptionWords = getDescriptionWords();
-
-        foreach(const QString &word, descriptionWords) {
-            if (m_SpellCheckInfo->hasDescriptionError(word)) {
-                anyError = true;
-                break;
-            }
-        }
-
-        return anyError;
-    }
-
-    bool BasicKeywordsModel::hasTitleSpellError() {
-        bool anyError = false;
-
-        const QStringList &titleWords = getTitleWords();
-
-        foreach(const QString &word, titleWords) {
-            if (m_SpellCheckInfo->hasTitleError(word)) {
-                anyError = true;
-                break;
-            }
-        }
-
-        return anyError;
-    }
-
-    bool BasicKeywordsModel::hasDescriptionWordSpellError(const QString &word) {
-        return m_SpellCheckInfo->hasDescriptionError(word);
-    }
-
-    bool BasicKeywordsModel::hasTitleWordSpellError(const QString &word) {
-        return m_SpellCheckInfo->hasTitleError(word);
-    }
-
     bool BasicKeywordsModel::hasSpellErrors() {
-        bool hasErrors = hasDescriptionSpellError() ||
-                         hasTitleSpellError() ||
-                         hasKeywordsSpellError();
-
+        bool hasErrors = hasKeywordsSpellError();
         return hasErrors;
     }
 
@@ -752,12 +590,6 @@ namespace Common {
         keywordsModel->unlockKeywords();
     }
 
-    void BasicKeywordsModel::clearModel() {
-        setDescription("");
-        setTitle("");
-        clearKeywords();
-    }
-
     void BasicKeywordsModel::notifySpellCheckResults(Common::SpellCheckFlags flags) {
         if (Common::HasFlag(flags, Common::SpellCheckFlags::Description) ||
             Common::HasFlag(flags, Common::SpellCheckFlags::Title)) {
@@ -765,38 +597,6 @@ namespace Common {
         }
 
         emit spellCheckErrorsChanged();
-    }
-
-    void BasicKeywordsModel::notifyDescriptionSpellCheck() {
-        emit spellCheckResultsReady();
-    }
-
-    void BasicKeywordsModel::notifyTitleSpellCheck() {
-        emit spellCheckResultsReady();
-    }
-
-    void BasicKeywordsModel::updateDescriptionSpellErrors(const QHash<QString, bool> &results) {
-        QSet<QString> descriptionErrors;
-        QStringList descriptionWords = getDescriptionWords();
-        foreach(const QString &word, descriptionWords) {
-            if (results.value(word, true) == false) {
-                descriptionErrors.insert(word);
-            }
-        }
-
-        m_SpellCheckInfo->setDescriptionErrors(descriptionErrors);
-    }
-
-    void BasicKeywordsModel::updateTitleSpellErrors(const QHash<QString, bool> &results) {
-        QSet<QString> titleErrors;
-        QStringList titleWords = getTitleWords();
-        foreach(const QString &word, titleWords) {
-            if (results.value(word, true) == false) {
-                titleErrors.insert(word);
-            }
-        }
-
-        m_SpellCheckInfo->setTitleErrors(titleErrors);
     }
 
     void BasicKeywordsModel::resetSpellCheckResultsUnsafe() {
@@ -852,23 +652,13 @@ namespace Common {
         return m_KeywordsList;
     }
 
-    void BasicKeywordsModel::setSpellCheckResults(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items) {
+    void BasicKeywordsModel::setKeywordsSpellCheckResults(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items) {
         LOG_DEBUG << items.size() << "results";
 
         QWriteLocker writeLocker(&m_KeywordsLock);
         Q_UNUSED(writeLocker);
 
         setSpellCheckResultsUnsafe(items);
-    }
-
-    void BasicKeywordsModel::setSpellCheckResults(const QHash<QString, bool> &results, Common::SpellCheckFlags flags) {
-        if (Common::HasFlag(flags, Common::SpellCheckFlags::Description)) {
-            updateDescriptionSpellErrors(results);
-        }
-
-        if (Common::HasFlag(flags, Common::SpellCheckFlags::Title)) {
-            updateTitleSpellErrors(results);
-        }
     }
 
     std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > BasicKeywordsModel::createKeywordsSuggestionsList() {
@@ -893,46 +683,6 @@ namespace Common {
                         spellCheckSuggestions.emplace_back(new SpellCheck::KeywordSpellSuggestions(item, i, keyword));
                     }
                 }
-            }
-        }
-
-        return spellCheckSuggestions;
-    }
-
-    std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > BasicKeywordsModel::createDescriptionSuggestionsList() {
-        LOG_DEBUG << "#";
-        QStringList descriptionWords = getDescriptionWords();
-        int length = descriptionWords.length();
-
-        std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > spellCheckSuggestions;
-        spellCheckSuggestions.reserve(length / 3);
-
-        for (int i = 0; i < length; ++i) {
-            const QString &word = descriptionWords.at(i);
-            if (m_SpellCheckInfo->hasDescriptionError(word)) {
-                LOG_DEBUG << word << "has wrong spelling";
-
-                spellCheckSuggestions.emplace_back(new SpellCheck::DescriptionSpellSuggestions(word));
-            }
-        }
-
-        return spellCheckSuggestions;
-    }
-
-    std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > BasicKeywordsModel::createTitleSuggestionsList() {
-        LOG_DEBUG << "#";
-        QStringList titleWords = getTitleWords();
-        int length = titleWords.length();
-
-        std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > spellCheckSuggestions;
-        spellCheckSuggestions.reserve(length / 3);
-
-        for (int i = 0; i < length; ++i) {
-            const QString &word = titleWords.at(i);
-            if (m_SpellCheckInfo->hasTitleError(word)) {
-                LOG_DEBUG << word << "has wrong spelling";
-
-                spellCheckSuggestions.emplace_back(new SpellCheck::TitleSpellSuggestions(word));
             }
         }
 
@@ -1012,22 +762,6 @@ namespace Common {
         return anyReplaced;
     }
 
-    void BasicKeywordsModel::fixDescriptionSpelling(const QString &word, const QString &replacement) {
-        Common::SearchFlags flags = Common::SearchFlags::None;
-        Common::SetFlag(flags, Common::SearchFlags::CaseSensitive);
-        Common::SetFlag(flags, Common::SearchFlags::Description);
-
-        replaceInDescription(word, replacement, flags);
-    }
-
-    void BasicKeywordsModel::fixTitleSpelling(const QString &word, const QString &replacement) {
-        Common::SearchFlags flags = Common::SearchFlags::None;
-        Common::SetFlag(flags, Common::SearchFlags::CaseSensitive);
-        Common::SetFlag(flags, Common::SearchFlags::Description);
-
-        replaceInTitle(word, replacement, flags);
-    }
-
     void BasicKeywordsModel::afterReplaceCallback() {
         LOG_DEBUG << "#";
         emit spellCheckErrorsChanged();
@@ -1037,26 +771,6 @@ namespace Common {
     void BasicKeywordsModel::connectSignals(SpellCheck::SpellCheckItem *item) {
         QObject::connect(item, SIGNAL(resultsReady(Common::SpellCheckFlags, int)),
                          this, SLOT(spellCheckRequestReady(Common::SpellCheckFlags, int)));
-    }
-
-    QStringList BasicKeywordsModel::getDescriptionWords() {
-        QReadLocker readLocker(&m_DescriptionLock);
-
-        Q_UNUSED(readLocker);
-
-        QStringList words;
-        Helpers::splitText(m_Description, words);
-        return words;
-    }
-
-    QStringList BasicKeywordsModel::getTitleWords() {
-        QReadLocker readLocker(&m_TitleLock);
-
-        Q_UNUSED(readLocker);
-
-        QStringList words;
-        Helpers::splitText(m_Title, words);
-        return words;
     }
 
     void BasicKeywordsModel::spellCheckRequestReady(Common::SpellCheckFlags flags, int index) {

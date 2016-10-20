@@ -31,7 +31,7 @@
 #include <QSet>
 #include <QTimer>
 #include <QQmlEngine>
-#include "../Common/basickeywordsmodel.h"
+#include "../Common/basicmetadatamodel.h"
 #include "../Common/flags.h"
 #include "../Common/ibasicartwork.h"
 #include "../Common/hold.h"
@@ -94,8 +94,8 @@ namespace Models {
         void dropWarningsFlags(Common::WarningFlags flagsToDrop) { Common::UnsetFlag(m_WarningsFlags, flagsToDrop); }
 
     public:
-        Common::BasicKeywordsModel *getKeywordsModel() { return &m_KeywordsModel; }
-        const Common::BasicKeywordsModel *getKeywordsModel() const { return &m_KeywordsModel; }
+        Common::BasicMetadataModel *getKeywordsModel() { return &m_MetadataModel; }
+        const Common::BasicMetadataModel *getKeywordsModel() const { return &m_MetadataModel; }
 
         virtual void clearModel();
         virtual bool clearKeywords();
@@ -104,7 +104,7 @@ namespace Models {
 
     public:
         virtual bool setDescription(const QString &value) {
-            bool result = m_KeywordsModel.setDescription(value);
+            bool result = m_MetadataModel.setDescription(value);
 
             if (result) { markModified(); }
 
@@ -112,7 +112,7 @@ namespace Models {
         }
 
         virtual bool setTitle(const QString &value) {
-            bool result = m_KeywordsModel.setTitle(value);
+            bool result = m_MetadataModel.setTitle(value);
 
             if (result) { markModified(); }
 
@@ -120,7 +120,7 @@ namespace Models {
         }
 
         virtual void setKeywords(const QStringList &keywords) {
-            m_KeywordsModel.setKeywords(keywords);
+            m_MetadataModel.setKeywords(keywords);
             markModified();
         }
 
@@ -138,7 +138,7 @@ namespace Models {
         void setFileSize(qint64 size) { m_FileSize = size; }
 
     public:
-        bool areKeywordsEmpty() { return m_KeywordsModel.areKeywordsEmpty(); }
+        bool areKeywordsEmpty() { return m_MetadataModel.areKeywordsEmpty(); }
         bool removeKeywordAt(int index);
         bool removeLastKeyword();
         virtual bool appendKeyword(const QString &keyword);
@@ -151,11 +151,11 @@ namespace Models {
 
     public:
         // IBasicArtwork interface
-        virtual QSet<QString> getKeywordsSet() { return m_KeywordsModel.getKeywordsSet(); }
-        virtual QStringList getKeywords() { return m_KeywordsModel.getKeywords(); }
-        virtual bool isEmpty() { return m_KeywordsModel.isEmpty(); }
-        virtual QString getDescription() { return m_KeywordsModel.getDescription(); }
-        virtual QString getTitle() { return m_KeywordsModel.getTitle(); }
+        virtual QSet<QString> getKeywordsSet() { return m_MetadataModel.getKeywordsSet(); }
+        virtual QStringList getKeywords() { return m_MetadataModel.getKeywords(); }
+        virtual bool isEmpty() { return m_MetadataModel.isEmpty(); }
+        virtual QString getDescription() { return m_MetadataModel.getDescription(); }
+        virtual QString getTitle() { return m_MetadataModel.getTitle(); }
 
     public:
         void markModified();
@@ -187,7 +187,7 @@ namespace Models {
     private:
         Common::Hold m_Hold;
         SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;
-        Common::BasicKeywordsModel m_KeywordsModel;
+        Common::BasicMetadataModel m_MetadataModel;
         qint64 m_FileSize;  // in bytes
         QString m_ArtworkFilepath;
         QTimer m_BackupTimer;

@@ -33,18 +33,18 @@
 
 namespace Models {
     ArtworkMetadata::ArtworkMetadata(const QString &filepath, qint64 ID):
-        m_KeywordsModel(m_Hold),
+        m_MetadataModel(m_Hold),
         m_FileSize(0),
         m_ArtworkFilepath(filepath),
         m_ID(ID),
         m_MetadataFlags(0),
         m_WarningsFlags(Common::WarningFlags::None)
     {
-        m_KeywordsModel.setSpellCheckInfo(&m_SpellCheckInfo);
+        m_MetadataModel.setSpellCheckInfo(&m_SpellCheckInfo);
         m_BackupTimer.setSingleShot(true);
 
         QObject::connect(&m_BackupTimer, SIGNAL(timeout()), this, SLOT(backupTimerTriggered()));
-        QObject::connect(&m_KeywordsModel, SIGNAL(spellCheckErrorsChanged()), this, SIGNAL(spellCheckErrorsChanged()));
+        QObject::connect(&m_MetadataModel, SIGNAL(spellCheckErrorsChanged()), this, SIGNAL(spellCheckErrorsChanged()));
     }
 
     ArtworkMetadata::~ArtworkMetadata() {
@@ -56,21 +56,21 @@ namespace Models {
 
         bool anythingModified = false;
 
-        if (overwrite || (m_KeywordsModel.isTitleEmpty() && !title.trimmed().isEmpty())) {
+        if (overwrite || (m_MetadataModel.isTitleEmpty() && !title.trimmed().isEmpty())) {
             anythingModified = true;
-            m_KeywordsModel.setTitle(title);
+            m_MetadataModel.setTitle(title);
         }
 
-        if (overwrite || (m_KeywordsModel.isDescriptionEmpty() && !description.trimmed().isEmpty())) {
+        if (overwrite || (m_MetadataModel.isDescriptionEmpty() && !description.trimmed().isEmpty())) {
             anythingModified = true;
-            m_KeywordsModel.setDescription(description);
+            m_MetadataModel.setDescription(description);
         }
 
         if (overwrite) {
             anythingModified = true;
-            m_KeywordsModel.setKeywords(rawKeywords);
+            m_MetadataModel.setKeywords(rawKeywords);
         } else if (!rawKeywords.isEmpty()) {
-            int appendedCount = m_KeywordsModel.appendKeywords(rawKeywords);
+            int appendedCount = m_MetadataModel.appendKeywords(rawKeywords);
             anythingModified = anythingModified || (appendedCount > 0);
         }
 
@@ -100,24 +100,24 @@ namespace Models {
     }
 
     void ArtworkMetadata::clearModel() {
-        m_KeywordsModel.clearModel();
+        m_MetadataModel.clearModel();
         markModified();
     }
 
     bool ArtworkMetadata::clearKeywords() {
-        bool result = m_KeywordsModel.clearKeywords();
+        bool result = m_MetadataModel.clearKeywords();
         if (result) { markModified(); }
         return result;
     }
 
     bool ArtworkMetadata::editKeyword(int index, const QString &replacement) {
-        bool result = m_KeywordsModel.editKeyword(index, replacement);
+        bool result = m_MetadataModel.editKeyword(index, replacement);
         if (result) { markModified(); }
         return result;
     }
 
     bool ArtworkMetadata::replace(const QString &replaceWhat, const QString &replaceTo, Common::SearchFlags flags) {
-        bool result = m_KeywordsModel.replace(replaceWhat, replaceTo, flags);
+        bool result = m_MetadataModel.replace(replaceWhat, replaceTo, flags);
         if (result) { markModified(); }
         return result;
     }
@@ -135,33 +135,33 @@ namespace Models {
 
     bool ArtworkMetadata::removeKeywordAt(int index) {
         QString removed;
-        bool result = m_KeywordsModel.takeKeywordAt(index, removed);
+        bool result = m_MetadataModel.takeKeywordAt(index, removed);
         if (result) { markModified(); }
         return result;
     }
 
     bool ArtworkMetadata::removeLastKeyword() {
         QString removed;
-        bool result = m_KeywordsModel.takeLastKeyword(removed);
+        bool result = m_MetadataModel.takeLastKeyword(removed);
         if (result) { markModified(); }
         return result;
     }
 
     bool ArtworkMetadata::appendKeyword(const QString &keyword) {
-        bool result = m_KeywordsModel.appendKeyword(keyword);
+        bool result = m_MetadataModel.appendKeyword(keyword);
         if (result) { markModified(); }
         return result;
     }
 
     int ArtworkMetadata::appendKeywords(const QStringList &keywordsList) {
-        int result = m_KeywordsModel.appendKeywords(keywordsList);
+        int result = m_MetadataModel.appendKeywords(keywordsList);
         LOG_INFO << "Appended" << result << "keywords out of" << keywordsList.length();
         if (result > 0) { markModified(); }
         return result;
     }
 
     bool ArtworkMetadata::removeKeywords(const QSet<QString> &keywordsSet, bool caseSensitive) {
-        bool result = m_KeywordsModel.removeKeywords(keywordsSet, caseSensitive);
+        bool result = m_MetadataModel.removeKeywords(keywordsSet, caseSensitive);
         LOG_INFO << "Removed keywords:" << result;
         if (result) { markModified(); }
         return result;

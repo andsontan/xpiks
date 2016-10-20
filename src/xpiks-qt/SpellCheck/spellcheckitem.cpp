@@ -26,7 +26,7 @@
 #include "ispellcheckable.h"
 #include "../Common/flags.h"
 #include "../Common/defines.h"
-#include "../Common/basickeywordsmodel.h"
+#include "../Common/basicmetadatamodel.h"
 #include "../Helpers/stringhelper.h"
 
 namespace SpellCheck {
@@ -91,15 +91,21 @@ namespace SpellCheck {
         }
 
         if (Common::HasFlag(spellCheckFlags, Common::SpellCheckFlags::Description)) {
-            QStringList descriptionWords = spellCheckable->getDescriptionWords();
-            reserve(descriptionWords.length());
-            addWords(descriptionWords, 100000, alwaysTrue);
+            Common::BasicMetadataModel *metadataModel = dynamic_cast<Common::BasicMetadataModel*>(spellCheckable);
+            if (metadataModel != nullptr) {
+                QStringList descriptionWords = metadataModel->getDescriptionWords();
+                reserve(descriptionWords.length());
+                addWords(descriptionWords, 100000, alwaysTrue);
+            }
         }
 
         if (Common::HasFlag(spellCheckFlags, Common::SpellCheckFlags::Title)) {
-            QStringList titleWords = spellCheckable->getTitleWords();
-            reserve(titleWords.length());
-            addWords(titleWords, 100000, alwaysTrue);
+            Common::BasicMetadataModel *metadataModel = dynamic_cast<Common::BasicMetadataModel*>(spellCheckable);
+            if (metadataModel != nullptr) {
+                QStringList titleWords = metadataModel->getTitleWords();
+                reserve(titleWords.length());
+                addWords(titleWords, 100000, alwaysTrue);
+            }
         }
     }
 
@@ -142,13 +148,16 @@ namespace SpellCheck {
                                                                         return match;
                                                                     };
 
-        QStringList descriptionWords = spellCheckable->getDescriptionWords();
-        reserve(descriptionWords.length());
-        addWords(descriptionWords, 100000, sameKeywordFunc);
+        Common::BasicMetadataModel *metadataModel = dynamic_cast<Common::BasicMetadataModel*>(spellCheckable);
+        if (metadataModel != nullptr) {
+            QStringList descriptionWords = metadataModel->getDescriptionWords();
+            reserve(descriptionWords.length());
+            addWords(descriptionWords, 100000, sameKeywordFunc);
 
-        QStringList titleWords = spellCheckable->getTitleWords();
-        reserve(titleWords.length());
-        addWords(titleWords, 100000, sameKeywordFunc);
+            QStringList titleWords = metadataModel->getTitleWords();
+            reserve(titleWords.length());
+            addWords(titleWords, 100000, sameKeywordFunc);
+        }
     }
 
     SpellCheckItem::~SpellCheckItem() {
@@ -190,12 +199,15 @@ namespace SpellCheck {
 
         // can be empty in case of clear command
         if (Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckFlags::Keywords) && !items.empty()) {
-            m_SpellCheckable->setSpellCheckResults(items);
+            m_SpellCheckable->setKeywordsSpellCheckResults(items);
         }
 
         if (Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckFlags::Description) ||
             Common::HasFlag(m_SpellCheckFlags, Common::SpellCheckFlags::Title)) {
-            m_SpellCheckable->setSpellCheckResults(getHash(), m_SpellCheckFlags);
+            Common::BasicMetadataModel *metadataModel = dynamic_cast<Common::BasicMetadataModel*>(m_SpellCheckable);
+            if (metadataModel != nullptr) {
+                metadataModel->setSpellCheckResults(getHash(), m_SpellCheckFlags);
+            }
         }
 
         int index = m_OnlyOneKeyword ? items.front()->m_Index : -1;

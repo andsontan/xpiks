@@ -78,8 +78,8 @@ namespace Suggestion {
         LOG_INFO << suggestedArtworks.size() << "item(s)";
         m_SelectedArtworksCount = 0;
         m_KeywordsHash.clear();
-        m_SuggestedKeywords.clearModel();
-        m_AllOtherKeywords.clearModel();
+        m_SuggestedKeywords.clearKeywords();
+        m_AllOtherKeywords.clearKeywords();
         beginResetModel();
         m_Suggestions = std::move(suggestedArtworks);
         endResetModel();
@@ -94,8 +94,8 @@ namespace Suggestion {
         LOG_DEBUG << "#";
         m_SelectedArtworksCount = 0;
         m_KeywordsHash.clear();
-        m_SuggestedKeywords.clearModel();
-        m_AllOtherKeywords.clearModel();
+        m_SuggestedKeywords.clearKeywords();
+        m_AllOtherKeywords.clearKeywords();
         beginResetModel();
         m_Suggestions.clear();
         endResetModel();

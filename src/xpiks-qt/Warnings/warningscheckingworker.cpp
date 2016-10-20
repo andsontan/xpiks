@@ -167,7 +167,7 @@ namespace Warnings {
         if (descriptionLength == 0) {
             Common::SetFlag(warningsInfo, Common::WarningFlags::DescriptionIsEmpty);
         } else {
-            Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
+            auto *keywordsModel = item->getKeywordsModel();
 
             if (descriptionLength > maximumDescriptionLength) {
                 Common::SetFlag(warningsInfo, Common::WarningFlags::DescriptionTooBig);
@@ -207,7 +207,7 @@ namespace Warnings {
         if (titleLength == 0) {
             Common::SetFlag(warningsInfo, Common::WarningFlags::TitleIsEmpty);
         } else {
-            Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
+            auto *keywordsModel = item->getKeywordsModel();
 
             QStringList titleWords = wi->getTitleWords();
             int partsLength = titleWords.length();
@@ -241,7 +241,7 @@ namespace Warnings {
 
         Common::WarningFlags warningsInfo = Common::WarningFlags::None;
         Models::ArtworkMetadata *item = wi->getCheckableItem();
-        Common::BasicKeywordsModel *keywordsModel = item->getKeywordsModel();
+        auto *keywordsModel = item->getKeywordsModel();
 
         if (keywordsModel->hasKeywordsSpellError()) {
             LOG_INTEGRATION_TESTS << "Detected keywords spell error";

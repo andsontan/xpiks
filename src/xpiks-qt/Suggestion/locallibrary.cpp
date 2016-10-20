@@ -181,9 +181,9 @@ namespace Suggestion {
             QSet<QString> tags;
             tags.unite(metadata->getKeywordsSet());
 
-            Common::BasicKeywordsModel *keywordsModel = metadata->getKeywordsModel();
-            QStringList descriptionWords = keywordsModel->getDescriptionWords();
-            QStringList titleWords = keywordsModel->getTitleWords();
+            auto *metadataModel = metadata->getKeywordsModel();
+            QStringList descriptionWords = metadataModel->getDescriptionWords();
+            QStringList titleWords = metadataModel->getTitleWords();
 
             tags.unite(descriptionWords.toSet());
             tags.unite(titleWords.toSet());

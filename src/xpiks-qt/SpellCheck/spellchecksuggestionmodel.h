@@ -34,7 +34,7 @@ namespace Models {
 }
 
 namespace Common {
-    class BasicKeywordsModel;
+    class BasicMetadataModel;
 }
 
 namespace SpellCheck {
@@ -67,13 +67,13 @@ namespace SpellCheck {
         void selectAllChanged();
 
     public:
-        void setupModel(Common::BasicKeywordsModel *item, int index, Common::SuggestionFlags flags);
+        void setupModel(Common::BasicMetadataModel *item, int index, Common::SuggestionFlags flags);
 #if defined(INTEGRATION_TESTS) || defined(CORE_TESTS)
         SpellSuggestionsItem *getItem(int i) const { return m_SuggestionsList.at(i).get(); }
 #endif
 
     private:
-        SuggestionsVector createSuggestionsRequests(Common::BasicKeywordsModel *item, Common::SuggestionFlags flags);
+        SuggestionsVector createSuggestionsRequests(Common::BasicMetadataModel *item, Common::SuggestionFlags flags);
         bool processFailedReplacements(const SuggestionsVector &failedReplacements) const;
         SuggestionsVector setupSuggestions(const SuggestionsVector &items);
 
@@ -86,7 +86,7 @@ namespace SpellCheck {
 
     private:
         std::vector<std::shared_ptr<SpellSuggestionsItem> > m_SuggestionsList;
-        Common::BasicKeywordsModel *m_CurrentItem;
+        Common::BasicMetadataModel *m_CurrentItem;
         int m_ItemIndex;
     };
 }

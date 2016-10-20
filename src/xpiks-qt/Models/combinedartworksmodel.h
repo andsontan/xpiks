@@ -32,7 +32,7 @@
 #include <memory>
 #include <vector>
 #include "artworksviewmodel.h"
-#include "../Common/basickeywordsmodel.h"
+#include "../Common/basicmetadatamodel.h"
 #include "../Common/flags.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Common/hold.h"
@@ -203,7 +203,7 @@ namespace Models {
 
     private:
         Common::Hold m_HoldPlaceholder;
-        Common::BasicKeywordsModel m_CommonKeywordsModel;
+        Common::BasicMetadataModel m_CommonKeywordsModel;
         SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;
         Common::CombinedEditFlags m_EditFlags;
         int m_ModifiedFlags;

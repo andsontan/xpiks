@@ -123,7 +123,7 @@ namespace SpellCheck {
         auto deleter = [](SpellCheckItem *item) { item->deleteLater(); };
 
         for (int i = 0; i < length; ++i) {
-            Common::BasicKeywordsModel *itemToCheck = itemsToCheck.at(i);
+            auto *itemToCheck = itemsToCheck.at(i);
             std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckFlags::All),
                 deleter);
             itemToCheck->connectSignals(item.get());
@@ -148,7 +148,7 @@ namespace SpellCheck {
         auto deleter = [](SpellCheckItem *item) { item->deleteLater(); };
 
         for (int i = 0; i < length; ++i) {
-            Common::BasicKeywordsModel *itemToCheck = itemsToCheck.at(i);
+            auto *itemToCheck = itemsToCheck.at(i);
             std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, wordsToCheck),
                                                  deleter);
             itemToCheck->connectSignals(item.get());

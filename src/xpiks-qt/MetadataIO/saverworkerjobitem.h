@@ -26,7 +26,7 @@
 #include <QString>
 
 namespace Common {
-    class BasicKeywordsModel;
+    class BasicMetadataModel;
 }
 
 namespace Models {
@@ -37,7 +37,7 @@ namespace MetadataIO {
     class MetadataSavingCopy {
     public:
         MetadataSavingCopy() {}
-        MetadataSavingCopy(Common::BasicKeywordsModel *keywordsModel);
+        MetadataSavingCopy(Common::BasicMetadataModel *keywordsModel);
         MetadataSavingCopy(const QHash<QString, QString> &dict);
 
     public:
@@ -48,7 +48,7 @@ namespace MetadataIO {
         void saveToMetadata(Models::ArtworkMetadata *artworkMetadata) const;
 
     private:
-        void readFromMetadata(Common::BasicKeywordsModel *keywordsModel);
+        void readFromMetadata(Common::BasicMetadataModel *keywordsModel);
 
     private:
         QHash<QString, QString> m_MetadataInfo;

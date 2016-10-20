@@ -35,22 +35,27 @@
 namespace SpellCheck {
     class KeywordSpellSuggestions;
 
-    class ISpellCheckable {
+    class IKeywordsSpellCheckable {
+    public:
+        virtual ~IKeywordsSpellCheckable() {}
+        virtual QString retrieveKeyword(int wordIndex) = 0;
+        virtual void setKeywordsSpellCheckResults(const std::vector<std::shared_ptr<SpellCheckQueryItem> > &items) = 0;
+        virtual std::vector<std::shared_ptr<SpellSuggestionsItem> > createKeywordsSuggestionsList() = 0;
+        virtual Common::KeywordReplaceResult fixKeywordSpelling(int index, const QString &existing, const QString &replacement) = 0;
+        virtual bool processFailedKeywordReplacements(const std::vector<std::shared_ptr<SpellCheck::KeywordSpellSuggestions> > &candidatesForRemoval) = 0;
+        virtual void afterReplaceCallback() = 0;
+        virtual void connectSignals(SpellCheckItem *item) = 0;
+    };
+
+    class ISpellCheckable: public virtual IKeywordsSpellCheckable {
     public:
         virtual ~ISpellCheckable() {}
 
-        virtual QString retrieveKeyword(int wordIndex) = 0;
-        virtual void setSpellCheckResults(const std::vector<std::shared_ptr<SpellCheckQueryItem> > &items) = 0;
         virtual void setSpellCheckResults(const QHash<QString, bool> &results, Common::SpellCheckFlags flags) = 0;
-        virtual std::vector<std::shared_ptr<SpellSuggestionsItem> > createKeywordsSuggestionsList() = 0;
         virtual std::vector<std::shared_ptr<SpellSuggestionsItem> > createDescriptionSuggestionsList() = 0;
         virtual std::vector<std::shared_ptr<SpellSuggestionsItem> > createTitleSuggestionsList() = 0;
-        virtual Common::KeywordReplaceResult fixKeywordSpelling(int index, const QString &existing, const QString &replacement) = 0;
-        virtual bool processFailedKeywordReplacements(const std::vector<std::shared_ptr<SpellCheck::KeywordSpellSuggestions> > &candidatesForRemoval) = 0;
         virtual void fixDescriptionSpelling(const QString &word, const QString &replacement) = 0;
         virtual void fixTitleSpelling(const QString &word, const QString &replacement) = 0;
-        virtual void afterReplaceCallback() = 0;
-        virtual void connectSignals(SpellCheckItem *item) = 0;
         virtual QStringList getDescriptionWords() = 0;
         virtual QStringList getTitleWords() = 0;
     };
