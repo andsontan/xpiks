@@ -38,6 +38,7 @@ namespace SpellCheck {
     class IKeywordsSpellCheckable {
     public:
         virtual ~IKeywordsSpellCheckable() {}
+
         virtual QString retrieveKeyword(int wordIndex) = 0;
         virtual void setKeywordsSpellCheckResults(const std::vector<std::shared_ptr<SpellCheckQueryItem> > &items) = 0;
         virtual std::vector<std::shared_ptr<SpellSuggestionsItem> > createKeywordsSuggestionsList() = 0;
@@ -47,7 +48,7 @@ namespace SpellCheck {
         virtual void connectSignals(SpellCheckItem *item) = 0;
     };
 
-    class ISpellCheckable: public virtual IKeywordsSpellCheckable {
+    class ISpellCheckable {
     public:
         virtual ~ISpellCheckable() {}
 

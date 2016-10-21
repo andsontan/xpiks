@@ -30,8 +30,11 @@
 #include <memory>
 #include "../Common/flags.h"
 
+namespace Common {
+    class BasicKeywordsModel;
+}
+
 namespace SpellCheck {
-    class ISpellCheckable;
 
     class SpellSuggestionsItem: public QAbstractListModel {
         Q_OBJECT
@@ -67,13 +70,13 @@ namespace SpellCheck {
         bool getReplacementSucceeded() const { return m_ReplacementSucceeded; }
 
     public:
-        virtual void replaceToSuggested(ISpellCheckable *item) = 0;
+        virtual void replaceToSuggested(Common::BasicKeywordsModel *item) = 0;
 
         // doesn't work like that because of f&cking c++ standard
         // about accessing base protected members in derived class
         // (you cannot access protected members of freestanding objects of base type)
         //protected:
-        virtual void replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement) = 0;
+        virtual void replaceToSuggested(Common::BasicKeywordsModel *item, const QString &word, const QString &replacement) = 0;
 
     signals:
         void replacementIndexChanged();
@@ -110,11 +113,11 @@ namespace SpellCheck {
 #endif
         int getOriginalIndex() const { return m_OriginalIndex; }
         bool isPotentialDuplicate() const { return m_ReplaceResult == Common::KeywordReplaceResult::FailedDuplicate; }
-        virtual void replaceToSuggested(ISpellCheckable *item);
+        virtual void replaceToSuggested(Common::BasicKeywordsModel *item);
 
         // TODO: fix this back in future when c++ will be normal language (see comments in base class)
     //protected:
-        virtual void replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement);
+        virtual void replaceToSuggested(Common::BasicKeywordsModel *item, const QString &word, const QString &replacement);
 
     private:
         int m_OriginalIndex;
@@ -131,10 +134,10 @@ namespace SpellCheck {
 #if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
         virtual QString toDebugString() const { return "DescReplace: " + SpellSuggestionsItem::toDebugString(); }
 #endif
-        virtual void replaceToSuggested(ISpellCheckable *item);
+        virtual void replaceToSuggested(Common::BasicKeywordsModel *item);
 
     //protected:
-        virtual void replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement);
+        virtual void replaceToSuggested(Common::BasicKeywordsModel *item, const QString &word, const QString &replacement);
     };
 
     class TitleSpellSuggestions: public SpellSuggestionsItem
@@ -147,10 +150,10 @@ namespace SpellCheck {
 #if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
         virtual QString toDebugString() const { return "TitleReplace: " + SpellSuggestionsItem::toDebugString(); }
 #endif
-        virtual void replaceToSuggested(ISpellCheckable *item);
+        virtual void replaceToSuggested(Common::BasicKeywordsModel *item);
 
     //protected:
-        virtual void replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement);
+        virtual void replaceToSuggested(Common::BasicKeywordsModel *item, const QString &word, const QString &replacement);
     };
 
     class CombinedSpellSuggestions: public SpellSuggestionsItem {
@@ -164,10 +167,10 @@ namespace SpellCheck {
         virtual QString toDebugString() const { return "Multireplace: " + SpellSuggestionsItem::toDebugString(); }
 #endif
         std::vector<std::shared_ptr<KeywordSpellSuggestions> > getKeywordsDuplicateSuggestions() const;
-        virtual void replaceToSuggested(ISpellCheckable *item);
+        virtual void replaceToSuggested(Common::BasicKeywordsModel *item);
 
     //protected:
-        virtual void replaceToSuggested(ISpellCheckable *item, const QString &word, const QString &replacement);
+        virtual void replaceToSuggested(Common::BasicKeywordsModel *item, const QString &word, const QString &replacement);
 
     private:
         std::vector<std::shared_ptr<SpellSuggestionsItem> > m_SpellSuggestions;
