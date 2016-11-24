@@ -232,7 +232,7 @@ ApplicationWindow {
 
     Action {
         id: upgradeAction
-        text: i18.n + qsTr("&Upgrade")
+        text: i18.n + qsTr("&Upgrade Now!")
         enabled: helpersWrapper.isUpdateDownloaded && (applicationWindow.openedDialogsCount == 0)
         onTriggered: {
             helpersWrapper.setUpgradeConsent()
