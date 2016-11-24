@@ -943,143 +943,212 @@ ApplicationWindow {
             }
         }
 
-        ColumnLayout {
-            id: repositoriesColumnLayout
-            width: 250
+        Rectangle {
+            id: leftCollapser
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
+            color: Colors.defaultDarkColor
+            width: 15
 
-            spacing: 0
-
-            Rectangle {
-                width: parent.width
-                height: 45
-                color: Colors.defaultDarkColor
-
-                StyledButton {
-                    anchors.left: parent.left
-                    anchors.leftMargin: 10
-                    anchors.verticalCenter: parent.verticalCenter
-                    id: addDirectoryButton
-                    text: i18.n + qsTr("Add directory")
-                    width: 110
-                    onClicked: chooseDirectoryDialog.open()
-                    enabled: (applicationWindow.openedDialogsCount == 0)
-                }
-
-                StyledButton {
-                    anchors.leftMargin: 10
-                    anchors.left: addDirectoryButton.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    text: i18.n + qsTr("Add files", "button")
-                    width: 110
-                    action: addFilesAction
-                }
+            TriangleElement {
+                width: 7
+                height: 14
+                isVertical: true
+                anchors.centerIn: parent
+                color: leftCollapseMA.containsMouse ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
             }
 
-            Rectangle {
-                height: 1
-                width: parent.width
-                color: Colors.labelInactiveForeground
+            MouseArea {
+                id: leftCollapseMA
+                hoverEnabled: true
+                anchors.fill: parent
             }
+        }
 
-            Rectangle {
-                Layout.fillHeight: true
-                width: 250
+        Rectangle {
+            id: tabsHolder
+            anchors.left: leftCollapser.right
+            anchors.top: parent.top
+            height: 45
 
-                color: Colors.defaultControlColor
+            RowLayout {
+                anchors.fill: parent
 
-                StyledScrollView {
-                    anchors.fill: parent
-                    anchors.topMargin: 5
+                CustomTab {
+                    id: foldersTab
+                    index: 0
+                    isSelected: mainTabView.currentIndex == index
+                    hovered: foldersMA.containsMouse
 
-                    ListView {
-                        id: sourcesListView
-                        model: artworkRepository
-                        boundsBehavior: Flickable.StopAtBounds
+                    Rectangle {
                         anchors.fill: parent
-                        anchors.rightMargin: 10
-                        anchors.leftMargin: 10
+                        anchors.margins: 10
+                        color: "transparent"
+                        property bool highlighted: (!parent.isSelected) && parent.hovered
+                        border.color: highlighted ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
+                        border.width: 1
+                    }
 
-                        spacing: 10
+                    MouseArea {
+                        id: foldersMA
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: mainTabView.currentIndex = index
+                    }
+                }
 
-                        displaced: Transition {
-                            NumberAnimation { properties: "x,y"; duration: 230 }
-                        }
+                CustomTab {
+                    id: translatorTab
+                    index: 1
+                    isSelected: mainTabView.currentIndex == index
+                    hovered: translatorMA.containsMouse
 
-                        addDisplaced: Transition {
-                            NumberAnimation { properties: "x,y"; duration: 230 }
-                        }
+                    Rectangle {
+                        anchors.fill: parent
+                        anchors.margins: 10
+                        color: "transparent"
+                        property bool highlighted: (!parent.isSelected) && parent.hovered
+                        border.color: highlighted ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
+                        border.width: 1
+                    }
 
-                        removeDisplaced: Transition {
-                            NumberAnimation { properties: "x,y"; duration: 230 }
-                        }
-
-                        delegate: Rectangle {
-                            id: sourceWrapper
-                            property int delegateIndex: index
-                            color: isselected ? Colors.itemsSourceSelected : Colors.itemsSourceBackground
-                            width: parent.width
-                            height: 31
-                            Layout.minimumWidth: 237
-
-                            /*MouseArea {
-                                anchors.fill: parent
-                                onClicked: {
-                                    filteredArtItemsModel.selectDirectory(sourceWrapper.delegateIndex)
-                                }
-                            }*/
-
-                            RowLayout {
-                                spacing: 10
-                                anchors.fill: parent
-
-                                Item {
-                                    id: placeholder1
-                                    width: 1
-                                }
-
-                                StyledText {
-                                    id: directoryPath
-                                    Layout.fillWidth: true
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    height: 31
-                                    color: Colors.inputForegroundColor
-                                    text: path + " (" + usedimagescount + ")"
-                                    elide: Text.ElideMiddle
-                                }
-
-                                CloseIcon {
-                                    width: 14
-                                    height: 14
-                                    anchors.verticalCenter: parent.verticalCenter
-                                    isActive: false
-                                    crossOpacity: 1
-
-                                    onItemClicked: {
-                                        if (mustUseConfirmation()) {
-                                            confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.delegateIndex
-                                            confirmRemoveDirectoryDialog.open()
-                                        } else {
-                                            filteredArtItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
-                                        }
-                                    }
-                                }
-
-                                Item {
-                                    id: placeholder2
-                                    width: 1
-                                }
-                            }
-                        }
+                    MouseArea {
+                        id: translatorMA
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: mainTabView.currentIndex = index
                     }
                 }
             }
         }
 
+        StyledMainTabView {
+            id: mainTabView
+            anchors.left: leftCollapser.right
+            anchors.top: tabsHolder.bottom
+            anchors.bottom: parent.bottom
+            width: 250
+
+            Tab {
+                ColumnLayout {
+                    anchors.fill: parent
+                    anchors.margins: 10
+                    spacing: 10
+
+                    StyledBlackButton {
+                        height: 25
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        text: i18.n + qsTr("Add directory")
+                        onClicked: chooseDirectoryDialog.open()
+                        enabled: (applicationWindow.openedDialogsCount == 0)
+                    }
+
+                    StyledBlackButton {
+                        height: 25
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        text: i18.n + qsTr("Add files", "button")
+                        action: addFilesAction
+                    }
+
+                    Item {
+                        Layout.fillHeight: true
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+
+                        StyledScrollView {
+                            anchors.fill: parent
+                            anchors.topMargin: 5
+
+                            ListView {
+                                id: sourcesListView
+                                model: artworkRepository
+                                boundsBehavior: Flickable.StopAtBounds
+                                anchors.fill: parent
+
+                                spacing: 10
+
+                                displaced: Transition {
+                                    NumberAnimation { properties: "x,y"; duration: 230 }
+                                }
+
+                                addDisplaced: Transition {
+                                    NumberAnimation { properties: "x,y"; duration: 230 }
+                                }
+
+                                removeDisplaced: Transition {
+                                    NumberAnimation { properties: "x,y"; duration: 230 }
+                                }
+
+                                delegate: Rectangle {
+                                    id: sourceWrapper
+                                    property int delegateIndex: index
+                                    color: isselected ? Colors.itemsSourceSelected : Colors.itemsSourceBackground
+                                    width: parent.width
+                                    height: 31
+                                    Layout.minimumWidth: 237
+
+                                    /*MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            filteredArtItemsModel.selectDirectory(sourceWrapper.delegateIndex)
+                                        }
+                                    }*/
+
+                                    RowLayout {
+                                        spacing: 10
+                                        anchors.fill: parent
+
+                                        Item {
+                                            id: placeholder1
+                                            width: 1
+                                        }
+
+                                        StyledText {
+                                            id: directoryPath
+                                            Layout.fillWidth: true
+                                            anchors.verticalCenter: parent.verticalCenter
+                                            height: 31
+                                            color: Colors.inputForegroundColor
+                                            text: path + " (" + usedimagescount + ")"
+                                            elide: Text.ElideMiddle
+                                        }
+
+                                        CloseIcon {
+                                            width: 14
+                                            height: 14
+                                            anchors.verticalCenter: parent.verticalCenter
+                                            isActive: false
+                                            crossOpacity: 1
+
+                                            onItemClicked: {
+                                                if (mustUseConfirmation()) {
+                                                    confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.delegateIndex
+                                                    confirmRemoveDirectoryDialog.open()
+                                                } else {
+                                                    filteredArtItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
+                                                }
+                                            }
+                                        }
+
+                                        Item {
+                                            id: placeholder2
+                                            width: 1
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
         ColumnLayout {
-            anchors.left: repositoriesColumnLayout.right
+            anchors.left: mainTabView.right
             anchors.leftMargin: 2
             anchors.right: parent.right
             anchors.top: parent.top

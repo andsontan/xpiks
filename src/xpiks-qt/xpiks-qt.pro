@@ -119,7 +119,8 @@ SOURCES += main.cpp \
     MetadataIO/exiv2inithelper.cpp \
     Conectivity/simplecurldownloader.cpp \
     Helpers/updatehelpers.cpp \
-    Common/basicmetadatamodel.cpp
+    Common/basicmetadatamodel.cpp \
+    QMLExtensions/folderelement.cpp
 
 RESOURCES += qml.qrc
 
@@ -296,7 +297,8 @@ HEADERS += \
     Conectivity/simplecurldownloader.h \
     Conectivity/apimanager.h \
     Helpers/updatehelpers.h \
-    Common/basicmetadatamodel.h
+    Common/basicmetadatamodel.h \
+    QMLExtensions/folderelement.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -366,7 +368,9 @@ DISTFILES += \
     Dialogs/ReplacePreview.qml \
     Dialogs/DeleteKeywordsDialog.qml \
     Dialogs/FailedUploadArtworks.qml \
-    Dialogs/InstallUpdateDialog.qml
+    Dialogs/InstallUpdateDialog.qml \
+    StyledControls/StyledMainTabView.qml \
+    Components/CustomTab.qml
 
 lupdate_only {
 SOURCES += *.qml \

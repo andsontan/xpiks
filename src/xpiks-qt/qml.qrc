@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>Components/CloseIcon.qml</file>
+        <file>Components/CustomTab.qml</file>
         <file>Components/EditableTags.qml</file>
         <file>Components/LargeRemoveIcon.qml</file>
         <file>Constants/Themes.js</file>
@@ -68,5 +69,6 @@
         <file>Dialogs/DeleteKeywordsDialog.qml</file>
         <file>Dialogs/FailedUploadArtworks.qml</file>
         <file>Dialogs/InstallUpdateDialog.qml</file>
+        <file>StyledControls/StyledMainTabView.qml</file>
     </qresource>
 </RCC>
