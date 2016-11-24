@@ -21,6 +21,8 @@
 
 #include "updateservice.h"
 #include "updatescheckerworker.h"
+#include <QFile>
+#include <QString>
 #include "../Common/defines.h"
 #include "../Models/settingsmodel.h"
 #include "../Helpers/appsettings.h"
@@ -43,7 +45,7 @@ namespace Conectivity {
             updateSettings();
             doStartChecking();
         } else {
-            LOG_INFO << "Update service disabled";
+            LOG_INFO << "Update checking disabled";
         }
     }
 

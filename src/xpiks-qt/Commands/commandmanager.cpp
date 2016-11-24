@@ -56,6 +56,7 @@
 #include "../Models/findandreplacemodel.h"
 #include "../Models/deletekeywordsviewmodel.h"
 #include "../Helpers/helpersqmlwrapper.h"
+#include "../Helpers/updatehelpers.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -670,7 +671,6 @@ void Commands::CommandManager::afterConstructionCallback() {
         QCoreApplication::processEvents();
         m_MetadataIOCoordinator->autoDiscoverExiftool();
     }
-
 #endif
 
 #ifdef QT_DEBUG
@@ -678,7 +678,8 @@ void Commands::CommandManager::afterConstructionCallback() {
 #endif
 
 #if !defined(CORE_TESTS) && !defined(INTEGRATION_TESTS)
-    Helpers::performCleanLogs();
+    Helpers::performCleanLogsAsync();
+    Helpers::cleanupUpdateArtifactsAsync();
 #endif
 }
 

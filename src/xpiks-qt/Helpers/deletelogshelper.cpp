@@ -19,7 +19,7 @@ namespace Helpers {
                 ((arg1.m_AgeDays == arg2.m_AgeDays) && (arg1.m_SizeBytes < arg2.m_SizeBytes));
     }
 
-    void performCleanLogs() {
+    void performCleanLogsAsync() {
 #ifdef WITH_LOGS
         QString appDataPath = XPIKS_USERDATA_PATH;
         QString logFileDir = QDir::cleanPath(appDataPath + QDir::separator() + "logs");

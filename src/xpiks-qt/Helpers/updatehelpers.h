@@ -26,6 +26,7 @@
 
 namespace Helpers {
     void installUpdate(const QString &updatePath);
+    void cleanupUpdateArtifactsAsync();
 }
 
 #endif // UPDATEHELPERS_H

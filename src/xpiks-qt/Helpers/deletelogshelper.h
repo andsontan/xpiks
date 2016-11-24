@@ -16,7 +16,7 @@ namespace Helpers {
         int m_AgeDays;
     };
 
-    void performCleanLogs();
+    void performCleanLogsAsync();
     void getFilesToDelete(const QVector<FileInfoHolder> &logFiles, qint64 overallSizeBytes,
                           QVector<FileInfoHolder> &filesToDelete);
     bool operator <(const FileInfoHolder &arg1, const FileInfoHolder &arg2);
