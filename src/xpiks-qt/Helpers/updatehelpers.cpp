@@ -30,12 +30,18 @@
 #include <QtConcurrent>
 #include "../Common/defines.h"
 
+#ifdef Q_OS_OSX
+
 void launchOSXdmg(const QString &dmgPath) {
     QStringList arguments;
     arguments << dmgPath;
 
     QProcess::startDetached("open", arguments);
 }
+
+#endif
+
+#ifdef Q_OS_WIN
 
 QString getLogFilenameForMinistaller() {
     QString appDataPath = XPIKS_USERDATA_PATH;
@@ -101,6 +107,8 @@ void cleanupUpdateArtifacts() {
     }
 }
 
+#endif
+
 namespace Helpers {
     void installUpdate(const QString &updatePath) {
 #if defined(Q_OS_OSX)
@@ -111,6 +119,8 @@ namespace Helpers {
     }
 
     void cleanupUpdateArtifactsAsync() {
+#ifdef Q_OS_WIN
         QtConcurrent::run(cleanupUpdateArtifacts);
+#endif
     }
 }
