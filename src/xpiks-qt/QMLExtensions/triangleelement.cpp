@@ -32,43 +32,67 @@ namespace QMLExtensions {
     TriangleElement::TriangleElement(QQuickItem *parent) :
         QQuickItem(parent),
         m_Geometry(QSGGeometry::defaultAttributes_Point2D(), 3),
-        m_IsFlipped(false)
+        m_IsFlipped(false),
+        m_IsVertical(false)
     {
         setFlag(ItemHasContents);
         m_Material.setColor(m_Color);
     }
 
-    QSGNode* TriangleElement::updatePaintNode(QSGNode* n, UpdatePaintNodeData*) {
-        if (n == NULL) {
-            n = new QSGNode;
+    QSGNode *TriangleElement::updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData*) {
+        QSGGeometryNode *node = 0;
+
+        if (oldNode == nullptr) {
+            node = new QSGGeometryNode();
+            node->setGeometry(&m_Geometry);
+            node->setMaterial(&m_Material);
+        } else {
+            node = static_cast<QSGGeometryNode *>(oldNode);
         }
 
-        QSGGeometryNode* geomnode = new QSGGeometryNode();
+        updateTriangle(&m_Geometry);
+        node->markDirty(QSGNode::DirtyGeometry);
 
-        QSGGeometry::Point2D* v = m_Geometry.vertexDataAsPoint2D();
+        return node;
+    }
+
+    void TriangleElement::updateTriangle(QSGGeometry *geometry) {
+        QSGGeometry::Point2D *v = geometry->vertexDataAsPoint2D();
         const QRectF rect = boundingRect();
 
-        if (m_IsFlipped) {
-            v[0].x = rect.left();
-            v[0].y = rect.top();
-            v[1].x = rect.left() + rect.width()/2;
-            v[1].y = rect.bottom();
-            v[2].x = rect.right();
-            v[2].y = rect.top();
-        } else {
-            v[0].x = rect.left();
-            v[0].y = rect.bottom();
-            v[1].x = rect.left() + rect.width()/2;
-            v[1].y = rect.top();
-            v[2].x = rect.right();
-            v[2].y = rect.bottom();
+        if (m_IsVertical) {
+            if (m_IsFlipped) {
+                v[0].x = rect.right();
+                v[0].y = rect.top();
+                v[1].x = rect.right();
+                v[1].y = rect.bottom();
+                v[2].x = rect.left();
+                v[2].y = rect.top() + rect.height()/2.0;
+            } else {
+                v[0].x = rect.left();
+                v[0].y = rect.top();
+                v[1].x = rect.right();
+                v[1].y = rect.top() + rect.height()/2.0;
+                v[2].x = rect.left();
+                v[2].y = rect.bottom();
+            }
+        } else { // horizontal
+            if (m_IsFlipped) {
+                v[0].x = rect.left();
+                v[0].y = rect.top();
+                v[1].x = rect.right();
+                v[1].y = rect.top();
+                v[2].x = rect.left() + rect.width()/2.0;
+                v[2].y = rect.bottom();
+            } else {
+                v[0].x = rect.left();
+                v[0].y = rect.bottom();
+                v[1].x = rect.left() + rect.width()/2.0;
+                v[1].y = rect.top();
+                v[2].x = rect.right();
+                v[2].y = rect.bottom();
+            }
         }
-
-        geomnode->setGeometry(&m_Geometry);
-        geomnode->setMaterial(&m_Material);
-
-        n->appendChildNode(geomnode);
-        return n;
     }
 
     void TriangleElement::setColor(const QColor &color) {
@@ -77,6 +101,22 @@ namespace QMLExtensions {
             m_Material.setColor(m_Color);
             update();
             emit colorChanged(color);
+        }
+    }
+
+    void TriangleElement::setIsFlipped(bool value) {
+        if (m_IsFlipped != value) {
+            m_IsFlipped = value;
+            emit isFlippedChanged(value);
+            update();
+        }
+    }
+
+    void TriangleElement::setIsVertical(bool value) {
+        if (m_IsVertical != value) {
+            m_IsVertical = value;
+            emit isVerticalChanged(value);
+            update();
         }
     }
 }

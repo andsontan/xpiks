@@ -33,35 +33,37 @@ namespace QMLExtensions {
         Q_OBJECT
         Q_PROPERTY(QColor color READ getColor WRITE setColor NOTIFY colorChanged)
         Q_PROPERTY(bool isFlipped READ getIsFlipped WRITE setIsFlipped NOTIFY isFlippedChanged)
+        Q_PROPERTY(bool isVertical READ getIsVertical WRITE setIsVertical NOTIFY isVerticalChanged)
 
     public:
         TriangleElement(QQuickItem *parent = 0);
 
         const QColor &getColor() const { return m_Color; }
         bool getIsFlipped() const { return m_IsFlipped; }
+        bool getIsVertical() const { return m_IsVertical; }
 
     public slots:
         void setColor(const QColor &color);
-        void setIsFlipped(bool value) {
-            if (m_IsFlipped != value) {
-                m_IsFlipped = value;
-                emit isFlippedChanged(value);
-                update();
-            }
-        }
+        void setIsFlipped(bool value);
+        void setIsVertical(bool value);
 
     signals:
         void colorChanged(const QColor &color);
         void isFlippedChanged(bool value);
+        void isVerticalChanged(bool value);
 
     protected:
-        QSGNode* updatePaintNode(QSGNode*, UpdatePaintNodeData *data);
+        virtual QSGNode *updatePaintNode(QSGNode*, UpdatePaintNodeData *data);
+
+    private:
+        void updateTriangle(QSGGeometry *geometry);
 
     private:
         QSGGeometry m_Geometry;
         QSGFlatColorMaterial m_Material;
         QColor m_Color;
         bool m_IsFlipped;
+        bool m_IsVertical;
     };
 }
 
