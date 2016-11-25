@@ -28,9 +28,9 @@ Rectangle {
     id: tab
     anchors.top: parent.top
     anchors.bottom: parent.bottom
-    width: 55
+    implicitWidth: 55
     color: isSelected ? Colors.defaultControlColor : Colors.defaultDarkColor
-    property int index: 0
+    property int tabIndex: -1
     property bool isSelected: false
     property bool hovered: false
 }

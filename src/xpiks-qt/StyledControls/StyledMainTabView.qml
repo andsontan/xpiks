@@ -38,14 +38,6 @@ TabView {
 
         tabBar: Rectangle {
             color: backgroundColor
-
-            Rectangle {
-                anchors.bottom: parent.bottom
-                height: tabBarHeight
-                anchors.left: parent.left
-                anchors.right: parent.right
-                color: Colors.defaultControlColor
-            }
         }
 
         tab: Item {}

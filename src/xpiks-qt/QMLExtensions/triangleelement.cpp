@@ -52,6 +52,7 @@ namespace QMLExtensions {
 
         updateTriangle(&m_Geometry);
         node->markDirty(QSGNode::DirtyGeometry);
+        node->markDirty(QSGNode::DirtyMaterial);
 
         return node;
     }

@@ -27,9 +27,7 @@
 
 namespace QMLExtensions {
     class ImageCachingService;
-}
 
-namespace QMLExtensions {
     class CachingImageProvider : public QObject, public QQuickImageProvider
     {
         Q_OBJECT

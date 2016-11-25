@@ -31,16 +31,66 @@
 namespace QMLExtensions {
     FolderElement::FolderElement(QQuickItem *parent):
         QQuickItem (parent),
-        m_Geometry(QSGGeometry::defaultAttributes_Point2D(), 6)
+        m_Geometry(QSGGeometry::defaultAttributes_Point2D(), 6),
+        m_Thickness(2.0)
     {
-        m_Geometry.setDrawingMode(GL_LINES);
+        setFlag(ItemHasContents);
+        m_Material.setColor(m_Color);
+        m_Geometry.setDrawingMode(GL_LINE_LOOP);
+        m_Geometry.setLineWidth(m_Thickness);;
     }
 
     void FolderElement::setColor(const QColor &color) {
-
+        if (m_Color != color) {
+            m_Color = color;
+            m_Material.setColor(m_Color);
+            update();
+            emit colorChanged(color);
+        }
     }
 
-    QSGNode *FolderElement::updatePaintNode(QSGNode *node, QQuickItem::UpdatePaintNodeData *data) {
+    void FolderElement::setThickness(qreal value) {
+        if (m_Thickness != value) {
+            m_Thickness = value;
+            m_Geometry.setLineWidth(value);
+            update();
+            emit thicknessChanged(value);
+        }
+    }
 
+    QSGNode *FolderElement::updatePaintNode(QSGNode *oldNode, QQuickItem::UpdatePaintNodeData *) {
+        QSGGeometryNode *node = 0;
+
+        if (oldNode == nullptr) {
+            node = new QSGGeometryNode();
+            node->setGeometry(&m_Geometry);
+            node->setMaterial(&m_Material);
+        } else {
+            node = static_cast<QSGGeometryNode *>(oldNode);
+        }
+
+        updateView(&m_Geometry);
+        node->markDirty(QSGNode::DirtyGeometry);
+        node->markDirty(QSGNode::DirtyMaterial);
+
+        return node;
+    }
+
+    void FolderElement::updateView(QSGGeometry *geometry) {
+        QSGGeometry::Point2D *v = geometry->vertexDataAsPoint2D();
+        const QRectF rect = boundingRect();
+
+        v[0].x = rect.left();
+        v[0].y = rect.top();
+        v[1].x = rect.left() + rect.width()/3.0;
+        v[1].y = rect.top();
+        v[2].x = rect.left() + rect.width()/2.0;
+        v[2].y = rect.top() + rect.height()/5.0;
+        v[3].x = rect.right();
+        v[3].y = v[2].y;
+        v[4].x = rect.right();
+        v[4].y = rect.bottom();
+        v[5].x = rect.left();
+        v[5].y = rect.bottom();
     }
 }

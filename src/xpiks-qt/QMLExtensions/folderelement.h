@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef TRIANGLEELEMENT_H
-#define TRIANGLEELEMENT_H
+#ifndef FOLDERELEMENT_H
+#define FOLDERELEMENT_H
 
 #include <QtQuick/QQuickItem>
 #include <QBrush>
@@ -32,20 +32,27 @@ namespace QMLExtensions {
     {
         Q_OBJECT
         Q_PROPERTY(QColor color READ getColor WRITE setColor NOTIFY colorChanged)
+        Q_PROPERTY(qreal thickness READ getThickness WRITE setThickness NOTIFY thicknessChanged)
     public:
-        FolderElement(QQuickItem *parent);
+        FolderElement(QQuickItem *parent=0);
 
     public:
         const QColor &getColor() const { return m_Color; }
+        qreal getThickness() const { return m_Thickness; }
 
     public slots:
         void setColor(const QColor &color);
+        void setThickness(qreal value);
 
     signals:
         void colorChanged(const QColor &color);
+        void thicknessChanged(qreal value);
 
     protected:
-        virtual QSGNode *updatePaintNode(QSGNode *node, UpdatePaintNodeData *data);
+        virtual QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *);
+
+    private:
+        void updateView(QSGGeometry *geometry);
 
     private:
         QSGGeometry m_Geometry;

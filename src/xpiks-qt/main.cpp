@@ -53,6 +53,7 @@
 #include "Suggestion/keywordssuggestor.h"
 #include "Models/combinedartworksmodel.h"
 #include "Conectivity/telemetryservice.h"
+#include "QMLExtensions/folderelement.h"
 #include "Helpers/globalimageprovider.h"
 #include "Models/uploadinforepository.h"
 #include "Conectivity/ftpcoordinator.h"
@@ -389,6 +390,7 @@ int main(int argc, char *argv[]) {
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
     qmlRegisterType<QMLExtensions::TriangleElement>("xpiks", 1, 0, "TriangleElement");
+    qmlRegisterType<QMLExtensions::FolderElement>("xpiks", 1, 0, "FolderElement");
 
     QQmlApplicationEngine engine;
     Helpers::GlobalImageProvider *globalProvider = new Helpers::GlobalImageProvider(QQmlImageProviderBase::Image);
