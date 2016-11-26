@@ -88,10 +88,12 @@ namespace QMLExtensions {
     }
 
     void FolderElement::itemChange(QQuickItem::ItemChange item, const QQuickItem::ItemChangeData &data) {
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
         if (item == QQuickItem::ItemDevicePixelRatioHasChanged) {
             m_Scale = data.realValue;
             update();
         }
+#endif
 
         QQuickItem::itemChange(item, data);
     }
