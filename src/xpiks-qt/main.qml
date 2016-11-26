@@ -48,6 +48,7 @@ ApplicationWindow {
     property bool listLayout: true
     property bool initializedColors: false
     property var spellCheckService: helpersWrapper.getSpellCheckerService()
+    property bool leftSideCollapsed: false
 
     onVisibleChanged: {
         if (!initializedColors) {
@@ -943,35 +944,31 @@ ApplicationWindow {
             }
         }
 
-        Rectangle {
-            id: leftCollapser
-            anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            color: Colors.defaultDarkColor
-            width: 15
-
-            TriangleElement {
-                width: 7
-                height: 14
-                isVertical: true
-                anchors.centerIn: parent
-                color: leftCollapseMA.containsMouse ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
-            }
-
-            MouseArea {
-                id: leftCollapseMA
-                hoverEnabled: true
-                anchors.fill: parent
-            }
-        }
-
         Item {
             id: leftDockingGroup
             width: 250
-            anchors.left: leftCollapser.right
+            anchors.left: parent.left
+            anchors.leftMargin: leftCollapser.width
             anchors.top: parent.top
             anchors.bottom: parent.bottom
+
+            states: [
+                State {
+                    name: "collapsed"
+
+                    PropertyChanges {
+                        target: leftDockingGroup
+                        anchors.leftMargin: -250 + leftCollapser.width
+                    }
+                }
+            ]
+
+            Behavior on anchors.leftMargin {
+                NumberAnimation {
+                    duration: 200
+                    easing.type: Easing.InQuad
+                }
+            }
 
             RowLayout {
                 id: tabsHolder
@@ -1154,6 +1151,43 @@ ApplicationWindow {
                             }
                         }
                     }
+                }
+            }
+        }
+
+        // hack for visual order of components (slider will be created after left panel)
+        // in order not to deal with Z animation/settings
+        Rectangle {
+            id: leftCollapser
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            color: Colors.defaultDarkColor
+            width: 15
+
+            TriangleElement {
+                width: 7
+                height: 14
+                isVertical: true
+                isFlipped: !applicationWindow.leftSideCollapsed
+                anchors.centerIn: parent
+                anchors.horizontalCenterOffset: isFlipped ? -1 : +1
+                color: {
+                    if (leftCollapseMA.pressed) {
+                        return Colors.whiteColor
+                    } else {
+                        return leftCollapseMA.containsMouse ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
+                    }
+                }
+            }
+
+            MouseArea {
+                id: leftCollapseMA
+                hoverEnabled: true
+                anchors.fill: parent
+                onClicked: {
+                    leftDockingGroup.state = (leftDockingGroup.state == "collapsed") ? "" : "collapsed"
+                    applicationWindow.leftSideCollapsed = !leftSideCollapsed
                 }
             }
         }
