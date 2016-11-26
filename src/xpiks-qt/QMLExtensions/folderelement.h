@@ -23,6 +23,7 @@
 #define FOLDERELEMENT_H
 
 #include <QtQuick/QQuickItem>
+#include <QtQuick/QQuickWindow>
 #include <QBrush>
 #include <QSGGeometry>
 #include <QSGFlatColorMaterial>
@@ -44,12 +45,16 @@ namespace QMLExtensions {
         void setColor(const QColor &color);
         void setThickness(qreal value);
 
+    private slots:
+        void windowChangedHandler(QQuickWindow *window);
+
     signals:
         void colorChanged(const QColor &color);
         void thicknessChanged(qreal value);
 
     protected:
         virtual QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *);
+        virtual void itemChange(ItemChange item, const ItemChangeData &data);
 
     private:
         void updateView(QSGGeometry *geometry);
@@ -59,6 +64,7 @@ namespace QMLExtensions {
         QSGFlatColorMaterial m_Material;
         QColor m_Color;
         qreal m_Thickness;
+        qreal m_Scale;
     };
 }
 

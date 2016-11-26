@@ -32,12 +32,15 @@ namespace QMLExtensions {
     FolderElement::FolderElement(QQuickItem *parent):
         QQuickItem (parent),
         m_Geometry(QSGGeometry::defaultAttributes_Point2D(), 6),
-        m_Thickness(2.0)
+        m_Thickness(2.0),
+        m_Scale(1.0)
     {
         setFlag(ItemHasContents);
         m_Material.setColor(m_Color);
         m_Geometry.setDrawingMode(GL_LINE_LOOP);
-        m_Geometry.setLineWidth(m_Thickness);;
+        m_Geometry.setLineWidth(m_Thickness);
+
+        QObject::connect(this, SIGNAL(windowChanged(QQuickWindow*)), this, SLOT(windowChangedHandler(QQuickWindow*)));
     }
 
     void FolderElement::setColor(const QColor &color) {
@@ -52,9 +55,15 @@ namespace QMLExtensions {
     void FolderElement::setThickness(qreal value) {
         if (m_Thickness != value) {
             m_Thickness = value;
-            m_Geometry.setLineWidth(value);
             update();
             emit thicknessChanged(value);
+        }
+    }
+
+    void FolderElement::windowChangedHandler(QQuickWindow *window) {
+        if (window != nullptr) {
+            m_Scale = window->devicePixelRatio();
+            update();
         }
     }
 
@@ -69,11 +78,22 @@ namespace QMLExtensions {
             node = static_cast<QSGGeometryNode *>(oldNode);
         }
 
+        m_Geometry.setLineWidth(m_Thickness * m_Scale);
+
         updateView(&m_Geometry);
         node->markDirty(QSGNode::DirtyGeometry);
         node->markDirty(QSGNode::DirtyMaterial);
 
         return node;
+    }
+
+    void FolderElement::itemChange(QQuickItem::ItemChange item, const QQuickItem::ItemChangeData &data) {
+        if (item == QQuickItem::ItemDevicePixelRatioHasChanged) {
+            m_Scale = data.realValue;
+            update();
+        }
+
+        QQuickItem::itemChange(item, data);
     }
 
     void FolderElement::updateView(QSGGeometry *geometry) {
