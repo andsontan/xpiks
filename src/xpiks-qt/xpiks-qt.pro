@@ -370,7 +370,8 @@ DISTFILES += \
     Dialogs/FailedUploadArtworks.qml \
     Dialogs/InstallUpdateDialog.qml \
     StyledControls/StyledMainTabView.qml \
-    Components/CustomTab.qml
+    Components/CustomTab.qml \
+    Components/MainGrid.qml
 
 lupdate_only {
 SOURCES += *.qml \
