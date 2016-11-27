@@ -702,6 +702,7 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     m_WarningsService->stopService();
     m_MetadataSaverService->stopSaving();
     m_AutoCompleteService->stopService();
+    m_UpdateService->stopChecking();
 
 #ifdef WITH_PLUGINS
     m_PluginManager->unloadPlugins();

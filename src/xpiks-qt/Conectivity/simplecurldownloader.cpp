@@ -39,7 +39,74 @@ static size_t write_file(void *buffer, size_t size, size_t nmemb, void *param) {
     return (size_t)written;
 }
 
+/* this is how the CURLOPT_XFERINFOFUNCTION callback works */
+static int transferinfo(void *p,
+                    curl_off_t dltotal, curl_off_t dlnow,
+                    curl_off_t ultotal, curl_off_t ulnow)
+{
+    Q_UNUSED(dltotal);
+    Q_UNUSED(dlnow);
+    Q_UNUSED(ultotal);
+    Q_UNUSED(ulnow);
+
+    Conectivity::SimpleProgressReporter *progressReporter = (Conectivity::SimpleProgressReporter *)p;
+    int result = progressReporter->cancelRequested() ? 1 : 0;
+    if (result) {
+        LOG_DEBUG << "Cancelling upload from the progress callback...";
+    }
+
+    return result;
+}
+
+/* for libcurl older than 7.32.0 (CURLOPT_PROGRESSFUNCTION) */
+static int older_transferinfo(void *p,
+                          double dltotal, double dlnow,
+                          double ultotal, double ulnow)
+{
+    return transferinfo(p,
+                    (curl_off_t)dltotal,
+                    (curl_off_t)dlnow,
+                    (curl_off_t)ultotal,
+                    (curl_off_t)ulnow);
+}
+
+void setSimleProgressCallback(CURL *curlHandle, Conectivity::SimpleProgressReporter *progressReporter) {
+    curl_easy_setopt(curlHandle, CURLOPT_PROGRESSFUNCTION, older_transferinfo);
+    /* pass the struct pointer into the progress function */
+    curl_easy_setopt(curlHandle, CURLOPT_PROGRESSDATA, progressReporter);
+
+#if LIBCURL_VERSION_NUM >= 0x072000
+    /* xferinfo was introduced in 7.32.0, no earlier libcurl versions will
+       compile as they won't have the symbols around.
+
+       If built with a newer libcurl, but running with an older libcurl:
+       curl_easy_setopt() will fail in run-time trying to set the new
+       callback, making the older callback get used.
+
+       New libcurls will prefer the new callback and instead use that one even
+       if both callbacks are set. */
+
+    curl_easy_setopt(curlHandle, CURLOPT_XFERINFOFUNCTION, transferinfo);
+    /* pass the struct pointer into the xferinfo function, note that this is
+          an alias to CURLOPT_PROGRESSDATA */
+    curl_easy_setopt(curlHandle, CURLOPT_XFERINFODATA, progressReporter);
+#endif
+
+    curl_easy_setopt(curlHandle, CURLOPT_NOPROGRESS, 0L);
+}
+
 namespace Conectivity {
+    SimpleProgressReporter::SimpleProgressReporter(void *curl):
+        m_Curl(curl),
+        m_Cancel(false)
+    {
+    }
+
+    void SimpleProgressReporter::cancelHandler() {
+        m_Cancel = true;
+        LOG_INFO << "Cancelled in the progress reporter...";
+    }
+
     SimpleCurlDownloader::SimpleCurlDownloader(const QString &resource, QObject *parent) :
         QObject(parent),
         m_RemoteResource(resource),
@@ -87,6 +154,9 @@ namespace Conectivity {
             return false;
         }
 
+        SimpleProgressReporter progressReporter(curl_handle);
+        QObject::connect(this, SIGNAL(cancelRequested()), &progressReporter, SLOT(cancelHandler()));
+
         std::string resourceString = m_RemoteResource.toStdString();
         const char *url = resourceString.data();
         /* specify URL to get */
@@ -113,6 +183,8 @@ namespace Conectivity {
             */
             curl_easy_setopt(curl_handle, CURLOPT_SSL_VERIFYHOST, 0L);
         }
+
+        setSimleProgressCallback(curl_handle, &progressReporter);
 
         /* follow redirects */
         curl_easy_setopt(curl_handle, CURLOPT_FOLLOWLOCATION, 1L);

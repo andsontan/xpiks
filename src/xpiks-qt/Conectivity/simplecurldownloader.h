@@ -32,6 +32,26 @@ namespace Models {
 }
 
 namespace Conectivity {
+    class SimpleProgressReporter : public QObject
+    {
+        Q_OBJECT
+    public:
+        SimpleProgressReporter(void *curl);
+
+    public:
+        bool cancelRequested() const { return m_Cancel; }
+
+    signals:
+        void progressChanged(double percentsDone);
+
+    public slots:
+        void cancelHandler();
+
+    private:
+        void *m_Curl;
+        volatile bool m_Cancel;
+    };
+
     class SimpleCurlDownloader : public QObject
     {
         Q_OBJECT
@@ -55,6 +75,7 @@ namespace Conectivity {
     signals:
         void downloadFinished(bool success);
         void stopped();
+        void cancelRequested();
 
     private:
         bool doDownloadFile();

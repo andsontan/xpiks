@@ -57,6 +57,7 @@ namespace Conectivity {
         void updateAvailable(QString updateLink);
         void updateDownloaded(const QString &updatePath, int version);
         void requestFinished();
+        void cancelRequested();
 
     private:
         Models::SettingsModel *m_SettingsModel;

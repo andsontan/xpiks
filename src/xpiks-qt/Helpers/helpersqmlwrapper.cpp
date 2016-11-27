@@ -79,6 +79,7 @@ namespace Helpers {
         emit globalBeforeDestruction();
         QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
         m_CommandManager->beforeDestructionCallback();
+        QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
 
         if (m_IsUpdateDownloaded && m_HaveUpgradeConsent) {
             LOG_INFO << "Installing update" << m_PathToUpdate;

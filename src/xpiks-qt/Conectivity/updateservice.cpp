@@ -51,6 +51,7 @@ namespace Conectivity {
 
     void UpdateService::stopChecking() {
         LOG_DEBUG << "#";
+        emit cancelRequested();
     }
 
     void UpdateService::doStartChecking() {
@@ -65,6 +66,9 @@ namespace Conectivity {
 
         QObject::connect(m_UpdatesCheckerWorker, SIGNAL(stopped()), m_UpdatesCheckerWorker, SLOT(deleteLater()));
         QObject::connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
+
+        QObject::connect(this, SIGNAL(cancelRequested()),
+                         m_UpdatesCheckerWorker, SIGNAL(cancelRequested()));
 
         QObject::connect(m_UpdatesCheckerWorker, SIGNAL(updateAvailable(QString)),
                          this, SIGNAL(updateAvailable(QString)));
