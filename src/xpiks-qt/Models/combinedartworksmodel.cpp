@@ -297,20 +297,20 @@ namespace Models {
         }
     }
 
-    bool CombinedArtworksModel::hasTitleWordSpellError(const QString &word) {
-        return m_CommonKeywordsModel.hasTitleWordSpellError(word);
-    }
-
-    bool CombinedArtworksModel::hasDescriptionWordSpellError(const QString &word) {
-        return m_CommonKeywordsModel.hasDescriptionWordSpellError(word);
-    }
-
     void CombinedArtworksModel::plainTextEdit(const QString &rawKeywords) {
         QStringList keywords = rawKeywords.trimmed().split(QChar(','), QString::SkipEmptyParts);
 
         m_CommonKeywordsModel.setKeywords(keywords);
         setKeywordsModified(true);
         emit keywordsCountChanged();
+    }
+
+    bool CombinedArtworksModel::hasTitleWordSpellError(const QString &word) {
+        return m_CommonKeywordsModel.hasTitleWordSpellError(word);
+    }
+
+    bool CombinedArtworksModel::hasDescriptionWordSpellError(const QString &word) {
+        return m_CommonKeywordsModel.hasDescriptionWordSpellError(word);
     }
 
     void CombinedArtworksModel::processCombinedEditCommand() {

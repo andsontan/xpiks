@@ -26,7 +26,7 @@ import "../Constants/UIConfig.js" as UIConfig
 TextEdit {
     id: textEditHost
     signal actionRightClicked();
-    property string rightClickedWord;
+    property string rightClickedWord
     property bool isActive: true
     property bool userDictEnabled: false
     font.family: Qt.platform.os === "windows" ? "Arial" : "Helvetica"

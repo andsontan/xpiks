@@ -200,6 +200,11 @@ ApplicationWindow {
         Common.launchDialog("Dialogs/DeleteKeywordsDialog.qml", applicationWindow, { componentParent: applicationWindow })
     }
 
+    function collapseLeftPane() {
+        leftDockingGroup.state = "collapsed"
+        applicationWindow.leftSideCollapsed = true
+    }
+
     Component.onCompleted: {
         console.debug("onCompleted handler")
         openingTimer.start()
@@ -1157,6 +1162,31 @@ ApplicationWindow {
             focus: true
 
             initialItem: MainGrid {
+            }
+
+            delegate: StackViewDelegate {
+                function transitionFinished(properties)
+                {
+                    properties.exitItem.opacity = 1
+                }
+
+                pushTransition: StackViewTransition {
+                    PropertyAnimation {
+                        target: enterItem
+                        property: "opacity"
+                        from: 0
+                        to: 1
+                        duration: 100
+                    }
+
+                    PropertyAnimation {
+                        target: exitItem
+                        property: "opacity"
+                        from: 1
+                        to: 0
+                        duration: 100
+                    }
+                }
             }
         }
     }

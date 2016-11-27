@@ -149,7 +149,6 @@ namespace Models {
 
 #ifdef CORE_TESTS
         QStringList getKeywords();
-
 #endif
 
     public:

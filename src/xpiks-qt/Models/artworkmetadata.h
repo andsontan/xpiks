@@ -46,7 +46,7 @@ namespace Models {
     class ArtworkMetadata:
         public QObject, public Common::IBasicArtwork
     {
-    Q_OBJECT
+        Q_OBJECT
 
     public:
         ArtworkMetadata(const QString &filepath, qint64 ID);

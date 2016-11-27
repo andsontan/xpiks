@@ -63,6 +63,7 @@
 #include "Models/artworksrepository.h"
 #include "QMLExtensions/colorsmodel.h"
 #include "Conectivity/updateservice.h"
+#include "Models/artworkproxymodel.h"
 #include "Warnings/warningsservice.h"
 #include "UndoRedo/undoredomanager.h"
 #include "Helpers/clipboardhelper.h"
@@ -321,6 +322,7 @@ int main(int argc, char *argv[]) {
     QMLExtensions::ImageCachingService imageCachingService;
     Models::FindAndReplaceModel replaceModel(&colorsModel);
     Models::DeleteKeywordsViewModel deleteKeywordsModel;
+    Models::ArtworkProxyModel artworkProxyModel;
 
     Conectivity::UpdateService updateService(&settingsModel);
 
@@ -372,6 +374,8 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&deleteKeywordsModel);
     commandManager.InjectDependency(&helpersQmlWrapper);
 
+    artworkProxyModel.setCommandManager(&commandManager);
+
     commandManager.ensureDependenciesInjected();
 
     keywordsSuggestor.initSuggestionEngines();
@@ -418,6 +422,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("Colors", &colorsModel);
     rootContext->setContextProperty("acSource", &autoCompleteModel);
     rootContext->setContextProperty("replaceModel", &replaceModel);
+    rootContext->setContextProperty("artworkProxy", &artworkProxyModel);
 
 #ifdef QT_DEBUG
     QVariant isDebug(true);

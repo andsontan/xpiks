@@ -120,7 +120,8 @@ SOURCES += main.cpp \
     Conectivity/simplecurldownloader.cpp \
     Helpers/updatehelpers.cpp \
     Common/basicmetadatamodel.cpp \
-    QMLExtensions/folderelement.cpp
+    QMLExtensions/folderelement.cpp \
+    Models/artworkproxymodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -298,7 +299,8 @@ HEADERS += \
     Conectivity/apimanager.h \
     Helpers/updatehelpers.h \
     Common/basicmetadatamodel.h \
-    QMLExtensions/folderelement.h
+    QMLExtensions/folderelement.h \
+    Models/artworkproxymodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -371,7 +373,8 @@ DISTFILES += \
     Dialogs/InstallUpdateDialog.qml \
     StyledControls/StyledMainTabView.qml \
     Components/CustomTab.qml \
-    Components/MainGrid.qml
+    Components/MainGrid.qml \
+    Components/ArtworkEditView.qml
 
 lupdate_only {
 SOURCES += *.qml \

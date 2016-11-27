@@ -58,7 +58,6 @@ namespace Models {
 
 #ifdef CORE_TESTS
         int retrieveNumberOfSelectedItems();
-
 #endif
 
     public:
