@@ -72,6 +72,7 @@ namespace Models {
         void setDescription(const QString &description);
         void setTitle(const QString &title);
         void spellCheckErrorsChangedHandler();
+        void afterSpellingErrorsFixedHandler();
 
     public:
         Q_INVOKABLE void editKeyword(int index, const QString &replacement);

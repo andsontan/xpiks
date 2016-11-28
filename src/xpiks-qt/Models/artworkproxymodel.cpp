@@ -64,6 +64,11 @@ namespace Models {
         emit titleChanged();
     }
 
+    void ArtworkProxyModel::afterSpellingErrorsFixedHandler() {
+        // if squeezing took place after replace
+        emit keywordsCountChanged();
+    }
+
     void ArtworkProxyModel::editKeyword(int index, const QString &replacement) {
         Q_ASSERT(m_ArtworkMetadata != nullptr);
         LOG_INFO << "index:" << index << "replacement:" << replacement;
@@ -222,6 +227,9 @@ namespace Models {
 
         QObject::connect(keywordsModel, SIGNAL(completionsAvailable()),
                          this, SIGNAL(completionsAvailable()));
+
+        QObject::connect(keywordsModel, SIGNAL(afterSpellingErrorsFixed()),
+                         this, SLOT(afterSpellingErrorsFixedHandler()));
 
         emit descriptionChanged();
         emit titleChanged();

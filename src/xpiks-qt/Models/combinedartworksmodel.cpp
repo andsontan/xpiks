@@ -420,6 +420,8 @@ namespace Models {
 
     void CombinedArtworksModel::spellCheckErrorsFixedHandler() {
         setSpellingFixed(true);
+        // for possible squeezing after replace
+        emit keywordsCountChanged();
     }
 
     bool CombinedArtworksModel::doRemoveSelectedArtworks() {
