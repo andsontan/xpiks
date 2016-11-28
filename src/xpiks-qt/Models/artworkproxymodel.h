@@ -89,7 +89,8 @@ namespace Models {
         Q_INVOKABLE void plainTextEdit(const QString &rawKeywords);
         Q_INVOKABLE bool hasTitleWordSpellError(const QString &word);
         Q_INVOKABLE bool hasDescriptionWordSpellError(const QString &word);
-        Q_INVOKABLE void setSourceArtwork(QObject *artworkMetadata);
+        Q_INVOKABLE void setSourceArtwork(QObject *artworkMetadata, int originalIndex=-1);
+        Q_INVOKABLE void resetModel();
         Q_INVOKABLE QObject *getBasicModel() {
             QObject *item = doGetBasicModel();
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
@@ -99,10 +100,12 @@ namespace Models {
 
     private:
         Common::BasicMetadataModel *doGetBasicModel() const { return m_ArtworkMetadata->getBasicModel(); }
+        void updateCurrentArtwork();
+        void doResetModel();
 
     private:
         Models::ArtworkMetadata *m_ArtworkMetadata;
-        QString m_imagePath;
+        int m_ArtworkOriginalIndex;
     };
 }
 

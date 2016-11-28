@@ -51,6 +51,8 @@ Item {
 
     function closePopup() {
         mainStackView.pop()
+        artworkProxy.resetModel()
+        expandLeftPane()
     }
 
     Component.onCompleted: {

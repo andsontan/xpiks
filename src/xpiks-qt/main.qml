@@ -205,6 +205,26 @@ ApplicationWindow {
         applicationWindow.leftSideCollapsed = true
     }
 
+    function expandLeftPane() {
+        leftDockingGroup.state = ""
+        applicationWindow.leftSideCollapsed = false
+    }
+
+    function startOneItemEditing(metadata, index, originalIndex) {
+        var keywordsModel = filteredArtItemsModel.getBasicModel(index)
+        artworkProxy.setSourceArtwork(metadata, originalIndex)
+        applicationWindow.collapseLeftPane()
+        mainStackView.push({
+                               item: "qrc:/Components/ArtworkEditView.qml",
+                               properties: {
+                                   artworkIndex: index,
+                                   keywordsModel: keywordsModel,
+                                   componentParent: applicationWindow
+                               },
+                               destroyOnPop: true
+                           })
+    }
+
     Component.onCompleted: {
         console.debug("onCompleted handler")
         openingTimer.start()
@@ -254,9 +274,9 @@ ApplicationWindow {
                     var index = filteredArtItemsModel.findSelectedItemIndex()
 
                     if (index !== -1) {
-                        Common.launchItemEditing(index, applicationWindow, {
-                                                     applyCallback: function() {}
-                                                 })
+                        var originalIndex = filteredArtItemsModel.getOriginalIndex(index)
+                        var metadata = filteredArtItemsModel.getArtworkMetadata(index)
+                        startOneItemEditing(metadata, index, originalIndex)
                         launched = true
                     }
                 }

@@ -746,22 +746,9 @@ ColumnLayout {
 
                                                 function dblClickHandler() {
                                                     var index = rowWrapper.delegateIndex
+                                                    var originalIndex = rowWrapper.getIndex()
                                                     var metadata = filteredArtItemsModel.getArtworkMetadata(index)
-                                                    var keywordsModel = filteredArtItemsModel.getBasicModel(index)
-                                                    artworkProxy.setSourceArtwork(metadata)
-                                                    applicationWindow.collapseLeftPane()
-                                                    mainStackView.push({
-                                                                           item: "qrc:/Components/ArtworkEditView.qml",
-                                                                           properties: {
-                                                                               artworkIndex: index,
-                                                                               keywordsModel: keywordsModel,
-                                                                               componentParent: applicationWindow
-                                                                           },
-                                                                           destroyOnPop: true
-                                                                       })
-                                                    /*Common.launchItemEditing(rowWrapper.getIndex(), applicationWindow, {
-                                                                                 applyCallback: function() {}
-                                                                             })*/
+                                                    startOneItemEditing(metadata, index, originalIndex)
                                                 }
 
                                                 Timer {

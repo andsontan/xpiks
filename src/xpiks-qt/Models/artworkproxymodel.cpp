@@ -25,7 +25,8 @@
 namespace Models {
     ArtworkProxyModel::ArtworkProxyModel(QObject *parent) :
         QObject(parent),
-        m_ArtworkMetadata(nullptr)
+        m_ArtworkMetadata(nullptr),
+        m_ArtworkOriginalIndex(-1)
     {
     }
 
@@ -201,9 +202,11 @@ namespace Models {
         return keywordsModel->hasDescriptionWordSpellError(word);
     }
 
-    void ArtworkProxyModel::setSourceArtwork(QObject *artworkMetadata) {
+    void ArtworkProxyModel::setSourceArtwork(QObject *artworkMetadata, int originalIndex) {
         ArtworkMetadata *metadata = qobject_cast<ArtworkMetadata*>(artworkMetadata);
         Q_ASSERT(metadata != nullptr);
+
+        updateCurrentArtwork();
 
         if (m_ArtworkMetadata != nullptr) {
             auto *basicModel = m_ArtworkMetadata->getBasicModel();
@@ -211,6 +214,7 @@ namespace Models {
         }
 
         m_ArtworkMetadata = metadata;
+        m_ArtworkOriginalIndex = originalIndex;
 
         auto *keywordsModel = metadata->getBasicModel();
         QObject::connect(keywordsModel, SIGNAL(spellCheckErrorsChanged()),
@@ -223,5 +227,21 @@ namespace Models {
         emit titleChanged();
         emit keywordsCountChanged();
         emit imagePathChanged();
+    }
+
+    void ArtworkProxyModel::resetModel() {
+        updateCurrentArtwork();
+        doResetModel();
+    }
+
+    void ArtworkProxyModel::updateCurrentArtwork() {
+        if (m_ArtworkOriginalIndex != -1) {
+            m_CommandManager->updateArtworks(QVector<int>() << m_ArtworkOriginalIndex);
+        }
+    }
+
+    void ArtworkProxyModel::doResetModel() {
+        m_ArtworkMetadata = nullptr;
+        m_ArtworkOriginalIndex = -1;
     }
 }
