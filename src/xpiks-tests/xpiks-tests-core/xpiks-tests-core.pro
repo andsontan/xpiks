@@ -152,7 +152,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Commands/deletekeywordscommand.cpp \
     ../../xpiks-qt/Conectivity/uploadwatcher.cpp \
     ../../xpiks-qt/Helpers/updatehelpers.cpp \
-    basicmetadatamodel_tests.cpp
+    basicmetadatamodel_tests.cpp \
+    ../../xpiks-qt/Models/artworkproxybase.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -261,5 +262,7 @@ HEADERS += \
     ../../xpiks-qt/Common/iflagsprovider.h \
     ../../xpiks-qt/Conectivity/uploadwatcher.h \
     ../../xpiks-qt/Helpers/updatehelpers.h \
-    basicmetadatamodel_tests.h
+    basicmetadatamodel_tests.h \
+    ../../xpiks-qt/Common/imetadataoperator.h \
+    ../../xpiks-qt/Models/artworkproxybase.h
 

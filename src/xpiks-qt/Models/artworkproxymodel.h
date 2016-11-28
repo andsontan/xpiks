@@ -38,11 +38,10 @@
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Common/hold.h"
 #include "../Models/metadataelement.h"
+#include "artworkproxybase.h"
 
 namespace Models {
-    class ArtworkProxyModel:
-            public QObject,
-            public Common::BaseEntity
+    class ArtworkProxyModel: public QObject, public ArtworkProxyBase
     {
         Q_OBJECT
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
@@ -55,24 +54,27 @@ namespace Models {
         explicit ArtworkProxyModel(QObject *parent = 0);
 
     public:
-        QString getDescription() const { return m_ArtworkMetadata->getDescription(); }
-        QString getTitle() const { return m_ArtworkMetadata->getTitle(); }
-        int getKeywordsCount() const;
         const QString &getImagePath() const { return m_ArtworkMetadata->getFilepath(); }
         QString getBasename() const { return m_ArtworkMetadata->getBaseFilename(); }
 
+    public:
+        virtual void setDescription(const QString &description);
+        virtual void setTitle(const QString &title);
+
     signals:
+        void imagePathChanged();
         void descriptionChanged();
         void titleChanged();
         void keywordsCountChanged();
-        void completionsAvailable();
-        void imagePathChanged();
+
+    protected:
+        virtual void signalDescriptionChanged() { emit descriptionChanged(); }
+        virtual void signalTitleChanged() { emit titleChanged(); }
+        virtual void signalKeywordsCountChanged() { emit keywordsCountChanged(); }
 
     public slots:
-        void setDescription(const QString &description);
-        void setTitle(const QString &title);
-        void spellCheckErrorsChangedHandler();
         void afterSpellingErrorsFixedHandler();
+        void spellCheckErrorsChangedHandler();
 
     public:
         Q_INVOKABLE void editKeyword(int index, const QString &replacement);
@@ -93,14 +95,24 @@ namespace Models {
         Q_INVOKABLE void setSourceArtwork(QObject *artworkMetadata, int originalIndex=-1);
         Q_INVOKABLE void resetModel();
         Q_INVOKABLE QObject *getBasicModel() {
-            QObject *item = doGetBasicModel();
+            QObject *item = getBasicMetadataModel();
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
 
             return item;
         }
 
+    protected:
+        virtual Common::BasicMetadataModel *getBasicMetadataModel() {
+            Q_ASSERT(m_ArtworkMetadata != nullptr);
+            return m_ArtworkMetadata->getBasicModel();
+        }
+
+        virtual Common::IMetadataOperator *getMetadataOperator() {
+            Q_ASSERT(m_ArtworkMetadata != nullptr);
+            return m_ArtworkMetadata;
+        }
+
     private:
-        Common::BasicMetadataModel *doGetBasicModel() const { return m_ArtworkMetadata->getBasicModel(); }
         void updateCurrentArtwork();
         void doResetModel();
 

@@ -121,7 +121,8 @@ SOURCES += main.cpp \
     Helpers/updatehelpers.cpp \
     Common/basicmetadatamodel.cpp \
     QMLExtensions/folderelement.cpp \
-    Models/artworkproxymodel.cpp
+    Models/artworkproxymodel.cpp \
+    Models/artworkproxybase.cpp
 
 RESOURCES += qml.qrc
 
@@ -300,7 +301,9 @@ HEADERS += \
     Helpers/updatehelpers.h \
     Common/basicmetadatamodel.h \
     QMLExtensions/folderelement.h \
-    Models/artworkproxymodel.h
+    Models/artworkproxymodel.h \
+    Models/artworkproxybase.h \
+    Common/imetadataoperator.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

@@ -25,37 +25,29 @@
 namespace Models {
     ArtworkProxyModel::ArtworkProxyModel(QObject *parent) :
         QObject(parent),
+        ArtworkProxyBase(),
         m_ArtworkMetadata(nullptr),
         m_ArtworkOriginalIndex(-1)
     {
     }
 
-    int ArtworkProxyModel::getKeywordsCount() const {
-        Common::BasicKeywordsModel *keywordsModel = m_ArtworkMetadata->getBasicModel();
-        return keywordsModel->getKeywordsCount();
-    }
-
     void ArtworkProxyModel::setDescription(const QString &description)  {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
+        if (doSetDescription(description)) {
+            signalDescriptionChanged();
 
-        if (m_ArtworkMetadata->setDescription(description)) {
             if (m_ArtworkMetadata->isInitialized()) {
                 m_ArtworkMetadata->requestBackup();
             }
-
-            emit descriptionChanged();
         }
     }
 
     void ArtworkProxyModel::setTitle(const QString &title) {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
+        if (doSetTitle(title)) {
+            signalTitleChanged();
 
-        if (m_ArtworkMetadata->setTitle(title)) {
             if (m_ArtworkMetadata->isInitialized()) {
                 m_ArtworkMetadata->requestBackup();
             }
-
-            emit titleChanged();
         }
     }
 
@@ -70,141 +62,65 @@ namespace Models {
     }
 
     void ArtworkProxyModel::editKeyword(int index, const QString &replacement) {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
-        LOG_INFO << "index:" << index << "replacement:" << replacement;
-        if (m_ArtworkMetadata->editKeyword(index, replacement)) {
-            auto *keywordsModel = doGetBasicModel();
-            m_CommandManager->submitKeywordForSpellCheck(keywordsModel, index);
-        } else {
-            LOG_INFO << "Failed to edit to" << replacement;
-        }
+        doEditKeyword(index, replacement);
     }
 
     void ArtworkProxyModel::removeKeywordAt(int keywordIndex) {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
-        LOG_INFO << "keyword index:" << keywordIndex;
-        if (m_ArtworkMetadata->removeKeywordAt(keywordIndex)) {
-            emit keywordsCountChanged();
-            LOG_INFO << "Keywords count:" << getKeywordsCount();
-        }
+        QString keyword;
+        doRemoveKeywordAt(keywordIndex, keyword);
     }
 
     void ArtworkProxyModel::removeLastKeyword() {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
-        LOG_DEBUG << "#";
-        if (m_ArtworkMetadata->removeLastKeyword()) {
-            emit keywordsCountChanged();
-            LOG_INFO << "Keywords count:" << getKeywordsCount();
-        }
+        QString keyword;
+        doRemoveLastKeyword(keyword);
     }
 
     void ArtworkProxyModel::appendKeyword(const QString &keyword) {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
-        LOG_INFO << keyword;
-        if (m_ArtworkMetadata->appendKeyword(keyword)) {
-            emit keywordsCountChanged();
-
-            auto *keywordsModel = doGetBasicModel();
-            m_CommandManager->submitKeywordForSpellCheck(keywordsModel, keywordsModel->rowCount() - 1);
-        } else {
-            LOG_INFO << "Failed to append:" << keyword;
-        }
+        doAppendKeyword(keyword);
     }
 
     void ArtworkProxyModel::pasteKeywords(const QStringList &keywords) {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
-        LOG_INFO << keywords.length() << "keyword(s)" << "|" << keywords;
-        int appendedCount = m_ArtworkMetadata->appendKeywords(keywords);
-        LOG_INFO << "Appended" << appendedCount << "keywords";
-
-        if (appendedCount > 0) {
-            emit keywordsCountChanged();
-
-            auto *keywordsModel = doGetBasicModel();
-            m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckFlags::Keywords);
-        }
+        doAppendKeywords(keywords);
     }
 
     void ArtworkProxyModel::clearKeywords() {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
-        LOG_DEBUG << "#";
-        if (m_ArtworkMetadata->clearKeywords()) {
-            emit keywordsCountChanged();
-        }
+        doClearKeywords();
     }
 
     QString ArtworkProxyModel::getKeywordsString() {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
-        auto *keywordsModel = doGetBasicModel();
-        return keywordsModel->getKeywordsString();
+        return doGetKeywordsString();
     }
 
     void ArtworkProxyModel::suggestCorrections() {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
-        LOG_DEBUG << "#";
-        auto *keywordsModel = doGetBasicModel();
-        m_CommandManager->setupSpellCheckSuggestions(keywordsModel, -1, Common::SuggestionFlags::All);
+        doSuggestCorrections();
     }
 
     void ArtworkProxyModel::initDescriptionHighlighting(QQuickTextDocument *document) {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
-        auto *keywordsModel = doGetBasicModel();
-        SpellCheck::SpellCheckItemInfo *info = keywordsModel->getSpellCheckInfo();
-
-        QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
-        info->createHighlighterForDescription(document->textDocument(), colorsModel, keywordsModel);
-        keywordsModel->notifyDescriptionSpellCheck();
+        doInitDescriptionHighlighting(document);
     }
 
     void ArtworkProxyModel::initTitleHighlighting(QQuickTextDocument *document) {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
-        auto *keywordsModel = doGetBasicModel();
-        SpellCheck::SpellCheckItemInfo *info = keywordsModel->getSpellCheckInfo();
-
-        QMLExtensions::ColorsModel *colorsModel = m_CommandManager->getColorsModel();
-        info->createHighlighterForTitle(document->textDocument(), colorsModel, keywordsModel);
-        keywordsModel->notifyTitleSpellCheck();
+        doInitTitleHighlighting(document);
     }
 
     void ArtworkProxyModel::spellCheckDescription() {
-        LOG_DEBUG << "#";
-        auto *keywordsModel = doGetBasicModel();
-        if (!keywordsModel->getDescription().trimmed().isEmpty()) {
-            m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckFlags::Description);
-        } else {
-            keywordsModel->notifySpellCheckResults(Common::SpellCheckFlags::Description);
-        }
+        doSpellCheckDescription();
     }
 
     void ArtworkProxyModel::spellCheckTitle() {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
-        LOG_DEBUG << "#";
-        auto *keywordsModel = doGetBasicModel();
-        if (!keywordsModel->getTitle().trimmed().isEmpty()) {
-            m_CommandManager->submitItemForSpellCheck(keywordsModel, Common::SpellCheckFlags::Title);
-        } else {
-            keywordsModel->notifySpellCheckResults(Common::SpellCheckFlags::Title);
-        }
+        doSpellCheckTitle();
     }
 
     void ArtworkProxyModel::plainTextEdit(const QString &rawKeywords) {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
-        QStringList keywords = rawKeywords.trimmed().split(QChar(','), QString::SkipEmptyParts);
-
-        m_ArtworkMetadata->setKeywords(keywords);
-        emit keywordsCountChanged();
+        doPlainTextEdit(rawKeywords);
     }
 
     bool ArtworkProxyModel::hasTitleWordSpellError(const QString &word) {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
-        auto *keywordsModel = doGetBasicModel();
-        return keywordsModel->hasTitleWordSpellError(word);
+        return getHasTitleWordSpellError(word);
     }
 
     bool ArtworkProxyModel::hasDescriptionWordSpellError(const QString &word) {
-        Q_ASSERT(m_ArtworkMetadata != nullptr);
-        auto *keywordsModel = doGetBasicModel();
-        return keywordsModel->hasDescriptionWordSpellError(word);
+        return getHasDescriptionWordSpellError(word);
     }
 
     void ArtworkProxyModel::setSourceArtwork(QObject *artworkMetadata, int originalIndex) {

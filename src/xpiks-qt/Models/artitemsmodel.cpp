@@ -179,8 +179,9 @@ namespace Models {
         LOG_INFO << "metadata index" << metadataIndex << "| keyword index" << keywordIndex;
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            QString removed;
 
-            if (metadata->removeKeywordAt(keywordIndex)) {
+            if (metadata->removeKeywordAt(keywordIndex, removed)) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
                 m_CommandManager->submitKeywordsForWarningsCheck(metadata);
@@ -193,8 +194,9 @@ namespace Models {
         LOG_INFO << "index" << metadataIndex;
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            QString removed;
 
-            if (metadata->removeLastKeyword()) {
+            if (metadata->removeLastKeyword(removed)) {
                 QModelIndex index = this->index(metadataIndex);
                 emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
                 m_CommandManager->submitKeywordsForWarningsCheck(metadata);

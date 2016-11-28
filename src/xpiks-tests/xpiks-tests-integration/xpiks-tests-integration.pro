@@ -154,7 +154,8 @@ SOURCES += main.cpp \
     artworkuploaderbasictest.cpp \
     ../../xpiks-qt/MetadataIO/exiv2inithelper.cpp \
     ../../xpiks-qt/Warnings/warningssettingsmodel.cpp \
-    ../../xpiks-qt/Helpers/updatehelpers.cpp
+    ../../xpiks-qt/Helpers/updatehelpers.cpp \
+    ../../xpiks-qt/Models/artworkproxybase.cpp
 
 RESOURCES +=
 
@@ -337,7 +338,9 @@ HEADERS += \
     ../../xpiks-qt/MetadataIO/exiv2inithelper.h \
     ../../xpiks-qt/Warnings/warningssettingsmodel.h \
     ../../xpiks-qt/Conectivity/apimanager.h \
-    ../../xpiks-qt/Helpers/updatehelpers.h
+    ../../xpiks-qt/Helpers/updatehelpers.h \
+    ../../xpiks-qt/Common/imetadataoperator.h \
+    ../../xpiks-qt/Models/artworkproxybase.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

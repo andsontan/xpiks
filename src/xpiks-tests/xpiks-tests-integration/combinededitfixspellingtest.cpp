@@ -90,7 +90,7 @@ int CombinedEditFixSpellingTest::doTest() {
         suggestionsItem->setReplacementIndex(0);
     }
 
-    auto *combinedKeywordsModel = combinedModel->getBasicMetadataModel();
+    auto *combinedKeywordsModel = combinedModel->retrieveBasicMetadataModel();
     VERIFY(combinedKeywordsModel->hasDescriptionSpellError(), "Description spell error was not propagated");
 
     SignalWaiter combinedEditWaiter;

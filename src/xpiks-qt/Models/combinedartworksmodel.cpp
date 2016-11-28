@@ -34,6 +34,7 @@
 namespace Models {
     CombinedArtworksModel::CombinedArtworksModel(QObject *parent):
         ArtworksViewModel(parent),
+        ArtworkProxyBase(),
         m_CommonKeywordsModel(m_HoldPlaceholder, this),
         m_EditFlags(Common::CombinedEditFlags::None),
         m_ModifiedFlags(0) {
@@ -134,59 +135,35 @@ namespace Models {
 #endif
 
     void CombinedArtworksModel::editKeyword(int index, const QString &replacement) {
-        LOG_INFO << "index:" << index << "replacement:" << replacement;
-        if (m_CommonKeywordsModel.editKeyword(index, replacement)) {
+        if (doEditKeyword(index, replacement)) {
             setKeywordsModified(true);
-            m_CommandManager->submitKeywordForSpellCheck(&m_CommonKeywordsModel, index);
-        } else {
-            LOG_INFO << "Failed to edit to" << replacement;
         }
     }
 
     QString CombinedArtworksModel::removeKeywordAt(int keywordIndex) {
-        LOG_INFO << "keyword index:" << keywordIndex;
         QString keyword;
-        if (m_CommonKeywordsModel.takeKeywordAt(keywordIndex, keyword)) {
-            emit keywordsCountChanged();
+        if (doRemoveKeywordAt(keywordIndex, keyword)) {
             setKeywordsModified(true);
-            LOG_INFO << "Removed keyword:" << keyword << "keywords count:" << getKeywordsCount();
         }
-
         return keyword;
     }
 
     void CombinedArtworksModel::removeLastKeyword() {
-        LOG_DEBUG << "#";
         QString keyword;
-        if (m_CommonKeywordsModel.takeLastKeyword(keyword)) {
-            emit keywordsCountChanged();
+        if (doRemoveLastKeyword(keyword)) {
             setKeywordsModified(true);
-            LOG_INFO << "Removed keyword:" << keyword << "keywords count:" << getKeywordsCount();
         }
     }
 
     void CombinedArtworksModel::appendKeyword(const QString &keyword) {
-        LOG_INFO << keyword;
-        if (m_CommonKeywordsModel.appendKeyword(keyword)) {
-            emit keywordsCountChanged();
+        if (doAppendKeyword(keyword)) {
             setKeywordsModified(true);
-
-            m_CommandManager->submitKeywordForSpellCheck(&m_CommonKeywordsModel, m_CommonKeywordsModel.rowCount() - 1);
-        } else {
-            LOG_INFO << "Failed to append:" << keyword;
         }
     }
 
     void CombinedArtworksModel::pasteKeywords(const QStringList &keywords) {
-        LOG_INFO << keywords.length() << "keyword(s)" << "|" << keywords;
-        int appendedCount = m_CommonKeywordsModel.appendKeywords(keywords);
-        LOG_INFO << "Appended" << appendedCount << "keywords";
-
-        if (appendedCount > 0) {
-            emit keywordsCountChanged();
+        if (doAppendKeywords(keywords) > 0) {
             setKeywordsModified(true);
-
-            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckFlags::Keywords);
         }
     }
 
@@ -212,16 +189,13 @@ namespace Models {
     }
 
     void CombinedArtworksModel::clearKeywords() {
-        LOG_DEBUG << "#";
-        if (m_CommonKeywordsModel.clearKeywords()) {
+        if (doClearKeywords()) {
             setKeywordsModified(true);
-            emit keywordsCountChanged();
         }
     }
 
     void CombinedArtworksModel::suggestCorrections() {
-        LOG_DEBUG << "#";
-        m_CommandManager->setupSpellCheckSuggestions(&m_CommonKeywordsModel, -1, Common::SuggestionFlags::All);
+        doSuggestCorrections();
     }
 
     void CombinedArtworksModel::initDescriptionHighlighting(QQuickTextDocument *document) {
@@ -255,21 +229,11 @@ namespace Models {
     }
 
     void CombinedArtworksModel::spellCheckDescription() {
-        LOG_DEBUG << "#";
-        if (!m_CommonKeywordsModel.getDescription().trimmed().isEmpty()) {
-            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckFlags::Description);
-        } else {
-            m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckFlags::Description);
-        }
+        doSpellCheckDescription();
     }
 
     void CombinedArtworksModel::spellCheckTitle() {
-        LOG_DEBUG << "#";
-        if (!m_CommonKeywordsModel.getTitle().trimmed().isEmpty()) {
-            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckFlags::Title);
-        } else {
-            m_CommonKeywordsModel.notifySpellCheckResults(Common::SpellCheckFlags::Title);
-        }
+        doSpellCheckTitle();
     }
 
     void CombinedArtworksModel::assignFromSelected() {
@@ -298,19 +262,16 @@ namespace Models {
     }
 
     void CombinedArtworksModel::plainTextEdit(const QString &rawKeywords) {
-        QStringList keywords = rawKeywords.trimmed().split(QChar(','), QString::SkipEmptyParts);
-
-        m_CommonKeywordsModel.setKeywords(keywords);
+        doPlainTextEdit(rawKeywords);
         setKeywordsModified(true);
-        emit keywordsCountChanged();
     }
 
     bool CombinedArtworksModel::hasTitleWordSpellError(const QString &word) {
-        return m_CommonKeywordsModel.hasTitleWordSpellError(word);
+        return getHasTitleWordSpellError(word);
     }
 
     bool CombinedArtworksModel::hasDescriptionWordSpellError(const QString &word) {
-        return m_CommonKeywordsModel.hasDescriptionWordSpellError(word);
+        return getHasDescriptionWordSpellError(word);
     }
 
     void CombinedArtworksModel::processCombinedEditCommand() {

@@ -71,7 +71,7 @@ void BasicKeywordsModelTests::removeExistingKeywordTest() {
     QSignalSpy removeSignalSpy(&basicModel, SIGNAL(rowsRemoved(QModelIndex,int,int)));
 
     QString removedKeyword;
-    bool result = basicModel.takeKeywordAt(0, removedKeyword);
+    bool result = basicModel.removeKeywordAt(0, removedKeyword);
     QCOMPARE(result, true);
 
     QCOMPARE(removedKeyword, keyword);
@@ -92,12 +92,12 @@ void BasicKeywordsModelTests::removeNonExistingKeywordTest() {
     QSignalSpy removeSignalSpy(&basicModel, SIGNAL(rowsRemoved(QModelIndex,int,int)));
 
     QString removedKeyword;
-    result = basicModel.takeKeywordAt(-1, removedKeyword);
+    result = basicModel.removeKeywordAt(-1, removedKeyword);
     QCOMPARE(result, false);
     QCOMPARE(basicModel.getKeywordsCount(), 1);
     QCOMPARE(removeSignalSpy.count(), 0);
 
-    result = basicModel.takeKeywordAt(1, removedKeyword);
+    result = basicModel.removeKeywordAt(1, removedKeyword);
     QCOMPARE(result, false);
     QCOMPARE(basicModel.getKeywordsCount(), 1);
     QCOMPARE(removeSignalSpy.count(), 0);
@@ -319,7 +319,7 @@ void BasicKeywordsModelTests::addRemoveAddUpperCaseWordTest() {
     QCOMPARE(addResult, true);
 
     QString removed;
-    bool removeResult = basicModel.takeKeywordAt(0, removed);
+    bool removeResult = basicModel.removeKeywordAt(0, removed);
     QCOMPARE(removeResult, true);
     QCOMPARE(removed, keyword);
 

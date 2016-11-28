@@ -415,20 +415,22 @@ ApplicationWindow {
 
             MenuItem {
                 text: i18.n + qsTr("&Invert selection")
-                enabled: artworksHost.count > 0
                 onTriggered: {
                     console.info("Invert selection triggered")
-                    filteredArtItemsModel.invertSelectionArtworks()
+                    if (filteredArtItemsModel.getItemsCount() > 0) {
+                        filteredArtItemsModel.invertSelectionArtworks()
+                    }
                 }
             }
 
             MenuItem {
                 text: i18.n + qsTr("&Sort by filename")
-                enabled: artworksHost.count > 0
                 checkable: true
                 onToggled: {
                     console.info("Sort by filename")
-                    filteredArtItemsModel.toggleSorted();
+                    if (filteredArtItemsModel.getItemsCount() > 0) {
+                        filteredArtItemsModel.toggleSorted();
+                    }
                 }
             }
 

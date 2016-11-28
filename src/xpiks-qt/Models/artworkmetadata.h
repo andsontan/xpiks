@@ -34,6 +34,7 @@
 #include "../Common/basicmetadatamodel.h"
 #include "../Common/flags.h"
 #include "../Common/ibasicartwork.h"
+#include "../Common/imetadataoperator.h"
 #include "../Common/hold.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../UndoRedo/artworkmetadatabackup.h"
@@ -44,7 +45,9 @@ namespace Models {
     class SettingsModel;
 
     class ArtworkMetadata:
-        public QObject, public Common::IBasicArtwork
+            public QObject,
+            public Common::IBasicArtwork,
+            public Common::IMetadataOperator
     {
         Q_OBJECT
 
@@ -139,11 +142,12 @@ namespace Models {
 
     public:
         bool areKeywordsEmpty() { return m_MetadataModel.areKeywordsEmpty(); }
-        bool removeKeywordAt(int index);
-        bool removeLastKeyword();
+        virtual bool removeKeywordAt(int index, QString &removed);
+        virtual bool removeLastKeyword(QString &removed);
         virtual bool appendKeyword(const QString &keyword);
         virtual int appendKeywords(const QStringList &keywordsList);
         bool removeKeywords(const QSet<QString> &keywordsSet, bool caseSensitive=true);
+        virtual QString getKeywordsString() { return m_MetadataModel.getKeywordsString(); }
 
     public:
         void acquire() { m_Hold.acquire(); }

@@ -133,16 +133,14 @@ namespace Models {
         return result;
     }
 
-    bool ArtworkMetadata::removeKeywordAt(int index) {
-        QString removed;
-        bool result = m_MetadataModel.takeKeywordAt(index, removed);
+    bool ArtworkMetadata::removeKeywordAt(int index, QString &removed) {
+        bool result = m_MetadataModel.removeKeywordAt(index, removed);
         if (result) { markModified(); }
         return result;
     }
 
-    bool ArtworkMetadata::removeLastKeyword() {
-        QString removed;
-        bool result = m_MetadataModel.takeLastKeyword(removed);
+    bool ArtworkMetadata::removeLastKeyword(QString &removed) {
+        bool result = m_MetadataModel.removeLastKeyword(removed);
         if (result) { markModified(); }
         return result;
     }

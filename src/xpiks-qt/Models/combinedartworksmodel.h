@@ -37,19 +37,21 @@
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Common/hold.h"
 #include "../Models/metadataelement.h"
+#include "artworkproxybase.h"
 
 namespace Models {
     class CombinedArtworksModel:
-        public ArtworksViewModel
+            public ArtworksViewModel,
+            public ArtworkProxyBase
     {
-    Q_OBJECT
-    Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
-    Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
-    Q_PROPERTY(int keywordsCount READ getKeywordsCount NOTIFY keywordsCountChanged)
-    Q_PROPERTY(bool changeDescription READ getChangeDescription WRITE setChangeDescription NOTIFY changeDescriptionChanged)
-    Q_PROPERTY(bool changeTitle READ getChangeTitle WRITE setChangeTitle NOTIFY changeTitleChanged)
-    Q_PROPERTY(bool changeKeywords READ getChangeKeywords WRITE setChangeKeywords NOTIFY changeKeywordsChanged)
-    Q_PROPERTY(bool appendKeywords READ getAppendKeywords WRITE setAppendKeywords NOTIFY appendKeywordsChanged)
+        Q_OBJECT
+        Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
+        Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
+        Q_PROPERTY(int keywordsCount READ getKeywordsCount NOTIFY keywordsCountChanged)
+        Q_PROPERTY(bool changeDescription READ getChangeDescription WRITE setChangeDescription NOTIFY changeDescriptionChanged)
+        Q_PROPERTY(bool changeTitle READ getChangeTitle WRITE setChangeTitle NOTIFY changeTitleChanged)
+        Q_PROPERTY(bool changeKeywords READ getChangeKeywords WRITE setChangeKeywords NOTIFY changeKeywordsChanged)
+        Q_PROPERTY(bool appendKeywords READ getAppendKeywords WRITE setAppendKeywords NOTIFY appendKeywordsChanged)
 
     public:
         CombinedArtworksModel(QObject *parent=0);
@@ -99,23 +101,17 @@ namespace Models {
 
     public:
         void setKeywords(const QStringList &keywords) { m_CommonKeywordsModel.setKeywords(keywords); }
-        QString getDescription() { return m_CommonKeywordsModel.getDescription(); }
         void setDescription(const QString &value) {
-            if (m_CommonKeywordsModel.setDescription(value)) {
-                emit descriptionChanged();
+            if (doSetDescription(value)) {
                 setDescriptionModified(true);
             }
         }
 
-        QString getTitle() { return m_CommonKeywordsModel.getTitle(); }
         void setTitle(const QString &value) {
-            if (m_CommonKeywordsModel.setTitle(value)) {
-                emit titleChanged();
+            if (doSetTitle(value)) {
                 setTitleModified(true);
             }
         }
-
-        int getKeywordsCount() { return m_CommonKeywordsModel.getKeywordsCount(); }
 
         bool getChangeDescription() const { return Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::EditDesctiption); }
         void setChangeDescription(bool value);
@@ -140,12 +136,13 @@ namespace Models {
         void artworkUnavailable(int index);
         void completionsAvailable();
 
+    protected:
+        virtual void signalDescriptionChanged() { emit descriptionChanged(); }
+        virtual void signalTitleChanged() { emit titleChanged(); }
+        virtual void signalKeywordsCountChanged() { emit keywordsCountChanged(); }
+
     public:
         void generateAboutToBeRemoved();
-
-#ifdef INTEGRATION_TESTS
-        Common::BasicMetadataModel *getBasicMetadataModel() { return &m_CommonKeywordsModel; }
-#endif
 
 #ifdef CORE_TESTS
         QStringList getKeywords();
@@ -185,13 +182,22 @@ namespace Models {
         void assignFromOneArtwork();
         void assignFromManyArtworks();
 
-    private slots:
+    public slots:
         void spellCheckErrorsChangedHandler();
         void spellCheckErrorsFixedHandler();
 
     public slots:
         void userDictUpdateHandler(const QStringList &keywords);
         void userDictClearedHandler();
+
+#ifdef INTEGRATION_TESTS
+    public:
+        Common::BasicMetadataModel *retrieveBasicMetadataModel() { return getBasicMetadataModel(); }
+#endif
+
+    protected:
+        virtual Common::BasicMetadataModel *getBasicMetadataModel() { return &m_CommonKeywordsModel; }
+        virtual Common::IMetadataOperator *getMetadataOperator() { return &m_CommonKeywordsModel; }
 
     protected:
         virtual bool doRemoveSelectedArtworks();

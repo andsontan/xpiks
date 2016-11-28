@@ -276,7 +276,8 @@ void ArtworkMetadataTests::removeKeywordFromEmptyTest() {
     QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
     QSignalSpy removedSpy(metadata.getBasicModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)));
 
-    bool removed = metadata.removeKeywordAt(0);
+    QString keyword;
+    bool removed = metadata.removeKeywordAt(0, keyword);
 
     QCOMPARE(removed, false);
     QCOMPARE(modifiedSpy.count(), 0);
@@ -288,7 +289,8 @@ void ArtworkMetadataTests::removeLastKeywordFromEmptyTest() {
     QSignalSpy modifiedSpy(&metadata, SIGNAL(modifiedChanged(bool)));
     QSignalSpy removedSpy(metadata.getBasicModel(), SIGNAL(rowsRemoved(QModelIndex,int,int)));
 
-    bool removed = metadata.removeLastKeyword();
+    QString keyword;
+    bool removed = metadata.removeLastKeyword(keyword);
 
     QCOMPARE(removed, false);
     QCOMPARE(modifiedSpy.count(), 0);
@@ -302,7 +304,8 @@ void ArtworkMetadataTests::removeActualKeywordTest() {
 
     metadata.appendKeyword("keyword1");
 
-    bool removed = metadata.removeKeywordAt(0);
+    QString keyword;
+    bool removed = metadata.removeKeywordAt(0, keyword);
 
     QCOMPARE(removed, true);
 
@@ -323,7 +326,8 @@ void ArtworkMetadataTests::removeLastActualKeywordTest() {
 
     metadata.appendKeyword("keyword1");
 
-    bool removed = metadata.removeLastKeyword();
+    QString keyword;
+    bool removed = metadata.removeLastKeyword(keyword);
 
     QCOMPARE(removed, true);
 

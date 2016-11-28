@@ -151,7 +151,7 @@ namespace Suggestion {
         LOG_INFO << "Index:" << keywordIndex;
 
         QString keyword;
-        if (m_SuggestedKeywords.takeKeywordAt(keywordIndex, keyword)) {
+        if (m_SuggestedKeywords.removeKeywordAt(keywordIndex, keyword)) {
             emit suggestedKeywordsCountChanged();
             LOG_INFO << "Removed:" << keyword;
         }
@@ -163,7 +163,7 @@ namespace Suggestion {
         LOG_INFO << "Index:" << keywordIndex;
 
         QString keyword;
-        if (m_AllOtherKeywords.takeKeywordAt(keywordIndex, keyword)) {
+        if (m_AllOtherKeywords.removeKeywordAt(keywordIndex, keyword)) {
             emit otherKeywordsCountChanged();
             LOG_INFO << "Removed:" << keyword;
         }

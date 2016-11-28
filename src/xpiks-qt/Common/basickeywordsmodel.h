@@ -34,6 +34,7 @@
 #include "hold.h"
 #include "../SpellCheck/ispellcheckable.h"
 #include "../Common/flags.h"
+#include "../Common/imetadataoperator.h"
 
 namespace SpellCheck {
     class SpellCheckQueryItem;
@@ -45,10 +46,11 @@ namespace SpellCheck {
 namespace Common {
     class BasicKeywordsModel:
             public AbstractListModel,
-            public SpellCheck::IKeywordsSpellCheckable
+            public SpellCheck::IKeywordsSpellCheckable,
+            public Common::IMetadataOperator
     {
-    Q_OBJECT
-    Q_PROPERTY(bool hasSpellErrors READ hasSpellErrors NOTIFY spellCheckErrorsChanged)
+        Q_OBJECT
+        Q_PROPERTY(bool hasSpellErrors READ hasSpellErrors NOTIFY spellCheckErrorsChanged)
 
     public:
         BasicKeywordsModel(Common::Hold &hold, QObject *parent=0);
@@ -79,16 +81,16 @@ namespace Common {
     public:
         int getKeywordsCount();
         QSet<QString> getKeywordsSet();
-        QString getKeywordsString();
+        virtual QString getKeywordsString();
 
     public:
-        bool appendKeyword(const QString &keyword);
-        bool takeKeywordAt(int index, QString &removedKeyword);
-        bool takeLastKeyword(QString &removedKeyword);
-        void setKeywords(const QStringList &keywordsList);
-        int appendKeywords(const QStringList &keywordsList);
-        bool editKeyword(int index, const QString &replacement);
-        bool clearKeywords();
+        virtual bool appendKeyword(const QString &keyword);
+        virtual bool removeKeywordAt(int index, QString &removedKeyword);
+        virtual bool removeLastKeyword(QString &removedKeyword);
+        virtual void setKeywords(const QStringList &keywordsList);
+        virtual int appendKeywords(const QStringList &keywordsList);
+        virtual bool editKeyword(int index, const QString &replacement);
+        virtual bool clearKeywords();
         bool areKeywordsEmpty();
         virtual bool replace(const QString &replaceWhat, const QString &replaceTo, Common::SearchFlags flags);
         bool removeKeywords(const QSet<QString> &keywords, bool caseSensitive);

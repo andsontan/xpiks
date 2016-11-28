@@ -122,7 +122,7 @@ namespace Common {
         return appendKeywordUnsafe(keyword);
     }
 
-    bool BasicKeywordsModel::takeKeywordAt(int index, QString &removedKeyword) {
+    bool BasicKeywordsModel::removeKeywordAt(int index, QString &removedKeyword) {
         bool wasCorrect = false, result = false;
 
         m_KeywordsLock.lockForWrite();
@@ -143,7 +143,7 @@ namespace Common {
         return result;
     }
 
-    bool BasicKeywordsModel::takeLastKeyword(QString &removedKeyword) {
+    bool BasicKeywordsModel::removeLastKeyword(QString &removedKeyword) {
         bool wasCorrect = false, result = false;
 
         m_KeywordsLock.lockForWrite();
