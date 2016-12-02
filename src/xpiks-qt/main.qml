@@ -583,6 +583,21 @@ ApplicationWindow {
                     Common.launchDialog("Dialogs/ExportMetadata.qml", applicationWindow, {overwriteAll: true})
                 }
             }
+
+            MenuSeparator { }
+
+            MenuItem {
+                text: i18.n + qsTr("Show logs")
+                onTriggered: {
+                    var logsModel = helpersWrapper.getLogsModel()
+                    var allText = logsModel.getAllLogsText()
+                    Common.launchDialog("Dialogs/LogsDialog.qml",
+                                        applicationWindow,
+                                        {
+                                            logText: allText
+                                        });
+                }
+            }
         }
 
         Menu {
@@ -1222,32 +1237,6 @@ ApplicationWindow {
 
             Item {
                 width: 20
-            }
-
-            StyledText {
-                text: i18.n + qsTr("Show logs")
-                color: logsMA.pressed ? Colors.linkClickedColor : Colors.labelInactiveForeground
-
-                MouseArea {
-                    id: logsMA
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        var logsModel = helpersWrapper.getLogsModel()
-                        var allText = logsModel.getAllLogsText()
-                        Common.launchDialog("Dialogs/LogsDialog.qml",
-                                            applicationWindow,
-                                            {
-                                                logText: allText
-                                            });
-                    }
-                }
-            }
-
-            StyledText {
-                text: "|"
-                color: Colors.labelInactiveForeground
-                verticalAlignment: Text.AlignVCenter
             }
 
             StyledText {
