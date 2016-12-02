@@ -31,6 +31,10 @@ namespace Models {
     {
     }
 
+    ArtworkProxyModel::~ArtworkProxyModel() {
+        doResetModel();
+    }
+
     void ArtworkProxyModel::setDescription(const QString &description)  {
         if (doSetDescription(description)) {
             signalDescriptionChanged();
@@ -132,8 +136,10 @@ namespace Models {
         if (m_ArtworkMetadata != nullptr) {
             auto *basicModel = m_ArtworkMetadata->getBasicModel();
             this->disconnect(basicModel);
+            m_ArtworkMetadata->release();
         }
 
+        metadata->acquire();
         m_ArtworkMetadata = metadata;
         m_ArtworkOriginalIndex = originalIndex;
 
@@ -165,6 +171,10 @@ namespace Models {
     }
 
     void ArtworkProxyModel::doResetModel() {
+        if (m_ArtworkMetadata != nullptr) {
+            m_ArtworkMetadata->release();
+        }
+
         m_ArtworkMetadata = nullptr;
         m_ArtworkOriginalIndex = -1;
     }

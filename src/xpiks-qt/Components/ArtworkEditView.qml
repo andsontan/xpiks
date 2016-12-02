@@ -57,8 +57,8 @@ Item {
 
     Component.onCompleted: {
         focus = true
-        //titleTextInput.forceActiveFocus()
-        //titleTextInput.cursorPosition = titleTextInput.text.length
+        titleTextInput.forceActiveFocus()
+        titleTextInput.cursorPosition = titleTextInput.text.length
     }
 
     Connections {
@@ -155,24 +155,35 @@ Item {
             Layout.fillWidth: true
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            color: Colors.defaultControlColor
+            color: Colors.defaultDarkColor
 
             Item {
                 id: topHeader
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: parent.top
-                anchors.margins: 10
-                height: 35
+                height: 45
+
+                Rectangle {
+                    id: spacer
+                    anchors.left: parent.left
+                    width: 2
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    color: Colors.artworkImageBackground
+                }
 
                 RowLayout {
-                    anchors.left: parent.left
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 10
+                    anchors.left: spacer.right
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
+                    height: childrenRect.height
                     spacing: 0
 
-                    StyledBlackButton {
-                        width: 80
+                    StyledButton {
+                        width: 100
                         text: qsTr("Back")
                         onClicked: closePopup()
                     }
@@ -225,94 +236,77 @@ Item {
                 height: 45
                 spacing: 0
 
-                CustomTab {
-                    tabIndex: 0
-                    width: rightPane.width/2
-                    isSelected: tabIndex == editTabView.currentIndex
-                    hovered: (!isSelected) && editTabMA.containsMouse
-                    color: isSelected ? Colors.selectedImageBackground : Colors.defaultControlColor
+                Repeater {
+                    model: [qsTr("Edit"), qsTr("Info")]
+                    delegate: CustomTab {
+                        width: rightPane.width/2
+                        property int delegateIndex: index
+                        tabIndex: delegateIndex
+                        isSelected: tabIndex === editTabView.currentIndex
+                        hovered: tabMA.containsMouse
 
-                    StyledText {
-                        color: parent.isSelected ? Colors.artworkActiveColor : (parent.hovered ? Colors.inputForegroundColor : Colors.labelActiveForeground)
-                        text: qsTr("Edit")
-                        anchors.centerIn: parent
-                    }
+                        StyledText {
+                            color: parent.isSelected ? Colors.artworkActiveColor : (parent.hovered ? Colors.inputForegroundColor : Colors.labelActiveForeground)
+                            text: modelData
+                            anchors.centerIn: parent
+                        }
 
-                    MouseArea {
-                        id: editTabMA
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onClicked: editTabView.currentIndex = parent.tabIndex
-                    }
-                }
-
-                CustomTab {
-                    tabIndex: 1
-                    width: rightPane.width/2
-                    isSelected: tabIndex == editTabView.currentIndex
-                    hovered: (!isSelected) && infoTabMA.containsMouse
-                    color: isSelected ? Colors.selectedImageBackground : Colors.defaultControlColor
-
-                    StyledText {
-                        color: parent.isSelected ? Colors.artworkActiveColor : (parent.hovered ? Colors.inputForegroundColor : Colors.labelActiveForeground)
-                        text: qsTr("Info")
-                        anchors.centerIn: parent
-                    }
-
-                    MouseArea {
-                        id: infoTabMA
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onClicked: editTabView.currentIndex = parent.tabIndex
+                        MouseArea {
+                            id: tabMA
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            onClicked: editTabView.setCurrentIndex(parent.tabIndex)
+                        }
                     }
                 }
             }
 
-            TabView {
+            Item {
                 id: editTabView
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: tabsHeader.bottom
                 anchors.bottom: parent.bottom
+                property int currentIndex: 0
 
-                style: TabViewStyle {
-                    frame: Rectangle {
-                        color: Colors.selectedImageBackground
+                function setCurrentIndex(index) {
+                    if (index === 0) {
+                        infoTab.visible = false
+                        editTab.visible = true
+                    } else if (index === 1) {
+                        infoTab.visible = true
+                        editTab.visible = false
                     }
 
-                    tabBar: Rectangle {
-                        color: Colors.selectedImageBackground
-                    }
-
-                    tab: Item {}
+                    editTabView.currentIndex = index
                 }
 
-                Tab {
-                    active: true
+                Rectangle {
+                    id: editTab
+                    color: Colors.defaultControlColor
                     anchors.fill: parent
 
                     ColumnLayout {
                         id: fields
                         anchors.fill: parent
-                        anchors.margins: 10
+                        anchors.leftMargin: 10
+                        anchors.rightMargin: 20
+                        anchors.topMargin: 5
+                        anchors.bottomMargin: 10
                         spacing: 0
 
-                        RowLayout {
-                            spacing: 5
+                        Item {
+                            height: childrenRect.height
+                            anchors.left: parent.left
+                            anchors.right: parent.right
 
                             StyledText {
+                                anchors.left: parent.left
                                 text: i18.n + qsTr("Title:")
                             }
 
                             StyledText {
-                                text: i18.n + qsTr("(same as Description if empty)")
-                            }
-
-                            Item {
-                                Layout.fillWidth: true
-                            }
-
-                            StyledText {
+                                anchors.right: parent.right
                                 text: titleTextInput.length
                             }
                         }
@@ -401,19 +395,18 @@ Item {
                             height: 20
                         }
 
-                        RowLayout {
+                        Item {
+                            height: childrenRect.height
                             anchors.left: parent.left
                             anchors.right: parent.right
 
                             StyledText {
+                                anchors.left: parent.left
                                 text: i18.n + qsTr("Description:")
                             }
 
-                            Item {
-                                Layout.fillWidth: true
-                            }
-
                             StyledText {
+                                anchors.right: parent.right
                                 text: descriptionTextInput.length
                             }
                         }
@@ -426,7 +419,7 @@ Item {
                             id: rect
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            height: 60
+                            height: 70
                             color: Colors.inputBackgroundColor
                             border.color: Colors.artworkActiveColor
                             border.width: descriptionTextInput.activeFocus ? 1 : 0
@@ -525,23 +518,19 @@ Item {
                             height: 20
                         }
 
-                        RowLayout {
-                            spacing: 5
+                        Item {
+                            height: childrenRect.height
+                            anchors.left: parent.left
+                            anchors.right: parent.right
 
                             StyledText {
+                                anchors.left: parent.left
                                 id: keywordsLabel
                                 text: i18.n + qsTr("Keywords:")
                             }
 
                             StyledText {
-                                text: i18.n + qsTr("(comma-separated)")
-                            }
-
-                            Item {
-                                Layout.fillWidth: true
-                            }
-
-                            StyledText {
+                                anchors.right: parent.right
                                 text: artworkProxy.keywordsCount
                             }
                         }
@@ -654,132 +643,99 @@ Item {
                             height: 4
                         }
 
-                        Item {
-                            anchors.right: parent.right
-                            width: parent.width
-                            height: childrenRect.height
+                        StyledText {
+                            text: i18.n + qsTr("Fix spelling")
+                            enabled: artworkEditComponent.keywordsModel ? artworkEditComponent.keywordsModel.hasSpellErrors : false
+                            color: enabled ? (fixSpellingMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
-                            RowLayout {
-                                anchors.left: parent.left
-                                anchors.leftMargin: 3
-                                anchors.right: parent.right
-                                anchors.rightMargin: 3
-                                spacing: 5
+                            MouseArea {
+                                id: fixSpellingMA
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    artworkProxy.suggestCorrections()
+                                    Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                                        componentParent,
+                                                        {})
+                                }
+                            }
+                        }
 
-                                StyledText {
-                                    text: i18.n + qsTr("Fix spelling")
-                                    enabled: artworkEditComponent.keywordsModel ? artworkEditComponent.keywordsModel.hasSpellErrors : false
-                                    color: enabled ? (fixSpellingMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
+                        StyledText {
+                            text: i18.n + qsTr("Suggest")
+                            color: enabled ? (suggestKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
-                                    MouseArea {
-                                        id: fixSpellingMA
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: {
-                                            artworkProxy.suggestCorrections()
-                                            Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
-                                                                componentParent,
-                                                                {})
+                            MouseArea {
+                                id: suggestKeywordsMA
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    var callbackObject = {
+                                        promoteKeywords: function(keywords) {
+                                            artworkProxy.pasteKeywords(keywords)
                                         }
                                     }
+
+                                    Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
+                                                        componentParent,
+                                                        {callbackObject: callbackObject});
                                 }
+                            }
+                        }
 
-                                StyledText {
-                                    text: "|"
-                                    verticalAlignment: Text.AlignVCenter
-                                }
+                        StyledText {
+                            text: i18.n + qsTr("Copy")
+                            color: copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
 
-                                StyledText {
-                                    text: i18.n + qsTr("Suggest")
-                                    color: enabled ? (suggestKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
+                            MouseArea {
+                                id: copyKeywordsMA
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: clipboard.setText(artworkProxy.getKeywordsString())
+                            }
+                        }
 
-                                    MouseArea {
-                                        id: suggestKeywordsMA
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: {
-                                            var callbackObject = {
-                                                promoteKeywords: function(keywords) {
-                                                    artworkProxy.pasteKeywords(keywords)
-                                                }
-                                            }
+                        StyledText {
+                            text: i18.n + qsTr("Clear")
+                            color: enabled ? (clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
-                                            Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
-                                                                componentParent,
-                                                                {callbackObject: callbackObject});
+                            MouseArea {
+                                id: clearKeywordsMA
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: clearKeywordsDialog.open()
+                            }
+                        }
+
+                        StyledText {
+                            id: plainTextText
+                            text: i18.n + qsTr("<u>edit in plain text</u>")
+                            color: plainTextMA.containsMouse ? Colors.linkClickedColor : Colors.labelActiveForeground
+
+                            MouseArea {
+                                id: plainTextMA
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    // strange bug with clicking on the keywords field
+                                    if (!containsMouse) { return; }
+
+                                    var callbackObject = {
+                                        onSuccess: function(text) {
+                                            artworkProxy.plainTextEdit(text)
+                                        },
+                                        onClose: function() {
+                                            flv.activateEdit()
                                         }
                                     }
-                                }
 
-                                StyledText {
-                                    text: "|"
-                                    verticalAlignment: Text.AlignVCenter
-                                }
-
-                                StyledText {
-                                    text: i18.n + qsTr("Copy")
-                                    color: copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
-
-                                    MouseArea {
-                                        id: copyKeywordsMA
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: clipboard.setText(artworkProxy.getKeywordsString())
-                                    }
-                                }
-
-                                StyledText {
-                                    text: "|"
-                                    verticalAlignment: Text.AlignVCenter
-                                }
-
-                                StyledText {
-                                    text: i18.n + qsTr("Clear")
-                                    color: enabled ? (clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
-
-                                    MouseArea {
-                                        id: clearKeywordsMA
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: clearKeywordsDialog.open()
-                                    }
-                                }
-
-                                Item {
-                                    Layout.fillWidth: true
-                                }
-
-                                StyledText {
-                                    id: plainTextText
-                                    text: i18.n + qsTr("<u>edit in plain text</u>")
-                                    color: plainTextMA.containsMouse ? Colors.linkClickedColor : Colors.labelActiveForeground
-
-                                    MouseArea {
-                                        id: plainTextMA
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: {
-                                            // strange bug with clicking on the keywords field
-                                            if (!containsMouse) { return; }
-
-                                            var callbackObject = {
-                                                onSuccess: function(text) {
-                                                    artworkProxy.plainTextEdit(text)
-                                                },
-                                                onClose: function() {
-                                                    flv.activateEdit()
-                                                }
-                                            }
-
-                                            Common.launchDialog("Dialogs/PlainTextKeywordsDialog.qml",
-                                                                applicationWindow,
-                                                                {
-                                                                    callbackObject: callbackObject,
-                                                                    keywordsText: artworkProxy.getKeywordsString(),
-                                                                    keywordsModel: artworkProxy.getBasicModel()
-                                                                });
-                                        }
-                                    }
+                                    Common.launchDialog("Dialogs/PlainTextKeywordsDialog.qml",
+                                                        applicationWindow,
+                                                        {
+                                                            callbackObject: callbackObject,
+                                                            keywordsText: artworkProxy.getKeywordsString(),
+                                                            keywordsModel: artworkProxy.getBasicModel()
+                                                        });
                                 }
                             }
                         }
@@ -790,7 +746,10 @@ Item {
                     }
                 }
 
-                Tab {
+                Rectangle {
+                    id: infoTab
+                    visible: false
+                    color: Colors.defaultControlColor
                     anchors.fill: parent
 
                     StyledText {

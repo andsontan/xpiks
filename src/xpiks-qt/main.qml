@@ -985,7 +985,7 @@ ApplicationWindow {
                         width: 25
                         height: 20
                         anchors.centerIn: parent
-                        color: parent.hovered ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
+                        color: (parent.isSelected || parent.hovered) ? Colors.inputForegroundColor : Colors.inputBackgroundColor
                     }
 
                     MouseArea {
@@ -1007,7 +1007,7 @@ ApplicationWindow {
                         width: 25
                         height: 20
                         anchors.centerIn: parent
-                        color: parent.hovered ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
+                        color: (parent.isSelected || parent.hovered) ? Colors.inputForegroundColor : Colors.inputBackgroundColor
                     }
 
                     MouseArea {
@@ -1039,10 +1039,11 @@ ApplicationWindow {
                         anchors.rightMargin: 10
                         anchors.topMargin: 15
                         anchors.bottomMargin: 10
-                        spacing: 10
+                        spacing: 0
 
                         StyledBlackButton {
-                            height: 25
+                            implicitHeight: 30
+                            height: 30
                             anchors.left: parent.left
                             anchors.right: parent.right
                             text: i18.n + qsTr("Add directory")
@@ -1050,12 +1051,21 @@ ApplicationWindow {
                             enabled: (applicationWindow.openedDialogsCount == 0)
                         }
 
+                        Item {
+                            height: 10
+                        }
+
                         StyledBlackButton {
-                            height: 25
+                            implicitHeight: 30
+                            height: 30
                             anchors.left: parent.left
                             anchors.right: parent.right
                             text: i18.n + qsTr("Add files", "button")
                             action: addFilesAction
+                        }
+
+                        Item {
+                            height: 20
                         }
 
                         Item {
@@ -1197,6 +1207,7 @@ ApplicationWindow {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             focus: true
+            property bool areActionsAllowed: depth <= 1
 
             initialItem: MainGrid {
             }
@@ -1247,6 +1258,7 @@ ApplicationWindow {
                     id: warningsMA
                     anchors.fill: parent
                     cursorShape: Qt.PointingHandCursor
+                    enabled: mainStackView.areActionsAllowed
                     onClicked: {
                         warningsModel.update()
                         //filteredArtItemsModel.checkForWarnings()
@@ -1330,6 +1342,7 @@ ApplicationWindow {
                 MouseArea {
                     id: selectSelectedMA
                     anchors.fill: parent
+                    enabled: mainStackView.areActionsAllowed
                     cursorShape: filteredArtItemsModel.selectedArtworksCount > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
                     onClicked: {
                         if (filteredArtItemsModel.selectedArtworksCount > 0) {
@@ -1357,6 +1370,7 @@ ApplicationWindow {
                 MouseArea {
                     id: selectModifiedMA
                     anchors.fill: parent
+                    enabled: mainStackView.areActionsAllowed
                     cursorShape: artItemsModel.modifiedArtworksCount > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
                     onClicked: {
                         if (artItemsModel.modifiedArtworksCount > 0) {

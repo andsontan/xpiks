@@ -98,9 +98,9 @@ SlateGrayTheme.selectedImageBackground = "#3e434d";
 SlateGrayTheme.selectedArtworkBackground = "#474b54";
 SlateGrayTheme.checkboxCheckedColor = "#ffffff";
 
-SlateGrayTheme.itemsSourceBackground = SlateGrayTheme.defaultDarkColor;
-SlateGrayTheme.itemsSourceSelected = SlateGrayTheme.selectedImageBackground;
-SlateGrayTheme.itemsSourceForeground = SlateGrayTheme.inputInactiveForeground;
+SlateGrayTheme.itemsSourceBackground = SlateGrayTheme.selectedImageBackground;
+SlateGrayTheme.itemsSourceSelected = SlateGrayTheme.itemsSourceBackground;
+SlateGrayTheme.itemsSourceForeground = SlateGrayTheme.inputForegroundColor;
 
 SlateGrayTheme.destructiveColor = "#A81A1A";
 SlateGrayTheme.greenColor = "#2daf02";

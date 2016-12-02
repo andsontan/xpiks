@@ -52,6 +52,7 @@ namespace Models {
 
     public:
         explicit ArtworkProxyModel(QObject *parent = 0);
+        virtual ~ArtworkProxyModel();
 
     public:
         const QString &getImagePath() const { return m_ArtworkMetadata->getFilepath(); }
@@ -66,6 +67,7 @@ namespace Models {
         void descriptionChanged();
         void titleChanged();
         void keywordsCountChanged();
+        void completionsAvailable();
 
     protected:
         virtual void signalDescriptionChanged() { emit descriptionChanged(); }
