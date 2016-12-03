@@ -50,6 +50,23 @@ Rectangle {
         autoCompleteBox = undefined
     }
 
+    function reloadItemEditing(itemIndex) {
+        if (itemIndex === artworkIndex) { return }
+
+        var originalIndex = filteredArtItemsModel.getOriginalIndex(itemIndex)
+        var metadata = filteredArtItemsModel.getArtworkMetadata(itemIndex)
+        var keywordsModel = filteredArtItemsModel.getBasicModel(itemIndex)
+
+        artworkProxy.setSourceArtwork(metadata, originalIndex)
+
+        artworkEditComponent.artworkIndex = itemIndex
+        artworkEditComponent.keywordsModel = keywordsModel
+        rosterListView.currentIndex = itemIndex
+
+        titleTextInput.forceActiveFocus()
+        titleTextInput.cursorPosition = titleTextInput.text.length
+    }
+
     function closePopup() {
         mainStackView.pop()
         artworkProxy.resetModel()
@@ -61,6 +78,7 @@ Rectangle {
         focus = true
         titleTextInput.forceActiveFocus()
         titleTextInput.cursorPosition = titleTextInput.text.length
+        rosterListView.currentIndex = artworkIndex
     }
 
     Connections {
@@ -153,7 +171,7 @@ Rectangle {
         anchors.bottom: bottomPane.top
 
         handleDelegate: Rectangle {
-            color: Colors.defaultDarkColor
+            color: Colors.defaultDarkerColor
         }
 
         onResizingChanged: {
@@ -771,8 +789,123 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         height: 110
-        color: Colors.defaultDarkColor
+        color: Colors.artworkBackground
 
+        Item {
+            id: selectPrevButton
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: 40
+
+            TriangleElement {
+                width: 7
+                height: 14
+                anchors.centerIn: parent
+                anchors.horizontalCenterOffset: isFlipped ? -1 : +1
+                isVertical: true
+                isFlipped: true
+                color: {
+                    if (leftCollapseMA.pressed) {
+                        return Colors.whiteColor
+                    } else {
+                        return prevButtonMA.containsMouse ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
+                    }
+                }
+            }
+
+            MouseArea {
+                id: prevButtonMA
+                anchors.fill: parent
+                hoverEnabled: true
+                enabled: rosterListView.currentIndex > 0
+                onClicked: {
+                    reloadItemEditing(rosterListView.currentIndex - 1)
+                }
+            }
+        }
+
+        ListView {
+            id: rosterListView
+            boundsBehavior: Flickable.StopAtBounds
+            orientation: ListView.Horizontal
+            anchors.left: selectPrevButton.right
+            anchors.right: selectNextButton.left
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            model: filteredArtItemsModel
+            highlightFollowsCurrentItem: false
+            highlightMoveDuration: 0
+            flickableDirection: Flickable.HorizontalFlick
+            interactive: false
+            focus: true
+            clip: true
+            spacing: 0
+
+            delegate: Rectangle {
+                id: cellItem
+                property int delegateIndex: index
+                anchors.top: parent.top
+                anchors.bottom: parent.bottom
+                width: bottomPane.height
+                color: (ListView.isCurrentItem || imageMA.containsMouse) ? Colors.selectedArtworkBackground : "transparent"
+
+                Image {
+                    id: artworkImage
+                    anchors.fill: parent
+                    anchors.margins: 15
+                    source: "image://cached/" + filename
+                    sourceSize.width: 150
+                    sourceSize.height: 150
+                    fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
+                    asynchronous: true
+                    // caching is implemented on different level
+                    cache: false
+                }
+
+                MouseArea {
+                    id: imageMA
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onClicked: {
+                        reloadItemEditing(cellItem.delegateIndex)
+                    }
+                }
+            }
+        }
+
+        Item {
+            id: selectNextButton
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            width: 40
+
+            TriangleElement {
+                width: 7
+                height: 14
+                anchors.centerIn: parent
+                anchors.horizontalCenterOffset: isFlipped ? -1 : +1
+                isVertical: true
+                color: {
+                    if (leftCollapseMA.pressed) {
+                        return Colors.whiteColor
+                    } else {
+                        return nextButtonMA.containsMouse ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
+                    }
+                }
+            }
+
+            MouseArea {
+                id: nextButtonMA
+                anchors.fill: parent
+                hoverEnabled: true
+                enabled: rosterListView.currentIndex < (rosterListView.count - 1)
+                onClicked: {
+                    reloadItemEditing(rosterListView.currentIndex + 1)
+                }
+            }
+        }
     }
 
     ClipboardHelper {

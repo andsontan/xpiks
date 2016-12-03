@@ -309,7 +309,7 @@ CloseRequested")
                                 boundsBehavior: Flickable.StopAtBounds
                                 anchors.fill: parent
                                 anchors.margins: 10
-                                orientation: Qt.Horizontal
+                                orientation: ListView.Horizontal
                                 spacing: 10
                                 model: combinedArtworks
 

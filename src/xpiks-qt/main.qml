@@ -955,7 +955,7 @@ ApplicationWindow {
 
                     PropertyChanges {
                         target: leftDockingGroup
-                        anchors.leftMargin: -250 + leftCollapser.width
+                        anchors.leftMargin: -leftDockingGroup.width - mainStackView.anchors.leftMargin + leftCollapser.width
                     }
                 }
             ]

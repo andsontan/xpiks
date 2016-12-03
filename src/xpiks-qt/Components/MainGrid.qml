@@ -1320,8 +1320,8 @@ ColumnLayout {
                                 }
                             }
                         }
-
                     }
+
                     Connections {
                         target: artItemsModel
                         onArtworksChanged: artworksHost.forceUpdateArtworks(needToMoveCurrentItem)
