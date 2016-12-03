@@ -81,6 +81,7 @@ namespace Constants {
     const char USER_DICT_FILENAME[] = "userdict.dic";
     const char PATH_TO_UPDATE[] = "PATH_TO_UPDATE";
     const char AVAILABLE_UPDATE_VERSION[] = "AVAILABLE_UPDATE_VERSION";
+    const char ARTWORK_EDIT_RIGHT_PANE_WIDTH[] = "ARTWORK_EDIT_RIGHT_PANE_WIDTH";
 #else
     const char MAX_KEYWORD_COUNT[] = "DEBUG_MAX_KEYWORD_COUNT";
     const char MAX_DESCRIPTION_LENGTH[] = "DEBUG_MAX_DESCRIPTION_LENGTH";
@@ -103,6 +104,7 @@ namespace Constants {
     const char AUTO_DOWNLOAD_UPDATES[] = "DEBUG_AUTO_DOWNLOAD_UPDATES";
     const char PATH_TO_UPDATE[] = "DEBUG_PATH_TO_UPDATE";
     const char AVAILABLE_UPDATE_VERSION[] = "DEBUG_AVAILABLE_UPDATE_VERSION";
+    const char ARTWORK_EDIT_RIGHT_PANE_WIDTH[] = "DEBUG_ARTWORK_EDIT_RIGHT_PANE_WIDTH";
 
 #ifdef INTEGRATION_TESTS
     const char LIBRARY_FILENAME[] = "xpiks.integration.library";

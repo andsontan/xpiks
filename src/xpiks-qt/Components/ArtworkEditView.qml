@@ -32,9 +32,10 @@ import "../Components"
 import "../StyledControls"
 import "../Constants/UIConfig.js" as UIConfig
 
-Item {
+Rectangle {
     id: artworkEditComponent
     anchors.fill: parent
+    color: Colors.artworkImageBackground
 
     property variant componentParent
     property var autoCompleteBox
@@ -52,6 +53,7 @@ Item {
     function closePopup() {
         mainStackView.pop()
         artworkProxy.resetModel()
+        settingsModel.saveArtworkEditUISettings()
         expandLeftPane()
     }
 
@@ -144,39 +146,38 @@ Item {
 
     SplitView {
         orientation: Qt.Horizontal
-        anchors.fill: parent
+        anchors.leftMargin: 2
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: bottomPane.top
 
         handleDelegate: Rectangle {
             color: Colors.defaultDarkColor
         }
 
-        Rectangle {
+        onResizingChanged: {
+            settingsModel.artworkEditRightPaneWidth = rightPane.width
+        }
+
+        Item {
             id: boundsRect
             Layout.fillWidth: true
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            color: Colors.defaultDarkColor
 
-            Item {
+            Rectangle {
                 id: topHeader
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: parent.top
                 height: 45
-
-                Rectangle {
-                    id: spacer
-                    anchors.left: parent.left
-                    width: 2
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    color: Colors.artworkImageBackground
-                }
+                color: Colors.defaultDarkColor
 
                 RowLayout {
                     anchors.leftMargin: 10
                     anchors.rightMargin: 10
-                    anchors.left: spacer.right
+                    anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
                     height: childrenRect.height
@@ -198,13 +199,12 @@ Item {
                 }
             }
 
-            Rectangle {
+            Item {
                 id: imageWrapper
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: topHeader.bottom
                 anchors.bottom: parent.bottom
-                color: Colors.artworkImageBackground
 
                 Image {
                     id: previewImage
@@ -221,14 +221,17 @@ Item {
 
         Item {
             id: rightPane
-            Layout.maximumWidth: 450
+            Layout.maximumWidth: 550
             Layout.minimumWidth: 250
-            Layout.preferredWidth: 300
-            width: 300
+            //width: 300
             anchors.top: parent.top
             anchors.bottom: parent.bottom
 
-            RowLayout {
+            Component.onCompleted: {
+                rightPane.width = settingsModel.artworkEditRightPaneWidth
+            }
+
+            Row {
                 id: tabsHeader
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -759,6 +762,17 @@ Item {
                 }
             }
         }
+    }
+
+    Rectangle {
+        id: bottomPane
+        anchors.leftMargin: 2
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: 110
+        color: Colors.defaultDarkColor
+
     }
 
     ClipboardHelper {

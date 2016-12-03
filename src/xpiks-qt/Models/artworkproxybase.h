@@ -45,7 +45,7 @@ namespace Models {
         virtual bool doSetDescription(const QString &description);
         virtual bool doSetTitle(const QString &title);
 
-        // virtual inheritance from qobject is not supported
+        // TODO: virtual inheritance from qobject is not supported
     //signals:
         virtual void signalDescriptionChanged() = 0;
         virtual void signalTitleChanged() = 0;

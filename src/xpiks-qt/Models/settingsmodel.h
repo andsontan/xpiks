@@ -65,6 +65,7 @@ namespace Models {
         Q_PROPERTY(QString proxyPassword READ getProxyPassword NOTIFY proxyPasswordChanged)
         Q_PROPERTY(QString proxyPort READ getProxyPort NOTIFY proxyPortChanged)
         Q_PROPERTY(bool autoCacheImages READ getAutoCacheImages WRITE setAutoCacheImages NOTIFY autoCacheImagesChanged)
+        Q_PROPERTY(int artworkEditRightPaneWidth READ getArtworkEditRightPaneWidth WRITE setArtworkEditRightPaneWidth NOTIFY artworkEditRightPaneWidthChanged)
 
     public:
         explicit SettingsModel(QObject *parent = 0);
@@ -86,6 +87,7 @@ namespace Models {
         Q_INVOKABLE void readAllValues();
         Q_INVOKABLE void raiseMasterPasswordSignal() { emit mustUseMasterPasswordChanged(m_MustUseMasterPassword); }
         Q_INVOKABLE void saveProxySetting(const QString &address, const QString &user, const QString &password, const QString &port);
+        Q_INVOKABLE void saveArtworkEditUISettings();
 
     public:
         QString getExifToolPath() const { return m_ExifToolPath; }
@@ -116,6 +118,7 @@ namespace Models {
         QString getProxyPort() const { return m_ProxySettings.m_Port; }
         ProxySettings *getProxySettings() { return &m_ProxySettings; }
         bool getAutoCacheImages() const { return m_AutoCacheImages; }
+        int getArtworkEditRightPaneWidth() const { return m_ArtworkEditRightPaneWidth; }
 
     signals:
         void settingsReset();
@@ -146,6 +149,7 @@ namespace Models {
         void proxyPasswordChanged(QString value);
         void proxyPortChanged(QString value);
         void autoCacheImagesChanged(bool value);
+        void artworkEditRightPaneWidthChanged(int value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -325,6 +329,13 @@ namespace Models {
             }
         }
 
+        void setArtworkEditRightPaneWidth(int value) {
+            if (value != m_ArtworkEditRightPaneWidth) {
+                m_ArtworkEditRightPaneWidth = value;
+                emit artworkEditRightPaneWidthChanged(value);
+            }
+        }
+
 #ifndef INTEGRATION_TESTS
     private:
 #else
@@ -341,6 +352,7 @@ namespace Models {
         QString m_SelectedLocale;
         double m_KeywordSizeScale;
         double m_ScrollSpeedScale;
+        int m_ArtworkEditRightPaneWidth;
         int m_UploadTimeout; // in seconds
         int m_DismissDuration;
         int m_MaxParallelUploads;

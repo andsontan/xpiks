@@ -158,6 +158,9 @@ namespace Helpers {
         Q_PROPERTY(QString availableUpdateVersionKey READ getAvailableUpdateVersionKey CONSTANT)
         QString getAvailableUpdateVersionKey() const { return QLatin1String(Constants::AVAILABLE_UPDATE_VERSION); }
 
+        Q_PROPERTY(QString artworkEditRightPaneWidthKey READ getArtworkEditRightPaneWidthKey CONSTANT)
+        QString getArtworkEditRightPaneWidthKey() const { return QLatin1String(Constants::ARTWORK_EDIT_RIGHT_PANE_WIDTH); }
+
         Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
         QString getWhatsNewText() const {
             QString text;

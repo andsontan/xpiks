@@ -58,6 +58,7 @@
 #define DEFAULT_USE_AUTO_COMPLETE true
 #define DEFAULT_USE_EXIFTOOL false
 #define DEFAULT_USE_PROXY false
+#define DEFAULT_ARTWORK_EDIT_RIGHT_PANE_WIDTH 300
 
 #ifndef INTEGRATION_TESTS
 #define DEFAULT_AUTO_CACHE_IMAGES true
@@ -73,6 +74,7 @@ namespace Models {
         m_SelectedLocale(DEFAULT_LOCALE),
         m_KeywordSizeScale(DEFAULT_KEYWORD_SIZE_SCALE),
         m_ScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE),
+        m_ArtworkEditRightPaneWidth(DEFAULT_ARTWORK_EDIT_RIGHT_PANE_WIDTH),
         m_UploadTimeout(DEFAULT_UPLOAD_TIMEOUT),
         m_DismissDuration(DEFAULT_DISMISS_DURATION),
         m_MaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS),
@@ -151,6 +153,7 @@ namespace Models {
         appSettings.setValue(appSettings.getUseProxyKey(), m_UseProxy);
         appSettings.setValue(appSettings.getproxyHashKey(),QVariant::fromValue(m_ProxySettings));
         appSettings.setValue(appSettings.getCacheImagesKey(), m_AutoCacheImages);
+        appSettings.setValue(appSettings.getArtworkEditRightPaneWidthKey(), m_ArtworkEditRightPaneWidth);
 
         if (!m_MustUseMasterPassword) {
             appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
@@ -218,6 +221,8 @@ namespace Models {
         QVariant qvalue = appSettings.value(Constants::PROXY_HOST, "");
         m_ProxySettings = qvalue.value<ProxySettings>();
         setAutoCacheImages(appSettings.boolValue(appSettings.getCacheImagesKey(), DEFAULT_AUTO_CACHE_IMAGES));
+
+        setArtworkEditRightPaneWidth(appSettings.intValue(appSettings.getArtworkEditRightPaneWidthKey(), DEFAULT_ARTWORK_EDIT_RIGHT_PANE_WIDTH));
     }
 
     void SettingsModel::resetToDefault() {
@@ -247,6 +252,7 @@ namespace Models {
         setUseProxy(DEFAULT_USE_PROXY);
         resetProxySetting();
         setAutoCacheImages(DEFAULT_AUTO_CACHE_IMAGES);
+        setArtworkEditRightPaneWidth(DEFAULT_ARTWORK_EDIT_RIGHT_PANE_WIDTH);
 
         Helpers::AppSettings appSettings;
 #if defined(QT_DEBUG)
@@ -321,6 +327,11 @@ namespace Models {
             m_ProxySettings.m_Port = tPort;
             emit proxyPortChanged(tPort);
         }
+    }
+
+    void SettingsModel::saveArtworkEditUISettings() {
+        Helpers::AppSettings appSettings;
+        appSettings.setValue(appSettings.getArtworkEditRightPaneWidthKey(), m_ArtworkEditRightPaneWidth);
     }
 
     void SettingsModel::resetProxySetting() {
