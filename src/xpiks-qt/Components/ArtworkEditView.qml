@@ -42,6 +42,7 @@ Rectangle {
 
     property int artworkIndex: -1
     property var keywordsModel
+    property bool wasLeftSideCollapsed
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
@@ -75,8 +76,14 @@ Rectangle {
         closeAutoComplete()
         mainStackView.pop()
         artworkProxy.resetModel()
-        expandLeftPane()
+        restoreLeftPane()
         settingsModel.saveArtworkEditUISettings()
+    }
+
+    function restoreLeftPane() {
+        if (!wasLeftSideCollapsed) {
+            expandLeftPane()
+        }
     }
 
     function closeAutoComplete() {

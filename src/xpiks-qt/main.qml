@@ -210,16 +210,23 @@ ApplicationWindow {
         applicationWindow.leftSideCollapsed = false
     }
 
+    function toggleLeftPane() {
+        leftDockingGroup.state = (leftDockingGroup.state == "collapsed") ? "" : "collapsed"
+        applicationWindow.leftSideCollapsed = !leftSideCollapsed
+    }
+
     function startOneItemEditing(metadata, index, originalIndex) {
         var keywordsModel = filteredArtItemsModel.getBasicModel(index)
         artworkProxy.setSourceArtwork(metadata, originalIndex)
+        var wasCollapsed = applicationWindow.leftSideCollapsed
         applicationWindow.collapseLeftPane()
         mainStackView.push({
                                item: "qrc:/Components/ArtworkEditView.qml",
                                properties: {
                                    artworkIndex: index,
                                    keywordsModel: keywordsModel,
-                                   componentParent: applicationWindow
+                                   componentParent: applicationWindow,
+                                   wasLeftSideCollapsed: wasCollapsed
                                },
                                destroyOnPop: true
                            })
@@ -1192,10 +1199,7 @@ ApplicationWindow {
                 id: leftCollapseMA
                 hoverEnabled: true
                 anchors.fill: parent
-                onClicked: {
-                    leftDockingGroup.state = (leftDockingGroup.state == "collapsed") ? "" : "collapsed"
-                    applicationWindow.leftSideCollapsed = !leftSideCollapsed
-                }
+                onClicked: toggleLeftPane()
             }
         }
 
