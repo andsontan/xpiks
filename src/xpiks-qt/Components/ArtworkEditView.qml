@@ -335,7 +335,7 @@ Rectangle {
                     id: editTab
                     color: Colors.defaultControlColor
                     anchors.fill: parent
-                    property color inputBackgroundColor: Colors.selectedImageBackground
+                    property color inputBackgroundColor: Colors.selectedArtworkBackground
 
                     ColumnLayout {
                         id: fields
@@ -818,7 +818,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         height: 110
-        color: Colors.artworkBackground
+        color: Colors.defaultDarkColor
 
         Item {
             id: selectPrevButton
