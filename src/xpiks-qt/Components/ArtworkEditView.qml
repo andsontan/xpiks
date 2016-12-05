@@ -43,6 +43,7 @@ Rectangle {
     property int artworkIndex: -1
     property var keywordsModel
     property bool wasLeftSideCollapsed
+    property bool listViewEnabled: true
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
@@ -65,8 +66,11 @@ Rectangle {
 
         artworkEditComponent.artworkIndex = itemIndex
         artworkEditComponent.keywordsModel = keywordsModel
-        rosterListView.currentIndex = itemIndex
-        rosterListView.positionViewAtIndex(itemIndex, ListView.Contain)
+
+        if (listViewEnabled) {
+            rosterListView.currentIndex = itemIndex
+            rosterListView.positionViewAtIndex(itemIndex, ListView.Contain)
+        }
 
         titleTextInput.forceActiveFocus()
         titleTextInput.cursorPosition = titleTextInput.text.length
@@ -118,12 +122,9 @@ Rectangle {
     }
 
     Connections {
-        target: artItemsModel
-        onFileWithIndexUnavailable: {
-            if (artworkIndex == index) {
-                console.debug("Artwork unavailable")
-                closePopup()
-            }
+        target: artworkProxy
+        onItemBecomeUnavailable: {
+            closePopup()
         }
     }
 
@@ -835,7 +836,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             width: 40
             enabled: rosterListView.currentIndex > 0
-            color: prevButtonMA.containsMouse ? Colors.defaultDarkerColor : Colors.defaultDarkColor
+            color: (enabled && prevButtonMA.containsMouse) ? Colors.defaultDarkerColor : Colors.defaultDarkColor
 
             TriangleElement {
                 width: 7
@@ -865,13 +866,14 @@ Rectangle {
 
         ListView {
             id: rosterListView
+            enabled: listViewEnabled
             boundsBehavior: Flickable.StopAtBounds
             orientation: ListView.Horizontal
             anchors.left: selectPrevButton.right
             anchors.right: selectNextButton.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            model: filteredArtItemsModel
+            model: listViewEnabled ? filteredArtItemsModel : null
             highlightFollowsCurrentItem: false
             highlightMoveDuration: 0
             flickableDirection: Flickable.HorizontalFlick
@@ -881,8 +883,10 @@ Rectangle {
             spacing: 0
 
             Component.onCompleted: {
-                rosterListView.currentIndex = artworkEditComponent.artworkIndex
-                rosterListView.positionViewAtIndex(artworkEditComponent.artworkIndex, ListView.Center)
+                if (listViewEnabled) {
+                    rosterListView.currentIndex = artworkEditComponent.artworkIndex
+                    rosterListView.positionViewAtIndex(artworkEditComponent.artworkIndex, ListView.Center)
+                }
             }
 
             delegate: Rectangle {
@@ -961,7 +965,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             width: 40
             enabled: rosterListView.currentIndex < (rosterListView.count - 1)
-            color: nextButtonMA.containsMouse ? Colors.defaultDarkerColor : Colors.defaultDarkColor
+            color: (enabled && nextButtonMA.containsMouse) ? Colors.defaultDarkerColor : Colors.defaultDarkColor
 
             TriangleElement {
                 width: 7

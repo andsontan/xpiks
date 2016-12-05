@@ -375,6 +375,8 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&helpersQmlWrapper);
 
     artworkProxyModel.setCommandManager(&commandManager);
+    QObject::connect(&artItemsModel, SIGNAL(fileWithIndexUnavailable(int)),
+                     &artworkProxyModel, SLOT(itemUnavailableHandler(int)));
 
     commandManager.ensureDependenciesInjected();
 

@@ -68,6 +68,7 @@ namespace Models {
         void titleChanged();
         void keywordsCountChanged();
         void completionsAvailable();
+        void itemBecomeUnavailable();
 
     protected:
         virtual void signalDescriptionChanged() { emit descriptionChanged(); }
@@ -77,6 +78,7 @@ namespace Models {
     public slots:
         void afterSpellingErrorsFixedHandler();
         void spellCheckErrorsChangedHandler();
+        void itemUnavailableHandler(int index);
 
     public:
         Q_INVOKABLE void editKeyword(int index, const QString &replacement);

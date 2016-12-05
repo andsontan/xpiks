@@ -60,6 +60,13 @@ namespace Models {
         emit titleChanged();
     }
 
+    void ArtworkProxyModel::itemUnavailableHandler(int index) {
+        if ((index == m_ArtworkOriginalIndex) && (m_ArtworkOriginalIndex != -1)) {
+            LOG_INFO << "Item is not available anymore" << index;
+            emit itemBecomeUnavailable();
+        }
+    }
+
     void ArtworkProxyModel::afterSpellingErrorsFixedHandler() {
         // if squeezing took place after replace
         emit keywordsCountChanged();
