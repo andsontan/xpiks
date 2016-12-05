@@ -185,6 +185,8 @@ namespace QMLExtensions {
                 unknownRequests.push_back(item);
             }
         }
+
+        LOG_DEBUG << knownRequests.size() << "known and" << unknownRequests.size() << "unknown";
     }
 
     void ImageCachingWorker::readIndex() {

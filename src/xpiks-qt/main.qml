@@ -1202,7 +1202,6 @@ ApplicationWindow {
         StackView {
             id: mainStackView
             anchors.left: leftDockingGroup.right
-            anchors.leftMargin: 2
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom

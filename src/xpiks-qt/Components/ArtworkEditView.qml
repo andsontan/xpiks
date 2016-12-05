@@ -895,6 +895,7 @@ Rectangle {
             MouseArea {
                 id: horizontalScrollMA
                 anchors.fill: parent
+                enabled: rosterListView.contentWidth > rosterListView.width
                 propagateComposedEvents: true
                 preventStealing: true
                 property double epsilon: 0.000001

@@ -34,7 +34,9 @@ import "../Constants/UIConfig.js" as UIConfig
 import "../Constants/Themes.js" as Themes
 
 ColumnLayout {
+    id: mainGridComponent
     spacing: 0
+    property int myLeftMargin: 2
 
     Action {
         id: searchAction
@@ -86,6 +88,7 @@ ColumnLayout {
         color: Colors.defaultDarkColor
         z: 2000
         anchors.left: parent.left
+        anchors.leftMargin: mainGridComponent.myLeftMargin
         anchors.right: parent.right
 
         RowLayout {
@@ -141,6 +144,7 @@ ColumnLayout {
     }
 
     Rectangle {
+        anchors.leftMargin: mainGridComponent.myLeftMargin
         height: 1
         anchors.left: parent.left
         anchors.right: parent.right
@@ -149,6 +153,7 @@ ColumnLayout {
 
     Rectangle {
         anchors.left: parent.left
+        anchors.leftMargin: mainGridComponent.myLeftMargin
         anchors.right: parent.right
         Layout.fillHeight: true
         color: Colors.defaultControlColor

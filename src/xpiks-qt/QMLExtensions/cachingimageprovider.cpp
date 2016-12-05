@@ -41,14 +41,16 @@ namespace QMLExtensions {
 
             return image;
         } else {
+            LOG_INTEGR_TESTS_OR_DEBUG << "Not found cached:" << id;
+
             QImage image(id);
             QImage result;
 
             if (requestedSize.isValid()) {
                 m_ImageCachingService->cacheImage(id, requestedSize);
                 result = image.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-            }
-            else {
+            } else {
+                LOG_WARNING << "Size is invalid:" << requestedSize.width() << "x" << requestedSize.height();
                 result = image;
             }
 
