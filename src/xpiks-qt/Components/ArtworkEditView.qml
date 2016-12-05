@@ -869,6 +869,18 @@ Rectangle {
                     cache: false
                 }
 
+                Image {
+                    id: imageTypeIcon
+                    visible: hasvectorattached
+                    enabled: hasvectorattached
+                    source: "qrc:/Graphics/vector-icon.svg"
+                    sourceSize.width: 20
+                    sourceSize.height: 20
+                    anchors.left: artworkImage.left
+                    anchors.bottom: artworkImage.bottom
+                    cache: true
+                }
+
                 MouseArea {
                     id: imageMA
                     anchors.fill: parent
@@ -876,6 +888,30 @@ Rectangle {
                     onClicked: {
                         reloadItemEditing(cellItem.delegateIndex)
                     }
+                }
+            }
+
+            // hack until QML will allow scrolling horizontally with mouse wheel
+            MouseArea {
+                id: horizontalScrollMA
+                anchors.fill: parent
+                propagateComposedEvents: true
+                preventStealing: true
+                property double epsilon: 0.000001
+
+                onWheel: {
+                    var shiftX = wheel.angleDelta.y
+                    var flickable = rosterListView
+
+                    if (shiftX > epsilon) { // up/right
+                        var maxScrollPos = flickable.contentWidth - flickable.width
+                        flickable.contentX = Math.min(maxScrollPos, flickable.contentX + shiftX)
+                        wheel.accepted = true
+                    } else if (shiftX < -epsilon) { // bottom/left
+                        flickable.contentX = Math.max(0, flickable.contentX + shiftX)
+                        wheel.accepted = true
+                    }
+
                 }
             }
         }

@@ -183,7 +183,7 @@ Flickable {
 
             var shift = wheel.angleDelta.y
 
-            if (shift < -epsilon) {
+            if (shift < -epsilon) { // bottom/left
                 var maxScrollPos = flowListView.contentHeight - flowListView.height
                 if (Math.abs(flowListView.contentY - maxScrollPos) > scrollStep) {
                     scrollDown()
@@ -191,7 +191,7 @@ Flickable {
                     scrollToBottom()
                     wheel.accepted = false
                 }
-            } else if (shift > epsilon) {
+            } else if (shift > epsilon) { // up/right
                 if (flowListView.contentY > scrollStep) {
                     scrollUp()
                 } else {
