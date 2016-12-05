@@ -71,10 +71,11 @@ Rectangle {
     }
 
     function closePopup() {
+        closeAutoComplete()
         mainStackView.pop()
         artworkProxy.resetModel()
-        settingsModel.saveArtworkEditUISettings()
         expandLeftPane()
+        settingsModel.saveArtworkEditUISettings()
     }
 
     function closeAutoComplete() {
