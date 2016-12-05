@@ -820,12 +820,14 @@ Rectangle {
         height: 110
         color: Colors.defaultDarkColor
 
-        Item {
+        Rectangle {
             id: selectPrevButton
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             width: 40
+            enabled: rosterListView.currentIndex > 0
+            color: prevButtonMA.containsMouse ? Colors.defaultDarkerColor : Colors.defaultDarkColor
 
             TriangleElement {
                 width: 7
@@ -835,10 +837,10 @@ Rectangle {
                 isVertical: true
                 isFlipped: true
                 color: {
-                    if (leftCollapseMA.pressed) {
-                        return Colors.whiteColor
+                    if (enabled) {
+                        return prevButtonMA.pressed ? Colors.inputForegroundColor : Colors.artworkActiveColor
                     } else {
-                        return prevButtonMA.containsMouse ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
+                        return Colors.inputBackgroundColor
                     }
                 }
             }
@@ -847,7 +849,6 @@ Rectangle {
                 id: prevButtonMA
                 anchors.fill: parent
                 hoverEnabled: true
-                enabled: rosterListView.currentIndex > 0
                 onClicked: {
                     reloadItemEditing(rosterListView.currentIndex - 1)
                 }
@@ -945,12 +946,14 @@ Rectangle {
             }
         }
 
-        Item {
+        Rectangle {
             id: selectNextButton
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             width: 40
+            enabled: rosterListView.currentIndex < (rosterListView.count - 1)
+            color: nextButtonMA.containsMouse ? Colors.defaultDarkerColor : Colors.defaultDarkColor
 
             TriangleElement {
                 width: 7
@@ -959,10 +962,10 @@ Rectangle {
                 anchors.horizontalCenterOffset: isFlipped ? -1 : +1
                 isVertical: true
                 color: {
-                    if (leftCollapseMA.pressed) {
-                        return Colors.whiteColor
+                    if (enabled) {
+                        return nextButtonMA.pressed ? Colors.inputForegroundColor : Colors.artworkActiveColor
                     } else {
-                        return nextButtonMA.containsMouse ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
+                        return Colors.inputBackgroundColor
                     }
                 }
             }
@@ -971,7 +974,6 @@ Rectangle {
                 id: nextButtonMA
                 anchors.fill: parent
                 hoverEnabled: true
-                enabled: rosterListView.currentIndex < (rosterListView.count - 1)
                 onClicked: {
                     reloadItemEditing(rosterListView.currentIndex + 1)
                 }
