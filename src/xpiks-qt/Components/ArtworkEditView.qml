@@ -62,6 +62,7 @@ Rectangle {
         artworkEditComponent.artworkIndex = itemIndex
         artworkEditComponent.keywordsModel = keywordsModel
         rosterListView.currentIndex = itemIndex
+        rosterListView.positionViewAtIndex(itemIndex, ListView.Contain)
 
         titleTextInput.forceActiveFocus()
         titleTextInput.cursorPosition = titleTextInput.text.length
@@ -76,9 +77,9 @@ Rectangle {
 
     Component.onCompleted: {
         focus = true
+
         titleTextInput.forceActiveFocus()
         titleTextInput.cursorPosition = titleTextInput.text.length
-        rosterListView.currentIndex = artworkIndex
     }
 
     Connections {
@@ -841,6 +842,11 @@ Rectangle {
             focus: true
             clip: true
             spacing: 0
+
+            Component.onCompleted: {
+                rosterListView.currentIndex = artworkEditComponent.artworkIndex
+                rosterListView.positionViewAtIndex(artworkEditComponent.artworkIndex, ListView.Center)
+            }
 
             delegate: Rectangle {
                 id: cellItem
