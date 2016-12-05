@@ -53,6 +53,8 @@ Rectangle {
     function reloadItemEditing(itemIndex) {
         if (itemIndex === artworkIndex) { return }
 
+        closeAutoComplete()
+
         var originalIndex = filteredArtItemsModel.getOriginalIndex(itemIndex)
         var metadata = filteredArtItemsModel.getArtworkMetadata(itemIndex)
         var keywordsModel = filteredArtItemsModel.getBasicModel(itemIndex)
@@ -73,6 +75,12 @@ Rectangle {
         artworkProxy.resetModel()
         settingsModel.saveArtworkEditUISettings()
         expandLeftPane()
+    }
+
+    function closeAutoComplete() {
+        if (typeof artworkEditComponent.autoCompleteBox !== "undefined") {
+            artworkEditComponent.autoCompleteBox.closePopup()
+        }
     }
 
     Component.onCompleted: {
@@ -109,7 +117,7 @@ Rectangle {
         onYes: filteredArtItemsModel.clearKeywords(artworkEditComponent.artworkIndex)
     }
 
-    Keys.onEscapePressed: closePopup()
+    // Keys.onEscapePressed: closePopup()
 
     Connections {
         target: artworkProxy
