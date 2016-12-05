@@ -36,7 +36,7 @@ import "../Constants/Themes.js" as Themes
 ColumnLayout {
     id: mainGridComponent
     spacing: 0
-    property int myLeftMargin: 2
+    property int myLeftMargin: applicationWindow.leftSideCollapsed ? 0 : 2
 
     Action {
         id: searchAction

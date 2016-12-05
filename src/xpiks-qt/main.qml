@@ -955,7 +955,7 @@ ApplicationWindow {
 
                     PropertyChanges {
                         target: leftDockingGroup
-                        anchors.leftMargin: -leftDockingGroup.width - mainStackView.anchors.leftMargin + leftCollapser.width
+                        anchors.leftMargin: -leftDockingGroup.width + leftCollapser.width
                     }
                 }
             ]
@@ -1169,7 +1169,7 @@ ApplicationWindow {
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            color: Colors.defaultDarkColor
+            color: Colors.leftSliderColor
             width: 15
 
             TriangleElement {
@@ -1178,7 +1178,7 @@ ApplicationWindow {
                 isVertical: true
                 isFlipped: !applicationWindow.leftSideCollapsed
                 anchors.centerIn: parent
-                anchors.horizontalCenterOffset: isFlipped ? -1 : +1
+                anchors.horizontalCenterOffset: isFlipped ? -1 : 0
                 color: {
                     if (leftCollapseMA.pressed) {
                         return Colors.whiteColor
@@ -1388,7 +1388,7 @@ ApplicationWindow {
             background: Rectangle {
                 implicitHeight: 20
                 implicitWidth: 200
-                color: Colors.defaultDarkColor
+                color: Colors.statusBarColor
             }
         }
     }

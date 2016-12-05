@@ -65,6 +65,9 @@
 #define DEFAULT_DESTRUCTIVE_COLOR "#d10b0b"
 #define DEFAULT_GREEN_COLOR "#2daf02"
 
+#define DEFAULT_STATUS_BAR_COLOR DEFAULT_ARTWORK_IMAGE_BACKGROUND
+#define DEFAULT_LEFT_SLIDER_COLOR DEFAULT_ARTWORK_IMAGE_BACKGROUND
+
 namespace QMLExtensions {
     ColorsModel::ColorsModel(QObject *parent) : QObject(parent)
     {
@@ -107,6 +110,9 @@ namespace QMLExtensions {
 
         setDestructiveColor(QColor(DEFAULT_DESTRUCTIVE_COLOR));
         setGreenColor(QColor(DEFAULT_GREEN_COLOR));
+
+        setStatusBarColor(QColor(DEFAULT_STATUS_BAR_COLOR));
+        setLeftSliderColor(QColor(DEFAULT_LEFT_SLIDER_COLOR));
     }
 
     void ColorsModel::registerTheme(const QJsonObject &theme) {
@@ -161,6 +167,9 @@ namespace QMLExtensions {
 
         setDestructiveColor(QColor(theme["destructiveColor"].toString(DEFAULT_DESTRUCTIVE_COLOR)));
         setGreenColor(QColor(theme["greenColor"].toString(DEFAULT_GREEN_COLOR)));
+
+        setStatusBarColor(QColor(theme["statusBarColor"].toString(DEFAULT_STATUS_BAR_COLOR)));
+        setLeftSliderColor(QColor(theme["leftSliderColor"].toString(DEFAULT_LEFT_SLIDER_COLOR)));
 
         emit themeChanged();
 

@@ -84,6 +84,16 @@ Rectangle {
         }
     }
 
+    Menu {
+        id: addWordContextMenu
+        property string word
+
+        MenuItem {
+            text: qsTr("Add to dictionary")
+            onTriggered: spellCheckService.addWordToUserDictionary(addWordContextMenu.word);
+        }
+    }
+
     Component.onCompleted: {
         focus = true
 
@@ -172,10 +182,18 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        id: leftSpacer
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        width: applicationWindow.leftSideCollapsed ? 2 : 0
+        color: Colors.defaultControlColor
+    }
+
     SplitView {
         orientation: Qt.Horizontal
-        anchors.leftMargin: 2
-        anchors.left: parent.left
+        anchors.left: leftSpacer.right
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: bottomPane.top
@@ -274,6 +292,7 @@ Rectangle {
                         property int delegateIndex: index
                         tabIndex: delegateIndex
                         isSelected: tabIndex === editTabView.currentIndex
+                        color: isSelected ? Colors.defaultControlColor : Colors.defaultDarkColor
                         hovered: tabMA.containsMouse
 
                         StyledText {
@@ -316,6 +335,7 @@ Rectangle {
                     id: editTab
                     color: Colors.defaultControlColor
                     anchors.fill: parent
+                    property color inputBackgroundColor: Colors.selectedImageBackground
 
                     ColumnLayout {
                         id: fields
@@ -351,7 +371,7 @@ Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
                             height: 25
-                            color: Colors.inputBackgroundColor
+                            color: editTab.inputBackgroundColor
                             border.color: Colors.artworkActiveColor
                             border.width: titleTextInput.activeFocus ? 1 : 0
                             clip: true
@@ -451,7 +471,7 @@ Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
                             height: 70
-                            color: Colors.inputBackgroundColor
+                            color: editTab.inputBackgroundColor
                             border.color: Colors.artworkActiveColor
                             border.width: descriptionTextInput.activeFocus ? 1 : 0
                             clip: true
@@ -577,7 +597,7 @@ Rectangle {
                             height: 255
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            color: Colors.inputBackgroundColor
+                            color: editTab.inputBackgroundColor
 
                             function removeKeyword(index) {
                                 artworkProxy.removeKeywordAt(index)
@@ -794,8 +814,7 @@ Rectangle {
 
     Rectangle {
         id: bottomPane
-        anchors.leftMargin: 2
-        anchors.left: parent.left
+        anchors.left: leftSpacer.right
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         height: 110

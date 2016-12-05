@@ -61,6 +61,9 @@ BlackTheme.itemsSourceForeground = BlackTheme.inputInactiveForeground;
 BlackTheme.destructiveColor = "#d10b0b";
 BlackTheme.greenColor = "#2daf02";
 
+BlackTheme.statusBarColor = BlackTheme.artworkImageBackground;
+BlackTheme.leftSliderColor = BlackTheme.artworkImageBackground;
+
 // ---------------------------------------------------------------
 
 var SlateGrayTheme = { name: "slate gray" };
@@ -104,3 +107,6 @@ SlateGrayTheme.itemsSourceForeground = SlateGrayTheme.inputForegroundColor;
 
 SlateGrayTheme.destructiveColor = "#A81A1A";
 SlateGrayTheme.greenColor = "#2daf02";
+
+SlateGrayTheme.statusBarColor = SlateGrayTheme.artworkImageBackground;
+SlateGrayTheme.leftSliderColor = SlateGrayTheme.artworkImageBackground;
