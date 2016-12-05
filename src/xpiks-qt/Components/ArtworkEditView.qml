@@ -52,6 +52,7 @@ Rectangle {
 
     function reloadItemEditing(itemIndex) {
         if (itemIndex === artworkIndex) { return }
+        if ((itemIndex < 0) || (itemIndex >= rosterListView.count)) { return }
 
         closeAutoComplete()
 
