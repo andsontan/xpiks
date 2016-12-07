@@ -20,7 +20,9 @@
  */
 
 #include "artworkproxymodel.h"
+#include <QImageReader>
 #include "../Commands/commandmanager.h"
+#include "imageartwork.h"
 
 namespace Models {
     ArtworkProxyModel::ArtworkProxyModel(QObject *parent) :
@@ -169,6 +171,67 @@ namespace Models {
     void ArtworkProxyModel::resetModel() {
         updateCurrentArtwork();
         doResetModel();
+    }
+
+    QSize ArtworkProxyModel::retrieveImageSize() const {
+        ImageArtwork *image = dynamic_cast<ImageArtwork *>(m_ArtworkMetadata);
+
+        if (image == NULL) {
+            return QSize();
+        }
+
+        QSize size;
+
+        if (image->isInitialized()) {
+            size = image->getImageSize();
+        } else {
+            QImageReader reader(image->getFilepath());
+            size = reader.size();
+            // metadata->setSize(size);
+        }
+
+        return size;
+    }
+
+    QString ArtworkProxyModel::retrieveFileSize() const {
+        double size = 0;
+
+        if (m_ArtworkMetadata->isInitialized()) {
+            size = m_ArtworkMetadata->getFileSize();
+        } else {
+            QFileInfo fi(m_ArtworkMetadata->getFilepath());
+            size = fi.size(); // in bytes
+        }
+
+        size /= 1024.0*1024.0;
+
+        QString sizeDescription;
+        if (size >= 1) {
+            sizeDescription = QString::number(size, 'f', 2) + QLatin1String(" MB");
+        } else {
+            size *= 1024;
+            sizeDescription = QString::number(size, 'f', 2) + QLatin1String(" KB");
+        }
+
+        return sizeDescription;
+    }
+
+    QString ArtworkProxyModel::getDateTaken() const {
+        ImageArtwork *image = dynamic_cast<ImageArtwork *>(m_ArtworkMetadata);
+        if (image != NULL) {
+            return image->getDateTaken();
+        } else {
+            return QLatin1String("");
+        }
+    }
+
+    QString ArtworkProxyModel::getAttachedVectorPath() const {
+        ImageArtwork *image = dynamic_cast<ImageArtwork *>(m_ArtworkMetadata);
+        if (image != NULL) {
+            return image->getAttachedVectorPath();
+        } else {
+            return QLatin1String("");
+        }
     }
 
     void ArtworkProxyModel::updateCurrentArtwork() {

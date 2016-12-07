@@ -170,6 +170,7 @@ Item {
                                                 sourceSize.height: 150
                                                 fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
                                                 asynchronous: true
+                                                cache: false
                                             }
                                         }
 

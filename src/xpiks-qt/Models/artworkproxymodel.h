@@ -29,6 +29,7 @@
 #include <QString>
 #include <QList>
 #include <QSet>
+#include <QSize>
 #include <QQuickTextDocument>
 #include <memory>
 #include <vector>
@@ -49,6 +50,10 @@ namespace Models {
         Q_PROPERTY(int keywordsCount READ getKeywordsCount NOTIFY keywordsCountChanged)
         Q_PROPERTY(QString imagePath READ getImagePath NOTIFY imagePathChanged)
         Q_PROPERTY(QString basename READ getBasename NOTIFY imagePathChanged)
+        Q_PROPERTY(QString attachedVectorPath READ getAttachedVectorPath NOTIFY imagePathChanged)
+        Q_PROPERTY(QSize imageSize READ retrieveImageSize NOTIFY imagePathChanged)
+        Q_PROPERTY(QString fileSize READ retrieveFileSize NOTIFY imagePathChanged)
+        Q_PROPERTY(QString dateTaken READ getDateTaken NOTIFY imagePathChanged)
 
     public:
         explicit ArtworkProxyModel(QObject *parent = 0);
@@ -104,6 +109,10 @@ namespace Models {
 
             return item;
         }
+        Q_INVOKABLE QSize retrieveImageSize() const;
+        Q_INVOKABLE QString retrieveFileSize() const;
+        Q_INVOKABLE QString getDateTaken() const;
+        Q_INVOKABLE QString getAttachedVectorPath() const;
 
     protected:
         virtual Common::BasicMetadataModel *getBasicMetadataModel() {

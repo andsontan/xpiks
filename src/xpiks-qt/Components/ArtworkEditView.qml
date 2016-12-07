@@ -812,9 +812,63 @@ Rectangle {
                     color: Colors.defaultControlColor
                     anchors.fill: parent
 
-                    StyledText {
-                        text: "Test here"
-                        anchors.centerIn: parent
+                    ColumnLayout {
+                        id: column
+                        anchors.fill: parent
+                        anchors.margins: 20
+                        spacing: 10
+
+                        Item {
+                            height: 15
+                        }
+
+                        StyledText {
+                            id: dimensionsText
+                            text: {
+                                var size = artworkProxy.imageSize
+                                return "W %1 x H %2".arg(size.width).arg(size.height)
+                            }
+                        }
+
+                        StyledText {
+                            id: sizeText
+                            text: artworkProxy.fileSize
+                        }
+
+                        StyledText {
+                            id: dateText
+                            text: artworkProxy.dateTaken
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                            height: 90
+
+                            StyledText {
+                                wrapMode: TextEdit.Wrap
+                                anchors.fill: parent
+                                text: artworkProxy.imagePath
+                                height: 90
+                                elide: Text.ElideRight
+                            }
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                            height: 90
+
+                            StyledText {
+                                wrapMode: TextEdit.Wrap
+                                anchors.fill: parent
+                                text: artworkProxy.attachedVectorPath
+                                height: 90
+                                elide: Text.ElideRight
+                            }
+                        }
+
+                        Item {
+                            Layout.fillHeight: true
+                        }
                     }
                 }
             }
