@@ -949,7 +949,13 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 width: bottomPane.height
-                color: (ListView.isCurrentItem || imageMA.containsMouse) ? Colors.selectedArtworkBackground : "transparent"
+                color: {
+                    if (ListView.isCurrentItem) {
+                        return Colors.selectedArtworkBackground
+                    } else {
+                        return imageMA.containsMouse ? Colors.defaultControlColor : "transparent"
+                    }
+                }
 
                 Image {
                     id: artworkImage
