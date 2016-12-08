@@ -142,10 +142,11 @@ Item {
 
                     Image {
                         id: previewImage
+                        property bool isFullSize: false
                         source: "image://global/" + imagePath
                         cache: false
-                        width: boundsRect.width - 20
-                        height: boundsRect.height - 20
+                        width: isFullSize ? sourceSize.width : (boundsRect.width - 20)
+                        height: isFullSize ? sourceSize.height : (boundsRect.height - 20)
                         fillMode: Image.PreserveAspectFit
                         anchors.centerIn: parent
                         asynchronous: true
@@ -235,8 +236,7 @@ Item {
                             text: i18.n + qsTr("100%")
                             width: parent.width / 2 - 10
                             onClicked: {
-                                previewImage.width = previewImage.sourceSize.width
-                                previewImage.height = previewImage.sourceSize.height
+                                previewImage.isFullSize = true
                                 scrollview.anchors.leftMargin = 0
                                 scrollview.anchors.topMargin = 0
                                 previewImage.fillMode = Image.Pad
@@ -247,8 +247,7 @@ Item {
                             text: i18.n + qsTr("Fit")
                             width: parent.width / 2 - 10
                             onClicked: {
-                                previewImage.width = boundsRect.width - 20
-                                previewImage.height = boundsRect.height - 20
+                                previewImage.isFullSize = false
                                 scrollview.anchors.leftMargin = 10
                                 scrollview.anchors.topMargin = 10
                                 previewImage.fillMode = Image.PreserveAspectFit

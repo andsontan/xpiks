@@ -1177,7 +1177,7 @@ ApplicationWindow {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             color: Colors.leftSliderColor
-            width: 15
+            width: 20
 
             TriangleElement {
                 width: 7

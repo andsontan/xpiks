@@ -35,7 +35,7 @@ import "../Constants/UIConfig.js" as UIConfig
 Rectangle {
     id: artworkEditComponent
     anchors.fill: parent
-    color: Colors.artworkImageBackground
+    color: Colors.defaultControlColor
 
     property variant componentParent
     property var autoCompleteBox
@@ -196,8 +196,8 @@ Rectangle {
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        width: applicationWindow.leftSideCollapsed ? 2 : 0
-        color: Colors.defaultControlColor
+        width: 2
+        color: applicationWindow.leftSideCollapsed ? Colors.defaultControlColor : Colors.artworkImageBackground
     }
 
     SplitView {
@@ -271,6 +271,19 @@ Rectangle {
                     anchors.centerIn: parent
                     asynchronous: true
                 }
+
+                Rectangle {
+                    anchors.bottom: parent.bottom
+                    anchors.right: parent.right
+                    width: 50
+                    height: 50
+                    color: Colors.defaultDarkColor
+
+                    ZoomAmplifier {
+                        anchors.fill: parent
+                        anchors.margins: 10
+                    }
+                }
             }
         }
 
@@ -301,7 +314,7 @@ Rectangle {
                         property int delegateIndex: index
                         tabIndex: delegateIndex
                         isSelected: tabIndex === editTabView.currentIndex
-                        color: isSelected ? Colors.defaultControlColor : Colors.defaultDarkColor
+                        color: isSelected ? Colors.selectedArtworkBackground : Colors.defaultControlColor
                         hovered: tabMA.containsMouse
 
                         StyledText {
@@ -342,9 +355,9 @@ Rectangle {
 
                 Rectangle {
                     id: editTab
-                    color: Colors.defaultControlColor
+                    color: Colors.selectedArtworkBackground
                     anchors.fill: parent
-                    property color inputBackgroundColor: Colors.selectedArtworkBackground
+                    property color inputBackgroundColor: Colors.inputBackgroundColor
 
                     ColumnLayout {
                         id: fields
@@ -809,7 +822,7 @@ Rectangle {
                 Rectangle {
                     id: infoTab
                     visible: false
-                    color: Colors.defaultControlColor
+                    color: Colors.selectedArtworkBackground
                     anchors.fill: parent
 
                     ColumnLayout {
@@ -881,7 +894,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         height: 110
-        color: Colors.defaultDarkColor
+        color: Colors.defaultDarkerColor
 
         Rectangle {
             id: selectPrevButton
@@ -890,7 +903,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             width: 40
             enabled: rosterListView.currentIndex > 0
-            color: (enabled && prevButtonMA.containsMouse) ? Colors.defaultDarkerColor : Colors.defaultDarkColor
+            color: (enabled && prevButtonMA.containsMouse) ? Colors.defaultControlColor : bottomPane.color
 
             TriangleElement {
                 width: 7
@@ -951,9 +964,9 @@ Rectangle {
                 width: bottomPane.height
                 color: {
                     if (ListView.isCurrentItem) {
-                        return Colors.selectedArtworkBackground
+                        return Colors.defaultControlColor
                     } else {
-                        return imageMA.containsMouse ? Colors.defaultControlColor : "transparent"
+                        return imageMA.containsMouse ? Colors.defaultDarkerColor : "transparent"
                     }
                 }
 
@@ -1025,7 +1038,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             width: 40
             enabled: rosterListView.currentIndex < (rosterListView.count - 1)
-            color: (enabled && nextButtonMA.containsMouse) ? Colors.defaultDarkerColor : Colors.defaultDarkColor
+            color: (enabled && nextButtonMA.containsMouse) ? Colors.defaultDarkerColor : bottomPane.color
 
             TriangleElement {
                 width: 7
