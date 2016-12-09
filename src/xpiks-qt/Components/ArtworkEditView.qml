@@ -208,6 +208,7 @@ Rectangle {
         anchors.bottom: bottomPane.top
 
         handleDelegate: Rectangle {
+            width: 2
             color: Colors.defaultDarkerColor
         }
 
@@ -260,16 +261,25 @@ Rectangle {
                 anchors.right: parent.right
                 anchors.top: topHeader.bottom
                 anchors.bottom: parent.bottom
+                property int imageMargin: 10
 
-                Image {
-                    id: previewImage
-                    source: "image://global/" + artworkProxy.imagePath
-                    cache: false
-                    width: imageWrapper.width - 20
-                    height: imageWrapper.height - 20
-                    fillMode: Image.PreserveAspectFit
-                    anchors.centerIn: parent
-                    asynchronous: true
+                StyledScrollView {
+                    id: scrollview
+                    anchors.fill: parent
+                    anchors.leftMargin: imageWrapper.imageMargin
+                    anchors.topMargin: imageWrapper.imageMargin
+
+                    Image {
+                        id: previewImage
+                        source: "image://global/" + artworkProxy.imagePath
+                        cache: false
+                        property bool isFullSize: false
+                        width: isFullSize ? sourceSize.width : (imageWrapper.width - 2*imageWrapper.imageMargin)
+                        height: isFullSize ? sourceSize.height : (imageWrapper.height - 2*imageWrapper.imageMargin)
+                        fillMode: Image.PreserveAspectFit
+                        anchors.centerIn: parent
+                        asynchronous: true
+                    }
                 }
 
                 Rectangle {
@@ -280,8 +290,17 @@ Rectangle {
                     color: Colors.defaultDarkColor
 
                     ZoomAmplifier {
+                        id: zoomIcon
                         anchors.fill: parent
                         anchors.margins: 10
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            previewImage.isFullSize = !previewImage.isFullSize
+                            zoomIcon.isPlus = !zoomIcon.isPlus
+                        }
                     }
                 }
             }
