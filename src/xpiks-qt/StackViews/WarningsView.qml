@@ -33,8 +33,9 @@ import "../StyledControls"
 import "../Constants/UIConfig.js" as UIConfig
 
 Rectangle {
-    color: Colors.defaultControlColor
+    color: Colors.defaultDarkColor
     property bool wasLeftSideCollapsed
+    property bool isRestricted: false
 
     function closePopup() {
         mainStackView.pop()
@@ -58,7 +59,7 @@ Rectangle {
 
             delegate: Rectangle {
                 property int delegateIndex: index
-                color: Colors.defaultDarkColor
+                color: Colors.defaultControlColor
                 id: imageWrapper
                 anchors.left: parent.left
                 anchors.right: parent.right
@@ -74,87 +75,90 @@ Rectangle {
                     anchors.bottom: parent.bottom
 
                     Item {
-                        anchors.fill: parent
-                        anchors.leftMargin: 10
-                        anchors.rightMargin: 15
+                        id: imageHost
+                        anchors.top: parent.top
+                        anchors.topMargin: 25
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        width: 150
+                        height: 120
 
-                        Item {
-                            id: imageHost
-                            anchors.top: parent.top
-                            anchors.topMargin: 25
-                            anchors.horizontalCenter: parent.horizontalCenter
-                            width: 150
-                            height: 150
-
-                            Image {
-                                id: artworkImage
-                                anchors.fill: parent
-                                source: "image://cached/" + filename
-                                sourceSize.width: 150
-                                sourceSize.height: 150
-                                fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
-                                asynchronous: true
-                                // caching is implemented on different level
-                                cache: false
-                            }
-
-                            Image {
-                                id: imageTypeIcon
-                                visible: hasvectorattached
-                                enabled: hasvectorattached
-                                source: "qrc:/Graphics/vector-icon.svg"
-                                sourceSize.width: 20
-                                sourceSize.height: 20
-                                anchors.left: artworkImage.left
-                                anchors.bottom: artworkImage.bottom
-                                cache: true
-                            }
+                        Image {
+                            id: artworkImage
+                            anchors.fill: parent
+                            source: "image://cached/" + filename
+                            sourceSize.width: 150
+                            sourceSize.height: 150
+                            fillMode: settingsModel.fitSmallPreview ? Image.PreserveAspectFit : Image.PreserveAspectCrop
+                            asynchronous: true
+                            // caching is implemented on different level
+                            cache: false
                         }
 
-                        StyledText {
-                            anchors.top: imageHost.bottom
-                            anchors.topMargin: 3
-                            width: parent.width
-                            elide: Text.ElideMiddle
-                            color: moreInfoMA.pressed ? Colors.linkClickedColor : Colors.labelActiveForeground
-                            horizontalAlignment: Text.AlignHCenter
-                            text: basefilename
+                        Image {
+                            id: imageTypeIcon
+                            visible: hasvectorattached
+                            enabled: hasvectorattached
+                            source: "qrc:/Graphics/vector-icon.svg"
+                            sourceSize.width: 20
+                            sourceSize.height: 20
+                            anchors.left: artworkImage.left
+                            anchors.bottom: artworkImage.bottom
+                            cache: true
+                        }
+                    }
 
-                            MouseArea {
-                                id: moreInfoMA
-                                anchors.fill: parent
-                                cursorShape: Qt.PointingHandCursor
+                    StyledText {
+                        anchors.top: imageHost.bottom
+                        anchors.topMargin: 3
+                        width: parent.width
+                        elide: Text.ElideMiddle
+                        color: moreInfoMA.pressed ? Colors.linkClickedColor : Colors.labelActiveForeground
+                        horizontalAlignment: Text.AlignHCenter
+                        text: basefilename
 
-                                onClicked: {
-                                    Common.launchDialog("../Dialogs/ArtworkPreview.qml", applicationWindow,
-                                                        {
-                                                            imagePath: filename,
-                                                            artworkIndex: rowWrapper.getIndex()
-                                                        });
-                                }
+                        MouseArea {
+                            id: moreInfoMA
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+
+                            onClicked: {
+                                Common.launchDialog("../Dialogs/ArtworkPreview.qml", applicationWindow,
+                                                    {
+                                                        imagePath: filename,
+                                                        artworkIndex: rowWrapper.getIndex()
+                                                    });
                             }
                         }
                     }
                 }
 
                 Rectangle {
-                    id: columnRectangle
+                    id: spacer
+                    width: 1
                     anchors.left: imageItem.right
+                    anchors.top: parent.top
+                    anchors.bottom: parent.bottom
+                    color: Colors.selectedArtworkBackground
+                }
+
+                Rectangle {
+                    id: columnRectangle
+                    anchors.left: spacer.right
                     anchors.top: parent.top
                     anchors.right: parent.right
                     height: (childrenRect.height < 160) ? 180 : (childrenRect.height + 20)
-                    color: Colors.defaultDarkerColor
+                    color: Colors.defaultControlColor
 
                     Column {
                         id: warningsTextList
-                        spacing: 10
+                        spacing: 15
 
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.top: parent.top
                         anchors.leftMargin: 10
                         anchors.rightMargin: 10
-                        anchors.topMargin: 10
+                        anchors.topMargin: 20
 
                         Repeater {
                             id: warningsDescriptions
