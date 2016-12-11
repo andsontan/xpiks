@@ -35,7 +35,7 @@ import "../Constants/UIConfig.js" as UIConfig
 Rectangle {
     id: artworkEditComponent
     anchors.fill: parent
-    color: Colors.defaultControlColor
+    color: Colors.artworkImageBackground
 
     property variant componentParent
     property var autoCompleteBox
@@ -209,7 +209,7 @@ Rectangle {
 
         handleDelegate: Rectangle {
             width: 2
-            color: Colors.defaultDarkerColor
+            color: Colors.defaultControlColor
         }
 
         onResizingChanged: {
@@ -333,7 +333,7 @@ Rectangle {
                         property int delegateIndex: index
                         tabIndex: delegateIndex
                         isSelected: tabIndex === editTabView.currentIndex
-                        color: isSelected ? Colors.selectedArtworkBackground : Colors.defaultControlColor
+                        color: isSelected ? Colors.defaultControlColor : Colors.defaultDarkColor
                         hovered: tabMA.containsMouse
 
                         StyledText {
@@ -374,9 +374,9 @@ Rectangle {
 
                 Rectangle {
                     id: editTab
-                    color: Colors.selectedArtworkBackground
+                    color: Colors.defaultControlColor
                     anchors.fill: parent
-                    property color inputBackgroundColor: Colors.inputBackgroundColor
+                    property color inputBackgroundColor: Colors.selectedArtworkBackground
 
                     ColumnLayout {
                         id: fields
@@ -913,7 +913,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         height: 110
-        color: Colors.defaultDarkerColor
+        color: Colors.defaultDarkColor
 
         Rectangle {
             id: selectPrevButton
@@ -983,9 +983,9 @@ Rectangle {
                 width: bottomPane.height
                 color: {
                     if (ListView.isCurrentItem) {
-                        return Colors.defaultControlColor
+                        return Colors.selectedArtworkBackground
                     } else {
-                        return imageMA.containsMouse ? Colors.defaultDarkerColor : "transparent"
+                        return imageMA.containsMouse ? Colors.defaultControlColor : "transparent"
                     }
                 }
 
