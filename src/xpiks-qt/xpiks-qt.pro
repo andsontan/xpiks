@@ -336,13 +336,10 @@ DISTFILES += \
     StyledControls/StyledBusyIndicator.qml \
     StyledControls/StyledTabView.qml \
     Components/CustomBorder.qml \
-    Dialogs/ArtworkPreview.qml \
     StyledControls/StyledBlackButton.qml \
     StyledControls/StyledSlider.qml \
     Components/KeywordWrapper.qml \
     Components/CustomScrollbar.qml \
-    Dialogs/EditArtworkVerticalDialog.qml \
-    Dialogs/EditArtworkHorizontalDialog.qml \
     Dialogs/UpdateWindow.qml \
     Dialogs/SpellCheckSuggestionsDialog.qml \
     Components/SuggestionWrapper.qml \
