@@ -53,7 +53,7 @@ Button {
                 var result = Colors.defaultControlColor;
 
                 if (control.enabled) {
-                    result = control.pressed ? Colors.buttonPressedForeground : Colors.inputForegroundColor;
+                    result = control.pressed ? Colors.buttonPressedForeground : Colors.labelActiveForeground;
                 } else {
                     result = Colors.buttonDisabledForeground;
                 }

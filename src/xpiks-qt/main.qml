@@ -993,7 +993,7 @@ ApplicationWindow {
                         width: 25
                         height: 20
                         anchors.centerIn: parent
-                        color: (parent.isSelected || parent.hovered) ? Colors.inputForegroundColor : Colors.inputBackgroundColor
+                        color: (parent.isSelected || parent.hovered) ? Colors.labelActiveForeground : Colors.selectedArtworkBackground
                     }
 
                     MouseArea {
@@ -1015,7 +1015,7 @@ ApplicationWindow {
                         width: 25
                         height: 20
                         anchors.centerIn: parent
-                        color: (parent.isSelected || parent.hovered) ? Colors.inputForegroundColor : Colors.inputBackgroundColor
+                        color: (parent.isSelected || parent.hovered) ? Colors.labelActiveForeground : Colors.selectedArtworkBackground
                     }
 
                     MouseArea {
@@ -1134,7 +1134,7 @@ ApplicationWindow {
                                                 Layout.fillWidth: true
                                                 anchors.verticalCenter: parent.verticalCenter
                                                 height: 31
-                                                color: Colors.inputForegroundColor
+                                                color: Colors.labelActiveForeground
                                                 text: path + " (" + usedimagescount + ")"
                                                 elide: Text.ElideMiddle
                                             }
@@ -1143,6 +1143,7 @@ ApplicationWindow {
                                                 width: 14
                                                 height: 14
                                                 anchors.verticalCenter: parent.verticalCenter
+                                                defaultColor: Colors.labelActiveForeground
                                                 isActive: false
                                                 crossOpacity: 1
 
@@ -1181,8 +1182,8 @@ ApplicationWindow {
             width: 20
 
             TriangleElement {
-                width: 7
-                height: 14
+                width: leftCollapseMA.pressed ? 5 : 7
+                height: leftCollapseMA.pressed ? 10 : 14
                 isVertical: true
                 isFlipped: !applicationWindow.leftSideCollapsed
                 anchors.centerIn: parent

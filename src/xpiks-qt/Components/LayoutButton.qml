@@ -31,17 +31,17 @@ Item {
     property bool isListLayout: true
     signal layoutChanged()
     property color currentColor: {
-        var resultColor = Colors.labelActiveForeground
+        var resultColor = Colors.selectedArtworkBackground
         if (enabled) {
             if (layoutMA.pressed) {
                 resultColor = Colors.linkClickedColor
             } else if (layoutMA.containsMouse) {
                 resultColor = Colors.labelActiveForeground
             } else {
-                resultColor = Colors.labelInactiveForeground
+                resultColor = Colors.selectedArtworkBackground
             }
         } else {
-            resultColor = Colors.defaultControlColor
+            resultColor = Colors.selectedArtworkBackground
         }
 
         return resultColor
@@ -103,7 +103,7 @@ Item {
 
     StyledText {
         anchors.left: parent.left
-        anchors.leftMargin: parent.height + 7
+        anchors.leftMargin: parent.height + 10
         anchors.verticalCenter: parent.verticalCenter
         anchors.verticalCenterOffset: 2
         text: i18.n + (isListLayout ? qsTr("Grid") : qsTr("List"))

@@ -29,10 +29,11 @@ CheckBox {
     property int indicatorWidth: 17
     property int indicatorHeight: 17
     checked: true
-    property color labelColor: enabled ? Colors.inputForegroundColor : (isContrast ? Colors.selectedImageBackground : Colors.inputInactiveForeground)
+    property color labelColor: enabled ? Colors.labelActiveForeground : (isContrast ? Colors.inputBackgroundColor : Colors.inputInactiveForeground)
+    property bool isBold: false
 
     style: CheckBoxStyle {
-        spacing: 8
+        spacing: 10
 
         indicator: Rectangle {
             implicitHeight: indicatorHeight
@@ -68,6 +69,7 @@ CheckBox {
         label: StyledText {
             text: control.text
             color: control.labelColor
+            font.bold: control.isBold
         }
     }
 }

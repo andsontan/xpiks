@@ -26,14 +26,14 @@ BlackTheme.defaultDarkerColor = "#333333";
 BlackTheme.defaultControlColor = "#292929";
 BlackTheme.whiteColor = "#ffffff";
 
-BlackTheme.inputBackgroundColor = "#999999";
-BlackTheme.inputInactiveBackground = BlackTheme.defaultControlColor;
-BlackTheme.inputForegroundColor = "#e6e7e8";
-BlackTheme.inputInactiveForeground = BlackTheme.inputBackgroundColor;
-BlackTheme.labelActiveForeground = BlackTheme.inputBackgroundColor;
-BlackTheme.labelInactiveForeground = "#545456";
+BlackTheme.labelActiveForeground = "#c9c9c9";
+BlackTheme.labelInactiveForeground = "#939393";
+BlackTheme.inputBackgroundColor = "#5d5d5d";
+BlackTheme.inputInactiveBackground = "#242424";
+BlackTheme.inputForegroundColor = BlackTheme.whiteColor; //"#e6e7e8";
+BlackTheme.inputInactiveForeground = BlackTheme.labelActiveForeground;
 
-BlackTheme.artworkBackground = "#031619";
+BlackTheme.artworkBackground = "#181818";
 BlackTheme.artworkImageBackground = "#071215";
 BlackTheme.artworkModifiedColor = "#f49c12";
 BlackTheme.artworkSavedColor = "#435151";
@@ -44,25 +44,25 @@ BlackTheme.defaultLightGrayColor = "#D0D0D0";
 BlackTheme.listSeparatorColor = BlackTheme.whiteColor;
 
 BlackTheme.buttonHoverBackground = BlackTheme.artworkActiveColor;
-BlackTheme.buttonPressedBackground = "#41b1b7";
-BlackTheme.buttonPressedForeground = "#283c3f";
-BlackTheme.buttonDisabledForeground = BlackTheme.buttonPressedForeground;
+BlackTheme.buttonPressedBackground = BlackTheme.defaultControlColor;
+BlackTheme.buttonPressedForeground = BlackTheme.whiteColor;
+BlackTheme.buttonDisabledForeground = BlackTheme.inputBackgroundColor;
 
 BlackTheme.linkClickedColor = BlackTheme.inputForegroundColor;
 
 BlackTheme.selectedImageBackground = BlackTheme.labelInactiveForeground;
-BlackTheme.selectedArtworkBackground = "#5d5d5d";
+BlackTheme.selectedArtworkBackground = "#404040";
 BlackTheme.checkboxCheckedColor = "#ffffff";
 
-BlackTheme.itemsSourceBackground = BlackTheme.defaultDarkColor;
+BlackTheme.itemsSourceBackground = BlackTheme.selectedArtworkBackground;
 BlackTheme.itemsSourceSelected = BlackTheme.selectedImageBackground;
 BlackTheme.itemsSourceForeground = BlackTheme.inputInactiveForeground;
 
-BlackTheme.destructiveColor = "#d10b0b";
+BlackTheme.destructiveColor = "#e81313";
 BlackTheme.greenColor = "#2daf02";
 
-BlackTheme.statusBarColor = BlackTheme.artworkImageBackground;
-BlackTheme.leftSliderColor = BlackTheme.artworkImageBackground;
+BlackTheme.statusBarColor = "#121212";
+BlackTheme.leftSliderColor = BlackTheme.artworkBackground;
 
 // ---------------------------------------------------------------
 
@@ -74,16 +74,16 @@ SlateGrayTheme.defaultControlColor = "#30333b";
 SlateGrayTheme.whiteColor = "#ffffff";
 
 SlateGrayTheme.inputBackgroundColor = "#7a7e86";
-SlateGrayTheme.inputInactiveBackground = "#30333b";
+SlateGrayTheme.inputInactiveBackground = SlateGrayTheme.defaultControlColor;
 SlateGrayTheme.inputForegroundColor = "#c7ccd3";
-SlateGrayTheme.inputInactiveForeground = "#7a7e86";
+SlateGrayTheme.inputInactiveForeground = SlateGrayTheme.inputBackgroundColor;
 SlateGrayTheme.labelInactiveForeground = "#474b54";
 SlateGrayTheme.labelActiveForeground = SlateGrayTheme.inputBackgroundColor;
 
-SlateGrayTheme.artworkBackground = "#22252c";
+SlateGrayTheme.artworkBackground = SlateGrayTheme.defaultDarkColor;
 SlateGrayTheme.artworkImageBackground = "#1c2025";
 SlateGrayTheme.artworkModifiedColor = "#f49c12";
-SlateGrayTheme.artworkSavedColor = "#7a7e86";
+SlateGrayTheme.artworkSavedColor = SlateGrayTheme.inputBackgroundColor;
 SlateGrayTheme.artworkActiveColor = "#2ec1c3";
 
 SlateGrayTheme.defaultLightColor = "#E0E0E0";

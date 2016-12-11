@@ -145,14 +145,6 @@ ColumnLayout {
     }
 
     Rectangle {
-        anchors.leftMargin: mainGridComponent.myLeftMargin
-        height: 1
-        anchors.left: parent.left
-        anchors.right: parent.right
-        color: Colors.labelInactiveForeground
-    }
-
-    Rectangle {
         anchors.left: parent.left
         anchors.leftMargin: mainGridComponent.myLeftMargin
         anchors.right: parent.right
@@ -174,7 +166,7 @@ ColumnLayout {
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: 24
+                height: 34
 
                 StyledCheckbox {
                     id: selectAllCheckbox
@@ -369,6 +361,7 @@ ColumnLayout {
                     StyledText {
                         id: undoDescription
                         text: undoRedoManager.undoDescription
+                        isActive: false
                     }
 
                     Item {
@@ -393,7 +386,7 @@ ColumnLayout {
 
                     StyledText {
                         text: i18.n + qsTr("Dismiss (%1)").arg(settingsModel.dismissDuration - (autoDismissTimer.iterations % (settingsModel.dismissDuration + 1)))
-                        color: dismissUndoMA.pressed ? Colors.linkClickedColor : Colors.labelActiveForeground
+                        color: dismissUndoMA.pressed ? Colors.linkClickedColor : Colors.labelInactiveForeground
 
                         MouseArea {
                             id: dismissUndoMA
@@ -521,7 +514,7 @@ ColumnLayout {
                             id: rowWrapper
                             objectName: "artworkDelegate"
                             property bool isHighlighted: isselected || wrappersScope.GridView.isCurrentItem
-                            color: isHighlighted ? Colors.selectedImageBackground : Colors.artworkImageBackground
+                            color: isHighlighted ? Colors.selectedArtworkBackground : Colors.artworkBackground
                             property var artworkModel: filteredArtItemsModel.getArtworkMetadata(index)
                             property var keywordsModel: filteredArtItemsModel.getBasicModel(index)
                             property int delegateIndex: index
@@ -788,28 +781,14 @@ ColumnLayout {
                                             anchors.topMargin: 3
                                             width: parent.width
                                             elide: Text.ElideMiddle
-                                            color: moreInfoMA.pressed ? Colors.linkClickedColor : Colors.labelActiveForeground
                                             horizontalAlignment: Text.AlignHCenter
                                             text: basefilename
-
-                                            MouseArea {
-                                                id: moreInfoMA
-                                                anchors.fill: parent
-                                                cursorShape: Qt.PointingHandCursor
-
-                                                onClicked: {
-                                                    Common.launchDialog("../Dialogs/ArtworkPreview.qml", applicationWindow,
-                                                                        {
-                                                                            imagePath: filename,
-                                                                            artworkIndex: rowWrapper.getIndex()
-                                                                        });
-                                                }
-                                            }
+                                            isActive: rowWrapper.isHighlighted
                                         }
                                     }
                                 }
 
-                                Rectangle {
+                                Item {
                                     id: columnRectangle
                                     visible: applicationWindow.listLayout
                                     anchors.top: applicationWindow.listLayout ? parent.top : undefined
@@ -817,12 +796,11 @@ ColumnLayout {
                                     anchors.left: applicationWindow.listLayout ? imageColumnWrapper.right : undefined
                                     anchors.leftMargin: applicationWindow.listLayout ? 5 : 0
                                     anchors.right: applicationWindow.listLayout ? parent.right : undefined
-                                    color: rowWrapper.isHighlighted ? Colors.selectedArtworkBackground : Colors.artworkBackground
 
                                     Item {
                                         id: columnLayout
                                         anchors.fill: parent
-                                        anchors.leftMargin: 20
+                                        anchors.leftMargin: 0
                                         anchors.rightMargin: 20
                                         anchors.topMargin: 20
                                         property bool isWideEnough: width > 450

@@ -40,7 +40,7 @@ Rectangle {
     signal actionRightClicked();
     signal spellSuggestionRequested();
 
-    color: isHighlighted ? Colors.inputForegroundColor : Colors.labelInactiveForeground
+    color: isHighlighted ? Colors.inputForegroundColor : Colors.selectedArtworkBackground
 
     width: childrenRect.width
     height: childrenRect.height
@@ -62,7 +62,7 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 verticalAlignment: Text.AlignVCenter
                 text: itemWrapper.keywordText
-                color: itemWrapper.isHighlighted ? Colors.defaultControlColor : Colors.inputForegroundColor
+                color: itemWrapper.isHighlighted ? Colors.selectedArtworkBackground : Colors.labelActiveForeground
                 font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
             }
 

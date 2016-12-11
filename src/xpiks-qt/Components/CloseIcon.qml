@@ -28,7 +28,7 @@ Item {
     property bool isPlus: false
     property int thickness: 3
     property alias crossOpacity: wrapperRect.opacity
-
+    property color defaultColor: Colors.labelActiveForeground
     signal itemClicked();
 
     Item {
@@ -36,16 +36,16 @@ Item {
         anchors.fill: parent
         opacity: closeIconMouseArea.containsMouse ? 1 : 0.8
 
-        function getPressColor() {
+        property color pressColor: {
             if (closeIconMouseArea.containsMouse) {
                 return Colors.artworkModifiedColor;
             } else {
-                return isActive ? Colors.defaultControlColor : Colors.inputForegroundColor;
+                return item.isActive ? Colors.selectedArtworkBackground : item.defaultColor;
             }
         }
 
         Rectangle {
-            color: enabled ? wrapperRect.getPressColor() : Colors.inputInactiveForeground
+            color: enabled ? wrapperRect.pressColor : Colors.inputInactiveForeground
             width: isPlus ? parent.width - 2 : parent.width
             height: item.thickness
             radius: item.thickness/2
@@ -55,7 +55,7 @@ Item {
         }
 
         Rectangle {
-            color: enabled ? wrapperRect.getPressColor() : Colors.inputInactiveForeground
+            color: enabled ? wrapperRect.pressColor : Colors.inputInactiveForeground
             width: isPlus ? parent.width - 2 : parent.width
             height: item.thickness
             radius: item.thickness/2
