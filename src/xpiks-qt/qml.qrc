@@ -70,8 +70,8 @@
         <file>Dialogs/FailedUploadArtworks.qml</file>
         <file>Dialogs/InstallUpdateDialog.qml</file>
         <file>StyledControls/StyledMainTabView.qml</file>
-        <file>Components/MainGrid.qml</file>
-        <file>Components/ArtworkEditView.qml</file>
+        <file>StackViews/MainGrid.qml</file>
+        <file>StackViews/ArtworkEditView.qml</file>
         <file>Components/ZoomAmplifier.qml</file>
     </qresource>
 </RCC>

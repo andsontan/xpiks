@@ -29,6 +29,7 @@ import xpiks 1.0
 import "../Constants" 1.0
 import "../StyledControls"
 import "../Dialogs"
+import "../Components"
 import "../Common.js" as Common
 import "../Constants/UIConfig.js" as UIConfig
 import "../Constants/Themes.js" as Themes

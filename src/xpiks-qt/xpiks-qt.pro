@@ -376,8 +376,8 @@ DISTFILES += \
     Dialogs/InstallUpdateDialog.qml \
     StyledControls/StyledMainTabView.qml \
     Components/CustomTab.qml \
-    Components/MainGrid.qml \
-    Components/ArtworkEditView.qml \
+    StackViews/MainGrid.qml \
+    StackViews/ArtworkEditView.qml \
     Components/ZoomAmplifier.qml
 
 lupdate_only {

@@ -30,6 +30,7 @@ import "Constants" 1.0
 import "Components"
 import "StyledControls"
 import "Dialogs"
+import "StackViews"
 import "Common.js" as Common
 import "Constants/UIConfig.js" as UIConfig
 import "Constants/Themes.js" as Themes
@@ -221,7 +222,7 @@ ApplicationWindow {
         var wasCollapsed = applicationWindow.leftSideCollapsed
         applicationWindow.collapseLeftPane()
         mainStackView.push({
-                               item: "qrc:/Components/ArtworkEditView.qml",
+                               item: "qrc:/StackViews/ArtworkEditView.qml",
                                properties: {
                                    artworkIndex: index,
                                    keywordsModel: keywordsModel,
