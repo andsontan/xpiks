@@ -130,7 +130,7 @@ Item {
             width: 480
             height: 240
             property int inputsWidth: 200
-            color: Colors.selectedImageBackground
+            color: Colors.popupBackgroundColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 

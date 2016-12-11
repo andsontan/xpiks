@@ -993,7 +993,7 @@ ApplicationWindow {
                         width: 25
                         height: 20
                         anchors.centerIn: parent
-                        color: (parent.isSelected || parent.hovered) ? Colors.labelActiveForeground : Colors.selectedArtworkBackground
+                        color: (parent.isSelected || parent.hovered) ? Colors.labelActiveForeground : Colors.inactiveControlColor
                     }
 
                     MouseArea {
@@ -1015,7 +1015,7 @@ ApplicationWindow {
                         width: 25
                         height: 20
                         anchors.centerIn: parent
-                        color: (parent.isSelected || parent.hovered) ? Colors.labelActiveForeground : Colors.selectedArtworkBackground
+                        color: (parent.isSelected || parent.hovered) ? Colors.labelActiveForeground : Colors.inactiveControlColor
                     }
 
                     MouseArea {
@@ -1182,8 +1182,8 @@ ApplicationWindow {
             width: 20
 
             TriangleElement {
-                width: leftCollapseMA.pressed ? 5 : 7
-                height: leftCollapseMA.pressed ? 10 : 14
+                width: leftCollapseMA.pressed ? 6 : 7
+                height: leftCollapseMA.pressed ? 12 : 14
                 isVertical: true
                 isFlipped: !applicationWindow.leftSideCollapsed
                 anchors.centerIn: parent

@@ -108,7 +108,7 @@ Item {
             id: dialogWindow
             width: 700
             height: 580
-            color: Colors.selectedImageBackground
+            color: Colors.popupBackgroundColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 
@@ -266,7 +266,7 @@ Item {
                         StyledText {
                             text: i18.n + qsTr("There are no warnings")
                             anchors.centerIn: parent
-                            color: Colors.selectedArtworkBackground
+                            isActive: false
                         }
                     }
                 }

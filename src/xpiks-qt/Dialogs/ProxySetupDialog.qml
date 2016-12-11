@@ -119,7 +119,7 @@ Item {
             id: dialogWindow
             width: 280
             height: 280
-            color: Colors.selectedImageBackground
+            color: Colors.popupBackgroundColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
 

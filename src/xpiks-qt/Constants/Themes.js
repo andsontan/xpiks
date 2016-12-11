@@ -24,6 +24,7 @@ var BlackTheme = { name: "black" };
 BlackTheme.defaultDarkColor = "#1e1e1e";
 BlackTheme.defaultDarkerColor = "#333333";
 BlackTheme.defaultControlColor = "#292929";
+BlackTheme.inactiveControlColor = "#404040";
 BlackTheme.whiteColor = "#ffffff";
 
 BlackTheme.labelActiveForeground = "#c9c9c9";
@@ -63,6 +64,7 @@ BlackTheme.greenColor = "#2daf02";
 
 BlackTheme.statusBarColor = "#121212";
 BlackTheme.leftSliderColor = BlackTheme.artworkBackground;
+BlackTheme.popupBackgroundColor = BlackTheme.defaultControlColor;
 
 // ---------------------------------------------------------------
 

@@ -42,7 +42,7 @@ Button {
                 if (control.enabled) {
                     result = control.pressed ? Colors.buttonPressedForeground : Colors.labelActiveForeground;
                 } else {
-                    result = Colors.selectedArtworkBackground;
+                    result = Colors.inactiveControlColor;
                 }
 
                 return result

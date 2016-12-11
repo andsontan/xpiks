@@ -40,12 +40,12 @@ Item {
             if (closeIconMouseArea.containsMouse) {
                 return Colors.artworkModifiedColor;
             } else {
-                return item.isActive ? Colors.selectedArtworkBackground : item.defaultColor;
+                return item.isActive ? Colors.inactiveControlColor : item.defaultColor;
             }
         }
 
         Rectangle {
-            color: enabled ? wrapperRect.pressColor : Colors.inputInactiveForeground
+            color: enabled ? wrapperRect.pressColor : Colors.inactiveControlColor
             width: isPlus ? parent.width - 2 : parent.width
             height: item.thickness
             radius: item.thickness/2
@@ -55,7 +55,7 @@ Item {
         }
 
         Rectangle {
-            color: enabled ? wrapperRect.pressColor : Colors.inputInactiveForeground
+            color: enabled ? wrapperRect.pressColor : Colors.inactiveControlColor
             width: isPlus ? parent.width - 2 : parent.width
             height: item.thickness
             radius: item.thickness/2

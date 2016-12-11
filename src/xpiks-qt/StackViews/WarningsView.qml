@@ -215,7 +215,7 @@ Rectangle {
         StyledText {
             text: i18.n + qsTr("There are no warnings")
             anchors.centerIn: parent
-            color: Colors.selectedArtworkBackground
+            isActive: false
         }
     }
 }

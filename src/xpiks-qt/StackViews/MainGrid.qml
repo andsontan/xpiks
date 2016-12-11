@@ -241,7 +241,7 @@ ColumnLayout {
                     StyledText {
                         text: i18.n + qsTr("Search...   x:empty  x:modified")
                         visible: !(filterClearTimer.running || filterText.activeFocus || (filterText.length > 0))
-                        color: Colors.selectedArtworkBackground
+                        color: Colors.inactiveControlColor
                         anchors.left: parent.left
                         anchors.leftMargin: 7
                         anchors.verticalCenter: parent.verticalCenter
@@ -1339,7 +1339,7 @@ ColumnLayout {
 
                     StyledText {
                         text: i18.n + qsTr("No items available.")
-                        color: Colors.selectedArtworkBackground
+                        isActive: false
                     }
 
                     StyledText {
@@ -1356,7 +1356,7 @@ ColumnLayout {
 
                     StyledText {
                         text: i18.n + qsTr("or")
-                        color: Colors.selectedArtworkBackground
+                        isActive: false
                     }
 
                     StyledText {

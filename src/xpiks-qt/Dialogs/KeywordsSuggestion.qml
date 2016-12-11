@@ -116,7 +116,7 @@ Item {
             anchors.topMargin: 15
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 15
-            color: Colors.selectedImageBackground
+            color: Colors.popupBackgroundColor
             anchors.horizontalCenter: parent.horizontalCenter
             Component.onCompleted: anchors.horizontalCenter = undefined
             z: 1000
