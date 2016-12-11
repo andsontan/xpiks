@@ -74,6 +74,8 @@ namespace QMLExtensions {
 
         Q_PROPERTY(QColor statusBarColor READ statusBarColor WRITE setStatusBarColor NOTIFY statusBarColorChanged)
         Q_PROPERTY(QColor leftSliderColor READ leftSliderColor WRITE setLeftSliderColor NOTIFY leftSliderColorChanged)
+        Q_PROPERTY(QColor popupBackgroundColor READ popupBackgroundColor WRITE setPopupBackgroundColor NOTIFY popupBackgroundColorChanged)
+        Q_PROPERTY(QColor inactiveControlColor READ inactiveControlColor WRITE setInactiveControlColor NOTIFY inactiveControlColorChanged)
 
         QVector<QJsonObject> m_RegisteredThemes;
         QStringList m_ThemeNames;
@@ -111,7 +113,9 @@ namespace QMLExtensions {
         QColor m_greenColor;
         QColor m_listSeparatorColor;
         QColor m_statusBarColor;
-        QColor m_leftSliderColor;
+        QColor m_leftSliderColor;        
+        QColor m_popupBackgroundColor;
+        QColor m_inactiveControlColor;
 
     public:
         explicit ColorsModel(QObject *parent = 0);
@@ -285,6 +289,16 @@ namespace QMLExtensions {
             return m_leftSliderColor;
         }
 
+        QColor popupBackgroundColor() const
+        {
+            return m_popupBackgroundColor;
+        }
+
+        QColor inactiveControlColor() const
+        {
+            return m_inactiveControlColor;
+        }
+
     signals:
         void themeChanged();
         void defaultDarkColorChanged(QColor defaultDarkColor);
@@ -319,8 +333,9 @@ namespace QMLExtensions {
         void defaultDarkerColorChanged(QColor defaultDarkerColor);
         void listSeparatorColorChanged(QColor listSeparatorColor);
         void statusBarColorChanged(QColor statusBarColor);
-
-        void leftSliderColorChanged(QColor leftSliderColor);
+        void leftSliderColorChanged(QColor leftSliderColor);        
+        void popupBackgroundColorChanged(QColor popupBackgroundColor);
+        void inactiveControlColorChanged(QColor inactiveControlColor);
 
     public slots:
         void setDefaultDarkColor(QColor defaultDarkColor)
@@ -586,6 +601,22 @@ namespace QMLExtensions {
 
             m_leftSliderColor = leftSliderColor;
             emit leftSliderColorChanged(leftSliderColor);
+        }
+        void setPopupBackgroundColor(QColor popupBackgroundColor)
+        {
+            if (m_popupBackgroundColor == popupBackgroundColor)
+                return;
+
+            m_popupBackgroundColor = popupBackgroundColor;
+            emit popupBackgroundColorChanged(popupBackgroundColor);
+        }
+        void setInactiveControlColor(QColor inactiveControlColor)
+        {
+            if (m_inactiveControlColor == inactiveControlColor)
+                return;
+
+            m_inactiveControlColor = inactiveControlColor;
+            emit inactiveControlColorChanged(inactiveControlColor);
         }
     };
 }

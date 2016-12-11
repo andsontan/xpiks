@@ -41,7 +41,7 @@ BlackTheme.artworkActiveColor = "#12b9bc";
 
 BlackTheme.defaultLightColor = BlackTheme.inputInactiveForeground;
 BlackTheme.defaultLightGrayColor = "#D0D0D0";
-BlackTheme.listSeparatorColor = BlackTheme.whiteColor;
+BlackTheme.listSeparatorColor = BlackTheme.labelActiveForeground;
 
 BlackTheme.buttonHoverBackground = BlackTheme.artworkActiveColor;
 BlackTheme.buttonPressedBackground = BlackTheme.defaultControlColor;

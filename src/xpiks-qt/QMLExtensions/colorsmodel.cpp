@@ -28,6 +28,7 @@
 #define DEFAULT_DARK_COLOR "#1e1e1e"
 #define DEFAULT_DARKER_COLOR "#333333"
 #define DEFAULT_CONTROL_COLOR "#292929"
+#define DEFAULT_INACTIVE_CONTROL_COLOR "#404040"
 #define DEFAULT_WHITE_COLOR "#ffffff"
 
 #define DEFAULT_INPUT_BACKGROUND "#999999"
@@ -67,6 +68,7 @@
 
 #define DEFAULT_STATUS_BAR_COLOR DEFAULT_ARTWORK_IMAGE_BACKGROUND
 #define DEFAULT_LEFT_SLIDER_COLOR DEFAULT_ARTWORK_IMAGE_BACKGROUND
+#define DEFAULT_POPUP_BACKGROUND_COLOR DEFAULT_CONTROL_COLOR
 
 namespace QMLExtensions {
     ColorsModel::ColorsModel(QObject *parent) : QObject(parent)
@@ -74,6 +76,7 @@ namespace QMLExtensions {
         setDefaultDarkColor(QColor(DEFAULT_DARK_COLOR));
         setDefaultDarkerColor(QColor(DEFAULT_DARKER_COLOR));
         setDefaultControlColor(QColor(DEFAULT_CONTROL_COLOR));
+        setInactiveControlColor(QColor(DEFAULT_INACTIVE_CONTROL_COLOR));
         setWhiteColor(QColor(DEFAULT_WHITE_COLOR));
 
         setInputBackgroundColor(QColor(DEFAULT_INPUT_BACKGROUND));
@@ -113,6 +116,7 @@ namespace QMLExtensions {
 
         setStatusBarColor(QColor(DEFAULT_STATUS_BAR_COLOR));
         setLeftSliderColor(QColor(DEFAULT_LEFT_SLIDER_COLOR));
+        setPopupBackgroundColor(QColor(DEFAULT_POPUP_BACKGROUND_COLOR));
     }
 
     void ColorsModel::registerTheme(const QJsonObject &theme) {
@@ -131,6 +135,7 @@ namespace QMLExtensions {
         setDefaultDarkColor(QColor(theme["defaultDarkColor"].toString(DEFAULT_DARK_COLOR)));
         setDefaultDarkerColor(QColor(theme["defaultDarkerColor"].toString(DEFAULT_DARKER_COLOR)));
         setDefaultControlColor(QColor(theme["defaultControlColor"].toString(DEFAULT_CONTROL_COLOR)));
+        setInactiveControlColor(QColor(theme["inactiveControlColor"].toString(DEFAULT_INACTIVE_CONTROL_COLOR)));
         setWhiteColor(QColor(theme["whiteColor"].toString(DEFAULT_WHITE_COLOR)));
 
         setInputBackgroundColor(QColor(theme["inputBackgroundColor"].toString(DEFAULT_INPUT_BACKGROUND)));
@@ -170,6 +175,7 @@ namespace QMLExtensions {
 
         setStatusBarColor(QColor(theme["statusBarColor"].toString(DEFAULT_STATUS_BAR_COLOR)));
         setLeftSliderColor(QColor(theme["leftSliderColor"].toString(DEFAULT_LEFT_SLIDER_COLOR)));
+        setPopupBackgroundColor(QColor(theme["popupBackgroundColor"].toString(DEFAULT_POPUP_BACKGROUND_COLOR)));
 
         emit themeChanged();
 

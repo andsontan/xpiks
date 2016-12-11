@@ -112,7 +112,7 @@ Item {
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.leftMargin: 16
-                    color: isSelected ? Colors.whiteColor : Colors.selectedArtworkBackground
+                    color: isSelected ? Colors.whiteColor : Colors.inputBackgroundColor
                 }
 
                 Rectangle {
