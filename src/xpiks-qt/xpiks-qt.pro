@@ -378,7 +378,8 @@ DISTFILES += \
     Components/CustomTab.qml \
     StackViews/MainGrid.qml \
     StackViews/ArtworkEditView.qml \
-    Components/ZoomAmplifier.qml
+    Components/ZoomAmplifier.qml \
+    StackViews/WarningsView.qml
 
 lupdate_only {
 SOURCES += *.qml \

@@ -1266,9 +1266,17 @@ ApplicationWindow {
                     onClicked: {
                         warningsModel.update()
                         //filteredArtItemsModel.checkForWarnings()
-                        Common.launchDialog("Dialogs/WarningsDialog.qml", applicationWindow, {
-                                                componentParent: applicationWindow
-                                            });
+
+                        var wasCollapsed = applicationWindow.leftSideCollapsed
+                        applicationWindow.collapseLeftPane()
+                        mainStackView.push({
+                                               item: "qrc:/StackViews/WarningsView.qml",
+                                               properties: {
+                                                   componentParent: applicationWindow,
+                                                   wasLeftSideCollapsed: wasCollapsed
+                                               },
+                                               destroyOnPop: true
+                                           })
                     }
                 }
             }

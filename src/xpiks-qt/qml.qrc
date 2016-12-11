@@ -73,5 +73,6 @@
         <file>StackViews/MainGrid.qml</file>
         <file>StackViews/ArtworkEditView.qml</file>
         <file>Components/ZoomAmplifier.qml</file>
+        <file>StackViews/WarningsView.qml</file>
     </qresource>
 </RCC>
