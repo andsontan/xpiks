@@ -48,14 +48,54 @@ Rectangle {
         }
     }
 
+    Rectangle {
+        id: header
+        color: Colors.defaultDarkColor
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        height: 45
+
+        RowLayout {
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: childrenRect.height
+            spacing: 0
+            anchors.leftMargin: 20
+            anchors.rightMargin: 20
+
+            StyledButton {
+                width: 100
+                text: qsTr("Back")
+                onClicked: closePopup()
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
+
+            StyledText {
+                text: qsTr("Warnings")
+                isActive: false
+            }
+        }
+    }
+
     StyledScrollView {
-        anchors.fill: parent
-        anchors.margins: 10
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: header.bottom
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 20
+        anchors.rightMargin: 10
+        anchors.topMargin: 10
+        anchors.bottomMargin: 20
 
         ListView {
             id: warningsListView
             model: warningsModel
-            spacing: 10
+            spacing: 20
 
             delegate: Rectangle {
                 property int delegateIndex: index
@@ -110,25 +150,11 @@ Rectangle {
                     StyledText {
                         anchors.top: imageHost.bottom
                         anchors.topMargin: 3
-                        width: parent.width
+                        width: parent.width - 10
                         elide: Text.ElideMiddle
-                        color: moreInfoMA.pressed ? Colors.linkClickedColor : Colors.labelActiveForeground
+                        color: Colors.labelActiveForeground
                         horizontalAlignment: Text.AlignHCenter
                         text: basefilename
-
-                        MouseArea {
-                            id: moreInfoMA
-                            anchors.fill: parent
-                            cursorShape: Qt.PointingHandCursor
-
-                            onClicked: {
-                                Common.launchDialog("../Dialogs/ArtworkPreview.qml", applicationWindow,
-                                                    {
-                                                        imagePath: filename,
-                                                        artworkIndex: rowWrapper.getIndex()
-                                                    });
-                            }
-                        }
                     }
                 }
 
@@ -198,14 +224,10 @@ Rectangle {
                     visible: enabled
 
                     onActionInvoked: {
-                        var index = warningsModel.getOriginalIndex(imageWrapper.delegateIndex);
-                        /*Common.launchItemEditing(index, componentParent,
-                                                 {
-                                                     applyCallback: function() {
-                                                         console.log("UI:WarningsDialog # Rechecking [" + imageWrapper.delegateIndex + "] item")
-                                                         warningsDescriptions.model = warningsModel.describeWarnings(imageWrapper.delegateIndex)
-                                                     }
-                                                 })*/
+                        var index = imageWrapper.delegateIndex
+                        var originalIndex = warningsModel.getOriginalIndex(index);
+                        var metadata = filteredArtItemsModel.getArtworkMetadata(index)
+                        startOneItemEditing(metadata, index, originalIndex)
                     }
                 }
             }
