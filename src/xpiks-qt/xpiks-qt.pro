@@ -376,7 +376,9 @@ DISTFILES += \
     StackViews/MainGrid.qml \
     StackViews/ArtworkEditView.qml \
     Components/ZoomAmplifier.qml \
-    StackViews/WarningsView.qml
+    StackViews/WarningsView.qml \
+    Components/GlyphButton.qml \
+    Components/BackGlyphButton.qml
 
 lupdate_only {
 SOURCES += *.qml \

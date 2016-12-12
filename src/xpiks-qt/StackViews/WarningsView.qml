@@ -43,8 +43,10 @@ Rectangle {
     }
 
     function restoreLeftPane() {
-        if (!wasLeftSideCollapsed) {
-            expandLeftPane()
+        if (mainStackView.depth === 1) {
+            if (!wasLeftSideCollapsed) {
+                expandLeftPane()
+            }
         }
     }
 

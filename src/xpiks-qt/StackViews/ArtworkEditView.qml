@@ -85,8 +85,10 @@ Rectangle {
     }
 
     function restoreLeftPane() {
-        if (!wasLeftSideCollapsed) {
-            expandLeftPane()
+        if (mainStackView.depth === 1) {
+            if (!wasLeftSideCollapsed) {
+                expandLeftPane()
+            }
         }
     }
 
@@ -239,8 +241,7 @@ Rectangle {
                     height: childrenRect.height
                     spacing: 0
 
-                    StyledButton {
-                        width: 100
+                    BackGlyphButton {
                         text: qsTr("Back")
                         onClicked: closePopup()
                     }

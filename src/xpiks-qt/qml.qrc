@@ -71,5 +71,7 @@
         <file>StackViews/ArtworkEditView.qml</file>
         <file>Components/ZoomAmplifier.qml</file>
         <file>StackViews/WarningsView.qml</file>
+        <file>Components/GlyphButton.qml</file>
+        <file>Components/BackGlyphButton.qml</file>
     </qresource>
 </RCC>
