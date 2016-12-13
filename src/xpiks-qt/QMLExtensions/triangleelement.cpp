@@ -42,6 +42,11 @@ namespace QMLExtensions {
     QSGNode *TriangleElement::updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData*) {
         QSGGeometryNode *node = 0;
 
+        if ((width() <= 0 || height() <= 0) && (oldNode != nullptr)) {
+            delete oldNode;
+            return nullptr;
+        }
+
         if (oldNode == nullptr) {
             node = new QSGGeometryNode();
             node->setGeometry(&m_Geometry);
