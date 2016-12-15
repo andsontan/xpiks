@@ -393,6 +393,7 @@ int main(int argc, char *argv[]) {
     languagesModel.loadLanguages();
 
     telemetryService.setInterfaceLanguage(languagesModel.getCurrentLanguage());
+    colorsModel.applyTheme(settingsModel.getSelectedThemeIndex());
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
     qmlRegisterType<QMLExtensions::TriangleElement>("xpiks", 1, 0, "TriangleElement");

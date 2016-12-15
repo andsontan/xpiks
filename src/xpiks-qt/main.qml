@@ -33,7 +33,6 @@ import "Dialogs"
 import "StackViews"
 import "Common.js" as Common
 import "Constants/UIConfig.js" as UIConfig
-import "Constants/Themes.js" as Themes
 
 ApplicationWindow {
     id: applicationWindow
@@ -47,20 +46,10 @@ ApplicationWindow {
     property bool showUpdateLink: false
     property bool needToCenter: true
     property bool listLayout: true
-    property bool initializedColors: false
     property var spellCheckService: helpersWrapper.getSpellCheckerService()
     property bool leftSideCollapsed: false
 
     onVisibleChanged: {
-        if (!initializedColors) {
-            initializedColors = true
-
-            Colors.registerTheme(Themes.BlackTheme);
-            Colors.registerTheme(Themes.SlateGrayTheme)
-
-            Colors.applyTheme(settingsModel.selectedThemeIndex)
-        }
-
         if (needToCenter) {
             needToCenter = false
             applicationWindow.x = appSettings.getAppPosX((Screen.width - applicationWindow.width) / 2)

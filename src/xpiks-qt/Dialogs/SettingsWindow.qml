@@ -28,7 +28,6 @@ import "../Components"
 import "../StyledControls"
 import "../Common.js" as Common
 import "../Constants/UIConfig.js" as UIConfig
-import "../Constants/Themes.js" as Themes;
 
 ApplicationWindow {
     id: settingsWindow

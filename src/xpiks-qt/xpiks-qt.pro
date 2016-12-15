@@ -353,7 +353,6 @@ DISTFILES += \
     Constants/UIConfig.js \
     Components/SelectedIcon.qml \
     Components/CustomComboBox.qml \
-    Constants/Themes.js \
     Components/CompletionBox.qml \
     Components/EditIcon.qml \
     uncrustify.cfg \

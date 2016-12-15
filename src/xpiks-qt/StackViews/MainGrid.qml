@@ -32,7 +32,6 @@ import "../Dialogs"
 import "../Components"
 import "../Common.js" as Common
 import "../Constants/UIConfig.js" as UIConfig
-import "../Constants/Themes.js" as Themes
 
 ColumnLayout {
     id: mainGridComponent

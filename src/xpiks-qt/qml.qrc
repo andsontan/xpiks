@@ -5,7 +5,6 @@
         <file>Components/CustomTab.qml</file>
         <file>Components/EditableTags.qml</file>
         <file>Components/LargeRemoveIcon.qml</file>
-        <file>Constants/Themes.js</file>
         <file>Dialogs/CombinedArtworksDialog.qml</file>
         <file>Dialogs/ExportMetadata.qml</file>
         <file>Dialogs/ImportMetadata.qml</file>
