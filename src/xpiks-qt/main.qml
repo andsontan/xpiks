@@ -281,8 +281,13 @@ ApplicationWindow {
                 if (!launched) {
                     // also as fallback in case of errors in findSelectedIndex
                     filteredArtItemsModel.combineSelectedArtworks();
-                    Common.launchDialog("Dialogs/CombinedArtworksDialog.qml",
-                                        applicationWindow, {componentParent: applicationWindow});
+                    mainStackView.push({
+                                           item: "qrc:/StackViews/CombinedEditView.qml",
+                                           properties: {
+                                               componentParent: applicationWindow
+                                           },
+                                           destroyOnPop: true
+                                       })
                 }
             }
         }

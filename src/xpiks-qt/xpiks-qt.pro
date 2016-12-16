@@ -315,7 +315,6 @@ DISTFILES += \
     StyledControls/StyledScrollView.qml \
     StyledControls/StyledText.qml \
     StyledControls/StyledTextInput.qml \
-    Dialogs/CombinedArtworksDialog.qml \
     Dialogs/ExportMetadata.qml \
     Dialogs/ImportMetadata.qml \
     Dialogs/SettingsWindow.qml \
@@ -377,7 +376,8 @@ DISTFILES += \
     Components/ZoomAmplifier.qml \
     StackViews/WarningsView.qml \
     Components/GlyphButton.qml \
-    Components/BackGlyphButton.qml
+    Components/BackGlyphButton.qml \
+    StackViews/CombinedEditView.qml
 
 lupdate_only {
 SOURCES += *.qml \

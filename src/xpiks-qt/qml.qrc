@@ -5,7 +5,6 @@
         <file>Components/CustomTab.qml</file>
         <file>Components/EditableTags.qml</file>
         <file>Components/LargeRemoveIcon.qml</file>
-        <file>Dialogs/CombinedArtworksDialog.qml</file>
         <file>Dialogs/ExportMetadata.qml</file>
         <file>Dialogs/ImportMetadata.qml</file>
         <file>Dialogs/SettingsWindow.qml</file>
@@ -72,5 +71,6 @@
         <file>StackViews/WarningsView.qml</file>
         <file>Components/GlyphButton.qml</file>
         <file>Components/BackGlyphButton.qml</file>
+        <file>StackViews/CombinedEditView.qml</file>
     </qresource>
 </RCC>

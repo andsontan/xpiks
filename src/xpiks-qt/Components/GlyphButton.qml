@@ -67,7 +67,7 @@ Rectangle {
         anchors.horizontalCenterOffset: control.leftShift
         anchors.centerIn: parent
         width: childrenRect.width
-        height: childrenRect.height
+        height: glyphWrapper.height
 
         Item {
             id: glyphWrapper

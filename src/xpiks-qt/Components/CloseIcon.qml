@@ -29,6 +29,7 @@ Item {
     property int thickness: 3
     property alias crossOpacity: wrapperRect.opacity
     property color defaultColor: Colors.labelActiveForeground
+    property color inactiveColor: defaultColor
     signal itemClicked();
 
     Item {
@@ -45,7 +46,7 @@ Item {
         }
 
         Rectangle {
-            color: enabled ? wrapperRect.pressColor : Colors.inactiveControlColor
+            color: enabled ? wrapperRect.pressColor : item.inactiveColor
             width: isPlus ? parent.width - 2 : parent.width
             height: item.thickness
             radius: item.thickness/2
@@ -55,7 +56,7 @@ Item {
         }
 
         Rectangle {
-            color: enabled ? wrapperRect.pressColor : Colors.inactiveControlColor
+            color: enabled ? wrapperRect.pressColor : item.inactiveColor
             width: isPlus ? parent.width - 2 : parent.width
             height: item.thickness
             radius: item.thickness/2

@@ -33,7 +33,7 @@ GlyphButton {
     glyphMargin: 12
     glyph: Item {
         width: childrenRect.width
-        height: childrenRect.height
+        height: 14
 
         TriangleElement {
             id: triangle

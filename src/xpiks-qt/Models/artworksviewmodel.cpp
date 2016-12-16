@@ -23,6 +23,7 @@
 #include <QVector>
 #include "../Helpers/indiceshelper.h"
 #include "../Common/defines.h"
+#include "imageartwork.h"
 
 namespace Models {
     ArtworksViewModel::ArtworksViewModel(QObject *parent):
@@ -138,10 +139,12 @@ namespace Models {
 
         auto &item = m_ArtworksList.at(row);
         auto *artwork = item.getOrigin();
+        auto *imageArtwork = dynamic_cast<ImageArtwork*>(artwork);
 
         switch (role) {
         case FilepathRole: return artwork->getFilepath();
         case IsSelectedRole: return item.isSelected();
+        case HasVectorAttachedRole: return (imageArtwork != nullptr) && (imageArtwork->hasVectorAttached());
         default: return QVariant();
         }
     }
@@ -150,6 +153,7 @@ namespace Models {
         QHash<int, QByteArray> names = QAbstractListModel::roleNames();
         names[FilepathRole] = "filepath";
         names[IsSelectedRole] = "isselected";
+        names[HasVectorAttachedRole] = "hasvectorattached";
         return names;
     }
 

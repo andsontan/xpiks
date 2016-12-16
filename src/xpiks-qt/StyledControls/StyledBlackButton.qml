@@ -27,7 +27,16 @@ import "../Constants"
 Button {
     style: ButtonStyle {
         background: Rectangle {
-            color: Colors.defaultDarkColor
+            color: {
+                var result = Colors.defaultDarkColor;
+
+                if (control.enabled &&
+                        (control.isDefault || control.hovered)) {
+                    result = Colors.buttonHoverBackground;
+                }
+
+                return result
+            }
             implicitWidth: control.width
             implicitHeight: 24
         }

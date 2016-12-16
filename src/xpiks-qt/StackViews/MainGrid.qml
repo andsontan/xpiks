@@ -235,6 +235,7 @@ ColumnLayout {
                         enabled: filterText.length > 0
                         anchors.verticalCenter: parent.verticalCenter
                         onItemClicked: clearFilter()
+                        inactiveColor: Colors.inactiveControlColor
                     }
 
                     StyledText {

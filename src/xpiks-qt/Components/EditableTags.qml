@@ -39,6 +39,7 @@ Flickable {
     flickableDirection: Flickable.VerticalFlick
     rightMargin: 10
     interactive: false
+    property bool populateAnimationEnabled: true
     clip: true
 
     property int scrollStep: 10
@@ -218,6 +219,7 @@ Flickable {
         }*/
 
         populate: Transition {
+            enabled: flowListView.populateAnimationEnabled
             NumberAnimation { properties: "x,y"; from: 200; duration: 100; easing.type: Easing.OutBounce }
         }
 

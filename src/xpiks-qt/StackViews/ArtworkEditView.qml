@@ -25,7 +25,6 @@ import QtQuick.Layouts 1.1
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls.Styles 1.1
 import xpiks 1.0
-import QtGraphicalEffects 1.0
 import "../Constants"
 import "../Common.js" as Common;
 import "../Components"
@@ -34,7 +33,6 @@ import "../Constants/UIConfig.js" as UIConfig
 
 Rectangle {
     id: artworkEditComponent
-    anchors.fill: parent
     color: Colors.defaultDarkerColor
 
     property variant componentParent
@@ -243,7 +241,10 @@ Rectangle {
 
                     BackGlyphButton {
                         text: qsTr("Back")
-                        onClicked: closePopup()
+                        onClicked: {
+                            flv.onBeforeClose()
+                            closePopup()
+                        }
                     }
 
                     Item {
@@ -444,8 +445,23 @@ Rectangle {
                                     width: titleFlick.width
                                     height: titleFlick.height
                                     text: artworkProxy.title
-                                    onTextChanged: artworkProxy.title = text
                                     userDictEnabled: true
+                                    property string previousText: text
+                                    onTextChanged: {
+                                        if (text.length > UIConfig.inputsMaxLength) {
+                                            var cursor = cursorPosition;
+                                            text = previousText;
+                                            if (cursor > text.length) {
+                                                cursorPosition = text.length;
+                                            } else {
+                                                cursorPosition = cursor-1;
+                                            }
+                                            console.info("Pasting cancelled: text length exceeded maximum")
+                                        }
+
+                                        previousText = text
+                                        artworkProxy.title = text
+                                    }
 
                                     onActionRightClicked: {
                                         if (artworkProxy.hasTitleWordSpellError(rightClickedWord)) {
@@ -551,7 +567,7 @@ Rectangle {
                                     property string previousText: text
                                     property int maximumLength: 280
                                     onTextChanged: {
-                                        if (text.length > maximumLength) {
+                                        if (text.length > UIConfig.inputsMaxLength) {
                                             var cursor = cursorPosition;
                                             text = previousText;
                                             if (cursor > text.length) {
@@ -559,6 +575,7 @@ Rectangle {
                                             } else {
                                                 cursorPosition = cursor-1;
                                             }
+                                            console.info("Pasting cancelled: text length exceeded maximum")
                                         }
 
                                         previousText = text
@@ -665,6 +682,7 @@ Rectangle {
                                 model: artworkEditComponent.keywordsModel
                                 property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
                                 scrollStep: keywordHeight
+                                populateAnimationEnabled: false
 
                                 delegate: KeywordWrapper {
                                     id: kw
@@ -963,7 +981,7 @@ Rectangle {
             anchors.right: selectNextButton.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            model: listViewEnabled ? filteredArtItemsModel : null
+            model: listViewEnabled ? filteredArtItemsModel : undefined
             highlightFollowsCurrentItem: false
             highlightMoveDuration: 0
             flickableDirection: Flickable.HorizontalFlick
@@ -1049,7 +1067,6 @@ Rectangle {
                         flickable.contentX = Math.max(0, flickable.contentX + shiftX)
                         wheel.accepted = true
                     }
-
                 }
             }
         }
