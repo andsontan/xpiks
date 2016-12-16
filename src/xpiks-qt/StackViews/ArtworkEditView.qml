@@ -35,7 +35,7 @@ import "../Constants/UIConfig.js" as UIConfig
 Rectangle {
     id: artworkEditComponent
     anchors.fill: parent
-    color: Colors.artworkImageBackground
+    color: Colors.defaultDarkerColor
 
     property variant componentParent
     property var autoCompleteBox
@@ -199,7 +199,7 @@ Rectangle {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         width: 2
-        color: applicationWindow.leftSideCollapsed ? Colors.defaultControlColor : Colors.artworkImageBackground
+        color: applicationWindow.leftSideCollapsed ? bottomPane.color : artworkEditComponent.color
     }
 
     SplitView {
@@ -210,8 +210,8 @@ Rectangle {
         anchors.bottom: bottomPane.top
 
         handleDelegate: Rectangle {
-            width: 2
-            color: Colors.defaultControlColor
+            width: 0
+            color: Colors.selectedArtworkBackground
         }
 
         onResizingChanged: {
@@ -234,7 +234,7 @@ Rectangle {
 
                 RowLayout {
                     anchors.leftMargin: 10
-                    anchors.rightMargin: 10
+                    anchors.rightMargin: 20
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.verticalCenter: parent.verticalCenter
@@ -252,6 +252,7 @@ Rectangle {
 
                     StyledText {
                         text: artworkProxy.basename
+                        isActive: false
                     }
                 }
             }
@@ -294,9 +295,11 @@ Rectangle {
                         id: zoomIcon
                         anchors.fill: parent
                         anchors.margins: 10
+                        scale: zoomMA.pressed ? 0.9 : 1
                     }
 
                     MouseArea {
+                        id: zoomMA
                         anchors.fill: parent
                         onClicked: {
                             previewImage.isFullSize = !previewImage.isFullSize
@@ -334,11 +337,11 @@ Rectangle {
                         property int delegateIndex: index
                         tabIndex: delegateIndex
                         isSelected: tabIndex === editTabView.currentIndex
-                        color: isSelected ? Colors.defaultControlColor : Colors.defaultDarkColor
+                        color: isSelected ? Colors.selectedArtworkBackground : Colors.inputInactiveBackground
                         hovered: tabMA.containsMouse
 
                         StyledText {
-                            color: parent.isSelected ? Colors.artworkActiveColor : (parent.hovered ? Colors.inputForegroundColor : Colors.labelActiveForeground)
+                            color: parent.isSelected ? Colors.artworkActiveColor : (parent.hovered ? Colors.labelActiveForeground : Colors.labelInactiveForeground)
                             text: modelData
                             anchors.centerIn: parent
                         }
@@ -375,9 +378,8 @@ Rectangle {
 
                 Rectangle {
                     id: editTab
-                    color: Colors.defaultControlColor
+                    color: Colors.selectedArtworkBackground
                     anchors.fill: parent
-                    property color inputBackgroundColor: Colors.selectedArtworkBackground
 
                     ColumnLayout {
                         id: fields
@@ -413,7 +415,7 @@ Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
                             height: 25
-                            color: editTab.inputBackgroundColor
+                            color: Colors.inputBackgroundColor
                             border.color: Colors.artworkActiveColor
                             border.width: titleTextInput.activeFocus ? 1 : 0
                             clip: true
@@ -513,7 +515,7 @@ Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
                             height: 70
-                            color: editTab.inputBackgroundColor
+                            color: Colors.inputBackgroundColor
                             border.color: Colors.artworkActiveColor
                             border.width: descriptionTextInput.activeFocus ? 1 : 0
                             clip: true
@@ -639,7 +641,7 @@ Rectangle {
                             height: 255
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            color: editTab.inputBackgroundColor
+                            color: Colors.inputBackgroundColor
 
                             function removeKeyword(index) {
                                 artworkProxy.removeKeywordAt(index)
@@ -914,7 +916,8 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         height: 110
-        color: Colors.defaultDarkColor
+        color: Colors.panelColor
+        property color hoverColor: Colors.panelHoverColor
 
         Rectangle {
             id: selectPrevButton
@@ -923,7 +926,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             width: 40
             enabled: rosterListView.currentIndex > 0
-            color: (enabled && prevButtonMA.containsMouse) ? Colors.defaultControlColor : bottomPane.color
+            color: (enabled && prevButtonMA.containsMouse) ? bottomPane.hoverColor : bottomPane.color
 
             TriangleElement {
                 width: 7
@@ -984,9 +987,9 @@ Rectangle {
                 width: bottomPane.height
                 color: {
                     if (ListView.isCurrentItem) {
-                        return Colors.selectedArtworkBackground
+                        return Colors.panelSelectedColor
                     } else {
-                        return imageMA.containsMouse ? Colors.defaultControlColor : "transparent"
+                        return imageMA.containsMouse ? bottomPane.hoverColor : "transparent"
                     }
                 }
 
@@ -1058,7 +1061,7 @@ Rectangle {
             anchors.bottom: parent.bottom
             width: 40
             enabled: rosterListView.currentIndex < (rosterListView.count - 1)
-            color: (enabled && nextButtonMA.containsMouse) ? Colors.defaultDarkerColor : bottomPane.color
+            color: (enabled && nextButtonMA.containsMouse) ? bottomPane.hoverColor : bottomPane.color
 
             TriangleElement {
                 width: 7

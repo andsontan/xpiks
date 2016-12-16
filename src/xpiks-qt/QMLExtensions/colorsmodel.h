@@ -47,6 +47,9 @@ namespace QMLExtensions {
         Q_PROPERTY(QColor defaultDarkerColor READ defaultDarkerColor WRITE setDefaultDarkerColor NOTIFY defaultDarkerColorChanged)
         Q_PROPERTY(QColor defaultControlColor READ defaultControlColor WRITE setDefaultControlColor NOTIFY defaultControlColorChanged)
         Q_PROPERTY(QColor whiteColor READ whiteColor WRITE setWhiteColor NOTIFY whiteColorChanged)
+        Q_PROPERTY(QColor panelColor READ panelColor WRITE setPanelColor NOTIFY panelColorChanged)
+        Q_PROPERTY(QColor panelSelectedColor READ panelSelectedColor WRITE setPanelSelectedColor NOTIFY panelSelectedColorChanged)
+        Q_PROPERTY(QColor panelHoverColor READ panelHoverColor WRITE setPanelHoverColor NOTIFY panelHoverColorChanged)
 
         Q_PROPERTY(QColor inputBackgroundColor READ inputBackgroundColor WRITE setInputBackgroundColor NOTIFY inputBackgroundColorChanged)
         Q_PROPERTY(QColor inputInactiveBackground READ inputInactiveBackground WRITE setInputInactiveBackground NOTIFY inputInactiveBackgroundChanged)
@@ -72,7 +75,6 @@ namespace QMLExtensions {
 
         Q_PROPERTY(QColor linkClickedColor READ linkClickedColor WRITE setLinkClickedColor NOTIFY linkClickedColorChanged)
 
-        Q_PROPERTY(QColor selectedImageBackground READ selectedImageBackground WRITE setSelectedImageBackground NOTIFY selectedImageBackgroundChanged)
         Q_PROPERTY(QColor selectedArtworkBackground READ selectedArtworkBackground WRITE setSelectedArtworkBackground NOTIFY selectedArtworkBackgroundChanged)
         Q_PROPERTY(QColor checkboxCheckedColor READ checkboxCheckedColor WRITE setCheckboxCheckedColor NOTIFY checkboxCheckedColorChanged)
 
@@ -114,7 +116,6 @@ namespace QMLExtensions {
         QColor m_buttonPressedForeground;
         QColor m_buttonDisabledForeground;
         QColor m_linkClickedColor;
-        QColor m_selectedImageBackground;
         QColor m_selectedArtworkBackground;
         QColor m_checkboxCheckedColor;
         QColor m_itemsSourceBackground;
@@ -127,6 +128,9 @@ namespace QMLExtensions {
         QColor m_leftSliderColor;        
         QColor m_popupBackgroundColor;
         QColor m_inactiveControlColor;
+        QColor m_panelColor;
+        QColor m_panelSelectedColor;
+        QColor m_panelHoverColor;
 
     public:
         explicit ColorsModel(QObject *parent = 0);
@@ -244,11 +248,6 @@ namespace QMLExtensions {
             return m_linkClickedColor;
         }
 
-        QColor selectedImageBackground() const
-        {
-            return m_selectedImageBackground;
-        }
-
         QColor selectedArtworkBackground() const
         {
             return m_selectedArtworkBackground;
@@ -314,6 +313,21 @@ namespace QMLExtensions {
             return m_inactiveControlColor;
         }
 
+        QColor panelColor() const
+        {
+            return m_panelColor;
+        }
+
+        QColor panelSelectedColor() const
+        {
+            return m_panelSelectedColor;
+        }
+
+        QColor panelHoverColor() const
+        {
+            return m_panelHoverColor;
+        }
+
     signals:
         void themeChanged();
         void defaultDarkColorChanged(QColor defaultDarkColor);
@@ -337,7 +351,6 @@ namespace QMLExtensions {
         void buttonPressedForegroundChanged(QColor buttonPressedForeground);
         void buttonDisabledForegroundChanged(QColor buttonDisabledForeground);
         void linkClickedColorChanged(QColor linkClickedColor);
-        void selectedImageBackgroundChanged(QColor selectedImageBackground);
         void selectedArtworkBackgroundChanged(QColor selectedArtworkBackground);
         void checkboxCheckedColorChanged(QColor checkboxCheckedColor);
         void itemsSourceBackgroundChanged(QColor itemsSourceBackground);
@@ -351,6 +364,9 @@ namespace QMLExtensions {
         void leftSliderColorChanged(QColor leftSliderColor);        
         void popupBackgroundColorChanged(QColor popupBackgroundColor);
         void inactiveControlColorChanged(QColor inactiveControlColor);
+        void panelColorChanged(QColor panelColor);
+        void panelSelectedColorChanged(QColor panelSelectedColor);
+        void panelHoverColorChanged(QColor panelHoverColor);
 
     public slots:
         void setDefaultDarkColor(QColor defaultDarkColor)
@@ -521,14 +537,6 @@ namespace QMLExtensions {
             m_linkClickedColor = linkClickedColor;
             emit linkClickedColorChanged(linkClickedColor);
         }
-        void setSelectedImageBackground(QColor selectedImageBackground)
-        {
-            if (m_selectedImageBackground == selectedImageBackground)
-                return;
-
-            m_selectedImageBackground = selectedImageBackground;
-            emit selectedImageBackgroundChanged(selectedImageBackground);
-        }
         void setSelectedArtworkBackground(QColor selectedArtworkBackground)
         {
             if (m_selectedArtworkBackground == selectedArtworkBackground)
@@ -632,6 +640,30 @@ namespace QMLExtensions {
 
             m_inactiveControlColor = inactiveControlColor;
             emit inactiveControlColorChanged(inactiveControlColor);
+        }
+        void setPanelColor(QColor panelColor)
+        {
+            if (m_panelColor == panelColor)
+                return;
+
+            m_panelColor = panelColor;
+            emit panelColorChanged(panelColor);
+        }
+        void setPanelSelectedColor(QColor panelSelectedColor)
+        {
+            if (m_panelSelectedColor == panelSelectedColor)
+                return;
+
+            m_panelSelectedColor = panelSelectedColor;
+            emit panelSelectedColorChanged(panelSelectedColor);
+        }
+        void setPanelHoverColor(QColor panelHoverColor)
+        {
+            if (m_panelHoverColor == panelHoverColor)
+                return;
+
+            m_panelHoverColor = panelHoverColor;
+            emit panelHoverColorChanged(panelHoverColor);
         }
     };
 }

@@ -34,6 +34,9 @@
 #define DEFAULT_DARKER_COLOR "defaultDarkerColor"
 #define DEFAULT_CONTROL_COLOR "defaultControlColor"
 #define INACTIVE_CONTROL_COLOR "inactiveControlColor"
+#define PANEL_COLOR "panelColor"
+#define PANEL_SELECTED_COLOR "panelSelectedColor"
+#define PANEL_HOVER_COLOR "panelHoverColor"
 #define WHITE_COLOR "whiteColor"
 
 #define INPUT_BACKGROUND "inputBackgroundColor"
@@ -60,7 +63,6 @@
 
 #define LINK_CLICKED_COLOR "linkClickedColor"
 
-#define SELECTED_IMAGE_BACKGROUND "selectedImageBackground"
 #define SELECTED_ARTWORK_BACKGROUND "selectedArtworkBackground"
 #define CHECKBOX_CHECKED_COLOR "checkboxCheckedColor"
 
@@ -82,16 +84,19 @@ ColorsMap createBlackTheme() {
 
     BlackTheme["name"] = "black";
 
+    BlackTheme[DEFAULT_DARKER_COLOR] = "#121212";
     BlackTheme[DEFAULT_DARK_COLOR] = "#1e1e1e";
-    BlackTheme[DEFAULT_DARKER_COLOR] = "#333333";
     BlackTheme[DEFAULT_CONTROL_COLOR] = "#292929";
     BlackTheme[INACTIVE_CONTROL_COLOR] = "#404040";
+    BlackTheme[PANEL_COLOR] = "#242424";
+    BlackTheme[PANEL_SELECTED_COLOR] = "#5d5d5d";
+    BlackTheme[PANEL_HOVER_COLOR] = "#4a4a4a";
     BlackTheme[WHITE_COLOR] = "#ffffff";
 
     BlackTheme[LABEL_ACTIVE_FOREGROUND] = "#c9c9c9";
     BlackTheme[LABEL_INACTIVE_FOREGROUND] = "#939393";
-    BlackTheme[INPUT_BACKGROUND] = "#5d5d5d";
-    BlackTheme[INPUT_INACTIVE_BACKGROUND] = "#242424";
+    BlackTheme[INPUT_BACKGROUND] = BlackTheme[PANEL_SELECTED_COLOR];
+    BlackTheme[INPUT_INACTIVE_BACKGROUND] = BlackTheme[PANEL_COLOR];
     BlackTheme[INPUT_FOREGROUND] = BlackTheme[WHITE_COLOR];
     BlackTheme[INPUT_INACTIVE_FOREGROUND] = BlackTheme[LABEL_ACTIVE_FOREGROUND];
 
@@ -112,20 +117,19 @@ ColorsMap createBlackTheme() {
 
     BlackTheme[LINK_CLICKED_COLOR] = BlackTheme[WHITE_COLOR];
 
-    BlackTheme[SELECTED_IMAGE_BACKGROUND] = BlackTheme[LABEL_INACTIVE_FOREGROUND];
-    BlackTheme[SELECTED_ARTWORK_BACKGROUND] = "#404040";
+    BlackTheme[SELECTED_ARTWORK_BACKGROUND] = BlackTheme[INACTIVE_CONTROL_COLOR];
     BlackTheme[CHECKBOX_CHECKED_COLOR] = "#ffffff";
 
-    BlackTheme[ITEMS_SOURCE_BACKGROUND] = BlackTheme[SELECTED_ARTWORK_BACKGROUND];
-    BlackTheme[ITEMS_SOURCE_SELECTED] = BlackTheme[SELECTED_IMAGE_BACKGROUND];
+    BlackTheme[ITEMS_SOURCE_BACKGROUND] = BlackTheme[INACTIVE_CONTROL_COLOR];
+    BlackTheme[ITEMS_SOURCE_SELECTED] = BlackTheme[INPUT_BACKGROUND];
     BlackTheme[ITEMS_SOURCE_FOREGROUND] = BlackTheme[INPUT_INACTIVE_FOREGROUND];
 
     BlackTheme[DESTRUCTIVE_COLOR] = "#e81313";
     BlackTheme[GREEN_COLOR] = "#2daf02";
 
-    BlackTheme[STATUS_BAR_COLOR] = "#121212";
+    BlackTheme[STATUS_BAR_COLOR] = BlackTheme[DEFAULT_DARKER_COLOR];
     BlackTheme[LEFT_SLIDER_COLOR] = BlackTheme[ARTWORK_BACKGROUND];
-    BlackTheme[POPUP_BACKGROUND_COLOR] = BlackTheme[DEFAULT_CONTROL_COLOR];
+    BlackTheme[POPUP_BACKGROUND_COLOR] = BlackTheme[INACTIVE_CONTROL_COLOR];
 
     return BlackTheme;
 }
@@ -164,11 +168,10 @@ ColorsMap createSlateGrayTheme() {
 
     SlateGrayTheme[LINK_CLICKED_COLOR] = SlateGrayTheme[INPUT_FOREGROUND];
 
-    SlateGrayTheme[SELECTED_IMAGE_BACKGROUND] = "#3e434d";
     SlateGrayTheme[SELECTED_ARTWORK_BACKGROUND] = "#474b54";
     SlateGrayTheme[CHECKBOX_CHECKED_COLOR] = "#ffffff";
 
-    SlateGrayTheme[ITEMS_SOURCE_BACKGROUND] = SlateGrayTheme[SELECTED_IMAGE_BACKGROUND];
+    SlateGrayTheme[ITEMS_SOURCE_BACKGROUND] = SlateGrayTheme[SELECTED_ARTWORK_BACKGROUND];
     SlateGrayTheme[ITEMS_SOURCE_SELECTED] = SlateGrayTheme[ITEMS_SOURCE_BACKGROUND];
     SlateGrayTheme[ITEMS_SOURCE_FOREGROUND] = SlateGrayTheme[INPUT_FOREGROUND];
 
@@ -254,6 +257,9 @@ namespace QMLExtensions {
         setDefaultDarkerColor(getColor(DEFAULT_DARKER_COLOR, theme, fallback));
         setDefaultControlColor(getColor(DEFAULT_CONTROL_COLOR,theme, fallback));
         setInactiveControlColor(getColor(INACTIVE_CONTROL_COLOR, theme, fallback));
+        setPanelColor(getColor(PANEL_COLOR, theme, fallback));
+        setPanelSelectedColor(getColor(PANEL_SELECTED_COLOR, theme, fallback));
+        setPanelHoverColor(getColor(PANEL_HOVER_COLOR, theme, fallback));
         setWhiteColor(getColor(WHITE_COLOR, theme, fallback));
 
         setInputBackgroundColor(getColor(INPUT_BACKGROUND, theme, fallback));
@@ -280,7 +286,6 @@ namespace QMLExtensions {
 
         setLinkClickedColor(getColor(LINK_CLICKED_COLOR, theme, fallback));
 
-        setSelectedImageBackground(getColor(SELECTED_IMAGE_BACKGROUND, theme, fallback));
         setSelectedArtworkBackground(getColor(SELECTED_ARTWORK_BACKGROUND, theme, fallback));
         setCheckboxCheckedColor(getColor(CHECKBOX_CHECKED_COLOR, theme, fallback));
 

@@ -40,7 +40,7 @@ GlyphButton {
             isVertical: true
             isFlipped: true
             width: 7
-            height: 13
+            height: 14
             anchors.left: parent.left
             anchors.verticalCenter: parent.verticalCenter
             color: buttonBack.textColor
@@ -50,8 +50,8 @@ GlyphButton {
             anchors.left: triangle.right
             anchors.verticalCenter: parent.verticalCenter
             color: buttonBack.textColor
-            width: 5
-            height: 5
+            width: 6
+            height: 6
         }
     }
 }
