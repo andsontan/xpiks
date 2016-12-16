@@ -137,6 +137,9 @@ namespace Models {
             signalKeywordsCountChanged();
         }
 
+        // to update fix spelling link
+        spellCheckKeywords();
+
         return result;
     }
 
@@ -195,6 +198,9 @@ namespace Models {
 
         auto *metadataOperator = getMetadataOperator();
         metadataOperator->setKeywords(keywords);
+
+        spellCheckKeywords();
+
         signalKeywordsCountChanged();
     }
 
@@ -206,5 +212,10 @@ namespace Models {
     bool ArtworkProxyBase::getHasDescriptionWordSpellError(const QString &word) {
         auto *keywordsModel = getBasicMetadataModel();
         return keywordsModel->hasDescriptionWordSpellError(word);
+    }
+
+    void ArtworkProxyBase::spellCheckKeywords() {
+        auto *basicModel = getBasicMetadataModel();
+        m_CommandManager->submitItemForSpellCheck(basicModel, Common::SpellCheckFlags::Keywords);
     }
 }

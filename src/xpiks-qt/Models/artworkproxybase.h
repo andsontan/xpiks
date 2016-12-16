@@ -71,6 +71,9 @@ namespace Models {
         void doPlainTextEdit(const QString &rawKeywords);
         bool getHasTitleWordSpellError(const QString &word);
         bool getHasDescriptionWordSpellError(const QString &word);
+
+    private:
+        void spellCheckKeywords();
     };
 }
 
