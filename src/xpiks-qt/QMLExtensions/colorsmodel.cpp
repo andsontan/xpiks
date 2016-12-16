@@ -28,51 +28,6 @@
 
 #include <unordered_map>
 
-#define DEFAULT_DARK_COLOR "#1e1e1e"
-#define DEFAULT_DARKER_COLOR "#333333"
-#define DEFAULT_CONTROL_COLOR "#292929"
-#define DEFAULT_INACTIVE_CONTROL_COLOR "#404040"
-#define DEFAULT_WHITE_COLOR "#ffffff"
-
-#define DEFAULT_INPUT_BACKGROUND "#999999"
-#define DEFAULT_INPUT_INACTIVE_BACKGROUND DEFAULT_CONTROL_COLOR
-#define DEFAULT_INPUT_FOREGROUND "#e6e7e8"
-#define DEFAULT_INPUT_INACTIVE_FOREGROUND DEFAULT_INPUT_BACKGROUND
-#define DEFAULT_LABEL_ACTIVE_FOREGROUND DEFAULT_INPUT_BACKGROUND
-#define DEFAULT_LABEL_INACTIVE_FOREGROUND "#545456"
-
-#define DEFAULT_ARTWORK_BACKGROUND "#031619"
-#define DEFAULT_ARTWORK_IMAGE_BACKGROUND "#081215"
-#define DEFAULT_ARTWORK_MODIFIED_COLOR "#f49c12"
-#define DEFAULT_ARTWORK_SAVED_COLOR "#435151"
-#define DEFAULT_ARTWORK_ACTIVE_COLOR "#12b9bc"
-
-#define DEFAULT_LIGHT_COLOR DEFAULT_INPUT_INACTIVE_FOREGROUND
-#define DEFAULT_LIGHT_GRAY_COLOR "#D0D0D0"
-#define DEFAULT_LIST_SEPARATOR_COLOR "#ffffff"
-
-#define DEFAULT_BUTTON_HOVER_BACKGROUND DEFAULT_ARTWORK_ACTIVE_COLOR
-#define DEFAULT_BUTTON_PRESSED_BACKGROUND "#41b1b7"
-#define DEFAULT_BUTTON_PRESSED_FOREGROUND "#283c3f"
-#define DEFAULT_BUTTON_DISABLED_FOREGROUND DEFAULT_BUTTON_PRESSED_FOREGROUND
-
-#define DEFAULT_LINK_CLICKED_COLOR DEFAULT_INPUT_FOREGROUND
-
-#define DEFAULT_SELECTED_IMAGE_BACKGROUND DEFAULT_LABEL_INACTIVE_FOREGROUND
-#define DEFAULT_SELECTED_ARTWORK_BACKGROUND "#5d5d5d"
-#define DEFAULT_CHECKBOX_CHECKED_COLOR DEFAULT_WHITE_COLOR
-
-#define DEFAULT_ITEMS_SOURCE_BACKGROUND DEFAULT_DARK_COLOR
-#define DEFAULT_ITEMS_SOURCE_SELECTED DEFAULT_SELECTED_IMAGE_BACKGROUND
-#define DEFAULT_ITEMS_SOURCE_FOREGROUND DEFAULT_INPUT_INACTIVE_FOREGROUND
-
-#define DEFAULT_DESTRUCTIVE_COLOR "#d10b0b"
-#define DEFAULT_GREEN_COLOR "#2daf02"
-
-#define DEFAULT_STATUS_BAR_COLOR DEFAULT_ARTWORK_IMAGE_BACKGROUND
-#define DEFAULT_LEFT_SLIDER_COLOR DEFAULT_ARTWORK_IMAGE_BACKGROUND
-#define DEFAULT_POPUP_BACKGROUND_COLOR DEFAULT_CONTROL_COLOR
-
 typedef std::unordered_map<std::string, std::string> ColorsMap;
 
 ColorsMap createBlackTheme() {
@@ -188,13 +143,14 @@ namespace QMLExtensions {
         {}
 
     public:
-        virtual QColor getColor(const std::string &colorName, const std::string &defaultValue) const {
+        virtual bool tryGetColor(const std::string &colorName, QColor &color) const {
             auto it = m_ColorsMap.find(colorName);
-            if (it != m_ColorsMap.end()) {
-                return QColor(QString::fromStdString(it->second));
-            } else {
-                return QColor(QString::fromStdString(defaultValue));
+            bool contains = it != m_ColorsMap.end();
+            if (contains) {
+                color = QColor(QString::fromStdString(it->second));
             }
+
+            return contains;
         }
 
         virtual QString getThemeName() const {
@@ -217,6 +173,22 @@ namespace QMLExtensions {
         applyTheme(0);
     }
 
+    const std::shared_ptr<ColorsProvider> &ColorsModel::getFallbackTheme() {
+        return m_RegisteredThemes.at(0);
+    }
+
+    QColor ColorsModel::getColor(const std::string &colorName, const std::shared_ptr<ColorsProvider> &theme,
+                                 const std::shared_ptr<ColorsProvider> &fallbackTheme) {
+        QColor result;
+        if (!theme->tryGetColor(colorName, result)) {
+            if (!fallbackTheme->tryGetColor(colorName, result)) {
+                result = QColor("#000000");
+            }
+        }
+
+        return result;
+    }
+
     void ColorsModel::registerTheme(const std::shared_ptr<ColorsProvider> &provider) {
         QString themeName = provider->getThemeName();
         LOG_DEBUG << themeName;
@@ -229,51 +201,52 @@ namespace QMLExtensions {
         if (index < 0 || index >= (int)m_RegisteredThemes.size()) { return false; }
 
         auto &theme = m_RegisteredThemes[index];
+        auto &fallback = getFallbackTheme();
 
-        setDefaultDarkColor(theme->getColor("defaultDarkColor", DEFAULT_DARK_COLOR));
-        setDefaultDarkerColor(theme->getColor("defaultDarkerColor", DEFAULT_DARKER_COLOR));
-        setDefaultControlColor(theme->getColor("defaultControlColor",DEFAULT_CONTROL_COLOR));
-        setInactiveControlColor(theme->getColor("inactiveControlColor", DEFAULT_INACTIVE_CONTROL_COLOR));
-        setWhiteColor(theme->getColor("whiteColor", DEFAULT_WHITE_COLOR));
+        setDefaultDarkColor(getColor("defaultDarkColor", theme, fallback));
+        setDefaultDarkerColor(getColor("defaultDarkerColor", theme, fallback));
+        setDefaultControlColor(getColor("defaultControlColor",theme, fallback));
+        setInactiveControlColor(getColor("inactiveControlColor", theme, fallback));
+        setWhiteColor(getColor("whiteColor", theme, fallback));
 
-        setInputBackgroundColor(theme->getColor("inputBackgroundColor", DEFAULT_INPUT_BACKGROUND));
-        setInputInactiveBackground(theme->getColor("inputInactiveBackground", DEFAULT_INPUT_INACTIVE_BACKGROUND));
-        setInputForegroundColor(theme->getColor("inputForegroundColor", DEFAULT_INPUT_FOREGROUND));
-        setInputInactiveForeground(theme->getColor("inputInactiveForeground", DEFAULT_INPUT_INACTIVE_FOREGROUND));
-        setLabelActiveForeground(theme->getColor("labelActiveForeground", DEFAULT_LABEL_ACTIVE_FOREGROUND));
-        setLabelInactiveForeground(theme->getColor("labelInactiveForeground", DEFAULT_LABEL_INACTIVE_FOREGROUND));
+        setInputBackgroundColor(getColor("inputBackgroundColor", theme, fallback));
+        setInputInactiveBackground(getColor("inputInactiveBackground", theme, fallback));
+        setInputForegroundColor(getColor("inputForegroundColor", theme, fallback));
+        setInputInactiveForeground(getColor("inputInactiveForeground", theme, fallback));
+        setLabelActiveForeground(getColor("labelActiveForeground", theme, fallback));
+        setLabelInactiveForeground(getColor("labelInactiveForeground", theme, fallback));
 
-        setArtworkBackground(theme->getColor("artworkBackground", DEFAULT_ARTWORK_BACKGROUND));
-        setArtworkImageBackground(theme->getColor("artworkImageBackground", DEFAULT_ARTWORK_IMAGE_BACKGROUND));
-        setArtworkModifiedColor(theme->getColor("artworkModifiedColor", DEFAULT_ARTWORK_MODIFIED_COLOR));
-        setArtworkSavedColor(theme->getColor("artworkSavedColor", DEFAULT_ARTWORK_SAVED_COLOR));
-        setArtworkActiveColor(theme->getColor("artworkActiveColor", DEFAULT_ARTWORK_ACTIVE_COLOR));
+        setArtworkBackground(getColor("artworkBackground", theme, fallback));
+        setArtworkImageBackground(getColor("artworkImageBackground", theme, fallback));
+        setArtworkModifiedColor(getColor("artworkModifiedColor", theme, fallback));
+        setArtworkSavedColor(getColor("artworkSavedColor", theme, fallback));
+        setArtworkActiveColor(getColor("artworkActiveColor", theme, fallback));
 
-        setDefaultLightColor(theme->getColor("defaultLightColor", DEFAULT_LIGHT_COLOR));
-        setDefaultLightGrayColor(theme->getColor("defaultLightGrayColor", DEFAULT_LIGHT_GRAY_COLOR));
-        setListSeparatorColor(theme->getColor("listSeparatorColor", DEFAULT_LIST_SEPARATOR_COLOR));
+        setDefaultLightColor(getColor("defaultLightColor", theme, fallback));
+        setDefaultLightGrayColor(getColor("defaultLightGrayColor", theme, fallback));
+        setListSeparatorColor(getColor("listSeparatorColor", theme, fallback));
 
-        setButtonHoverBackground(theme->getColor("buttonHoverBackground", DEFAULT_BUTTON_HOVER_BACKGROUND));
-        setButtonPressedBackground(theme->getColor("buttonPressedBackground", DEFAULT_BUTTON_PRESSED_BACKGROUND));
-        setButtonPressedForeground(theme->getColor("buttonPressedForeground", DEFAULT_BUTTON_PRESSED_FOREGROUND));
-        setButtonDisabledForeground(theme->getColor("buttonDisabledForeground", DEFAULT_BUTTON_DISABLED_FOREGROUND));
+        setButtonHoverBackground(getColor("buttonHoverBackground", theme, fallback));
+        setButtonPressedBackground(getColor("buttonPressedBackground", theme, fallback));
+        setButtonPressedForeground(getColor("buttonPressedForeground", theme, fallback));
+        setButtonDisabledForeground(getColor("buttonDisabledForeground", theme, fallback));
 
-        setLinkClickedColor(theme->getColor("linkClickedColor", DEFAULT_LINK_CLICKED_COLOR));
+        setLinkClickedColor(getColor("linkClickedColor", theme, fallback));
 
-        setSelectedImageBackground(theme->getColor("selectedImageBackground", DEFAULT_SELECTED_IMAGE_BACKGROUND));
-        setSelectedArtworkBackground(theme->getColor("selectedArtworkBackground", DEFAULT_SELECTED_ARTWORK_BACKGROUND));
-        setCheckboxCheckedColor(theme->getColor("checkboxCheckedColor", DEFAULT_CHECKBOX_CHECKED_COLOR));
+        setSelectedImageBackground(getColor("selectedImageBackground", theme, fallback));
+        setSelectedArtworkBackground(getColor("selectedArtworkBackground", theme, fallback));
+        setCheckboxCheckedColor(getColor("checkboxCheckedColor", theme, fallback));
 
-        setItemsSourceBackground(theme->getColor("itemsSourceBackground", DEFAULT_ITEMS_SOURCE_BACKGROUND));
-        setItemsSourceSelected(theme->getColor("itemsSourceSelected", DEFAULT_ITEMS_SOURCE_SELECTED));
-        setItemsSourceForeground(theme->getColor("itemsSourceForeground", DEFAULT_ITEMS_SOURCE_FOREGROUND));
+        setItemsSourceBackground(getColor("itemsSourceBackground", theme, fallback));
+        setItemsSourceSelected(getColor("itemsSourceSelected", theme, fallback));
+        setItemsSourceForeground(getColor("itemsSourceForeground", theme, fallback));
 
-        setDestructiveColor(theme->getColor("destructiveColor", DEFAULT_DESTRUCTIVE_COLOR));
-        setGreenColor(theme->getColor("greenColor", DEFAULT_GREEN_COLOR));
+        setDestructiveColor(getColor("destructiveColor", theme, fallback));
+        setGreenColor(getColor("greenColor", theme, fallback));
 
-        setStatusBarColor(theme->getColor("statusBarColor", DEFAULT_STATUS_BAR_COLOR));
-        setLeftSliderColor(theme->getColor("leftSliderColor", DEFAULT_LEFT_SLIDER_COLOR));
-        setPopupBackgroundColor(theme->getColor("popupBackgroundColor", DEFAULT_POPUP_BACKGROUND_COLOR));
+        setStatusBarColor(getColor("statusBarColor", theme, fallback));
+        setLeftSliderColor(getColor("leftSliderColor", theme, fallback));
+        setPopupBackgroundColor(getColor("popupBackgroundColor", theme, fallback));
 
         emit themeChanged();
 

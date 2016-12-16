@@ -36,7 +36,7 @@ namespace QMLExtensions {
     class ColorsProvider {
     public:
         virtual ~ColorsProvider() {}
-        virtual QColor getColor(const std::string &colorName, const std::string &defaultValue) const = 0;
+        virtual bool tryGetColor(const std::string &colorName, QColor &color) const = 0;
         virtual QString getThemeName() const = 0;
     };
 
@@ -131,6 +131,9 @@ namespace QMLExtensions {
     public:
         explicit ColorsModel(QObject *parent = 0);
 
+        const std::shared_ptr<ColorsProvider> &getFallbackTheme();
+        QColor getColor(const std::string &colorName, const std::shared_ptr<ColorsProvider> &theme,
+                        const std::shared_ptr<ColorsProvider> &fallbackTheme);
         void registerTheme(const std::shared_ptr<ColorsProvider> &provider);
 
         Q_INVOKABLE bool applyTheme(int index);
