@@ -160,15 +160,15 @@ Rectangle {
                 options["anchors.bottomMargin"] = directParent.height - tmp.y + flv.editControl.height
             }
 
-            var component = Qt.createComponent("CompletionBox.qml");
+            var component = Qt.createComponent("../Components/CompletionBox.qml");
             if (component.status !== Component.Ready) {
                 console.debug("Component Error: " + component.errorString());
             } else {
                 var instance = component.createObject(directParent, options);
 
-                instance.boxDestruction.connect(dialogWindow.onAutoCompleteClose)
+                instance.boxDestruction.connect(combinedEditComponent.onAutoCompleteClose)
                 instance.itemSelected.connect(flv.editControl.acceptCompletion)
-                dialogWindow.autoCompleteBox = instance
+                combinedEditComponent.autoCompleteBox = instance
 
                 instance.openPopup()
             }
