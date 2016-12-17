@@ -142,7 +142,7 @@ Item {
                         spacing: 5
 
                         delegate: Rectangle {
-                            color: Colors.itemsSourceBackground
+                            color: Colors.panelColor
 
                             anchors.left: parent.left
                             anchors.right: parent.right
@@ -172,7 +172,7 @@ Item {
                     StyledText {
                         text: i18.n + qsTr("No plugins available")
                         anchors.centerIn: parent
-                        color: Colors.selectedArtworkBackground
+                        isActive: false
                     }
                 }
             }

@@ -33,7 +33,7 @@ TextEdit {
     font.pixelSize: UIConfig.fontPixelSize * settingsModel.keywordSizeScale
     verticalAlignment: TextInput.AlignVCenter
     selectedTextColor: Colors.inputForegroundColor
-    selectionColor: Colors.defaultControlColor
+    selectionColor: Colors.inactiveControlColor
     renderType: Text.NativeRendering
     selectByMouse: true
     cursorVisible: false

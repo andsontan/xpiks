@@ -111,399 +111,450 @@ Item {
         // This rectangle is the actual popup
         Rectangle {
             id: dialogWindow
-            width: 740
+            property bool isTooNarrow: parent.width <= 1100
+            width: Math.max(900, parent.width - 200)
             anchors.top: parent.top
-            anchors.topMargin: 15
+            anchors.topMargin: 20
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 15
+            anchors.bottomMargin: 20
             color: Colors.popupBackgroundColor
             anchors.horizontalCenter: parent.horizontalCenter
             Component.onCompleted: anchors.horizontalCenter = undefined
             z: 1000
 
-            RowLayout {
-                id: searchRow
+            Item {
+                id: previewsPanel
                 anchors.left: parent.left
-                anchors.right: parent.right
                 anchors.top: parent.top
-                anchors.topMargin: 20
+                anchors.bottom: parent.bottom
                 anchors.leftMargin: 20
-                anchors.rightMargin: 20
-                height: 24
-                spacing: 20
-                z: 15000
-
-                Rectangle {
-                    color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
-                    border.width: queryText.activeFocus ? 1 : 0
-                    border.color: Colors.artworkActiveColor
-                    width: 300
-                    height: UIConfig.textInputHeight
-                    clip: true
-                    Layout.row: 0
-                    Layout.column: 1
-
-                    StyledTextInput {
-                        id: queryText
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.leftMargin: 5
-                        anchors.rightMargin: 5
-                        anchors.verticalCenter: parent.verticalCenter
-                        onAccepted: keywordsSuggestor.searchArtworks(queryText.text)
-                    }
-                }
-
-                StyledButton {
-                    text: i18.n + qsTr("Search")
-                    width: 100
-                    activeFocusOnPress: true
-                    enabled: !keywordsSuggestor.isInProgress
-                    onClicked: keywordsSuggestor.searchArtworks(queryText.text)
-                }
+                anchors.topMargin: 20
+                anchors.bottomMargin: 20
+                width: dialogWindow.isTooNarrow ? 460 : 615
 
                 Item {
-                    Layout.fillWidth: true
-                }
+                    id: searchRow
+                    anchors.left: parent.left
+                    anchors.top: parent.top
+                    anchors.right: parent.right
+                    height: childrenRect.height
+                    z: 100500
 
-                CustomComboBox {
-                    id: sourceComboBox
-                    model: keywordsSuggestor.getEngineNames()
-                    width: 200
-                    height: 24
-                    itemHeight: 28
-                    onComboIndexChanged: {
-                        keywordsSuggestor.selectedSourceIndex = sourceComboBox.selectedIndex
-                    }
+                    Rectangle {
+                        id: searchRect
+                        anchors.left: parent.left
+                        color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
+                        border.width: queryText.activeFocus ? 1 : 0
+                        border.color: Colors.artworkActiveColor
+                        width: dialogWindow.isTooNarrow ? 200 : 250
+                        height: UIConfig.textInputHeight
+                        clip: true
 
-                    Component.onCompleted: selectedIndex = keywordsSuggestor.selectedSourceIndex
-                }
-            }
-
-            Rectangle {
-                id: resultsRect
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: searchRow.bottom
-                anchors.topMargin: 15
-                anchors.bottom: column.top
-                anchors.bottomMargin: 10
-                anchors.leftMargin: 20
-                anchors.rightMargin: 20
-                color: Colors.defaultControlColor
-
-                Flickable {
-                    clip: true
-                    id: suggestionsWrapper
-                    anchors.fill: parent
-                    contentHeight: flow.childrenRect.height + 40
-                    contentWidth: parent.width
-                    enabled: !keywordsSuggestor.isInProgress
-                    flickableDirection: Flickable.VerticalFlick
-                    boundsBehavior: Flickable.StopAtBounds
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            sourceComboBox.closePopup()
+                        StyledTextInput {
+                            id: queryText
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.leftMargin: 5
+                            anchors.rightMargin: 5
+                            anchors.verticalCenter: parent.verticalCenter
+                            onAccepted: keywordsSuggestor.searchArtworks(queryText.text)
                         }
                     }
 
-                    Flow {
-                        id: flow
-                        spacing: 20
-                        anchors.top: parent.top
-                        anchors.left: parent.left
+                    CustomComboBox {
+                        anchors.left: searchRect.right
+                        id: searchTypeCombobox
+                        model: ["All Images", "Images", "Vectors"]
+                        width: 150
+                        height: 24
+                        itemHeight: 28
+                        showColorSign: false
+                        onComboIndexChanged: {
+                        }
+                    }
+
+                    StyledButton {
                         anchors.right: parent.right
-                        anchors.margins: 20
+                        text: i18.n + qsTr("Search")
+                        width: 100
+                        activeFocusOnPress: true
+                        enabled: !keywordsSuggestor.isInProgress
+                        onClicked: keywordsSuggestor.searchArtworks(queryText.text)
+                    }
+                }
 
-                        Repeater {
-                            id: suggestionsRepeater
-                            model: keywordsSuggestor
+                Rectangle {
+                    id: resultsRect
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: searchRow.bottom
+                    anchors.topMargin: 10
+                    anchors.bottom: parent.bottom
+                    color: Colors.defaultControlColor
 
-                            delegate: Item {
-                                property int delegateIndex: index
-                                id: imageWrapper
-                                height: 150
-                                width: height
+                    Flickable {
+                        clip: true
+                        id: suggestionsWrapper
+                        anchors.fill: parent
+                        contentHeight: flow.childrenRect.height + 40
+                        contentWidth: parent.width
+                        enabled: !keywordsSuggestor.isInProgress
+                        flickableDirection: Flickable.VerticalFlick
+                        boundsBehavior: Flickable.StopAtBounds
 
-                                Image {
-                                    anchors.fill: parent
-                                    anchors.margins: 1
-                                    source: url
-                                    sourceSize.width: 150
-                                    sourceSize.height: 150
-                                    fillMode: Image.PreserveAspectCrop
-                                    asynchronous: true
-                                }
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                sourceComboBox.closePopup()
+                            }
+                        }
 
-                                Rectangle {
-                                    anchors.fill: parent
-                                    color: Colors.defaultControlColor
-                                    opacity: isselected ? (mouseArea.containsMouse ? 0.6 : 0.7) : (mouseArea.containsMouse ? 0.4 : 0)
-                                }
+                        Flow {
+                            id: flow
+                            spacing: 10
+                            anchors.top: parent.top
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.margins: 10
 
-                                LargeAddIcon {
-                                    opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
-                                    width: parent.width
-                                    height: parent.height
-                                    rotation: isselected ? 45 : 0
-                                }
+                            Repeater {
+                                id: suggestionsRepeater
+                                model: keywordsSuggestor
 
-                                MouseArea {
-                                    id: mouseArea
-                                    anchors.fill: parent
-                                    hoverEnabled: true
-                                    onClicked: {
-                                        keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
-                                        sourceComboBox.closePopup()
+                                delegate: Item {
+                                    property int delegateIndex: index
+                                    id: imageWrapper
+                                    height: 140
+                                    width: height
+
+                                    Image {
+                                        anchors.fill: parent
+                                        anchors.margins: 1
+                                        source: url
+                                        sourceSize.width: 150
+                                        sourceSize.height: 150
+                                        fillMode: Image.PreserveAspectCrop
+                                        asynchronous: true
+                                    }
+
+                                    Rectangle {
+                                        anchors.fill: parent
+                                        color: Colors.defaultControlColor
+                                        opacity: isselected ? (mouseArea.containsMouse ? 0.6 : 0.7) : (mouseArea.containsMouse ? 0.4 : 0)
+                                    }
+
+                                    LargeAddIcon {
+                                        opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
+                                        width: parent.width
+                                        height: parent.height
+                                        rotation: isselected ? 45 : 0
+                                    }
+
+                                    MouseArea {
+                                        id: mouseArea
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        onClicked: {
+                                            keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
+                                            sourceComboBox.closePopup()
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
 
-                CustomScrollbar {
-                    anchors.topMargin: 0
-                    anchors.bottomMargin: 0
-                    anchors.rightMargin: -15
-                    flickable: suggestionsWrapper
-                }
-
-                Rectangle {
-                    anchors.fill: parent
-                    color: Colors.selectedArtworkBackground
-                    opacity: 0.4
-                    visible: keywordsSuggestor.isInProgress
-                }
-
-                Item {
-                    anchors.fill: parent
-                    visible: !keywordsSuggestor.isInProgress && (suggestionsRepeater.count == 0)
-
-                    StyledText {
-                        anchors.centerIn: parent
-                        text: keywordsSuggestor.lastErrorString
-                        color: Colors.selectedArtworkBackground
+                    CustomScrollbar {
+                        anchors.topMargin: 0
+                        anchors.bottomMargin: 0
+                        anchors.rightMargin: -15
+                        flickable: suggestionsWrapper
                     }
 
-                    MouseArea {
+                    Rectangle {
                         anchors.fill: parent
-                        onClicked: {
-                            sourceComboBox.closePopup()
+                        color: Colors.selectedArtworkBackground
+                        opacity: 0.4
+                        visible: keywordsSuggestor.isInProgress
+                    }
+
+                    Item {
+                        anchors.fill: parent
+                        visible: !keywordsSuggestor.isInProgress && (suggestionsRepeater.count == 0)
+
+                        StyledText {
+                            anchors.centerIn: parent
+                            text: keywordsSuggestor.lastErrorString
+                            color: Colors.selectedArtworkBackground
+                        }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            onClicked: {
+                                sourceComboBox.closePopup()
+                            }
                         }
                     }
-                }
 
-                StyledBusyIndicator {
-                    width: parent.height
-                    height: parent.height
-                    anchors.centerIn: parent
-                    running: keywordsSuggestor.isInProgress
+                    StyledBusyIndicator {
+                        width: parent.height
+                        height: parent.height
+                        anchors.centerIn: parent
+                        running: keywordsSuggestor.isInProgress
+                    }
                 }
             }
 
-            ColumnLayout {
-                id: column
-                anchors.left: parent.left
+            Item {
+                id: keywordsPane
+                anchors.top: parent.top
+                anchors.left: previewsPanel.right
                 anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.leftMargin: 20
+                anchors.bottom: actionsPane.top
+                anchors.topMargin: 20
                 anchors.rightMargin: 20
                 anchors.bottomMargin: 20
-                spacing: 5
+                anchors.leftMargin: 30
+
+                Item {
+                    id: headerRow
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    height: childrenRect.height
+                    z: 100500 - 1
+
+                    CustomComboBox {
+                        id: sourceComboBox
+                        model: keywordsSuggestor.getEngineNames()
+                        anchors.right: parent.right
+                        width: 200
+                        height: 24
+                        itemHeight: 28
+                        onComboIndexChanged: {
+                            keywordsSuggestor.selectedSourceIndex = sourceComboBox.selectedIndex
+                        }
+
+                        Component.onCompleted: selectedIndex = keywordsSuggestor.selectedSourceIndex
+                    }
+                }
+
+                Item {
+                    id: suggestedPart
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: headerRow.bottom
+                    height: (keywordsPane.height - headerRow.height)/2
+
+                    RowLayout {
+                        id: captionSuggested
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.topMargin: 15
+                        height: childrenRect.height
+
+                        StyledText {
+                            text: i18.n + qsTr("Suggested keywords:")
+                            color: Colors.artworkActiveColor
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
+                        StyledText {
+                            text: keywordsSuggestor.suggestedKeywordsCount
+                        }
+                    }
+
+                    Rectangle {
+                        id: suggestedKeywordsWrapper
+                        border.color: Colors.artworkActiveColor
+                        border.width: suggestedFlv.isFocused ? 1 : 0
+                        anchors.top: captionSuggested.bottom
+                        anchors.topMargin: 5
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        color: Colors.inputBackgroundColor
+
+                        function removeKeyword(index) {
+                            var keyword = keywordsSuggestor.removeSuggestedKeywordAt(index)
+                            keywordsSuggestor.appendKeywordToOther(keyword)
+                        }
+
+                        EditableTags {
+                            id: suggestedFlv
+                            anchors.fill: parent
+                            model: keywordsSuggestor.getSuggestedKeywordsModel()
+                            property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
+                            scrollStep: keywordHeight
+                            editEnabled: false
+
+                            delegate: KeywordWrapper {
+                                isHighlighted: true
+                                delegateIndex: index
+                                keywordText: keyword
+                                itemHeight: suggestedFlv.keywordHeight
+                                onRemoveClicked: suggestedKeywordsWrapper.removeKeyword(delegateIndex)
+                            }
+
+                            onTagAdded: {
+                                //suggestedKeywordsWrapper.appendKeyword(text)
+                            }
+
+                            onRemoveLast: {
+                                //suggestedKeywordsWrapper.removeLastKeyword()
+                            }
+
+                            onTagsPasted: {
+                                //suggestedKeywordsWrapper.pasteKeywords(tagsList)
+                            }
+
+                            onClickedInside: {
+                                sourceComboBox.closePopup()
+                            }
+                        }
+
+                        CustomScrollbar {
+                            anchors.topMargin: -5
+                            anchors.bottomMargin: -5
+                            anchors.rightMargin: -15
+                            flickable: suggestedFlv
+                        }
+                    }
+                }
+
+                Item {
+                    id: otherPart
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: suggestedPart.bottom
+                    height: suggestedPart.height
+
+                    RowLayout {
+                        id: captionOther
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.topMargin: 20
+                        height: childrenRect.height
+
+                        StyledText {
+                            text: i18.n + qsTr("Other keywords:")
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
+                        StyledText {
+                            text: keywordsSuggestor.otherKeywordsCount
+                        }
+                    }
+
+                    Rectangle {
+                        id: otherKeywordsWrapper
+                        anchors.top: captionOther.bottom
+                        anchors.topMargin: 5
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        color: Colors.inputInactiveBackground
+
+                        function removeKeyword(index) {
+                            var keyword = keywordsSuggestor.removeOtherKeywordAt(index)
+                            keywordsSuggestor.appendKeywordToSuggested(keyword)
+                        }
+
+                        EditableTags {
+                            id: otherFlv
+                            anchors.fill: parent
+                            model: keywordsSuggestor.getAllOtherKeywordsModel()
+                            property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
+                            scrollStep: keywordHeight
+                            editEnabled: false
+
+                            delegate: KeywordWrapper {
+                                delegateIndex: index
+                                keywordText: keyword
+                                isHighlighted: false
+                                hasPlusSign: true
+                                itemHeight: otherFlv.keywordHeight
+                                onRemoveClicked: otherKeywordsWrapper.removeKeyword(delegateIndex)
+                            }
+
+                            onTagAdded: {
+                                //eywordsWrapper.appendKeyword(text)
+                            }
+
+                            onRemoveLast: {
+                                //keywordsWrapper.removeLastKeyword()
+                            }
+
+                            onTagsPasted: {
+                                //keywordsWrapper.pasteKeywords(tagsList)
+                            }
+
+                            onClickedInside: {
+                                sourceComboBox.closePopup()
+                            }
+                        }
+
+                        CustomScrollbar {
+                            anchors.topMargin: -5
+                            anchors.bottomMargin: -5
+                            anchors.rightMargin: -15
+                            flickable: otherFlv
+                        }
+                    }
+                }
+            }
+
+            Item {
+                id: actionsPane
+                anchors.left: previewsPanel.right
+                anchors.right: parent.right
+                anchors.bottom: parent.bottom
+                anchors.rightMargin: 20
+                anchors.bottomMargin: 20
+                anchors.leftMargin: 20
                 height: childrenRect.height
 
                 RowLayout {
-                    StyledText {
-                        text: i18.n + qsTr("Suggested keywords:")
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    StyledText {
-                        text: keywordsSuggestor.suggestedKeywordsCount
-                    }
-                }
-
-                Rectangle {
-                    id: suggestedKeywordsWrapper
-                    border.color: Colors.artworkActiveColor
-                    border.width: suggestedFlv.isFocused ? 1 : 0
-                    height: 80
-                    anchors.rightMargin: 20
-                    Layout.fillWidth: true
-                    color: Colors.inputBackgroundColor
-
-                    function removeKeyword(index) {
-                        var keyword = keywordsSuggestor.removeSuggestedKeywordAt(index)
-                        keywordsSuggestor.appendKeywordToOther(keyword)
-                    }
-
-                    EditableTags {
-                        id: suggestedFlv
-                        anchors.fill: parent
-                        model: keywordsSuggestor.getSuggestedKeywordsModel()
-                        property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
-                        scrollStep: keywordHeight
-                        editEnabled: false
-
-                        delegate: KeywordWrapper {
-                            isHighlighted: true
-                            delegateIndex: index
-                            keywordText: keyword
-                            itemHeight: suggestedFlv.keywordHeight
-                            onRemoveClicked: suggestedKeywordsWrapper.removeKeyword(delegateIndex)
-                        }
-
-                        onTagAdded: {
-                            //suggestedKeywordsWrapper.appendKeyword(text)
-                        }
-
-                        onRemoveLast: {
-                            //suggestedKeywordsWrapper.removeLastKeyword()
-                        }
-
-                        onTagsPasted: {
-                            //suggestedKeywordsWrapper.pasteKeywords(tagsList)
-                        }
-
-                        onClickedInside: {
-                            sourceComboBox.closePopup()
-                        }
-                    }
-
-                    CustomScrollbar {
-                        anchors.topMargin: -5
-                        anchors.bottomMargin: -5
-                        anchors.rightMargin: -15
-                        flickable: suggestedFlv
-                    }
-                }
-
-                Item {
-                    height: 1
-                }
-
-                RowLayout {
-                    StyledText {
-                        text: i18.n + qsTr("Other keywords:")
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    StyledText {
-                        text: keywordsSuggestor.otherKeywordsCount
-                    }
-                }
-
-                Rectangle {
-                    id: otherKeywordsWrapper
-                    border.color: Colors.artworkActiveColor
-                    border.width: otherFlv.isFocused ? 1 : 0
-                    height: 80
-                    anchors.rightMargin: 20
-                    Layout.fillWidth: true
-                    color: Colors.inputBackgroundColor
-
-                    function removeKeyword(index) {
-                        var keyword = keywordsSuggestor.removeOtherKeywordAt(index)
-                        keywordsSuggestor.appendKeywordToSuggested(keyword)
-                    }
-
-                    EditableTags {
-                        id: otherFlv
-                        anchors.fill: parent
-                        model: keywordsSuggestor.getAllOtherKeywordsModel()
-                        property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
-                        scrollStep: keywordHeight
-                        editEnabled: false
-
-                        delegate: KeywordWrapper {
-                            delegateIndex: index
-                            keywordText: keyword
-                            isHighlighted: true
-                            hasPlusSign: true
-                            itemHeight: otherFlv.keywordHeight
-                            onRemoveClicked: otherKeywordsWrapper.removeKeyword(delegateIndex)
-                        }
-
-                        onTagAdded: {
-                            //eywordsWrapper.appendKeyword(text)
-                        }
-
-                        onRemoveLast: {
-                            //keywordsWrapper.removeLastKeyword()
-                        }
-
-                        onTagsPasted: {
-                            //keywordsWrapper.pasteKeywords(tagsList)
-                        }
-
-                        onClickedInside: {
-                            sourceComboBox.closePopup()
-                        }
-                    }
-
-                    CustomScrollbar {
-                        anchors.topMargin: -5
-                        anchors.bottomMargin: -5
-                        anchors.rightMargin: -15
-                        flickable: otherFlv
-                    }
-                }
-
-                Item {
-                    height: 10
-                }
-
-                RowLayout {
-                    spacing: 20
+                    spacing: 0
                     anchors.left: parent.left
                     anchors.right: parent.right
 
-                    StyledText {
+                    /*StyledText {
                         text: i18.n + (keywordsSuggestor.selectedArtworksCount !== 1 ? qsTr("%1 selected items").arg(keywordsSuggestor.selectedArtworksCount) : qsTr("1 selected item"))
-                    }
+                    }*/
 
                     Item {
                         Layout.fillWidth: true
                     }
 
-                    Timer {
-                        id: suggestedAddedTimer
-                        property int iterations: 0
-                        interval: 2000
-                        repeat: false
-                        running: false
-                        onTriggered: {
-                            addKeywordsButton.text = i18.n + qsTr("Add suggested keywords")
-                            addKeywordsButton.enabled = true
-                        }
+                    StyledButton {
+                        width: 100
+                        text: i18.n + qsTr("Cancel")
+                        onClicked: closePopup()
+                    }
+
+                    Item {
+                        width: 20
                     }
 
                     StyledButton {
                         id: addKeywordsButton
-                        text: i18.n + qsTr("Add suggested keywords")
+                        isDefault: true
+                        text: i18.n + qsTr("Add suggested")
                         enabled: !keywordsSuggestor.isInProgress
-                        width: 200
+                        width: 150
                         onClicked: {
                             callbackObject.promoteKeywords(keywordsSuggestor.getSuggestedKeywords())
-                            text = i18.n + qsTr("Added!")
-                            addKeywordsButton.enabled = false
-                            suggestedAddedTimer.start()
+                            closePopup()
                         }
-                    }
-
-                    StyledButton {
-                        width: 80
-                        text: i18.n + qsTr("Close")
-                        onClicked: closePopup()
                     }
                 }
             }

@@ -105,7 +105,7 @@ Item {
         Rectangle {
             id: dialogWindow
             width: 680
-            height: 400
+            height: 450
             color: Colors.popupBackgroundColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -141,7 +141,7 @@ Item {
                     anchors.left: parent.left
                     anchors.right: parent.right
                     Layout.fillHeight: true
-                    color: Colors.defaultDarkerColor
+                    color: Colors.defaultControlColor
 
                     ListView {
                         id: warningsListView
@@ -182,15 +182,15 @@ Item {
                                     height: 5
                                     width: height
                                     radius: height/2
-                                    color: Colors.labelActiveForeground
+                                    color: Colors.labelInactiveForeground
                                 }
 
                                 StyledText {
                                     id: hostAddress
                                     text: artworkUploader.getFtpName(ftpaddress)
                                     color: Colors.artworkActiveColor
-                                    font.bold: true
-                                    font.pixelSize: UIConfig.fontPixelSize + 3
+                                    //font.bold: true
+                                    font.pixelSize: UIConfig.fontPixelSize + 4
                                 }
 
                                 Item {
@@ -200,6 +200,7 @@ Item {
                                 StyledText {
                                     id: hostName
                                     text: '(' + ftpaddress + ')'
+                                    isActive: false
                                 }
                             }
 
@@ -262,6 +263,7 @@ Item {
                                             width: parent.width
                                             elide: Text.ElideMiddle
                                             horizontalAlignment: Text.AlignHCenter
+                                            isActive: false
                                         }
                                     }
                                 }
@@ -288,7 +290,7 @@ Item {
 
                     StyledButton {
                         text: i18.n + qsTr("Close")
-                        width: 80
+                        width: 100
                         onClicked: closePopup()
                     }
                 }
