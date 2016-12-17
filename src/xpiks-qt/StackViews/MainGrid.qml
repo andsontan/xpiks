@@ -681,6 +681,9 @@ ColumnLayout {
                                             onAllItemsSelectedChanged: {
                                                 itemCheckedCheckbox.checked = rowWrapper.isItemSelected
                                             }
+                                            onForceUnselected: {
+                                                itemCheckedCheckbox.checked = false
+                                            }
                                         }
                                     }
                                 }

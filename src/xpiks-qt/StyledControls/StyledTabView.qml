@@ -30,7 +30,7 @@ import "../Constants"
 TabView {
     property double tabBarHeight: 1
     property double tabsHeight: 25
-    property color backgroundColor: Colors.selectedImageBackground
+    property color backgroundColor: Colors.popupBackgroundColor
 
     style: TabViewStyle {
         frameOverlap: -tabBarHeight

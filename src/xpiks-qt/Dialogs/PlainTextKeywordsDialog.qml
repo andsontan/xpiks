@@ -156,7 +156,7 @@ Item {
                 anchors.topMargin: 10
                 anchors.bottom: footer.top
                 anchors.bottomMargin: 20
-                color: Colors.defaultControlColor
+                color: Colors.inputInactiveBackground
 
                 Flickable {
                     id: flick
@@ -185,7 +185,7 @@ Item {
                         focus: true
                         text: plainTextKeywordsComponent.keywordsText
                         font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
-                        selectionColor: Colors.selectedImageBackground
+                        selectionColor: Colors.inputBackgroundColor
                         wrapMode: TextEdit.Wrap
                         horizontalAlignment: TextEdit.AlignLeft
                         verticalAlignment: TextEdit.AlignTop

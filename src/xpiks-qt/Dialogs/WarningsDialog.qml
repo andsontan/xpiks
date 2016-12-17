@@ -188,13 +188,12 @@ Item {
                                     }
                                 }
 
-                                Rectangle {
+                                Item {
                                     id: columnRectangle
                                     anchors.left: imageItem.right
                                     anchors.top: parent.top
                                     anchors.right: parent.right
                                     height: (childrenRect.height < 80) ? 100 : (childrenRect.height + 20)
-                                    color: Colors.defaultDarkerColor
 
                                     Column {
                                         id: warningsTextList
@@ -236,7 +235,7 @@ Item {
                                 }
 
                                 EditIcon {
-                                    backgroundColor: columnRectangle.color
+                                    backgroundColor: imageWrapper.color
                                     anchors.verticalCenter: parent.verticalCenter
                                     anchors.verticalCenterOffset: -5
                                     anchors.right: parent.right

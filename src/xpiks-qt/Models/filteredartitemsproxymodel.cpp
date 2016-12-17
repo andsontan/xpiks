@@ -542,7 +542,7 @@ namespace Models {
         artItemsModel->forceUnselectAllItems();
         m_SelectedArtworksCount = 0;
         emit selectedArtworksCountChanged();
-        emit allItemsSelectedChanged();
+        emit forceUnselected();
     }
 
     ArtItemsModel *FilteredArtItemsProxyModel::getArtItemsModel() const {

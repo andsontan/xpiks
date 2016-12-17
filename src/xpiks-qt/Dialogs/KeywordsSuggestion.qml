@@ -273,7 +273,7 @@ Item {
 
                 Rectangle {
                     anchors.fill: parent
-                    color: Colors.selectedImageBackground
+                    color: Colors.selectedArtworkBackground
                     opacity: 0.4
                     visible: keywordsSuggestor.isInProgress
                 }

@@ -48,7 +48,7 @@ ApplicationWindow {
     }
 
     Rectangle {
-        color: Colors.selectedImageBackground
+        color: Colors.popupBackgroundColor
         anchors.fill: parent
 
         Component.onCompleted: focus = true

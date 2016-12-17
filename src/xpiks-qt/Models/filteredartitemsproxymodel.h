@@ -38,9 +38,9 @@ namespace Models {
     class FilteredArtItemsProxyModel:
         public QSortFilterProxyModel, public Common::BaseEntity
     {
-    Q_OBJECT
-    Q_PROPERTY(QString searchTerm READ getSearchTerm WRITE setSearchTerm NOTIFY searchTermChanged)
-    Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
+        Q_OBJECT
+        Q_PROPERTY(QString searchTerm READ getSearchTerm WRITE setSearchTerm NOTIFY searchTermChanged)
+        Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
 
     public:
         FilteredArtItemsProxyModel(QObject *parent=0);
@@ -109,6 +109,7 @@ namespace Models {
         void selectedArtworksCountChanged();
         void afterInvalidateFilter();
         void allItemsSelectedChanged();
+        void forceUnselected();
 
     private:
         void removeMetadataInItems(std::vector<MetadataElement> &itemsToClear, Common::CombinedEditFlags flags) const;

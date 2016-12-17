@@ -29,7 +29,7 @@ CheckBox {
     property int indicatorWidth: 17
     property int indicatorHeight: 17
     checked: true
-    property color labelColor: enabled ? Colors.labelActiveForeground : (isContrast ? Colors.inputBackgroundColor : Colors.inputInactiveForeground)
+    property color labelColor: enabled ? Colors.labelActiveForeground : (isContrast ? Colors.inputBackgroundColor : Colors.labelInactiveForeground)
     property bool isBold: false
 
     style: CheckBoxStyle {

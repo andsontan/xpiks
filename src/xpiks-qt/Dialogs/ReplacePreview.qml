@@ -160,7 +160,7 @@ Item {
                             delegate: Rectangle {
                                 id: imageWrapper
                                 property int delegateIndex: index
-                                color: isselected ? Colors.selectedImageBackground : Colors.artworkImageBackground
+                                color: isselected ? Colors.selectedArtworkBackground : Colors.artworkBackground
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.rightMargin: 10
@@ -249,7 +249,7 @@ Item {
                                         anchors.left: parent.left
                                         anchors.top: parent.top
                                         anchors.right: parent.right
-                                        anchors.leftMargin: 10
+                                        anchors.leftMargin: 5
                                         anchors.rightMargin: 10
                                         anchors.topMargin: 10
                                         height: childrenRect.height

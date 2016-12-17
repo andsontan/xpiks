@@ -892,7 +892,6 @@ Rectangle {
                     StyledCheckbox {
                         id: appendKeywordsCheckbox
                         text: i18.n + qsTr("Only append new keywords")
-                        labelColor: Colors.labelActiveForeground
                         onClicked: combinedArtworks.appendKeywords = checked
                         Component.onCompleted: appendKeywordsCheckbox.checked = combinedArtworks.appendKeywords
                     }
@@ -907,7 +906,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: bottomPane.top
         height: 45
-        color: Colors.defaultControlColor
+        color: Colors.defaultDarkColor
 
         RowLayout {
             spacing: 20
@@ -922,7 +921,7 @@ Rectangle {
                 Layout.fillWidth: true
             }
 
-            StyledBlackButton {
+            StyledButton {
                 text: i18.n + qsTr("Assign from selected")
                 width: 160
                 enabled: combinedArtworks.selectedArtworksCount == 1
@@ -932,7 +931,7 @@ Rectangle {
                 }
             }
 
-            StyledBlackButton {
+            StyledButton {
                 text: i18.n + qsTr("Remove selected")
                 width: 150
                 tooltip: i18.n + qsTr("Remove selected artworks from this dialog")

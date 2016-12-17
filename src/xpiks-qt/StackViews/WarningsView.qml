@@ -65,10 +65,9 @@ Rectangle {
             height: childrenRect.height
             spacing: 0
             anchors.leftMargin: 20
-            anchors.rightMargin: 20
+            anchors.rightMargin: 30
 
-            StyledButton {
-                width: 100
+            BackGlyphButton {
                 text: qsTr("Back")
                 onClicked: closePopup()
             }
@@ -113,6 +112,7 @@ Rectangle {
                     id: imageItem
                     width: 180
                     anchors.left: parent.left
+                    anchors.leftMargin: 10
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
 
@@ -161,20 +161,11 @@ Rectangle {
                 }
 
                 Rectangle {
-                    id: spacer
-                    width: 1
+                    id: columnRectangle
                     anchors.left: imageItem.right
                     anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    color: Colors.selectedArtworkBackground
-                }
-
-                Rectangle {
-                    id: columnRectangle
-                    anchors.left: spacer.right
-                    anchors.top: parent.top
                     anchors.right: parent.right
-                    height: (childrenRect.height < 160) ? 180 : (childrenRect.height + 20)
+                    height: (childrenRect.height < 120) ? 180 : (childrenRect.height + 60)
                     color: Colors.defaultControlColor
 
                     Column {
@@ -186,7 +177,7 @@ Rectangle {
                         anchors.top: parent.top
                         anchors.leftMargin: 10
                         anchors.rightMargin: 10
-                        anchors.topMargin: 20
+                        anchors.topMargin: 30
 
                         Repeater {
                             id: warningsDescriptions
@@ -221,7 +212,7 @@ Rectangle {
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.verticalCenterOffset: -5
                     anchors.right: parent.right
-                    anchors.rightMargin: 10
+                    anchors.rightMargin: 30
                     enabled: !isRestricted && warningsListView.count > 0
                     visible: enabled
 

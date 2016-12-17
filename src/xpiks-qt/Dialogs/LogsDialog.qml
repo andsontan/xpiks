@@ -155,7 +155,7 @@ Item {
                 anchors.topMargin: 10
                 anchors.bottom: footer.top
                 anchors.bottomMargin: 20
-                color: Colors.defaultControlColor
+                color: Colors.inputInactiveBackground
 
                 StyledScrollView {
                     id: scrollView
@@ -165,7 +165,7 @@ Item {
                     StyledTextEdit {
                         id: textEdit
                         text: logsComponent.logText
-                        selectionColor: Colors.selectedImageBackground
+                        selectionColor: Colors.inputBackgroundColor
                         readOnly: true
 
                         Component.onCompleted: {
