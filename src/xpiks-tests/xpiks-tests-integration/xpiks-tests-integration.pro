@@ -155,7 +155,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/MetadataIO/exiv2inithelper.cpp \
     ../../xpiks-qt/Warnings/warningssettingsmodel.cpp \
     ../../xpiks-qt/Helpers/updatehelpers.cpp \
-    ../../xpiks-qt/Models/artworkproxybase.cpp
+    ../../xpiks-qt/Models/artworkproxybase.cpp \
+    plaintextedittest.cpp
 
 RESOURCES +=
 
@@ -340,7 +341,8 @@ HEADERS += \
     ../../xpiks-qt/Conectivity/apimanager.h \
     ../../xpiks-qt/Helpers/updatehelpers.h \
     ../../xpiks-qt/Common/imetadataoperator.h \
-    ../../xpiks-qt/Models/artworkproxybase.h
+    ../../xpiks-qt/Models/artworkproxybase.h \
+    plaintextedittest.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
