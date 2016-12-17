@@ -28,25 +28,23 @@ Item {
     property bool isPlus: false
     property int thickness: 3
     property alias crossOpacity: wrapperRect.opacity
-    property color defaultColor: Colors.labelActiveForeground
-    property color inactiveColor: defaultColor
     signal itemClicked();
 
     Item {
         id: wrapperRect
         anchors.fill: parent
-        opacity: closeIconMouseArea.containsMouse ? 1 : 0.8
+        opacity: closeIconMouseArea.containsMouse ? 1 : 0.9
 
         property color pressColor: {
             if (closeIconMouseArea.containsMouse) {
                 return Colors.artworkModifiedColor;
             } else {
-                return item.isActive ? Colors.inactiveControlColor : item.defaultColor;
+                return item.isActive ? Colors.closeIconActiveColor : Colors.closeIconInactiveColor;
             }
         }
 
         Rectangle {
-            color: enabled ? wrapperRect.pressColor : item.inactiveColor
+            color: enabled ? wrapperRect.pressColor : Colors.closeIconDisabledColor
             width: isPlus ? parent.width - 2 : parent.width
             height: item.thickness
             radius: item.thickness/2
@@ -56,7 +54,7 @@ Item {
         }
 
         Rectangle {
-            color: enabled ? wrapperRect.pressColor : item.inactiveColor
+            color: enabled ? wrapperRect.pressColor : Colors.closeIconDisabledColor
             width: isPlus ? parent.width - 2 : parent.width
             height: item.thickness
             radius: item.thickness/2

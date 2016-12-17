@@ -33,7 +33,7 @@ Button {
             implicitWidth: control.width
             implicitHeight: 24
             color: {
-                var result = Colors.defaultControlColor;
+                var result = Colors.buttonDefaultBackground;
 
                 if (control.enabled &&
                         (control.isDefault || control.hovered)) {
@@ -53,7 +53,7 @@ Button {
                 var result = Colors.defaultControlColor;
 
                 if (control.enabled) {
-                    result = control.pressed ? Colors.buttonPressedForeground : Colors.labelActiveForeground;
+                    result = control.pressed ? Colors.buttonPressedForeground : Colors.buttonDefaultForeground;
                 } else {
                     result = Colors.buttonDisabledForeground;
                 }

@@ -1137,7 +1137,6 @@ ApplicationWindow {
                                                 width: 14
                                                 height: 14
                                                 anchors.verticalCenter: parent.verticalCenter
-                                                defaultColor: Colors.labelActiveForeground
                                                 isActive: false
                                                 crossOpacity: 1
 
@@ -1186,7 +1185,7 @@ ApplicationWindow {
                     if (leftCollapseMA.pressed) {
                         return Colors.whiteColor
                     } else {
-                        return leftCollapseMA.containsMouse ? Colors.defaultLightGrayColor : Colors.inputBackgroundColor
+                        return leftCollapseMA.containsMouse ? Colors.labelInactiveForeground : Colors.inputBackgroundColor
                     }
                 }
             }

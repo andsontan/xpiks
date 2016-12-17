@@ -59,19 +59,19 @@ namespace QMLExtensions {
         Q_PROPERTY(QColor labelInactiveForeground READ labelInactiveForeground WRITE setLabelInactiveForeground NOTIFY labelInactiveForegroundChanged)
 
         Q_PROPERTY(QColor artworkBackground READ artworkBackground WRITE setArtworkBackground NOTIFY artworkBackgroundChanged)
-        Q_PROPERTY(QColor artworkImageBackground READ artworkImageBackground WRITE setArtworkImageBackground NOTIFY artworkImageBackgroundChanged)
         Q_PROPERTY(QColor artworkModifiedColor READ artworkModifiedColor WRITE setArtworkModifiedColor NOTIFY artworkModifiedColorChanged)
         Q_PROPERTY(QColor artworkSavedColor READ artworkSavedColor WRITE setArtworkSavedColor NOTIFY artworkSavedColorChanged)
         Q_PROPERTY(QColor artworkActiveColor READ artworkActiveColor WRITE setArtworkActiveColor NOTIFY artworkActiveColorChanged)
 
         Q_PROPERTY(QColor listSeparatorColor READ listSeparatorColor WRITE setListSeparatorColor NOTIFY listSeparatorColorChanged)
-        Q_PROPERTY(QColor defaultLightColor READ defaultLightColor WRITE setDefaultLightColor NOTIFY defaultLightColorChanged)
         Q_PROPERTY(QColor defaultLightGrayColor READ defaultLightGrayColor WRITE setDefaultLightGrayColor NOTIFY defaultLightGrayColorChanged)
 
         Q_PROPERTY(QColor buttonHoverBackground READ buttonHoverBackground WRITE setButtonHoverBackground NOTIFY buttonHoverBackgroundChanged)
         Q_PROPERTY(QColor buttonPressedBackground READ buttonPressedBackground WRITE setButtonPressedBackground NOTIFY buttonPressedBackgroundChanged)
         Q_PROPERTY(QColor buttonPressedForeground READ buttonPressedForeground WRITE setButtonPressedForeground NOTIFY buttonPressedForegroundChanged)
         Q_PROPERTY(QColor buttonDisabledForeground READ buttonDisabledForeground WRITE setButtonDisabledForeground NOTIFY buttonDisabledForegroundChanged)
+        Q_PROPERTY(QColor buttonDefaultBackground READ buttonDefaultBackground WRITE setButtonDefaultBackground NOTIFY buttonDefaultBackgroundChanged)
+        Q_PROPERTY(QColor buttonDefaultForeground READ buttonDefaultForeground WRITE setButtonDefaultForeground NOTIFY buttonDefaultForegroundChanged)
 
         Q_PROPERTY(QColor linkClickedColor READ linkClickedColor WRITE setLinkClickedColor NOTIFY linkClickedColorChanged)
 
@@ -89,6 +89,12 @@ namespace QMLExtensions {
         Q_PROPERTY(QColor leftSliderColor READ leftSliderColor WRITE setLeftSliderColor NOTIFY leftSliderColorChanged)
         Q_PROPERTY(QColor popupBackgroundColor READ popupBackgroundColor WRITE setPopupBackgroundColor NOTIFY popupBackgroundColorChanged)
         Q_PROPERTY(QColor inactiveControlColor READ inactiveControlColor WRITE setInactiveControlColor NOTIFY inactiveControlColorChanged)
+        Q_PROPERTY(QColor inactiveKeywordBackground READ inactiveKeywordBackground WRITE setInactiveKeywordBackground NOTIFY inactiveKeywordBackgroundChanged)
+        Q_PROPERTY(QColor inactiveKeywordForeground READ inactiveKeywordForeground WRITE setInactiveKeywordForeground NOTIFY inactiveKeywordForegroundChanged)
+
+        Q_PROPERTY(QColor closeIconActiveColor READ closeIconActiveColor WRITE setCloseIconActiveColor NOTIFY closeIconActiveColorChanged)
+        Q_PROPERTY(QColor closeIconInactiveColor READ closeIconInactiveColor WRITE setCloseIconInactiveColor NOTIFY closeIconInactiveColorChanged)
+        Q_PROPERTY(QColor closeIconDisabledColor READ closeIconDisabledColor WRITE setCloseIconDisabledColor NOTIFY closeIconDisabledColorChanged)
 
         std::vector<std::shared_ptr<ColorsProvider> > m_RegisteredThemes;
         QStringList m_ThemeNames;
@@ -105,11 +111,9 @@ namespace QMLExtensions {
         QColor m_labelActiveForeground;
         QColor m_labelInactiveForeground;
         QColor m_artworkBackground;
-        QColor m_artworkImageBackground;
         QColor m_artworkModifiedColor;
         QColor m_artworkSavedColor;
         QColor m_artworkActiveColor;
-        QColor m_defaultLightColor;
         QColor m_defaultLightGrayColor;
         QColor m_buttonHoverBackground;
         QColor m_buttonPressedBackground;
@@ -131,6 +135,13 @@ namespace QMLExtensions {
         QColor m_panelColor;
         QColor m_panelSelectedColor;
         QColor m_panelHoverColor;
+        QColor m_buttonDefaultBackground;
+        QColor m_buttonDefaultForeground;
+        QColor m_inactiveKeywordBackground;
+        QColor m_inactiveKeywordForeground;
+        QColor m_closeIconActiveColor;
+        QColor m_closeIconInactiveColor;
+        QColor m_closeIconDisabledColor;
 
     public:
         explicit ColorsModel(QObject *parent = 0);
@@ -193,11 +204,6 @@ namespace QMLExtensions {
             return m_artworkBackground;
         }
 
-        QColor artworkImageBackground() const
-        {
-            return m_artworkImageBackground;
-        }
-
         QColor artworkModifiedColor() const
         {
             return m_artworkModifiedColor;
@@ -211,11 +217,6 @@ namespace QMLExtensions {
         QColor artworkActiveColor() const
         {
             return m_artworkActiveColor;
-        }
-
-        QColor defaultLightColor() const
-        {
-            return m_defaultLightColor;
         }
 
         QColor defaultLightGrayColor() const
@@ -328,6 +329,41 @@ namespace QMLExtensions {
             return m_panelHoverColor;
         }
 
+        QColor buttonDefaultBackground() const
+        {
+            return m_buttonDefaultBackground;
+        }
+
+        QColor buttonDefaultForeground() const
+        {
+            return m_buttonDefaultForeground;
+        }
+
+        QColor inactiveKeywordBackground() const
+        {
+            return m_inactiveKeywordBackground;
+        }
+
+        QColor inactiveKeywordForeground() const
+        {
+            return m_inactiveKeywordForeground;
+        }
+
+        QColor closeIconActiveColor() const
+        {
+            return m_closeIconActiveColor;
+        }
+
+        QColor closeIconInactiveColor() const
+        {
+            return m_closeIconInactiveColor;
+        }
+
+        QColor closeIconDisabledColor() const
+        {
+            return m_closeIconDisabledColor;
+        }
+
     signals:
         void themeChanged();
         void defaultDarkColorChanged(QColor defaultDarkColor);
@@ -340,11 +376,9 @@ namespace QMLExtensions {
         void labelActiveForegroundChanged(QColor labelActiveForeground);
         void labelInactiveForegroundChanged(QColor labelInactiveForeground);
         void artworkBackgroundChanged(QColor artworkBackground);
-        void artworkImageBackgroundChanged(QColor artworkImageBackground);
         void artworkModifiedColorChanged(QColor artworkModifiedColor);
         void artworkSavedColorChanged(QColor artworkSavedColor);
         void artworkActiveColorChanged(QColor artworkActiveColor);
-        void defaultLightColorChanged(QColor defaultLightColor);
         void defaultLightGrayColorChanged(QColor defaultLightGrayColor);
         void buttonHoverBackgroundChanged(QColor buttonHoverBackground);
         void buttonPressedBackgroundChanged(QColor buttonPressedBackground);
@@ -367,6 +401,17 @@ namespace QMLExtensions {
         void panelColorChanged(QColor panelColor);
         void panelSelectedColorChanged(QColor panelSelectedColor);
         void panelHoverColorChanged(QColor panelHoverColor);
+        void buttonDefaultBackgroundChanged(QColor buttonDefaultBackground);
+        void buttonDefaultForegroundChanged(QColor buttonDefaultForeground);
+        void inactiveKeywordBackgroundChanged(QColor inactiveKeywordBackground);
+
+        void inactiveKeywordForegroundChanged(QColor inactiveKeywordForeground);
+
+        void closeIconActiveColorChanged(QColor closeIconActiveColor);
+
+        void closeIconInactiveColorChanged(QColor closeIconInactiveColor);
+
+        void closeIconDisabledColorChanged(QColor closeIconDisabledColor);
 
     public slots:
         void setDefaultDarkColor(QColor defaultDarkColor)
@@ -449,14 +494,6 @@ namespace QMLExtensions {
             m_artworkBackground = artworkBackground;
             emit artworkBackgroundChanged(artworkBackground);
         }
-        void setArtworkImageBackground(QColor artworkImageBackground)
-        {
-            if (m_artworkImageBackground == artworkImageBackground)
-                return;
-
-            m_artworkImageBackground = artworkImageBackground;
-            emit artworkImageBackgroundChanged(artworkImageBackground);
-        }
         void setArtworkModifiedColor(QColor artworkModifiedColor)
         {
             if (m_artworkModifiedColor == artworkModifiedColor)
@@ -480,14 +517,6 @@ namespace QMLExtensions {
 
             m_artworkActiveColor = artworkActiveColor;
             emit artworkActiveColorChanged(artworkActiveColor);
-        }
-        void setDefaultLightColor(QColor defaultLightColor)
-        {
-            if (m_defaultLightColor == defaultLightColor)
-                return;
-
-            m_defaultLightColor = defaultLightColor;
-            emit defaultLightColorChanged(defaultLightColor);
         }
         void setDefaultLightGrayColor(QColor defaultLightGrayColor)
         {
@@ -664,6 +693,62 @@ namespace QMLExtensions {
 
             m_panelHoverColor = panelHoverColor;
             emit panelHoverColorChanged(panelHoverColor);
+        }
+        void setButtonDefaultBackground(QColor buttonDefaultBackground)
+        {
+            if (m_buttonDefaultBackground == buttonDefaultBackground)
+                return;
+
+            m_buttonDefaultBackground = buttonDefaultBackground;
+            emit buttonDefaultBackgroundChanged(buttonDefaultBackground);
+        }
+        void setButtonDefaultForeground(QColor buttonDefaultForeground)
+        {
+            if (m_buttonDefaultForeground == buttonDefaultForeground)
+                return;
+
+            m_buttonDefaultForeground = buttonDefaultForeground;
+            emit buttonDefaultForegroundChanged(buttonDefaultForeground);
+        }
+        void setInactiveKeywordBackground(QColor inactiveKeywordBackground)
+        {
+            if (m_inactiveKeywordBackground == inactiveKeywordBackground)
+                return;
+
+            m_inactiveKeywordBackground = inactiveKeywordBackground;
+            emit inactiveKeywordBackgroundChanged(inactiveKeywordBackground);
+        }
+        void setInactiveKeywordForeground(QColor inactiveKeywordForeground)
+        {
+            if (m_inactiveKeywordForeground == inactiveKeywordForeground)
+                return;
+
+            m_inactiveKeywordForeground = inactiveKeywordForeground;
+            emit inactiveKeywordForegroundChanged(inactiveKeywordForeground);
+        }
+        void setCloseIconActiveColor(QColor closeIconActiveColor)
+        {
+            if (m_closeIconActiveColor == closeIconActiveColor)
+                return;
+
+            m_closeIconActiveColor = closeIconActiveColor;
+            emit closeIconActiveColorChanged(closeIconActiveColor);
+        }
+        void setCloseIconInactiveColor(QColor closeIconInactiveColor)
+        {
+            if (m_closeIconInactiveColor == closeIconInactiveColor)
+                return;
+
+            m_closeIconInactiveColor = closeIconInactiveColor;
+            emit closeIconInactiveColorChanged(closeIconInactiveColor);
+        }
+        void setCloseIconDisabledColor(QColor closeIconDisabledColor)
+        {
+            if (m_closeIconDisabledColor == closeIconDisabledColor)
+                return;
+
+            m_closeIconDisabledColor = closeIconDisabledColor;
+            emit closeIconDisabledColorChanged(closeIconDisabledColor);
         }
     };
 }

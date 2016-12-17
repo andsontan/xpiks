@@ -28,14 +28,14 @@ Item {
 
     Rectangle {
         border.width: 2
-        border.color: Colors.defaultLightColor
+        border.color: Colors.inputForegroundColor
         radius: parent.width / 2
         anchors.fill: parent
         color: enabled ? (isGreen ? Colors.greenColor : Colors.destructiveColor) : Colors.selectedArtworkBackground
 
         Rectangle {
             visible: item.isGreen
-            color: Colors.defaultLightColor
+            color: Colors.inputBackgroundColor
             width: parent.width * 0.7
             height: 2
             radius: 1
@@ -46,7 +46,7 @@ Item {
 
         Rectangle {
             visible: item.isGreen
-            color: Colors.defaultLightColor
+            color: Colors.inputBackgroundColor
             width: parent.width / 2
             radius: 1
             height: 2

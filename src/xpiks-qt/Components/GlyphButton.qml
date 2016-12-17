@@ -40,7 +40,7 @@ Rectangle {
     signal clicked()
 
     color: {
-        var result = Colors.defaultControlColor;
+        var result = Colors.buttonDefaultBackground;
 
         if (control.enabled &&
                 (control.isDefault || control.hovered)) {
@@ -54,7 +54,7 @@ Rectangle {
         var result = Colors.defaultControlColor;
 
         if (control.enabled) {
-            result = control.pressed ? Colors.buttonPressedForeground : Colors.labelActiveForeground;
+            result = control.pressed ? Colors.buttonPressedForeground : Colors.buttonDefaultForeground;
         } else {
             result = Colors.buttonDisabledForeground;
         }

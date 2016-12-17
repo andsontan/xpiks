@@ -47,15 +47,21 @@
 #define LABEL_INACTIVE_FOREGROUND "labelInactiveForeground"
 
 #define ARTWORK_BACKGROUND "artworkBackground"
-#define ARTWORK_IMAGE_BACKGROUND "artworkImageBackground"
 #define ARTWORK_MODIFIED_COLOR "artworkModifiedColor"
 #define ARTWORK_SAVED_COLOR "artworkSavedColor"
 #define ARTWORK_ACTIVE_COLOR "artworkActiveColor"
 
+#define INACTIVE_KEYWORD_BACKGROUND "inactiveKeywordBackground"
+#define INACTIVE_KEYWORD_FOREGROUND "inactiveKeywordForeground"
+#define CLOSE_ICON_ACTIVE_COLOR "closeIconActiveColor"
+#define CLOSE_ICON_INACTIVE_COLOR "closeIconInactiveColor"
+#define CLOSE_ICON_DISABLED_COLOR "closeIconDisabledColor"
+
 #define LIST_SEPARATOR_COLOR "listSeparatorColor"
-#define LIGHT_COLOR "defaultLightColor"
 #define LIGHT_GRAY_COLOR "defaultLightGrayColor"
 
+#define BUTTON_DEFAULT_BACKGROUND "buttonDefaultBackground"
+#define BUTTON_DEFAULT_FOREGROUND "buttonDefaultForeground"
 #define BUTTON_HOVER_BACKGROUND "buttonHoverBackground"
 #define BUTTON_PRESSED_BACKGROUND "buttonPressedBackground"
 #define BUTTON_PRESSED_FOREGROUND "buttonPressedForeground"
@@ -101,15 +107,17 @@ ColorsMap createBlackTheme() {
     BlackTheme[INPUT_INACTIVE_FOREGROUND] = BlackTheme[LABEL_ACTIVE_FOREGROUND];
 
     BlackTheme[ARTWORK_BACKGROUND] = "#181818";
-    BlackTheme[ARTWORK_IMAGE_BACKGROUND] = "#071215";
+    //BlackTheme[ARTWORK_IMAGE_BACKGROUND] = "#071215";
     BlackTheme[ARTWORK_MODIFIED_COLOR] = "#f49c12";
     BlackTheme[ARTWORK_SAVED_COLOR] = "#435151";
     BlackTheme[ARTWORK_ACTIVE_COLOR] = "#12b9bc";
 
-    BlackTheme[LIGHT_COLOR] = BlackTheme[INPUT_INACTIVE_FOREGROUND];
+    //BlackTheme[LIGHT_COLOR] = BlackTheme[INPUT_INACTIVE_FOREGROUND];
     BlackTheme[LIGHT_GRAY_COLOR] = "#D0D0D0";
     BlackTheme[LIST_SEPARATOR_COLOR] = BlackTheme[LABEL_ACTIVE_FOREGROUND];
 
+    BlackTheme[BUTTON_DEFAULT_BACKGROUND] = BlackTheme[DEFAULT_CONTROL_COLOR];
+    BlackTheme[BUTTON_DEFAULT_FOREGROUND] = BlackTheme[LABEL_ACTIVE_FOREGROUND];
     BlackTheme[BUTTON_HOVER_BACKGROUND] = BlackTheme[ARTWORK_ACTIVE_COLOR];
     BlackTheme[BUTTON_PRESSED_BACKGROUND] = BlackTheme[DEFAULT_CONTROL_COLOR];
     BlackTheme[BUTTON_PRESSED_FOREGROUND] = BlackTheme[WHITE_COLOR];
@@ -131,6 +139,13 @@ ColorsMap createBlackTheme() {
     BlackTheme[LEFT_SLIDER_COLOR] = BlackTheme[ARTWORK_BACKGROUND];
     BlackTheme[POPUP_BACKGROUND_COLOR] = BlackTheme[INACTIVE_CONTROL_COLOR];
 
+    BlackTheme[INACTIVE_KEYWORD_BACKGROUND] = BlackTheme[INACTIVE_CONTROL_COLOR];
+    BlackTheme[INACTIVE_KEYWORD_FOREGROUND] = BlackTheme[LABEL_ACTIVE_FOREGROUND];
+
+    BlackTheme[CLOSE_ICON_ACTIVE_COLOR] = BlackTheme[INACTIVE_CONTROL_COLOR];
+    BlackTheme[CLOSE_ICON_INACTIVE_COLOR] = BlackTheme[LABEL_ACTIVE_FOREGROUND];
+    BlackTheme[CLOSE_ICON_DISABLED_COLOR] = BlackTheme[INACTIVE_CONTROL_COLOR];
+
     return BlackTheme;
 }
 
@@ -140,7 +155,7 @@ ColorsMap createSlateGrayTheme() {
     SlateGrayTheme["name"] = "slate gray";
 
     SlateGrayTheme[DEFAULT_DARK_COLOR] = "#22252c";
-    SlateGrayTheme[DEFAULT_DARKER_COLOR] = "#373a42";
+    SlateGrayTheme[DEFAULT_DARKER_COLOR] = "#1c2025";
     SlateGrayTheme[DEFAULT_CONTROL_COLOR] = "#30333b";
     SlateGrayTheme[WHITE_COLOR] = "#ffffff";
 
@@ -152,19 +167,23 @@ ColorsMap createSlateGrayTheme() {
     SlateGrayTheme[LABEL_ACTIVE_FOREGROUND] = SlateGrayTheme[INPUT_BACKGROUND];
 
     SlateGrayTheme[ARTWORK_BACKGROUND] = SlateGrayTheme[DEFAULT_DARK_COLOR];
-    SlateGrayTheme[ARTWORK_IMAGE_BACKGROUND] = "#1c2025";
+    //SlateGrayTheme[ARTWORK_IMAGE_BACKGROUND] = "#1c2025";
     SlateGrayTheme[ARTWORK_MODIFIED_COLOR] = "#f49c12";
     SlateGrayTheme[ARTWORK_SAVED_COLOR] = SlateGrayTheme[INPUT_BACKGROUND];
     SlateGrayTheme[ARTWORK_ACTIVE_COLOR] = "#2ec1c3";
 
-    SlateGrayTheme[LIGHT_COLOR] = "#E0E0E0";
+    //SlateGrayTheme[LIGHT_COLOR] = "#E0E0E0";
     SlateGrayTheme[LIGHT_GRAY_COLOR] = "#D0D0D0";
-    SlateGrayTheme[LIST_SEPARATOR_COLOR] = SlateGrayTheme[LIGHT_COLOR];
+    SlateGrayTheme[LIST_SEPARATOR_COLOR] = "#E0E0E0";
 
+    SlateGrayTheme[BUTTON_DEFAULT_BACKGROUND] = SlateGrayTheme[DEFAULT_CONTROL_COLOR];
+    SlateGrayTheme[BUTTON_DEFAULT_FOREGROUND] = SlateGrayTheme[INPUT_FOREGROUND];
     SlateGrayTheme[BUTTON_HOVER_BACKGROUND] = "#12b9bc";
     SlateGrayTheme[BUTTON_PRESSED_BACKGROUND] = "#41b1b7";
-    SlateGrayTheme[BUTTON_DISABLED_FOREGROUND] = "#283c3f";
-    SlateGrayTheme[BUTTON_PRESSED_FOREGROUND] = "#283c3f";
+    SlateGrayTheme[BUTTON_PRESSED_FOREGROUND] = SlateGrayTheme[WHITE_COLOR];
+    SlateGrayTheme[BUTTON_DISABLED_FOREGROUND] = SlateGrayTheme[INPUT_BACKGROUND];
+    /*SlateGrayTheme[BUTTON_DISABLED_FOREGROUND] = "#283c3f";
+    SlateGrayTheme[BUTTON_PRESSED_FOREGROUND] = "#283c3f";*/
 
     SlateGrayTheme[LINK_CLICKED_COLOR] = SlateGrayTheme[INPUT_FOREGROUND];
 
@@ -178,9 +197,18 @@ ColorsMap createSlateGrayTheme() {
     SlateGrayTheme[DESTRUCTIVE_COLOR] = "#A81A1A";
     SlateGrayTheme[GREEN_COLOR] = "#2daf02";
 
-    SlateGrayTheme[STATUS_BAR_COLOR] = SlateGrayTheme[ARTWORK_IMAGE_BACKGROUND];
-    SlateGrayTheme[LEFT_SLIDER_COLOR] = SlateGrayTheme[ARTWORK_IMAGE_BACKGROUND];
+    SlateGrayTheme[INACTIVE_CONTROL_COLOR] = "#292c34";
+
+    SlateGrayTheme[STATUS_BAR_COLOR] = "#15181c";
+    SlateGrayTheme[LEFT_SLIDER_COLOR] = SlateGrayTheme[ARTWORK_BACKGROUND];
     SlateGrayTheme[POPUP_BACKGROUND_COLOR] = SlateGrayTheme[DEFAULT_CONTROL_COLOR];
+
+    SlateGrayTheme[INACTIVE_KEYWORD_BACKGROUND] = SlateGrayTheme[LABEL_INACTIVE_FOREGROUND];
+    SlateGrayTheme[INACTIVE_KEYWORD_FOREGROUND] = SlateGrayTheme[INPUT_FOREGROUND];
+
+    SlateGrayTheme[CLOSE_ICON_ACTIVE_COLOR] = SlateGrayTheme[DEFAULT_CONTROL_COLOR];
+    SlateGrayTheme[CLOSE_ICON_INACTIVE_COLOR] = SlateGrayTheme[INPUT_FOREGROUND];
+    SlateGrayTheme[CLOSE_ICON_DISABLED_COLOR] = SlateGrayTheme[INPUT_INACTIVE_FOREGROUND];
 
     return SlateGrayTheme;
 }
@@ -232,6 +260,7 @@ namespace QMLExtensions {
         QColor result;
         if (!theme->tryGetColor(colorName, result)) {
             if (!fallbackTheme->tryGetColor(colorName, result)) {
+                LOG_WARNING << "Color not found:" << QString::fromStdString(colorName);
                 result = QColor("#000000");
             }
         }
@@ -270,15 +299,15 @@ namespace QMLExtensions {
         setLabelInactiveForeground(getColor(LABEL_INACTIVE_FOREGROUND, theme, fallback));
 
         setArtworkBackground(getColor(ARTWORK_BACKGROUND, theme, fallback));
-        setArtworkImageBackground(getColor(ARTWORK_IMAGE_BACKGROUND, theme, fallback));
         setArtworkModifiedColor(getColor(ARTWORK_MODIFIED_COLOR, theme, fallback));
         setArtworkSavedColor(getColor(ARTWORK_SAVED_COLOR, theme, fallback));
         setArtworkActiveColor(getColor(ARTWORK_ACTIVE_COLOR, theme, fallback));
 
-        setDefaultLightColor(getColor(LIGHT_COLOR, theme, fallback));
         setDefaultLightGrayColor(getColor(LIGHT_GRAY_COLOR, theme, fallback));
         setListSeparatorColor(getColor(LIST_SEPARATOR_COLOR, theme, fallback));
 
+        setButtonDefaultBackground(getColor(BUTTON_DEFAULT_BACKGROUND, theme, fallback));
+        setButtonDefaultForeground(getColor(BUTTON_DEFAULT_FOREGROUND, theme, fallback));
         setButtonHoverBackground(getColor(BUTTON_HOVER_BACKGROUND, theme, fallback));
         setButtonPressedBackground(getColor(BUTTON_PRESSED_BACKGROUND, theme, fallback));
         setButtonPressedForeground(getColor(BUTTON_PRESSED_FOREGROUND, theme, fallback));
@@ -299,6 +328,12 @@ namespace QMLExtensions {
         setStatusBarColor(getColor(STATUS_BAR_COLOR, theme, fallback));
         setLeftSliderColor(getColor(LEFT_SLIDER_COLOR, theme, fallback));
         setPopupBackgroundColor(getColor(POPUP_BACKGROUND_COLOR, theme, fallback));
+        setInactiveKeywordBackground(getColor(INACTIVE_KEYWORD_BACKGROUND, theme, fallback));
+        setInactiveKeywordForeground(getColor(INACTIVE_KEYWORD_FOREGROUND, theme, fallback));
+
+        setCloseIconActiveColor(getColor(CLOSE_ICON_ACTIVE_COLOR, theme, fallback));
+        setCloseIconInactiveColor(getColor(CLOSE_ICON_INACTIVE_COLOR, theme, fallback));
+        setCloseIconDisabledColor(getColor(CLOSE_ICON_DISABLED_COLOR, theme, fallback));
 
         emit themeChanged();
 
