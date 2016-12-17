@@ -149,7 +149,7 @@ CloseRequested")
         Rectangle {
             id: dialogWindow
             width: 730
-            height: 600
+            height: 610
             color: Colors.popupBackgroundColor
             anchors.centerIn: parent
             Component.onCompleted: anchors.centerIn = undefined
@@ -333,12 +333,11 @@ CloseRequested")
                             StyledText {
                                 id: keywordsLabel
                                 text: i18.n + qsTr("Keywords to delete:")
-                                color: Colors.labelActiveForeground
                             }
 
                             StyledText {
                                 text: i18.n + qsTr("(comma-separated)")
-                                color: Colors.labelActiveForeground
+                                isActive: false
                             }
 
                             Item {
@@ -347,7 +346,6 @@ CloseRequested")
 
                             StyledText {
                                 text: deleteKeywordsModel.keywordsToDeleteCount
-                                color: Colors.labelActiveForeground
                             }
                         }
 
@@ -539,7 +537,7 @@ CloseRequested")
                             height: 155
                             anchors.rightMargin: 20
                             Layout.fillWidth: true
-                            color: enabled ? Colors.inputBackgroundColor : Colors.inputInactiveBackground
+                            color: Colors.inputInactiveBackground
                             property var keywordsModel: deleteKeywordsModel.getCommonKeywordsModel()
 
                             function removeKeyword(index) {
@@ -562,7 +560,7 @@ CloseRequested")
                                     keywordText: keyword
                                     hasSpellCheckError: !iscorrect
                                     delegateIndex: index
-                                    isHighlighted: true
+                                    isHighlighted: false
                                     hasPlusSign: true
                                     itemHeight: flvCommon.keywordHeight
                                     onRemoveClicked: commonKeywordsWrapper.removeKeyword(delegateIndex)

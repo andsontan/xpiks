@@ -223,7 +223,7 @@ Item {
 
                 StyledText {
                     text: i18.n + qsTr("Skip")
-                    color: skipMA.pressed ? Colors.linkClickedColor : Colors.labelActiveForeground
+                    color: skipMA.pressed ? Colors.linkClickedColor : Colors.labelInactiveForeground
 
                     MouseArea {
                         id: skipMA

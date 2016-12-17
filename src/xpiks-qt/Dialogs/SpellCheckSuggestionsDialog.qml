@@ -130,8 +130,8 @@ Item {
                         anchors.fill: parent
 
                         StyledText {
-                            text: i18.n + qsTr("No suggestions available.")
-                            color: Colors.selectedArtworkBackground
+                            text: i18.n + qsTr("No suggestions available")
+                            isActive: false
                             anchors.centerIn: parent
                         }
                     }
@@ -150,7 +150,7 @@ Item {
                             delegate: Rectangle {
                                 id: suggestionsWrapper
                                 property int delegateIndex: index
-                                color: Colors.defaultDarkColor
+                                color: Colors.panelColor
                                 width: parent.width - 10
                                 height: suggestionsListRect.height
 
@@ -186,21 +186,12 @@ Item {
                                     }
                                 }
 
-                                Rectangle {
-                                    anchors.left: wordsColumn.right
-                                    anchors.bottom: parent.bottom
-                                    anchors.top: parent.top
-                                    width: 1
-                                    color: Colors.defaultControlColor
-                                }
-
-                                Rectangle {
+                                Item {
                                     id: suggestionsListRect
                                     anchors.left: wordsColumn.right
                                     anchors.leftMargin: 5
                                     anchors.top: parent.top
                                     anchors.right: parent.right
-                                    color: Colors.defaultDarkColor
                                     height: childrenRect.height + 20
 
                                     Flow {
