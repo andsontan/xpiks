@@ -68,7 +68,7 @@ Rectangle {
             anchors.rightMargin: 30
 
             BackGlyphButton {
-                text: qsTr("Back")
+                text: i18.n + qsTr("Back")
                 onClicked: closePopup()
             }
 
@@ -77,7 +77,7 @@ Rectangle {
             }
 
             StyledText {
-                text: qsTr("Warnings")
+                text: i18.n + qsTr("Warnings")
                 isActive: false
             }
         }

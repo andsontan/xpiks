@@ -115,7 +115,7 @@ Item {
                 spacing: 20
 
                 StyledText {
-                    text: qsTr("Updates are ready to install")
+                    text: i18.n + qsTr("Updates are ready to install")
                     anchors.left: parent.left
                 }
 
@@ -127,7 +127,7 @@ Item {
                     StyledButton {
                         width: 100
                         isDefault: true
-                        text: qsTr("Upgrade")
+                        text: i18.n + qsTr("Upgrade")
                         onClicked: {
                             helpersWrapper.upgradeNow()
                             closePopup()
@@ -140,7 +140,7 @@ Item {
 
                     StyledButton {
                         width: 100
-                        text: qsTr("Later")
+                        text: i18.n + qsTr("Later")
                         onClicked: {
                             closePopup()
                         }

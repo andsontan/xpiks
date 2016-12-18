@@ -203,12 +203,12 @@ Rectangle {
 
             BackGlyphButton {
                 width: 110
-                text: qsTr("Cancel")
+                text: i18.n + qsTr("Cancel")
                 onClicked: closePopup()
             }
 
             StyledButton {
-                text: qsTr("Save")
+                text: i18.n + qsTr("Save")
                 width: 100
                 isDefault: true
                 onClicked: {

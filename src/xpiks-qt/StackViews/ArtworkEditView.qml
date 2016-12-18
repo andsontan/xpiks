@@ -101,7 +101,7 @@ Rectangle {
         property string word
 
         MenuItem {
-            text: qsTr("Add to dictionary")
+            text: i18.n + qsTr("Add to dictionary")
             onTriggered: spellCheckService.addWordToUserDictionary(addWordContextMenu.word);
         }
     }
@@ -240,7 +240,7 @@ Rectangle {
                     spacing: 0
 
                     BackGlyphButton {
-                        text: qsTr("Back")
+                        text: i18.n + qsTr("Back")
                         onClicked: {
                             flv.onBeforeClose()
                             closePopup()
@@ -343,7 +343,7 @@ Rectangle {
 
                         StyledText {
                             color: parent.isSelected ? Colors.artworkActiveColor : (parent.hovered ? Colors.labelActiveForeground : Colors.labelInactiveForeground)
-                            text: modelData
+                            text: i18.n + modelData
                             anchors.centerIn: parent
                         }
 
