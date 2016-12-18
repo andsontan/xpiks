@@ -180,6 +180,7 @@ Item {
                                             horizontalAlignment: Text.AlignHCenter
                                             text: basefilename
                                             font.pixelSize: 11
+                                            isActive: false
                                         }
 
                                         Item {
@@ -220,7 +221,7 @@ Item {
                                                     width: height
                                                     radius: height/2
                                                     anchors.verticalCenter: parent.verticalCenter
-                                                    color: Colors.labelActiveForeground
+                                                    color: Colors.inactiveControlColor
                                                 }
 
                                                 StyledText {

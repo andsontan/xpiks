@@ -65,7 +65,7 @@ Rectangle {
             height: childrenRect.height
             spacing: 0
             anchors.leftMargin: 20
-            anchors.rightMargin: 30
+            anchors.rightMargin: 40
 
             BackGlyphButton {
                 text: i18.n + qsTr("Back")
@@ -90,7 +90,6 @@ Rectangle {
         anchors.bottom: parent.bottom
         anchors.leftMargin: 20
         anchors.rightMargin: 10
-        anchors.topMargin: 10
         anchors.bottomMargin: 20
 
         ListView {
@@ -193,7 +192,7 @@ Rectangle {
                                     width: height
                                     radius: height/2
                                     anchors.verticalCenter: parent.verticalCenter
-                                    color: Colors.labelActiveForeground
+                                    color: Colors.inactiveControlColor
                                 }
 
                                 StyledText {
