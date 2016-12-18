@@ -90,6 +90,7 @@ Item {
                 old_y = tmp.y;
 
                 sourceComboBox.closePopup()
+                searchTypeCombobox.closePopup()
             }
 
             onPositionChanged: {
@@ -205,6 +206,7 @@ Item {
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
+                                searchTypeCombobox.closePopup()
                                 sourceComboBox.closePopup()
                             }
                         }
@@ -256,6 +258,7 @@ Item {
                                         hoverEnabled: true
                                         onClicked: {
                                             keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
+                                            searchTypeCombobox.closePopup()
                                             sourceComboBox.closePopup()
                                         }
                                     }
@@ -291,6 +294,7 @@ Item {
                         MouseArea {
                             anchors.fill: parent
                             onClicked: {
+                                searchTypeCombobox.closePopup()
                                 sourceComboBox.closePopup()
                             }
                         }
@@ -413,6 +417,7 @@ Item {
                             }
 
                             onClickedInside: {
+                                searchTypeCombobox.closePopup()
                                 sourceComboBox.closePopup()
                             }
                         }
@@ -498,6 +503,7 @@ Item {
                             }
 
                             onClickedInside: {
+                                searchTypeCombobox.closePopup()
                                 sourceComboBox.closePopup()
                             }
                         }

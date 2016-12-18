@@ -153,9 +153,9 @@ Rectangle {
                         anchors.topMargin: 3
                         width: parent.width - 10
                         elide: Text.ElideMiddle
-                        color: Colors.labelActiveForeground
                         horizontalAlignment: Text.AlignHCenter
                         text: basefilename
+                        isActive: false
                     }
                 }
 

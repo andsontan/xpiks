@@ -34,7 +34,7 @@ ApplicationWindow {
     modality: "ApplicationModal"
     title: i18.n + qsTr("Settings")
     width: 550
-    height: 300
+    height: 350
     minimumWidth: width
     maximumWidth: width
     minimumHeight: height
@@ -631,6 +631,7 @@ ApplicationWindow {
 
                         StyledText {
                             text: i18.n + qsTr("(seconds)")
+                            isActive: false
                         }
                     }
 
@@ -681,7 +682,7 @@ ApplicationWindow {
                             Layout.fillWidth: true
                             Layout.maximumWidth: 80
                             enabled: settingsModel.useExifTool
-                            color: Colors.labelActiveForeground
+                            isActive: useExifToolCheckbox.checked
 
                             horizontalAlignment: Text.AlignRight
                             text: i18.n + qsTr("ExifTool path:")
@@ -883,7 +884,7 @@ ApplicationWindow {
 
                         StyledText {
                             text: i18.n + qsTr("(seconds)")
-                            color: Colors.inputBackgroundColor
+                            isActive: false
                         }
                     }
 
@@ -936,6 +937,7 @@ ApplicationWindow {
 
                         StyledText {
                             text: i18.n + qsTr("(takes effect after relaunch)")
+                            isActive: false
                         }
                     }
 

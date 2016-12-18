@@ -165,7 +165,6 @@ Item {
                         Layout.preferredWidth: 130
                         horizontalAlignment: Text.AlignRight
                         text: i18.n + qsTr("Current Master Password:")
-                        color: Colors.labelActiveForeground
                     }
 
                     Rectangle {

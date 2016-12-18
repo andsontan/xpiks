@@ -518,7 +518,6 @@ CloseRequested")
 
                             StyledText {
                                 text: i18.n + qsTr("Common keywords:")
-                                color: Colors.labelActiveForeground
                             }
 
                             Item {
@@ -527,7 +526,6 @@ CloseRequested")
 
                             StyledText {
                                 text: deleteKeywordsModel.commonKeywordsCount
-                                color: Colors.labelActiveForeground
                             }
                         }
 

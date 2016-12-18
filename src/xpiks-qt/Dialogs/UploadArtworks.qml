@@ -481,7 +481,6 @@ Item {
 
                                     StyledText {
                                         text: i18.n + qsTr("Title:")
-                                        color: Colors.labelActiveForeground
                                     }
 
                                     Rectangle {
@@ -589,7 +588,6 @@ Item {
 
                                     StyledText {
                                         text: i18.n + qsTr("Host:")
-                                        color: Colors.labelActiveForeground
                                     }
 
                                     Rectangle {
@@ -624,7 +622,6 @@ Item {
 
                                     StyledText {
                                         text: i18.n + qsTr("Username:")
-                                        color: Colors.labelActiveForeground
                                     }
 
                                     Rectangle {
@@ -658,7 +655,6 @@ Item {
 
                                     StyledText {
                                         text: i18.n + qsTr("Password:")
-                                        color: Colors.labelActiveForeground
                                     }
 
                                     Rectangle {
