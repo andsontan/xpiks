@@ -22,6 +22,7 @@
 #include "artworkproxymodel.h"
 #include <QImageReader>
 #include "../Commands/commandmanager.h"
+#include "../Warnings/warningsservice.h"
 #include "imageartwork.h"
 
 namespace Models {
@@ -237,6 +238,10 @@ namespace Models {
     void ArtworkProxyModel::updateCurrentArtwork() {
         if (m_ArtworkOriginalIndex != -1) {
             m_CommandManager->updateArtworks(QVector<int>() << m_ArtworkOriginalIndex);
+        }
+
+        if (m_ArtworkMetadata != nullptr) {
+            m_CommandManager->submitForWarningsCheck(m_ArtworkMetadata);
         }
     }
 

@@ -781,7 +781,6 @@ Rectangle {
 
                             StyledText {
                                 text: "|"
-                                isActive: rowWrapper.isHighlighted
                                 verticalAlignment: Text.AlignVCenter
                             }
 
@@ -809,7 +808,6 @@ Rectangle {
 
                             StyledText {
                                 text: "|"
-                                isActive: rowWrapper.isHighlighted
                                 verticalAlignment: Text.AlignVCenter
                             }
 
@@ -827,7 +825,6 @@ Rectangle {
 
                             StyledText {
                                 text: "|"
-                                isActive: rowWrapper.isHighlighted
                                 verticalAlignment: Text.AlignVCenter
                             }
 
