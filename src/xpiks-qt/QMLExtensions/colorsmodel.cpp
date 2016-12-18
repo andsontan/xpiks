@@ -157,63 +157,63 @@ ColorsMap createSlateGrayTheme() {
 
     SlateGrayTheme["name"] = "slate gray";
 
+    SlateGrayTheme[DEFAULT_DARKER_COLOR] = "#15181c";
     SlateGrayTheme[DEFAULT_DARK_COLOR] = "#22252c";
-    SlateGrayTheme[DEFAULT_DARKER_COLOR] = "#1c2025";
     SlateGrayTheme[DEFAULT_CONTROL_COLOR] = "#30333b";
+    SlateGrayTheme[INACTIVE_CONTROL_COLOR] = "#3e434d";
+    SlateGrayTheme[PANEL_COLOR] = "#292c34";
+    SlateGrayTheme[PANEL_SELECTED_COLOR] = "#515761";
+    SlateGrayTheme[PANEL_HOVER_COLOR] = "#4a4a4a";
     SlateGrayTheme[WHITE_COLOR] = "#ffffff";
 
-    SlateGrayTheme[INPUT_BACKGROUND] = "#7a7e86";
-    SlateGrayTheme[INPUT_INACTIVE_BACKGROUND] = SlateGrayTheme[DEFAULT_CONTROL_COLOR];
-    SlateGrayTheme[INPUT_FOREGROUND] = "#c7ccd3";
-    SlateGrayTheme[INPUT_INACTIVE_FOREGROUND] = SlateGrayTheme[INPUT_BACKGROUND];
-    SlateGrayTheme[LABEL_INACTIVE_FOREGROUND] = SlateGrayTheme[INPUT_INACTIVE_FOREGROUND]; //"#474b54";
-    SlateGrayTheme[LABEL_ACTIVE_FOREGROUND] = SlateGrayTheme[INPUT_BACKGROUND];
+    SlateGrayTheme[LABEL_ACTIVE_FOREGROUND] = "#c7ccd3";
+    SlateGrayTheme[LABEL_INACTIVE_FOREGROUND] = "#979ca5";
+    SlateGrayTheme[INPUT_BACKGROUND] = SlateGrayTheme[PANEL_SELECTED_COLOR];
+    SlateGrayTheme[INPUT_INACTIVE_BACKGROUND] = SlateGrayTheme[PANEL_COLOR];
+    SlateGrayTheme[INPUT_FOREGROUND] = SlateGrayTheme[WHITE_COLOR];
+    SlateGrayTheme[INPUT_INACTIVE_FOREGROUND] = SlateGrayTheme[LABEL_ACTIVE_FOREGROUND];
+    SlateGrayTheme[INPUT_HINT_FOREGROUND] = SlateGrayTheme[INACTIVE_CONTROL_COLOR];
 
-    SlateGrayTheme[ARTWORK_BACKGROUND] = SlateGrayTheme[DEFAULT_DARK_COLOR];
-    //SlateGrayTheme[ARTWORK_IMAGE_BACKGROUND] = "#1c2025";
+    SlateGrayTheme[ARTWORK_BACKGROUND] = "#1e2026";
+    //SlateGrayTheme[ARTWORK_IMAGE_BACKGROUND] = "#071215";
     SlateGrayTheme[ARTWORK_MODIFIED_COLOR] = "#f49c12";
-    SlateGrayTheme[ARTWORK_SAVED_COLOR] = SlateGrayTheme[INPUT_BACKGROUND];
+    SlateGrayTheme[ARTWORK_SAVED_COLOR] = "#435151";
     SlateGrayTheme[ARTWORK_ACTIVE_COLOR] = "#2ec1c3";
 
-    //SlateGrayTheme[LIGHT_COLOR] = "#E0E0E0";
+    //SlateGrayTheme[LIGHT_COLOR] = SlateGrayTheme[INPUT_INACTIVE_FOREGROUND];
     //SlateGrayTheme[LIGHT_GRAY_COLOR] = "#D0D0D0";
-    SlateGrayTheme[LIST_SEPARATOR_COLOR] = "#E0E0E0";
+    SlateGrayTheme[LIST_SEPARATOR_COLOR] = SlateGrayTheme[LABEL_ACTIVE_FOREGROUND];
 
     SlateGrayTheme[BUTTON_DEFAULT_BACKGROUND] = SlateGrayTheme[DEFAULT_CONTROL_COLOR];
-    SlateGrayTheme[BUTTON_DEFAULT_FOREGROUND] = SlateGrayTheme[INPUT_FOREGROUND];
-    SlateGrayTheme[BUTTON_HOVER_BACKGROUND] = "#12b9bc";
-    SlateGrayTheme[BUTTON_PRESSED_BACKGROUND] = "#41b1b7";
+    SlateGrayTheme[BUTTON_DEFAULT_FOREGROUND] = SlateGrayTheme[LABEL_ACTIVE_FOREGROUND];
+    SlateGrayTheme[BUTTON_HOVER_BACKGROUND] = SlateGrayTheme[ARTWORK_ACTIVE_COLOR];
+    SlateGrayTheme[BUTTON_PRESSED_BACKGROUND] = SlateGrayTheme[DEFAULT_CONTROL_COLOR];
     SlateGrayTheme[BUTTON_PRESSED_FOREGROUND] = SlateGrayTheme[WHITE_COLOR];
     SlateGrayTheme[BUTTON_DISABLED_FOREGROUND] = SlateGrayTheme[INPUT_BACKGROUND];
-    /*SlateGrayTheme[BUTTON_DISABLED_FOREGROUND] = "#283c3f";
-    SlateGrayTheme[BUTTON_PRESSED_FOREGROUND] = "#283c3f";*/
 
-    SlateGrayTheme[LINK_CLICKED_COLOR] = SlateGrayTheme[INPUT_FOREGROUND];
+    SlateGrayTheme[LINK_CLICKED_COLOR] = SlateGrayTheme[WHITE_COLOR];
 
-    SlateGrayTheme[SELECTED_ARTWORK_BACKGROUND] = "#474b54";
+    SlateGrayTheme[SELECTED_ARTWORK_BACKGROUND] = SlateGrayTheme[INACTIVE_CONTROL_COLOR];
     SlateGrayTheme[CHECKBOX_CHECKED_COLOR] = "#ffffff";
 
-    SlateGrayTheme[ITEMS_SOURCE_BACKGROUND] = SlateGrayTheme[SELECTED_ARTWORK_BACKGROUND];
-    SlateGrayTheme[ITEMS_SOURCE_SELECTED] = SlateGrayTheme[ITEMS_SOURCE_BACKGROUND];
-    SlateGrayTheme[ITEMS_SOURCE_FOREGROUND] = SlateGrayTheme[INPUT_FOREGROUND];
+    SlateGrayTheme[ITEMS_SOURCE_BACKGROUND] = SlateGrayTheme[INACTIVE_CONTROL_COLOR];
+    SlateGrayTheme[ITEMS_SOURCE_SELECTED] = SlateGrayTheme[INPUT_BACKGROUND];
+    SlateGrayTheme[ITEMS_SOURCE_FOREGROUND] = SlateGrayTheme[INPUT_INACTIVE_FOREGROUND];
 
-    SlateGrayTheme[DESTRUCTIVE_COLOR] = "#A81A1A";
+    SlateGrayTheme[DESTRUCTIVE_COLOR] = "#e81313"; //"#A81A1A";
     SlateGrayTheme[GREEN_COLOR] = "#2daf02";
 
-    SlateGrayTheme[INACTIVE_CONTROL_COLOR] = "#292c34";
-
-    SlateGrayTheme[STATUS_BAR_COLOR] = "#15181c";
+    SlateGrayTheme[STATUS_BAR_COLOR] = SlateGrayTheme[DEFAULT_DARKER_COLOR];
     SlateGrayTheme[LEFT_SLIDER_COLOR] = SlateGrayTheme[ARTWORK_BACKGROUND];
-    SlateGrayTheme[POPUP_BACKGROUND_COLOR] = "#3e434d";
-    SlateGrayTheme[POPUP_DARK_INPUT_BACKGROUND] = SlateGrayTheme[DEFAULT_CONTROL_COLOR];
+    SlateGrayTheme[POPUP_BACKGROUND_COLOR] = SlateGrayTheme[INACTIVE_CONTROL_COLOR];
+    SlateGrayTheme[POPUP_DARK_INPUT_BACKGROUND] = SlateGrayTheme[INPUT_INACTIVE_BACKGROUND];
 
-    SlateGrayTheme[INACTIVE_KEYWORD_BACKGROUND] = "#474b54";
-    SlateGrayTheme[INACTIVE_KEYWORD_FOREGROUND] = SlateGrayTheme[INPUT_FOREGROUND];
+    SlateGrayTheme[INACTIVE_KEYWORD_BACKGROUND] = SlateGrayTheme[INACTIVE_CONTROL_COLOR];
+    SlateGrayTheme[INACTIVE_KEYWORD_FOREGROUND] = SlateGrayTheme[LABEL_ACTIVE_FOREGROUND];
 
-    SlateGrayTheme[CLOSE_ICON_ACTIVE_COLOR] = SlateGrayTheme[DEFAULT_CONTROL_COLOR];
-    SlateGrayTheme[CLOSE_ICON_INACTIVE_COLOR] = SlateGrayTheme[INPUT_FOREGROUND];
-    SlateGrayTheme[CLOSE_ICON_DISABLED_COLOR] = SlateGrayTheme[INPUT_INACTIVE_FOREGROUND];
-    SlateGrayTheme[INPUT_HINT_FOREGROUND] = SlateGrayTheme[SELECTED_ARTWORK_BACKGROUND];
+    SlateGrayTheme[CLOSE_ICON_ACTIVE_COLOR] = SlateGrayTheme[INACTIVE_CONTROL_COLOR];
+    SlateGrayTheme[CLOSE_ICON_INACTIVE_COLOR] = SlateGrayTheme[LABEL_ACTIVE_FOREGROUND];
+    SlateGrayTheme[CLOSE_ICON_DISABLED_COLOR] = SlateGrayTheme[INACTIVE_CONTROL_COLOR];
 
     return SlateGrayTheme;
 }
