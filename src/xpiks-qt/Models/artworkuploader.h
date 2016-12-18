@@ -54,6 +54,8 @@ namespace Models {
         virtual ~ArtworkUploader();
 
     public:
+        // used to test UI of artwork upload
+        // virtual bool getInProgress() const { return true; }
         AutoComplete::StringFilterProxyModel *getStocksCompletionSource() { return &m_StocksCompletionSource; }
         virtual void setCommandManager(Commands::CommandManager *commandManager);
 

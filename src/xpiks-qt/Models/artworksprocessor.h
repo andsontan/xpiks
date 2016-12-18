@@ -61,7 +61,7 @@ namespace Models {
         void incProgress() { m_ProcessedArtworksCount++; updateProgress(); }
 
     public:
-        bool getInProgress() const { return m_IsInProgress; }
+        virtual bool getInProgress() const { return m_IsInProgress; }
         void setInProgress(bool value) { m_IsInProgress = value; emit inProgressChanged(); }
         virtual int getPercent() const { return m_ArtworksCount == 0 ? 0 : (m_ProcessedArtworksCount * 100 / m_ArtworksCount); }
         void updateProgress() { emit percentChanged(); }
