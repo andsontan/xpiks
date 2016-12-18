@@ -36,7 +36,6 @@
 #define INACTIVE_CONTROL_COLOR "inactiveControlColor"
 #define PANEL_COLOR "panelColor"
 #define PANEL_SELECTED_COLOR "panelSelectedColor"
-#define PANEL_HOVER_COLOR "panelHoverColor"
 #define WHITE_COLOR "whiteColor"
 
 #define INPUT_BACKGROUND "inputBackgroundColor"
@@ -97,7 +96,6 @@ ColorsMap createBlackTheme() {
     BlackTheme[INACTIVE_CONTROL_COLOR] = "#404040";
     BlackTheme[PANEL_COLOR] = "#242424";
     BlackTheme[PANEL_SELECTED_COLOR] = "#5d5d5d";
-    BlackTheme[PANEL_HOVER_COLOR] = "#4a4a4a";
     BlackTheme[WHITE_COLOR] = "#ffffff";
 
     BlackTheme[LABEL_ACTIVE_FOREGROUND] = "#c9c9c9";
@@ -163,7 +161,6 @@ ColorsMap createSlateGrayTheme() {
     SlateGrayTheme[INACTIVE_CONTROL_COLOR] = "#3e434d";
     SlateGrayTheme[PANEL_COLOR] = "#292c34";
     SlateGrayTheme[PANEL_SELECTED_COLOR] = "#515761";
-    SlateGrayTheme[PANEL_HOVER_COLOR] = "#4a4a4a";
     SlateGrayTheme[WHITE_COLOR] = "#ffffff";
 
     SlateGrayTheme[LABEL_ACTIVE_FOREGROUND] = "#c7ccd3";
@@ -293,7 +290,6 @@ namespace QMLExtensions {
         setInactiveControlColor(getColor(INACTIVE_CONTROL_COLOR, theme, fallback));
         setPanelColor(getColor(PANEL_COLOR, theme, fallback));
         setPanelSelectedColor(getColor(PANEL_SELECTED_COLOR, theme, fallback));
-        setPanelHoverColor(getColor(PANEL_HOVER_COLOR, theme, fallback));
         setWhiteColor(getColor(WHITE_COLOR, theme, fallback));
 
         setInputBackgroundColor(getColor(INPUT_BACKGROUND, theme, fallback));

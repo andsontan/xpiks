@@ -935,16 +935,19 @@ Rectangle {
         anchors.bottom: parent.bottom
         height: 110
         color: Colors.panelColor
-        property color hoverColor: Colors.panelHoverColor
 
-        Rectangle {
+        Item {
             id: selectPrevButton
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             width: 40
             enabled: rosterListView.currentIndex > 0
-            color: (enabled && prevButtonMA.containsMouse) ? bottomPane.hoverColor : bottomPane.color
+
+            Rectangle {
+                anchors.fill: parent
+                color: enabled ? (prevButtonMA.containsMouse ? Colors.defaultControlColor : Colors.leftSliderColor) : Colors.panelColor
+            }
 
             TriangleElement {
                 width: 7
@@ -1003,12 +1006,13 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 width: bottomPane.height
-                color: {
-                    if (ListView.isCurrentItem) {
-                        return Colors.panelSelectedColor
-                    } else {
-                        return imageMA.containsMouse ? bottomPane.hoverColor : "transparent"
-                    }
+                color: ListView.isCurrentItem ? Colors.panelSelectedColor : "transparent"
+
+                Rectangle {
+                    anchors.fill: parent
+                    visible: imageMA.containsMouse
+                    color: Colors.panelSelectedColor
+                    opacity: 0.6
                 }
 
                 Image {
@@ -1071,14 +1075,18 @@ Rectangle {
             }
         }
 
-        Rectangle {
+        Item {
             id: selectNextButton
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             width: 40
             enabled: rosterListView.currentIndex < (rosterListView.count - 1)
-            color: (enabled && nextButtonMA.containsMouse) ? bottomPane.hoverColor : bottomPane.color
+
+            Rectangle {
+                anchors.fill: parent
+                color: enabled ? (nextButtonMA.containsMouse ? Colors.defaultControlColor : Colors.leftSliderColor) : Colors.panelColor
+            }
 
             TriangleElement {
                 width: 7

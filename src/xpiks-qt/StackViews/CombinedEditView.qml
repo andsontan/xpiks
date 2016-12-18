@@ -201,8 +201,8 @@ Rectangle {
             height: childrenRect.height
             spacing: 20
 
-            BackGlyphButton {
-                width: 110
+            StyledButton {
+                width: 100
                 text: i18.n + qsTr("Cancel")
                 onClicked: closePopup()
             }
@@ -952,16 +952,19 @@ Rectangle {
         anchors.bottom: parent.bottom
         height: 110
         color: Colors.panelColor
-        property color hoverColor: Colors.panelHoverColor
 
-        Rectangle {
+        Item {
             id: selectPrevButton
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             width: 40
-            enabled: rosterListView.contentWidth > rosterListView.width
-            color: (enabled && prevButtonMA.containsMouse) ? bottomPane.hoverColor : bottomPane.color
+            enabled: (rosterListView.contentWidth > rosterListView.width) && (rosterListView.contentX > 0)
+
+            Rectangle {
+                anchors.fill: parent
+                color: enabled ? (prevButtonMA.containsMouse ? Colors.defaultControlColor : Colors.leftSliderColor) : Colors.panelColor
+            }
 
             TriangleElement {
                 width: 7
@@ -1044,12 +1047,13 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 width: bottomPane.height
-                color: {
-                    if (isselected) {
-                        return Colors.panelSelectedColor
-                    } else {
-                        return imageMA.containsMouse ? Colors.panelHoverColor : "transparent"
-                    }
+                color: isselected ? Colors.panelSelectedColor : "transparent"
+
+                Rectangle {
+                    anchors.fill: parent
+                    visible: !isselected && imageMA.containsMouse
+                    color: Colors.panelSelectedColor
+                    opacity: 0.6
                 }
 
                 Image {
@@ -1119,14 +1123,18 @@ Rectangle {
             }
         }
 
-        Rectangle {
+        Item {
             id: selectNextButton
             anchors.right: parent.right
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             width: 40
-            enabled: rosterListView.contentWidth > rosterListView.width
-            color: (enabled && nextButtonMA.containsMouse) ? bottomPane.hoverColor : bottomPane.color
+            enabled: (rosterListView.contentWidth > rosterListView.width) && (rosterListView.contentX < (rosterListView.contentWidth - rosterListView.width))
+
+            Rectangle {
+                anchors.fill: parent
+                color: enabled ? (nextButtonMA.containsMouse ? Colors.defaultControlColor : Colors.leftSliderColor) : Colors.panelColor
+            }
 
             TriangleElement {
                 width: 7

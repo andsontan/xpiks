@@ -49,7 +49,6 @@ namespace QMLExtensions {
         Q_PROPERTY(QColor whiteColor READ whiteColor WRITE setWhiteColor NOTIFY whiteColorChanged)
         Q_PROPERTY(QColor panelColor READ panelColor WRITE setPanelColor NOTIFY panelColorChanged)
         Q_PROPERTY(QColor panelSelectedColor READ panelSelectedColor WRITE setPanelSelectedColor NOTIFY panelSelectedColorChanged)
-        Q_PROPERTY(QColor panelHoverColor READ panelHoverColor WRITE setPanelHoverColor NOTIFY panelHoverColorChanged)
 
         Q_PROPERTY(QColor inputBackgroundColor READ inputBackgroundColor WRITE setInputBackgroundColor NOTIFY inputBackgroundColorChanged)
         Q_PROPERTY(QColor inputInactiveBackground READ inputInactiveBackground WRITE setInputInactiveBackground NOTIFY inputInactiveBackgroundChanged)
@@ -134,7 +133,6 @@ namespace QMLExtensions {
         QColor m_inactiveControlColor;
         QColor m_panelColor;
         QColor m_panelSelectedColor;
-        QColor m_panelHoverColor;
         QColor m_buttonDefaultBackground;
         QColor m_buttonDefaultForeground;
         QColor m_inactiveKeywordBackground;
@@ -321,11 +319,6 @@ namespace QMLExtensions {
             return m_panelSelectedColor;
         }
 
-        QColor panelHoverColor() const
-        {
-            return m_panelHoverColor;
-        }
-
         QColor buttonDefaultBackground() const
         {
             return m_buttonDefaultBackground;
@@ -406,7 +399,6 @@ namespace QMLExtensions {
         void inactiveControlColorChanged(QColor inactiveControlColor);
         void panelColorChanged(QColor panelColor);
         void panelSelectedColorChanged(QColor panelSelectedColor);
-        void panelHoverColorChanged(QColor panelHoverColor);
         void buttonDefaultBackgroundChanged(QColor buttonDefaultBackground);
         void buttonDefaultForegroundChanged(QColor buttonDefaultForeground);
         void inactiveKeywordBackgroundChanged(QColor inactiveKeywordBackground);
@@ -681,14 +673,6 @@ namespace QMLExtensions {
 
             m_panelSelectedColor = panelSelectedColor;
             emit panelSelectedColorChanged(panelSelectedColor);
-        }
-        void setPanelHoverColor(QColor panelHoverColor)
-        {
-            if (m_panelHoverColor == panelHoverColor)
-                return;
-
-            m_panelHoverColor = panelHoverColor;
-            emit panelHoverColorChanged(panelHoverColor);
         }
         void setButtonDefaultBackground(QColor buttonDefaultBackground)
         {
