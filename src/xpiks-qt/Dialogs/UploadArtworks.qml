@@ -355,7 +355,6 @@ Item {
                                                 Layout.fillWidth: true
                                                 anchors.verticalCenter: parent.verticalCenter
                                                 height: 31
-                                                color: Colors.defaultLightGrayColor
                                                 text: title
                                                 elide: Text.ElideMiddle
                                                 font.bold: sourceWrapper.isSelected

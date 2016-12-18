@@ -34,6 +34,7 @@ Rectangle {
     property string keywordText
     property bool hasPlusSign: false
     property alias itemHeight: tagTextRect.height
+    property alias closeIconDisabledColor: closeIcon.disabledColor
 
     signal removeClicked();
     signal actionDoubleClicked();
@@ -87,6 +88,7 @@ Rectangle {
             width: height
 
             CloseIcon {
+                id: closeIcon
                 isPlus: itemWrapper.hasPlusSign
                 width: 14*settingsModel.keywordSizeScale
                 height: 14*settingsModel.keywordSizeScale

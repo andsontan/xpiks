@@ -4,7 +4,6 @@
         <file>Components/CloseIcon.qml</file>
         <file>Components/CustomTab.qml</file>
         <file>Components/EditableTags.qml</file>
-        <file>Components/LargeRemoveIcon.qml</file>
         <file>Dialogs/ExportMetadata.qml</file>
         <file>Dialogs/ImportMetadata.qml</file>
         <file>Dialogs/SettingsWindow.qml</file>

@@ -24,30 +24,27 @@ import "../Constants"
 
 Item {
     id: item
+    property real thickness: 6
     signal itemClicked();
 
     Item {
         anchors.fill: parent
 
         Rectangle {
-            color: Colors.defaultLightGrayColor
-            width: parent.width/2
-            height: 8
-            border.width: 4
-            border.color: color
-            radius: 4
+            color: Colors.whiteColor
+            width: parent.width/3
+            height: item.thickness
+            radius: height/2
             transformOrigin: Item.Center
             rotation: 90
             anchors.centerIn: parent
         }
 
         Rectangle {
-            color: Colors.defaultLightGrayColor
-            width: parent.width/2
-            height: 8
-            radius: 4
-            border.width: 4
-            border.color: color
+            color: Colors.whiteColor
+            width: parent.width/3
+            height: item.thickness
+            radius: height/2
             anchors.centerIn: parent
         }
 

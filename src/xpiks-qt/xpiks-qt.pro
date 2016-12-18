@@ -308,7 +308,6 @@ HEADERS += \
 DISTFILES += \
     Components/CloseIcon.qml \
     Components/EditableTags.qml \
-    Components/LargeRemoveIcon.qml \
     StyledControls/SimpleProgressBar.qml \
     StyledControls/StyledButton.qml \
     StyledControls/StyledCheckbox.qml \

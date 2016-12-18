@@ -240,7 +240,7 @@ ColumnLayout {
                     StyledText {
                         text: i18.n + qsTr("Search...   x:empty  x:modified")
                         visible: !(filterClearTimer.running || filterText.activeFocus || (filterText.length > 0))
-                        color: Colors.inactiveControlColor
+                        color: Colors.inputHintForeground
                         anchors.left: parent.left
                         anchors.leftMargin: 7
                         anchors.verticalCenter: parent.verticalCenter

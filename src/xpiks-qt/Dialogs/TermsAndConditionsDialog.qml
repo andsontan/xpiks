@@ -111,7 +111,7 @@ Item {
                 anchors.topMargin: 10
                 anchors.bottom: footer.top
                 anchors.bottomMargin: 20
-                color: Colors.inputInactiveBackground
+                color: Colors.popupDarkInputBackground
 
                 StyledScrollView {
                     id: scrollView

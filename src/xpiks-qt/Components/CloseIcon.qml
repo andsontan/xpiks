@@ -28,6 +28,7 @@ Item {
     property bool isPlus: false
     property int thickness: 3
     property alias crossOpacity: wrapperRect.opacity
+    property color disabledColor: Colors.closeIconDisabledColor
     signal itemClicked();
 
     Item {
@@ -44,7 +45,7 @@ Item {
         }
 
         Rectangle {
-            color: enabled ? wrapperRect.pressColor : Colors.closeIconDisabledColor
+            color: enabled ? wrapperRect.pressColor : item.disabledColor
             width: isPlus ? parent.width - 2 : parent.width
             height: item.thickness
             radius: item.thickness/2
@@ -54,7 +55,7 @@ Item {
         }
 
         Rectangle {
-            color: enabled ? wrapperRect.pressColor : Colors.closeIconDisabledColor
+            color: enabled ? wrapperRect.pressColor : item.disabledColor
             width: isPlus ? parent.width - 2 : parent.width
             height: item.thickness
             radius: item.thickness/2

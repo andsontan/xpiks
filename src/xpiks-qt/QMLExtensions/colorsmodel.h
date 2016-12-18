@@ -57,6 +57,8 @@ namespace QMLExtensions {
         Q_PROPERTY(QColor inputInactiveForeground READ inputInactiveForeground WRITE setInputInactiveForeground NOTIFY inputInactiveForegroundChanged)
         Q_PROPERTY(QColor labelActiveForeground READ labelActiveForeground WRITE setLabelActiveForeground NOTIFY labelActiveForegroundChanged)
         Q_PROPERTY(QColor labelInactiveForeground READ labelInactiveForeground WRITE setLabelInactiveForeground NOTIFY labelInactiveForegroundChanged)
+        Q_PROPERTY(QColor inputHintForeground READ inputHintForeground WRITE setInputHintForeground NOTIFY inputHintForegroundChanged)
+        Q_PROPERTY(QColor popupDarkInputBackground READ popupDarkInputBackground WRITE setPopupDarkInputBackground NOTIFY popupDarkInputBackgroundChanged)
 
         Q_PROPERTY(QColor artworkBackground READ artworkBackground WRITE setArtworkBackground NOTIFY artworkBackgroundChanged)
         Q_PROPERTY(QColor artworkModifiedColor READ artworkModifiedColor WRITE setArtworkModifiedColor NOTIFY artworkModifiedColorChanged)
@@ -64,7 +66,6 @@ namespace QMLExtensions {
         Q_PROPERTY(QColor artworkActiveColor READ artworkActiveColor WRITE setArtworkActiveColor NOTIFY artworkActiveColorChanged)
 
         Q_PROPERTY(QColor listSeparatorColor READ listSeparatorColor WRITE setListSeparatorColor NOTIFY listSeparatorColorChanged)
-        Q_PROPERTY(QColor defaultLightGrayColor READ defaultLightGrayColor WRITE setDefaultLightGrayColor NOTIFY defaultLightGrayColorChanged)
 
         Q_PROPERTY(QColor buttonHoverBackground READ buttonHoverBackground WRITE setButtonHoverBackground NOTIFY buttonHoverBackgroundChanged)
         Q_PROPERTY(QColor buttonPressedBackground READ buttonPressedBackground WRITE setButtonPressedBackground NOTIFY buttonPressedBackgroundChanged)
@@ -114,7 +115,6 @@ namespace QMLExtensions {
         QColor m_artworkModifiedColor;
         QColor m_artworkSavedColor;
         QColor m_artworkActiveColor;
-        QColor m_defaultLightGrayColor;
         QColor m_buttonHoverBackground;
         QColor m_buttonPressedBackground;
         QColor m_buttonPressedForeground;
@@ -142,6 +142,8 @@ namespace QMLExtensions {
         QColor m_closeIconActiveColor;
         QColor m_closeIconInactiveColor;
         QColor m_closeIconDisabledColor;
+        QColor m_inputHintForeground;
+        QColor m_popupDarkInputBackground;
 
     public:
         explicit ColorsModel(QObject *parent = 0);
@@ -217,11 +219,6 @@ namespace QMLExtensions {
         QColor artworkActiveColor() const
         {
             return m_artworkActiveColor;
-        }
-
-        QColor defaultLightGrayColor() const
-        {
-            return m_defaultLightGrayColor;
         }
 
         QColor buttonHoverBackground() const
@@ -364,6 +361,16 @@ namespace QMLExtensions {
             return m_closeIconDisabledColor;
         }
 
+        QColor inputHintForeground() const
+        {
+            return m_inputHintForeground;
+        }
+
+        QColor popupDarkInputBackground() const
+        {
+            return m_popupDarkInputBackground;
+        }
+
     signals:
         void themeChanged();
         void defaultDarkColorChanged(QColor defaultDarkColor);
@@ -379,7 +386,6 @@ namespace QMLExtensions {
         void artworkModifiedColorChanged(QColor artworkModifiedColor);
         void artworkSavedColorChanged(QColor artworkSavedColor);
         void artworkActiveColorChanged(QColor artworkActiveColor);
-        void defaultLightGrayColorChanged(QColor defaultLightGrayColor);
         void buttonHoverBackgroundChanged(QColor buttonHoverBackground);
         void buttonPressedBackgroundChanged(QColor buttonPressedBackground);
         void buttonPressedForegroundChanged(QColor buttonPressedForeground);
@@ -404,14 +410,12 @@ namespace QMLExtensions {
         void buttonDefaultBackgroundChanged(QColor buttonDefaultBackground);
         void buttonDefaultForegroundChanged(QColor buttonDefaultForeground);
         void inactiveKeywordBackgroundChanged(QColor inactiveKeywordBackground);
-
         void inactiveKeywordForegroundChanged(QColor inactiveKeywordForeground);
-
         void closeIconActiveColorChanged(QColor closeIconActiveColor);
-
         void closeIconInactiveColorChanged(QColor closeIconInactiveColor);
-
         void closeIconDisabledColorChanged(QColor closeIconDisabledColor);
+        void inputHintForegroundChanged(QColor inputHintForeground);
+        void popupDarkInputBackgroundChanged(QColor popupInputBackground);
 
     public slots:
         void setDefaultDarkColor(QColor defaultDarkColor)
@@ -517,14 +521,6 @@ namespace QMLExtensions {
 
             m_artworkActiveColor = artworkActiveColor;
             emit artworkActiveColorChanged(artworkActiveColor);
-        }
-        void setDefaultLightGrayColor(QColor defaultLightGrayColor)
-        {
-            if (m_defaultLightGrayColor == defaultLightGrayColor)
-                return;
-
-            m_defaultLightGrayColor = defaultLightGrayColor;
-            emit defaultLightGrayColorChanged(defaultLightGrayColor);
         }
         void setButtonHoverBackground(QColor buttonHoverBackground)
         {
@@ -749,6 +745,22 @@ namespace QMLExtensions {
 
             m_closeIconDisabledColor = closeIconDisabledColor;
             emit closeIconDisabledColorChanged(closeIconDisabledColor);
+        }
+        void setInputHintForeground(QColor inputHintForeground)
+        {
+            if (m_inputHintForeground == inputHintForeground)
+                return;
+
+            m_inputHintForeground = inputHintForeground;
+            emit inputHintForegroundChanged(inputHintForeground);
+        }
+        void setPopupDarkInputBackground(QColor popupInputBackground)
+        {
+            if (m_popupDarkInputBackground == popupInputBackground)
+                return;
+
+            m_popupDarkInputBackground = popupInputBackground;
+            emit popupDarkInputBackgroundChanged(popupInputBackground);
         }
     };
 }

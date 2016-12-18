@@ -45,6 +45,7 @@
 #define INPUT_INACTIVE_FOREGROUND "inputInactiveForeground"
 #define LABEL_ACTIVE_FOREGROUND "labelActiveForeground"
 #define LABEL_INACTIVE_FOREGROUND "labelInactiveForeground"
+#define INPUT_HINT_FOREGROUND "inputHintForeground"
 
 #define ARTWORK_BACKGROUND "artworkBackground"
 #define ARTWORK_MODIFIED_COLOR "artworkModifiedColor"
@@ -58,7 +59,6 @@
 #define CLOSE_ICON_DISABLED_COLOR "closeIconDisabledColor"
 
 #define LIST_SEPARATOR_COLOR "listSeparatorColor"
-#define LIGHT_GRAY_COLOR "defaultLightGrayColor"
 
 #define BUTTON_DEFAULT_BACKGROUND "buttonDefaultBackground"
 #define BUTTON_DEFAULT_FOREGROUND "buttonDefaultForeground"
@@ -82,6 +82,7 @@
 #define STATUS_BAR_COLOR "statusBarColor"
 #define LEFT_SLIDER_COLOR "leftSliderColor"
 #define POPUP_BACKGROUND_COLOR "popupBackgroundColor"
+#define POPUP_DARK_INPUT_BACKGROUND "popupDarkInputBackground"
 
 typedef std::unordered_map<std::string, std::string> ColorsMap;
 
@@ -105,6 +106,7 @@ ColorsMap createBlackTheme() {
     BlackTheme[INPUT_INACTIVE_BACKGROUND] = BlackTheme[PANEL_COLOR];
     BlackTheme[INPUT_FOREGROUND] = BlackTheme[WHITE_COLOR];
     BlackTheme[INPUT_INACTIVE_FOREGROUND] = BlackTheme[LABEL_ACTIVE_FOREGROUND];
+    BlackTheme[INPUT_HINT_FOREGROUND] = BlackTheme[INACTIVE_CONTROL_COLOR];
 
     BlackTheme[ARTWORK_BACKGROUND] = "#181818";
     //BlackTheme[ARTWORK_IMAGE_BACKGROUND] = "#071215";
@@ -113,7 +115,7 @@ ColorsMap createBlackTheme() {
     BlackTheme[ARTWORK_ACTIVE_COLOR] = "#12b9bc";
 
     //BlackTheme[LIGHT_COLOR] = BlackTheme[INPUT_INACTIVE_FOREGROUND];
-    BlackTheme[LIGHT_GRAY_COLOR] = "#D0D0D0";
+    //BlackTheme[LIGHT_GRAY_COLOR] = "#D0D0D0";
     BlackTheme[LIST_SEPARATOR_COLOR] = BlackTheme[LABEL_ACTIVE_FOREGROUND];
 
     BlackTheme[BUTTON_DEFAULT_BACKGROUND] = BlackTheme[DEFAULT_CONTROL_COLOR];
@@ -138,6 +140,7 @@ ColorsMap createBlackTheme() {
     BlackTheme[STATUS_BAR_COLOR] = BlackTheme[DEFAULT_DARKER_COLOR];
     BlackTheme[LEFT_SLIDER_COLOR] = BlackTheme[ARTWORK_BACKGROUND];
     BlackTheme[POPUP_BACKGROUND_COLOR] = BlackTheme[INACTIVE_CONTROL_COLOR];
+    BlackTheme[POPUP_DARK_INPUT_BACKGROUND] = BlackTheme[INPUT_INACTIVE_BACKGROUND];
 
     BlackTheme[INACTIVE_KEYWORD_BACKGROUND] = BlackTheme[INACTIVE_CONTROL_COLOR];
     BlackTheme[INACTIVE_KEYWORD_FOREGROUND] = BlackTheme[LABEL_ACTIVE_FOREGROUND];
@@ -163,7 +166,7 @@ ColorsMap createSlateGrayTheme() {
     SlateGrayTheme[INPUT_INACTIVE_BACKGROUND] = SlateGrayTheme[DEFAULT_CONTROL_COLOR];
     SlateGrayTheme[INPUT_FOREGROUND] = "#c7ccd3";
     SlateGrayTheme[INPUT_INACTIVE_FOREGROUND] = SlateGrayTheme[INPUT_BACKGROUND];
-    SlateGrayTheme[LABEL_INACTIVE_FOREGROUND] = "#474b54";
+    SlateGrayTheme[LABEL_INACTIVE_FOREGROUND] = SlateGrayTheme[INPUT_INACTIVE_FOREGROUND]; //"#474b54";
     SlateGrayTheme[LABEL_ACTIVE_FOREGROUND] = SlateGrayTheme[INPUT_BACKGROUND];
 
     SlateGrayTheme[ARTWORK_BACKGROUND] = SlateGrayTheme[DEFAULT_DARK_COLOR];
@@ -173,7 +176,7 @@ ColorsMap createSlateGrayTheme() {
     SlateGrayTheme[ARTWORK_ACTIVE_COLOR] = "#2ec1c3";
 
     //SlateGrayTheme[LIGHT_COLOR] = "#E0E0E0";
-    SlateGrayTheme[LIGHT_GRAY_COLOR] = "#D0D0D0";
+    //SlateGrayTheme[LIGHT_GRAY_COLOR] = "#D0D0D0";
     SlateGrayTheme[LIST_SEPARATOR_COLOR] = "#E0E0E0";
 
     SlateGrayTheme[BUTTON_DEFAULT_BACKGROUND] = SlateGrayTheme[DEFAULT_CONTROL_COLOR];
@@ -201,14 +204,16 @@ ColorsMap createSlateGrayTheme() {
 
     SlateGrayTheme[STATUS_BAR_COLOR] = "#15181c";
     SlateGrayTheme[LEFT_SLIDER_COLOR] = SlateGrayTheme[ARTWORK_BACKGROUND];
-    SlateGrayTheme[POPUP_BACKGROUND_COLOR] = SlateGrayTheme[DEFAULT_CONTROL_COLOR];
+    SlateGrayTheme[POPUP_BACKGROUND_COLOR] = "#3e434d";
+    SlateGrayTheme[POPUP_DARK_INPUT_BACKGROUND] = SlateGrayTheme[DEFAULT_CONTROL_COLOR];
 
-    SlateGrayTheme[INACTIVE_KEYWORD_BACKGROUND] = SlateGrayTheme[LABEL_INACTIVE_FOREGROUND];
+    SlateGrayTheme[INACTIVE_KEYWORD_BACKGROUND] = "#474b54";
     SlateGrayTheme[INACTIVE_KEYWORD_FOREGROUND] = SlateGrayTheme[INPUT_FOREGROUND];
 
     SlateGrayTheme[CLOSE_ICON_ACTIVE_COLOR] = SlateGrayTheme[DEFAULT_CONTROL_COLOR];
     SlateGrayTheme[CLOSE_ICON_INACTIVE_COLOR] = SlateGrayTheme[INPUT_FOREGROUND];
     SlateGrayTheme[CLOSE_ICON_DISABLED_COLOR] = SlateGrayTheme[INPUT_INACTIVE_FOREGROUND];
+    SlateGrayTheme[INPUT_HINT_FOREGROUND] = SlateGrayTheme[SELECTED_ARTWORK_BACKGROUND];
 
     return SlateGrayTheme;
 }
@@ -297,13 +302,14 @@ namespace QMLExtensions {
         setInputInactiveForeground(getColor(INPUT_INACTIVE_FOREGROUND, theme, fallback));
         setLabelActiveForeground(getColor(LABEL_ACTIVE_FOREGROUND, theme, fallback));
         setLabelInactiveForeground(getColor(LABEL_INACTIVE_FOREGROUND, theme, fallback));
+        setInputHintForeground(getColor(INPUT_HINT_FOREGROUND, theme, fallback));
+        setPopupDarkInputBackground(getColor(POPUP_DARK_INPUT_BACKGROUND, theme, fallback));
 
         setArtworkBackground(getColor(ARTWORK_BACKGROUND, theme, fallback));
         setArtworkModifiedColor(getColor(ARTWORK_MODIFIED_COLOR, theme, fallback));
         setArtworkSavedColor(getColor(ARTWORK_SAVED_COLOR, theme, fallback));
         setArtworkActiveColor(getColor(ARTWORK_ACTIVE_COLOR, theme, fallback));
 
-        setDefaultLightGrayColor(getColor(LIGHT_GRAY_COLOR, theme, fallback));
         setListSeparatorColor(getColor(LIST_SEPARATOR_COLOR, theme, fallback));
 
         setButtonDefaultBackground(getColor(BUTTON_DEFAULT_BACKGROUND, theme, fallback));

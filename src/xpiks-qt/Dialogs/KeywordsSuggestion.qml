@@ -244,7 +244,7 @@ Item {
                                     }
 
                                     LargeAddIcon {
-                                        opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.6 : 0)
+                                        opacity: isselected ? (mouseArea.containsMouse ? 0.85 : 1) : (mouseArea.containsMouse ? 0.7 : 0)
                                         width: parent.width
                                         height: parent.height
                                         rotation: isselected ? 45 : 0
@@ -297,8 +297,8 @@ Item {
                     }
 
                     StyledBusyIndicator {
-                        width: parent.height
-                        height: parent.height
+                        width: parent.width/2
+                        height: parent.width/2
                         anchors.centerIn: parent
                         running: keywordsSuggestor.isInProgress
                     }

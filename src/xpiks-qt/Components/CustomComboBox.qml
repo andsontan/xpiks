@@ -148,7 +148,7 @@ Item {
 
             delegate: Rectangle {
                 id: currentDelegate
-                color: itemMA.containsMouse ? highlightedItemColor : Colors.selectedArtworkBackground
+                color: itemMA.containsMouse ? highlightedItemColor : dropDown.color
                 property var itemText: modelData
                 property bool isCurrentItem: index == comboBox.selectedIndex
                 property bool isLastItem: index === (dropDownItems.count - 1)

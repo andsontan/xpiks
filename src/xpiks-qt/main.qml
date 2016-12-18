@@ -470,14 +470,6 @@ ApplicationWindow {
             }
 
             MenuItem {
-                text: i18.n + qsTr("&Cleanup local library in background")
-                onTriggered: {
-                    console.info("Cleanup local library triggered")
-                    helpersWrapper.cleanupLocalLibrary()
-                }
-            }
-
-            MenuItem {
                 text: i18.n + qsTr("&Manage upload hosts")
                 onTriggered: {
                     console.info("Manage upload hosts triggered")
@@ -586,18 +578,28 @@ ApplicationWindow {
                 }
             }
 
-            MenuSeparator { }
+            Menu {
+                title: i18.n + qsTr("&Advanced")
 
-            MenuItem {
-                text: i18.n + qsTr("Show logs")
-                onTriggered: {
-                    var logsModel = helpersWrapper.getLogsModel()
-                    var allText = logsModel.getAllLogsText()
-                    Common.launchDialog("Dialogs/LogsDialog.qml",
-                                        applicationWindow,
-                                        {
-                                            logText: allText
-                                        });
+                MenuItem {
+                    text: i18.n + qsTr("&Cleanup local library in background")
+                    onTriggered: {
+                        console.info("Cleanup local library triggered")
+                        helpersWrapper.cleanupLocalLibrary()
+                    }
+                }
+
+                MenuItem {
+                    text: i18.n + qsTr("Show logs")
+                    onTriggered: {
+                        var logsModel = helpersWrapper.getLogsModel()
+                        var allText = logsModel.getAllLogsText()
+                        Common.launchDialog("Dialogs/LogsDialog.qml",
+                                            applicationWindow,
+                                            {
+                                                logText: allText
+                                            });
+                    }
                 }
             }
         }
@@ -1128,7 +1130,7 @@ ApplicationWindow {
                                                 Layout.fillWidth: true
                                                 anchors.verticalCenter: parent.verticalCenter
                                                 height: 31
-                                                color: Colors.labelActiveForeground
+                                                color: Colors.itemsSourceForeground
                                                 text: path + " (" + usedimagescount + ")"
                                                 elide: Text.ElideMiddle
                                             }

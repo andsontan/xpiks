@@ -679,6 +679,7 @@ Rectangle {
                                 hasSpellCheckError: !iscorrect
                                 delegateIndex: index
                                 itemHeight: flv.keywordHeight
+                                closeIconDisabledColor: Colors.closeIconInactiveColor
                                 onRemoveClicked: keywordsWrapper.removeKeyword(delegateIndex)
                                 onActionDoubleClicked: {
                                     var callbackObject = {
