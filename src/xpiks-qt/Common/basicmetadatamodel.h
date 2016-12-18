@@ -39,7 +39,8 @@ namespace SpellCheck {
 namespace Common {
     class BasicMetadataModel :
             public BasicKeywordsModel,
-            public SpellCheck::ISpellCheckable
+            public SpellCheck::ISpellCheckable,
+            public Common::IMetadataOperator
     {
         Q_OBJECT
     public:
@@ -81,8 +82,20 @@ namespace Common {
         virtual bool hasSpellErrors();
 
     public:
-        bool setDescription(const QString &value);
-        bool setTitle(const QString &value);
+        // IMetadataOperator
+        // c++ is still not capable of picking abstract implementations from Base class
+        virtual bool editKeyword(int index, const QString &replacement) { return BasicKeywordsModel::editKeyword(index, replacement); }
+        virtual bool removeKeywordAt(int index, QString &removedKeyword) { return BasicKeywordsModel::removeKeywordAt(index, removedKeyword); }
+        virtual bool removeLastKeyword(QString &removedKeyword) { return BasicKeywordsModel::removeLastKeyword(removedKeyword); }
+        virtual bool appendKeyword(const QString &keyword) { return BasicKeywordsModel::appendKeyword(keyword); }
+        virtual int appendKeywords(const QStringList &keywordsList) { return BasicKeywordsModel::appendKeywords(keywordsList); }
+        virtual bool clearKeywords() { return BasicKeywordsModel::clearKeywords(); }
+        virtual QString getKeywordsString() { return BasicKeywordsModel::getKeywordsString(); }
+        virtual void setKeywords(const QStringList &keywords) { return BasicKeywordsModel::setKeywords(keywords); }
+
+    public:
+        virtual bool setDescription(const QString &value);
+        virtual bool setTitle(const QString &value);
         virtual bool isEmpty();
         bool isTitleEmpty();
         bool isDescriptionEmpty();

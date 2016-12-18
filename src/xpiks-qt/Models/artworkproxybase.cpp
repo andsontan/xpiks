@@ -51,13 +51,13 @@ namespace Models {
     }
 
     bool ArtworkProxyBase::doSetDescription(const QString &description) {
-        auto *basicModel = getBasicMetadataModel();
-        return basicModel->setDescription(description);
+        auto *metadataOperator = getMetadataOperator();
+        return metadataOperator->setDescription(description);
     }
 
     bool ArtworkProxyBase::doSetTitle(const QString &title) {
-        auto *basicModel = getBasicMetadataModel();
-        return basicModel->setTitle(title);
+        auto *metadataOperator = getMetadataOperator();
+        return metadataOperator->setTitle(title);
     }
 
     bool ArtworkProxyBase::doEditKeyword(int index, const QString &replacement) {

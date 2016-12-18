@@ -37,6 +37,8 @@ namespace Common {
         virtual bool clearKeywords() = 0;
         virtual QString getKeywordsString() = 0;
         virtual void setKeywords(const QStringList &keywords) = 0;
+        virtual bool setDescription(const QString &value) = 0;
+        virtual bool setTitle(const QString &value) = 0;
     };
 }
 

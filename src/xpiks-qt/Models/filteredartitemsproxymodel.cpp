@@ -73,6 +73,14 @@ namespace Models {
         return row;
     }
 
+    int FilteredArtItemsProxyModel::getDerivedIndex(int originalIndex) {
+        ArtItemsModel *artItemsModel = getArtItemsModel();
+        QModelIndex index = mapFromSource(artItemsModel->index(originalIndex, 0));
+        int row = index.row();
+
+        return row;
+    }
+
     void FilteredArtItemsProxyModel::selectDirectory(int directoryIndex) {
         LOG_DEBUG << "directory index:" << directoryIndex;
 
