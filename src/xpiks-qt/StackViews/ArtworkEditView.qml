@@ -101,7 +101,7 @@ Rectangle {
         property string word
 
         MenuItem {
-            text: i18.n + qsTr("Add to dictionary")
+            text: qsTr("Add to dictionary")
             onTriggered: spellCheckService.addWordToUserDictionary(addWordContextMenu.word);
         }
     }

@@ -128,7 +128,12 @@ namespace Suggestion {
                             }
                         }
 
-                        suggestionArtworks.emplace_back(new SuggestionArtwork(url, keywordsList, false));
+                        QString externalUrl;
+                        if (imageResult.contains("id")) {
+                            externalUrl = QString("https://www.shutterstock.com/pic-%1.html").arg(imageResult["id"].toString());
+                        }
+
+                        suggestionArtworks.emplace_back(new SuggestionArtwork(url, externalUrl, keywordsList, false));
                     }
                 }
             }

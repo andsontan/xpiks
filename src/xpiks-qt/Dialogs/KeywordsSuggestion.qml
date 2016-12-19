@@ -72,6 +72,18 @@ Item {
         }
     }
 
+    Menu {
+        id: contextMenu
+        property string externalUrl
+
+        MenuItem {
+            text: qsTr("Open in browser")
+            onTriggered: {
+                Qt.openUrlExternally(contextMenu.externalUrl)
+            }
+        }
+    }
+
     FocusScope {
         anchors.fill: parent
 
@@ -227,8 +239,9 @@ Item {
                                 model: keywordsSuggestor
 
                                 delegate: Item {
-                                    property int delegateIndex: index
                                     id: imageWrapper
+                                    property int delegateIndex: index
+                                    property string realUrl: externalurl
                                     height: 140
                                     width: height
 
@@ -259,10 +272,18 @@ Item {
                                         id: mouseArea
                                         anchors.fill: parent
                                         hoverEnabled: true
+                                        acceptedButtons: Qt.LeftButton | Qt.RightButton
                                         onClicked: {
-                                            keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
-                                            searchTypeCombobox.closePopup()
-                                            sourceComboBox.closePopup()
+                                            if (mouse.button == Qt.RightButton) {
+                                                if (imageWrapper.realUrl != "") {
+                                                    contextMenu.externalUrl = imageWrapper.realUrl
+                                                    contextMenu.popup()
+                                                }
+                                            } else {
+                                                keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
+                                                searchTypeCombobox.closePopup()
+                                                sourceComboBox.closePopup()
+                                            }
                                         }
                                     }
                                 }

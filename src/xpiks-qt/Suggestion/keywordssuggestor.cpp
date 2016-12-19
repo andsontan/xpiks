@@ -229,6 +229,8 @@ namespace Suggestion {
             return suggestionArtwork->getUrl();
         case IsSelectedRole:
             return suggestionArtwork->getIsSelected();
+        case ExternalUrlRole:
+            return suggestionArtwork->getExternalUrl();
         default:
             return QVariant();
         }
@@ -238,6 +240,7 @@ namespace Suggestion {
         QHash<int, QByteArray> roles;
         roles[UrlRole] = "url";
         roles[IsSelectedRole] = "isselected";
+        roles[ExternalUrlRole] = "externalurl";
         return roles;
     }
 

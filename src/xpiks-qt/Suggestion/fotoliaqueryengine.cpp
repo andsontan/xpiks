@@ -114,9 +114,13 @@ namespace Suggestion {
             QJsonValue keywords = object["keywords"];
             if (!keywords.isString()) { continue; }
 
+            QJsonValue id = object["id"];
+            if (!id.isDouble()) { continue; }
+            QString externalUrl = QString("https://fotolia.com/id/%1").arg((int)id.toDouble());
+
             QStringList keywordsList = keywords.toString().split(',');
 
-            suggestionArtworks.emplace_back(new SuggestionArtwork(url.toString(), keywordsList, false));
+            suggestionArtworks.emplace_back(new SuggestionArtwork(url.toString(), externalUrl, keywordsList, false));
         }
     }
 
@@ -132,6 +136,7 @@ namespace Suggestion {
         urlQuery.addQueryItem("result_columns[1]", "title");
         urlQuery.addQueryItem("result_columns[2]", "keywords");
         urlQuery.addQueryItem("result_columns[3]", "thumbnail_url");
+        urlQuery.addQueryItem("result_columns[4]", "id");
         urlQuery.addQueryItem(resultsTypeToString(resultsType), "1");
 
         QUrl url;

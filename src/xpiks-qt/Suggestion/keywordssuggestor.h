@@ -120,7 +120,8 @@ namespace Suggestion {
     public:
         enum KeywordsSuggestor_Roles {
             UrlRole = Qt::UserRole + 1,
-            IsSelectedRole
+            IsSelectedRole,
+            ExternalUrlRole
         };
 
         virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
