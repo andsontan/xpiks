@@ -33,6 +33,13 @@ namespace Models {
 }
 
 namespace Suggestion {
+    enum struct QueryResultsType {
+        AllImages,
+        Photos,
+        Vectors,
+        Illustrations
+    };
+
     class SuggestionQueryEngineBase: public QObject {
         Q_OBJECT
     public:
@@ -45,7 +52,7 @@ namespace Suggestion {
 
         virtual ~SuggestionQueryEngineBase() { }
 
-        virtual void submitQuery(const QStringList &queryKeywords) = 0;
+        virtual void submitQuery(const QStringList &queryKeywords, QueryResultsType resultsType) = 0;
         virtual QString getName() const = 0;
 
     public:

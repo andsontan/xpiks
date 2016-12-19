@@ -39,12 +39,12 @@ namespace Suggestion {
         m_FotoliaAPIKey = "ad2954b4ee1e9686fbf8446f85e0c26edfae6003f51f49ca5559aed915879e733bbaf2003b3575bc0b96e682a30a69907c612865ec8f4ec2522131108a4a9f24467f1f83befc3d80201e5f906c761341";
     }
 
-    void FotoliaQueryEngine::submitQuery(const QStringList &queryKeywords) {
+    void FotoliaQueryEngine::submitQuery(const QStringList &queryKeywords, QueryResultsType resultsType) {
         LOG_INFO << queryKeywords;
 
         QString decodedAPIKey = Encryption::decodeText(m_FotoliaAPIKey, "MasterPassword");
 
-        QUrl url = buildQuery(decodedAPIKey, queryKeywords);
+        QUrl url = buildQuery(decodedAPIKey, queryKeywords, resultsType);
 
         auto *settings = getSettingsModel();
         auto *proxySettings = settings->getProxySettings();
@@ -120,7 +120,7 @@ namespace Suggestion {
         }
     }
 
-    QUrl FotoliaQueryEngine::buildQuery(const QString &apiKey, const QStringList &queryKeywords) const {
+    QUrl FotoliaQueryEngine::buildQuery(const QString &apiKey, const QStringList &queryKeywords, QueryResultsType resultsType) const {
         QUrlQuery urlQuery;
 
         urlQuery.addQueryItem("search_parameters[language_id]", "2");
@@ -132,6 +132,7 @@ namespace Suggestion {
         urlQuery.addQueryItem("result_columns[1]", "title");
         urlQuery.addQueryItem("result_columns[2]", "keywords");
         urlQuery.addQueryItem("result_columns[3]", "thumbnail_url");
+        urlQuery.addQueryItem(resultsTypeToString(resultsType), "1");
 
         QUrl url;
         url.setUrl(QLatin1String("http://api.fotolia.com/Rest/1/search/getSearchResults"));
@@ -139,5 +140,15 @@ namespace Suggestion {
         //url.setPassword("");
         url.setQuery(urlQuery);
         return url;
+    }
+
+    QString FotoliaQueryEngine::resultsTypeToString(QueryResultsType resultsType) const {
+        switch (resultsType) {
+        case QueryResultsType::AllImages: return QLatin1String("search_parameters[filters][content_type:all]");
+        case QueryResultsType::Photos: return QLatin1String("search_parameters[filters][content_type:photo]");
+        case QueryResultsType::Vectors: return QLatin1String("search_parameters[filters][content_type:vector]");
+        case QueryResultsType::Illustrations: return QLatin1String("search_parameters[filters][content_type:illustration]");
+        default: return QString();
+        }
     }
 }

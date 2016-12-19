@@ -41,7 +41,7 @@ namespace Suggestion {
         ShutterstockQueryEngine(int engineID, Models::SettingsModel *settingsModel);
 
     public:
-        virtual void submitQuery(const QStringList &queryKeywords);
+        virtual void submitQuery(const QStringList &queryKeywords, QueryResultsType resultsType);
         virtual QString getName() const { return tr("Shutterstock"); }
 
     private slots:
@@ -50,7 +50,8 @@ namespace Suggestion {
     private:
         void parseResponse(const QJsonArray &jsonArray,
                            std::vector<std::shared_ptr<SuggestionArtwork> > &suggestionArtworks);
-        QUrl buildQuery(const QStringList &queryKeywords) const;
+        QUrl buildQuery(const QStringList &queryKeywords, QueryResultsType resultsType) const;
+        QString resultsTypeToString(QueryResultsType resultsType) const;
 
     private:
         QString m_ClientId;

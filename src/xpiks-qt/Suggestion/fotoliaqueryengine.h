@@ -37,7 +37,7 @@ namespace Suggestion {
         FotoliaQueryEngine(int engineID, Models::SettingsModel *settingsModel);
 
     public:
-        virtual void submitQuery(const QStringList &queryKeywords);
+        virtual void submitQuery(const QStringList &queryKeywords, QueryResultsType resultsType);
         virtual QString getName() const { return tr("Fotolia"); }
 
     private slots:
@@ -46,7 +46,8 @@ namespace Suggestion {
     private:
         void parseResponse(const QJsonObject &jsonObject, int count,
                            std::vector<std::shared_ptr<SuggestionArtwork> > &suggestionArtworks);
-        QUrl buildQuery(const QString &apiKey, const QStringList &queryKeywords) const;
+        QUrl buildQuery(const QString &apiKey, const QStringList &queryKeywords, QueryResultsType resultsType) const;
+        QString resultsTypeToString(QueryResultsType resultsType) const;
 
     private:
         QString m_FotoliaAPIKey;

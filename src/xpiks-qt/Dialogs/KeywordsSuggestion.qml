@@ -158,14 +158,17 @@ Item {
                             anchors.leftMargin: 5
                             anchors.rightMargin: 5
                             anchors.verticalCenter: parent.verticalCenter
-                            onAccepted: keywordsSuggestor.searchArtworks(queryText.text)
+                            onAccepted: keywordsSuggestor.searchArtworks(queryText.text, searchTypeCombobox.selectedIndex)
                         }
                     }
 
                     CustomComboBox {
-                        anchors.left: searchRect.right
                         id: searchTypeCombobox
-                        model: ["All Images", "Images", "Vectors"]
+                        anchors.left: searchRect.right
+                        model: [i18.n + qsTr("All Images"),
+                            i18.n + qsTr("Photos"),
+                            i18.n + qsTr("Vectors"),
+                            i18.n + qsTr("Illustrations")]
                         width: 150
                         height: 24
                         itemHeight: 28
@@ -180,7 +183,7 @@ Item {
                         width: 100
                         activeFocusOnPress: true
                         enabled: !keywordsSuggestor.isInProgress
-                        onClicked: keywordsSuggestor.searchArtworks(queryText.text)
+                        onClicked: keywordsSuggestor.searchArtworks(queryText.text, searchTypeCombobox.selectedIndex)
                     }
                 }
 

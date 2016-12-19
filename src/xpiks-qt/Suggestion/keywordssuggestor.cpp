@@ -188,8 +188,8 @@ namespace Suggestion {
         updateSuggestedKeywords();
     }
 
-    void KeywordsSuggestor::searchArtworks(const QString &searchTerm) {
-        LOG_DEBUG << searchTerm;
+    void KeywordsSuggestor::searchArtworks(const QString &searchTerm, int resultsType) {
+        LOG_INFO << "[" << searchTerm << "], search type:" << resultsType;
 
         if (!m_IsInProgress && !searchTerm.trimmed().isEmpty()) {
             setInProgress();
@@ -197,7 +197,7 @@ namespace Suggestion {
             QStringList searchTerms = searchTerm.split(QChar::Space, QString::SkipEmptyParts);
 
             SuggestionQueryEngineBase *engine = m_QueryEngines.at(m_SelectedSourceIndex);
-            engine->submitQuery(searchTerms);
+            engine->submitQuery(searchTerms, (QueryResultsType)resultsType);
 
             if (dynamic_cast<LocalLibraryQueryEngine*>(engine) == NULL) {
                 m_CommandManager->reportUserAction(Conectivity::UserAction::SuggestionRemote);

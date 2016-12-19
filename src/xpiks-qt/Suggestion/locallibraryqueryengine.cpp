@@ -33,7 +33,7 @@ namespace Suggestion {
     {
     }
 
-    void LocalLibraryQueryEngine::submitQuery(const QStringList &queryKeywords) {
+    void LocalLibraryQueryEngine::submitQuery(const QStringList &queryKeywords, QueryResultsType resultsType) {
         LOG_DEBUG << queryKeywords;
         LibraryQueryWorker *worker = new LibraryQueryWorker(m_LocalLibrary, queryKeywords, MAX_LOCAL_RESULTS);
         QThread *thread = new QThread();

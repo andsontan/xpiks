@@ -43,9 +43,9 @@ namespace Suggestion {
         m_ClientSecret = "5092d9a967c2f19b57aac29bc09ac3b9e6ae5baec1a371331b73ff24f1625d95c4f3fef90bdacfbe9b0b3803b48c269192bc55f14bb9c2b5a16d650cd641b746eb384fcf9dbd53a96f1f81215921b04409f3635ecf846ffdf01ee04ba76624c9";
     }
 
-    void ShutterstockQueryEngine::submitQuery(const QStringList &queryKeywords) {
+    void ShutterstockQueryEngine::submitQuery(const QStringList &queryKeywords, QueryResultsType resultsType) {
         LOG_INFO << queryKeywords;
-        QUrl url = buildQuery(queryKeywords);
+        QUrl url = buildQuery(queryKeywords, resultsType);
 
         QString decodedClientId = Encryption::decodeText(m_ClientId, "MasterPassword");
         QString decodedClientSecret = Encryption::decodeText(m_ClientSecret, "MasterPassword");
@@ -135,7 +135,7 @@ namespace Suggestion {
         }
     }
 
-    QUrl ShutterstockQueryEngine::buildQuery(const QStringList &queryKeywords) const {
+    QUrl ShutterstockQueryEngine::buildQuery(const QStringList &queryKeywords, QueryResultsType resultsType) const {
         QUrlQuery urlQuery;
 
         urlQuery.addQueryItem("language", "en");
@@ -144,10 +144,23 @@ namespace Suggestion {
         urlQuery.addQueryItem("sort", "popular");
         urlQuery.addQueryItem("query", queryKeywords.join(' '));
 
+        if (resultsType != QueryResultsType::AllImages) {
+            urlQuery.addQueryItem("image_type", resultsTypeToString(resultsType));
+        }
+
         QUrl url;
         url.setUrl(QLatin1String("https://api.shutterstock.com/v2/images/search"));
         url.setQuery(urlQuery);
         return url;
+    }
+
+    QString ShutterstockQueryEngine::resultsTypeToString(QueryResultsType resultsType) const {
+        switch (resultsType) {
+        case QueryResultsType::Photos: return QLatin1String("photo");
+        case QueryResultsType::Vectors: return QLatin1String("vector");
+        case QueryResultsType::Illustrations: return QLatin1String("illustration");
+        default: return QString();
+        }
     }
 }
 

@@ -39,9 +39,9 @@ namespace Suggestion {
         m_GettyImagesAPIKey = QLatin1String("17a45639c3bf88f7a6d549759af398090c3f420e53a61a06d7a2a2b153c89fc9470b2365dae8c6d92203287dc6f69f55b230835a8fb2a70b24e806771b750690");
     }
 
-    void GettyQueryEngine::submitQuery(const QStringList &queryKeywords) {
+    void GettyQueryEngine::submitQuery(const QStringList &queryKeywords, QueryResultsType resultsType) {
         LOG_INFO << queryKeywords;
-        QUrl url = buildQuery(queryKeywords);
+        QUrl url = buildQuery(queryKeywords, resultsType);
 
         QString decodedAPIKey = Encryption::decodeText(m_GettyImagesAPIKey, "MasterPassword");
 
@@ -174,7 +174,7 @@ namespace Suggestion {
         }
     }
 
-    QUrl GettyQueryEngine::buildQuery(const QStringList &queryKeywords) const {
+    QUrl GettyQueryEngine::buildQuery(const QStringList &queryKeywords, QueryResultsType resultsType) const {
         QUrlQuery urlQuery;
 
         urlQuery.addQueryItem("fields", "keywords,preview,title");
@@ -183,9 +183,22 @@ namespace Suggestion {
         urlQuery.addQueryItem("page_size", "100");
         urlQuery.addQueryItem("sort_order", "most_popular");
 
+        if (resultsType != QueryResultsType::AllImages) {
+            urlQuery.addQueryItem("graphical_styles", resultsTypeToString(resultsType));
+        }
+
         QUrl url;
         url.setUrl(QLatin1String("https://api.gettyimages.com:443/v3/search/images"));
         url.setQuery(urlQuery);
         return url;
+    }
+
+    QString GettyQueryEngine::resultsTypeToString(QueryResultsType resultsType) const {
+        switch (resultsType) {
+        case QueryResultsType::Photos: return QLatin1String("photography");
+        case QueryResultsType::Vectors: return QLatin1String("illustration");
+        case QueryResultsType::Illustrations: return QLatin1String("fine_art");
+        default: return QString();
+        }
     }
 }
