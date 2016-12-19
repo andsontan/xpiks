@@ -1280,7 +1280,7 @@ ApplicationWindow {
             StyledText {
                 visible: applicationWindow.showUpdateLink
                 text: "|"
-                color: Colors.labelInactiveForeground
+                isActive: false
                 verticalAlignment: Text.AlignVCenter
             }
 
@@ -1334,7 +1334,7 @@ ApplicationWindow {
 
             StyledText {
                 text: "|"
-                color: Colors.labelInactiveForeground
+                isActive: false
                 verticalAlignment: Text.AlignVCenter
             }
 
@@ -1362,7 +1362,7 @@ ApplicationWindow {
 
             StyledText {
                 text: "|"
-                color: Colors.labelInactiveForeground
+                isActive: false
                 verticalAlignment: Text.AlignVCenter
             }
 

@@ -818,7 +818,6 @@ Rectangle {
 
                             StyledText {
                                 text: "|"
-                                color: Colors.inputBackgroundColor
                                 verticalAlignment: Text.AlignVCenter
                             }
 
@@ -846,7 +845,6 @@ Rectangle {
 
                             StyledText {
                                 text: "|"
-                                color: Colors.inputBackgroundColor
                                 verticalAlignment: Text.AlignVCenter
                             }
 
@@ -864,7 +862,6 @@ Rectangle {
 
                             StyledText {
                                 text: "|"
-                                color: Colors.inputBackgroundColor
                                 verticalAlignment: Text.AlignVCenter
                             }
 

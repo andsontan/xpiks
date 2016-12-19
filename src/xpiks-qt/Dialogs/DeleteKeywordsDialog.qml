@@ -451,7 +451,6 @@ CloseRequested")
 
                                 StyledText {
                                     text: "|"
-                                    color: Colors.inputBackgroundColor
                                     verticalAlignment: Text.AlignVCenter
                                 }
 
@@ -463,7 +462,6 @@ CloseRequested")
 
                                 StyledText {
                                     text: "|"
-                                    color: Colors.inputBackgroundColor
                                     verticalAlignment: Text.AlignVCenter
                                 }
 
@@ -475,7 +473,6 @@ CloseRequested")
 
                                 StyledText {
                                     text: "|"
-                                    color: Colors.inputBackgroundColor
                                     verticalAlignment: Text.AlignVCenter
                                 }
 
