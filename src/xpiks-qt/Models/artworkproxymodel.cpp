@@ -142,12 +142,7 @@ namespace Models {
         Q_ASSERT(metadata != nullptr);
 
         updateCurrentArtwork();
-
-        if (m_ArtworkMetadata != nullptr) {
-            auto *basicModel = m_ArtworkMetadata->getBasicModel();
-            this->disconnect(basicModel);
-            m_ArtworkMetadata->release();
-        }
+        disconnectCurrentArtwork();
 
         metadata->acquire();
         m_ArtworkMetadata = metadata;
@@ -246,11 +241,17 @@ namespace Models {
     }
 
     void ArtworkProxyModel::doResetModel() {
+        disconnectCurrentArtwork();
+        m_ArtworkOriginalIndex = -1;
+    }
+
+    void ArtworkProxyModel::disconnectCurrentArtwork() {
         if (m_ArtworkMetadata != nullptr) {
+            auto *basicModel = m_ArtworkMetadata->getBasicModel();
+            this->disconnect(basicModel);
             m_ArtworkMetadata->release();
         }
 
         m_ArtworkMetadata = nullptr;
-        m_ArtworkOriginalIndex = -1;
     }
 }

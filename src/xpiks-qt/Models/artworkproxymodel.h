@@ -128,6 +128,7 @@ namespace Models {
     private:
         void updateCurrentArtwork();
         void doResetModel();
+        void disconnectCurrentArtwork();
 
     private:
         Models::ArtworkMetadata *m_ArtworkMetadata;
