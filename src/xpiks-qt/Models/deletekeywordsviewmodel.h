@@ -96,7 +96,8 @@ namespace Models {
         void fillKeywordsHash(QHash<QString, int> &keywordsHash);
 
     private:
-        Common::Hold m_HoldPlaceholder;
+        Common::Hold m_HoldForDeleters;
+        Common::Hold m_HoldForCommon;
         Common::BasicKeywordsModel m_KeywordsToDeleteModel;
         Common::BasicKeywordsModel m_CommonKeywordsModel;
         bool m_CaseSensitive;

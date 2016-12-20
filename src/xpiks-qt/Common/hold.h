@@ -31,11 +31,17 @@ namespace Common {
         {}
 
     public:
-        void acquire() { m_RefCount.fetchAndAddOrdered(1); }
-        bool release() { return m_RefCount.fetchAndSubOrdered(1) == 1; }
+        virtual void acquire() { m_RefCount.fetchAndAddOrdered(1); }
+        virtual bool release() { return m_RefCount.fetchAndSubOrdered(1) == 1; }
 
     private:
         QAtomicInt m_RefCount;
+    };
+
+    class FakeHold: public Hold {
+    public:
+        virtual void acquire() { Q_ASSERT(false); }
+        virtual bool release() { Q_ASSERT(false); return false; }
     };
 }
 

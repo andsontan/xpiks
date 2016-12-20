@@ -30,8 +30,8 @@
 namespace Models {
     DeleteKeywordsViewModel::DeleteKeywordsViewModel(QObject *parent):
         Models::ArtworksViewModel(parent),
-        m_KeywordsToDeleteModel(m_HoldPlaceholder),
-        m_CommonKeywordsModel(m_HoldPlaceholder),
+        m_KeywordsToDeleteModel(m_HoldForDeleters),
+        m_CommonKeywordsModel(m_HoldForCommon),
         m_CaseSensitive(false)
     {
     }

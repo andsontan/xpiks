@@ -146,7 +146,7 @@ namespace Suggestion {
         LocalLibrary *m_LocalLibrary;
         QStringList m_QueryEnginesNames;
         QString m_LastErrorString;
-        Common::Hold m_HoldPlaceholder;
+        Common::FakeHold m_HoldPlaceholder;
         Common::BasicKeywordsModel m_SuggestedKeywords;
         Common::BasicKeywordsModel m_AllOtherKeywords;
         int m_SelectedArtworksCount;
