@@ -120,7 +120,7 @@ namespace Suggestion {
 
             QStringList keywordsList = keywords.toString().split(',');
 
-            suggestionArtworks.emplace_back(new SuggestionArtwork(url.toString(), externalUrl, keywordsList, false));
+            suggestionArtworks.emplace_back(new SuggestionArtwork(url.toString(), externalUrl, keywordsList));
         }
     }
 

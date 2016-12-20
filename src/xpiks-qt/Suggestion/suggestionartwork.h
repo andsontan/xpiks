@@ -31,9 +31,9 @@ namespace Suggestion {
     class SuggestionArtwork
     {
     public:
-        SuggestionArtwork(const QString &url, const QString &externalUrl, const QStringList &keywords, bool isLocal = true) :
+        SuggestionArtwork(const QString &url, const QStringList &keywords, bool isLocal = true) :
             m_KeywordsSet(keywords.toSet()),
-            m_ExternalUrl(externalUrl),
+            m_ExternalUrl(""),
             m_IsSelected(false)
         {
             if (isLocal) {
@@ -41,6 +41,14 @@ namespace Suggestion {
             } else {
                 m_Url = url;
             }
+        }
+
+        SuggestionArtwork(const QString &url, const QString &externalUrl, const QStringList &keywords) :
+            m_KeywordsSet(keywords.toSet()),
+            m_Url(url),
+            m_ExternalUrl(externalUrl),
+            m_IsSelected(false)
+        {
         }
 
     public:

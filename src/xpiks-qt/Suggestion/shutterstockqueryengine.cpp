@@ -133,7 +133,7 @@ namespace Suggestion {
                             externalUrl = QString("https://www.shutterstock.com/pic-%1.html").arg(imageResult["id"].toString());
                         }
 
-                        suggestionArtworks.emplace_back(new SuggestionArtwork(url, externalUrl, keywordsList, false));
+                        suggestionArtworks.emplace_back(new SuggestionArtwork(url, externalUrl, keywordsList));
                     }
                 }
             }

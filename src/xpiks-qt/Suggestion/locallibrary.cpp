@@ -112,7 +112,7 @@ namespace Suggestion {
 
             if (!anyError) {
                 if (QFile(i.key()).exists()) {
-                    searchResults.emplace_back(new SuggestionArtwork(i.key(), "", keywords));
+                    searchResults.emplace_back(new SuggestionArtwork(i.key(), keywords));
 
                     if (searchResults.size() >= maxResults) {
                         break;

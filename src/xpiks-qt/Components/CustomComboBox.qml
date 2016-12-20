@@ -97,12 +97,12 @@ Item {
             anchors.top: parent.top
             anchors.bottom: parent.bottom
             width: 20
-            color: Colors.artworkBackground
+            color: enabled ? Colors.artworkBackground : Colors.panelSelectedColor
 
             TriangleElement {
                 anchors.centerIn: parent
                 anchors.verticalCenterOffset: isFlipped ? height*0.3 : 0
-                color: (headerMA.containsMouse || comboBox.state === "dropDown") ? Colors.labelActiveForeground : Colors.labelInactiveForeground
+                color: (enabled && (headerMA.containsMouse || comboBox.state === "dropDown")) ? Colors.labelActiveForeground : Colors.labelInactiveForeground
                 isFlipped: comboBox.state === ""
                 width: parent.width * 0.6
                 height: width * 0.5

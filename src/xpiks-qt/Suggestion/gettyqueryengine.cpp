@@ -128,7 +128,7 @@ namespace Suggestion {
                 }
 
                 // TODO: parse external url from istock
-                suggestionArtworks.emplace_back(new SuggestionArtwork(url, "", keywords, false));
+                suggestionArtworks.emplace_back(new SuggestionArtwork(url, keywords, false));
             }
         }
     }

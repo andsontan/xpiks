@@ -41,6 +41,7 @@ namespace Suggestion {
         m_AllOtherKeywords(m_HoldPlaceholder, this),
         m_SelectedArtworksCount(0),
         m_SelectedSourceIndex(0),
+        m_LocalSearchIndex(-1),
         m_IsInProgress(false)
     {
         setLastErrorString(tr("No results found"));
@@ -60,6 +61,7 @@ namespace Suggestion {
         m_QueryEngines.append(new GettyQueryEngine(id++, settingsModel));
         m_QueryEngines.append(new FotoliaQueryEngine(id++, settingsModel));
         m_QueryEngines.append(new LocalLibraryQueryEngine(id++, m_LocalLibrary));
+        m_LocalSearchIndex = m_QueryEngines.length() - 1;
 
         int length = m_QueryEngines.length();
         for (int i = 0; i < length; ++i) {
@@ -112,6 +114,7 @@ namespace Suggestion {
                 LOG_INFO << "Selected query source index:" << value;
                 m_SelectedSourceIndex = value;
                 emit selectedSourceIndexChanged();
+                emit isLocalSearchChanged();
             }
         }
     }

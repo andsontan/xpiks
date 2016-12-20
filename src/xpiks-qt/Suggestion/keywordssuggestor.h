@@ -46,6 +46,7 @@ namespace Suggestion {
         Q_PROPERTY(int selectedArtworksCount READ getSelectedArtworksCount NOTIFY selectedArtworksCountChanged)
         Q_PROPERTY(int selectedSourceIndex READ getSelectedSourceIndex WRITE setSelectedSourceIndex NOTIFY selectedSourceIndexChanged)
         Q_PROPERTY(QString lastErrorString READ getLastErrorString WRITE setLastErrorString NOTIFY lastErrorStringChanged)
+        Q_PROPERTY(bool isLocalSearch READ getIsLocalSearch NOTIFY isLocalSearchChanged)
 
     public:
         KeywordsSuggestor(LocalLibrary *library, QObject *parent=NULL);
@@ -72,6 +73,7 @@ namespace Suggestion {
         bool getIsInProgress() const { return m_IsInProgress; }
         int getSelectedArtworksCount() const { return m_SelectedArtworksCount; }
         const QString &getLastErrorString() const { return m_LastErrorString; }
+        bool getIsLocalSearch() const { return m_SelectedSourceIndex == m_LocalSearchIndex; }
 
     signals:
         void suggestedKeywordsCountChanged();
@@ -81,6 +83,7 @@ namespace Suggestion {
         void suggestionArrived();
         void selectedArtworksCountChanged();
         void lastErrorStringChanged();
+        void isLocalSearchChanged();
 
     private slots:
         void resultsAvailableHandler();
@@ -148,6 +151,7 @@ namespace Suggestion {
         Common::BasicKeywordsModel m_AllOtherKeywords;
         int m_SelectedArtworksCount;
         int m_SelectedSourceIndex;
+        int m_LocalSearchIndex;
         volatile bool m_IsInProgress;
     };
 }
