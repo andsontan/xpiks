@@ -629,6 +629,13 @@ ApplicationWindow {
             enabled: debug
 
             MenuItem {
+                text: "Update all items"
+                onTriggered: {
+                    artItemsModel.updateAllItems()
+                }
+            }
+
+            MenuItem {
                 text: "Keywords Suggestion"
                 onTriggered: {
                     var callbackObject = {

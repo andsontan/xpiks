@@ -45,8 +45,7 @@ namespace SpellCheck {
 
 namespace Common {
     class BasicKeywordsModel:
-            public AbstractListModel,
-            public SpellCheck::IKeywordsSpellCheckable
+            public AbstractListModel
     {
         Q_OBJECT
         Q_PROPERTY(bool hasSpellErrors READ hasSpellErrors NOTIFY spellCheckErrorsChanged)

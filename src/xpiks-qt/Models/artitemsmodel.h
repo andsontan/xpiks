@@ -86,7 +86,7 @@ namespace Models {
         void updateModifiedCount() { emit modifiedArtworksCountChanged(); }
         void updateItems(const QVector<int> &indices, const QVector<int> &roles);
         void forceUnselectAllItems() const;
-        void updateAllItems();
+        Q_INVOKABLE void updateAllItems();
         virtual bool removeUnavailableItems();
         void generateAboutToBeRemoved();
 

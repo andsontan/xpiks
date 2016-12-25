@@ -156,7 +156,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Warnings/warningssettingsmodel.cpp \
     ../../xpiks-qt/Helpers/updatehelpers.cpp \
     ../../xpiks-qt/Models/artworkproxybase.cpp \
-    plaintextedittest.cpp
+    plaintextedittest.cpp \
+    fixspellingmarksmodifiedtest.cpp
 
 RESOURCES +=
 
@@ -342,7 +343,8 @@ HEADERS += \
     ../../xpiks-qt/Helpers/updatehelpers.h \
     ../../xpiks-qt/Common/imetadataoperator.h \
     ../../xpiks-qt/Models/artworkproxybase.h \
-    plaintextedittest.h
+    plaintextedittest.h \
+    fixspellingmarksmodifiedtest.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
