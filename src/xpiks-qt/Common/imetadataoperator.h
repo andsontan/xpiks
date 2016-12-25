@@ -23,8 +23,12 @@
 #define IMETADATAOPERATOR_H
 
 #include <QString>
+#include "../SpellCheck/spellsuggestionsitem.h"
+#include "../Common/flags.h"
 
 namespace Common {
+    class BasicKeywordsModel;
+
     class IMetadataOperator {
     public:
         virtual ~IMetadataOperator() {}
@@ -39,6 +43,18 @@ namespace Common {
         virtual void setKeywords(const QStringList &keywords) = 0;
         virtual bool setDescription(const QString &value) = 0;
         virtual bool setTitle(const QString &value) = 0;
+
+        virtual Common::BasicKeywordsModel *getBasicKeywordsModel() = 0;
+
+        // former ispellcheckable here
+        virtual Common::KeywordReplaceResult fixKeywordSpelling(int index, const QString &existing, const QString &replacement) = 0;
+        virtual bool fixDescriptionSpelling(const QString &word, const QString &replacement) = 0;
+        virtual bool fixTitleSpelling(const QString &word, const QString &replacement) = 0;
+        virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createDescriptionSuggestionsList() = 0;
+        virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createTitleSuggestionsList() = 0;
+        virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createKeywordsSuggestionsList() = 0;
+        virtual bool processFailedKeywordReplacements(const std::vector<std::shared_ptr<SpellCheck::KeywordSpellSuggestions> > &candidatesForRemoval) = 0;
+        virtual void afterReplaceCallback() = 0;
     };
 }
 

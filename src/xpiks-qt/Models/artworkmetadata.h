@@ -150,6 +150,17 @@ namespace Models {
         virtual QString getKeywordsString() { return m_MetadataModel.getKeywordsString(); }
 
     public:
+        virtual Common::KeywordReplaceResult fixKeywordSpelling(int index, const QString &existing, const QString &replacement);
+        virtual bool fixDescriptionSpelling(const QString &word, const QString &replacement);
+        virtual bool fixTitleSpelling(const QString &word, const QString &replacement);
+        virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createDescriptionSuggestionsList();
+        virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createTitleSuggestionsList();
+        virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createKeywordsSuggestionsList();
+        virtual bool processFailedKeywordReplacements(const std::vector<std::shared_ptr<SpellCheck::KeywordSpellSuggestions> > &candidatesForRemoval);
+        virtual void afterReplaceCallback();
+        virtual Common::BasicKeywordsModel *getBasicKeywordsModel();
+
+    public:
         void acquire() { m_Hold.acquire(); }
         bool release() { return m_Hold.release(); }
 

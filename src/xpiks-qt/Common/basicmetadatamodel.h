@@ -26,7 +26,6 @@
 #include <QStringList>
 #include <QHash>
 #include <QReadWriteLock>
-#include "../SpellCheck/ispellcheckable.h"
 #include "../Common/flags.h"
 
 namespace SpellCheck {
@@ -39,7 +38,6 @@ namespace SpellCheck {
 namespace Common {
     class BasicMetadataModel :
             public BasicKeywordsModel,
-            public SpellCheck::ISpellCheckable,
             public Common::IMetadataOperator
     {
         Q_OBJECT
@@ -58,12 +56,17 @@ namespace Common {
 #endif
 
     public:
-        // ISPELLCHECKABLE
         virtual void setSpellCheckResults(const QHash<QString, bool> &results, SpellCheckFlags flags);
         virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createDescriptionSuggestionsList();
         virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createTitleSuggestionsList();
-        virtual void fixDescriptionSpelling(const QString &word, const QString &replacement);
-        virtual void fixTitleSpelling(const QString &word, const QString &replacement);
+        virtual bool fixDescriptionSpelling(const QString &word, const QString &replacement);
+        virtual bool fixTitleSpelling(const QString &word, const QString &replacement);
+        virtual void setKeywordsSpellCheckResults(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items);
+        virtual bool processFailedKeywordReplacements(const std::vector<std::shared_ptr<SpellCheck::KeywordSpellSuggestions> > &candidatesForRemoval);
+        virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createKeywordsSuggestionsList();
+        virtual Common::KeywordReplaceResult fixKeywordSpelling(int index, const QString &existing, const QString &replacement);
+        virtual void afterReplaceCallback();
+        virtual Common::BasicKeywordsModel *getBasicKeywordsModel();
         virtual QStringList getDescriptionWords();
         virtual QStringList getTitleWords();
 

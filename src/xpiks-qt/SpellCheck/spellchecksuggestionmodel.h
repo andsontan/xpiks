@@ -28,19 +28,19 @@
 #include <memory>
 #include "../Common/baseentity.h"
 #include "../Common/flags.h"
+#include "../Common/imetadataoperator.h"
 
 namespace Models {
     class ArtworkMetadata;
 }
 
 namespace Common {
-    class BasicMetadataModel;
+    class IMetadataOperator;
 }
 
 namespace SpellCheck {
     class SpellSuggestionsItem;
     class SpellCheckerService;
-    class ISpellCheckable;
 
     typedef std::vector<std::shared_ptr<SpellSuggestionsItem> > SuggestionsVector;
 
@@ -67,13 +67,13 @@ namespace SpellCheck {
         void selectAllChanged();
 
     public:
-        void setupModel(Common::BasicMetadataModel *item, int index, Common::SuggestionFlags flags);
+        void setupModel(Common::IMetadataOperator *item, int index, Common::SuggestionFlags flags);
 #if defined(INTEGRATION_TESTS) || defined(CORE_TESTS)
         SpellSuggestionsItem *getItem(int i) const { return m_SuggestionsList.at(i).get(); }
 #endif
 
     private:
-        SuggestionsVector createSuggestionsRequests(Common::BasicMetadataModel *item, Common::SuggestionFlags flags);
+        SuggestionsVector createSuggestionsRequests(Common::IMetadataOperator *item, Common::SuggestionFlags flags);
         bool processFailedReplacements(const SuggestionsVector &failedReplacements) const;
         SuggestionsVector setupSuggestions(const SuggestionsVector &items);
 
@@ -86,7 +86,7 @@ namespace SpellCheck {
 
     private:
         std::vector<std::shared_ptr<SpellSuggestionsItem> > m_SuggestionsList;
-        Common::BasicMetadataModel *m_CurrentItem;
+        Common::IMetadataOperator *m_CurrentItem;
         int m_ItemIndex;
     };
 }

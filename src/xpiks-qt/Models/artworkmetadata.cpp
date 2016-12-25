@@ -165,6 +165,62 @@ namespace Models {
         return result;
     }
 
+    Common::KeywordReplaceResult ArtworkMetadata::fixKeywordSpelling(int index, const QString &existing, const QString &replacement) {
+        auto result = m_MetadataModel.fixKeywordSpelling(index, existing, replacement);
+        if (Common::KeywordReplaceResult::Succeeded == result) {
+            markModified();
+        }
+
+        return result;
+    }
+
+    bool ArtworkMetadata::fixDescriptionSpelling(const QString &word, const QString &replacement) {
+        bool result = m_MetadataModel.fixDescriptionSpelling(word, replacement);
+        if (result) {
+            markModified();
+        }
+
+        return result;
+    }
+
+    bool ArtworkMetadata::fixTitleSpelling(const QString &word, const QString &replacement) {
+        bool result = m_MetadataModel.fixTitleSpelling(word, replacement);
+        if (result) {
+            markModified();
+        }
+
+        return result;
+    }
+
+    std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > ArtworkMetadata::createDescriptionSuggestionsList() {
+        return m_MetadataModel.createDescriptionSuggestionsList();
+    }
+
+    std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > ArtworkMetadata::createTitleSuggestionsList() {
+        return m_MetadataModel.createTitleSuggestionsList();
+    }
+
+    std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > ArtworkMetadata::createKeywordsSuggestionsList() {
+        return m_MetadataModel.createKeywordsSuggestionsList();
+    }
+
+    bool ArtworkMetadata::processFailedKeywordReplacements(const std::vector<std::shared_ptr<SpellCheck::KeywordSpellSuggestions> > &candidatesForRemoval) {
+        bool result = m_MetadataModel.processFailedKeywordReplacements(candidatesForRemoval);
+        if (result) {
+            markModified();
+        }
+
+        return result;
+    }
+
+    void ArtworkMetadata::afterReplaceCallback() {
+        m_MetadataModel.afterReplaceCallback();
+    }
+
+    Common::BasicKeywordsModel *ArtworkMetadata::getBasicKeywordsModel() {
+        return &m_MetadataModel;
+    }
+
     void ArtworkMetadata::markModified() {
         if (!getIsModifiedFlag()) {
             setIsModifiedFlag(true);

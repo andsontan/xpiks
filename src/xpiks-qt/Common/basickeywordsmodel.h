@@ -32,7 +32,6 @@
 #include <QReadWriteLock>
 #include "baseentity.h"
 #include "hold.h"
-#include "../SpellCheck/ispellcheckable.h"
 #include "../Common/flags.h"
 #include "../Common/imetadataoperator.h"
 

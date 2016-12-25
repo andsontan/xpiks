@@ -113,20 +113,46 @@ namespace Common {
         return spellCheckSuggestions;
     }
 
-    void BasicMetadataModel::fixDescriptionSpelling(const QString &word, const QString &replacement) {
+    bool BasicMetadataModel::fixDescriptionSpelling(const QString &word, const QString &replacement) {
         Common::SearchFlags flags = Common::SearchFlags::None;
         Common::SetFlag(flags, Common::SearchFlags::CaseSensitive);
         Common::SetFlag(flags, Common::SearchFlags::Description);
 
-        replaceInDescription(word, replacement, flags);
+        bool result = replaceInDescription(word, replacement, flags);
+        return result;
     }
 
-    void BasicMetadataModel::fixTitleSpelling(const QString &word, const QString &replacement) {
+    bool BasicMetadataModel::fixTitleSpelling(const QString &word, const QString &replacement) {
         Common::SearchFlags flags = Common::SearchFlags::None;
         Common::SetFlag(flags, Common::SearchFlags::CaseSensitive);
         Common::SetFlag(flags, Common::SearchFlags::Description);
 
-        replaceInTitle(word, replacement, flags);
+        bool result = replaceInTitle(word, replacement, flags);
+        return result;
+    }
+
+    void BasicMetadataModel::setKeywordsSpellCheckResults(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items) {
+        BasicKeywordsModel::setKeywordsSpellCheckResults(items);
+    }
+
+    bool BasicMetadataModel::processFailedKeywordReplacements(const std::vector<std::shared_ptr<SpellCheck::KeywordSpellSuggestions> > &candidatesForRemoval) {
+        return BasicKeywordsModel::processFailedKeywordReplacements(candidatesForRemoval);
+    }
+
+    std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > BasicMetadataModel::createKeywordsSuggestionsList() {
+        return BasicKeywordsModel::createKeywordsSuggestionsList();
+    }
+
+    KeywordReplaceResult BasicMetadataModel::fixKeywordSpelling(int index, const QString &existing, const QString &replacement) {
+        return BasicKeywordsModel::fixKeywordSpelling(index, existing, replacement);
+    }
+
+    void BasicMetadataModel::afterReplaceCallback() {
+        BasicKeywordsModel::afterReplaceCallback();
+    }
+
+    BasicKeywordsModel *BasicMetadataModel::getBasicKeywordsModel() {
+        return this;
     }
 
     QStringList BasicMetadataModel::getDescriptionWords() {

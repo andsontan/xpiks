@@ -23,7 +23,6 @@
 #include "../Models/artworkmetadata.h"
 #include <QStringList>
 #include "../Helpers/indiceshelper.h"
-#include "ispellcheckable.h"
 #include "../Common/flags.h"
 #include "../Common/defines.h"
 #include "../Common/basicmetadatamodel.h"

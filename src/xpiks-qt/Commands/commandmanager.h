@@ -48,6 +48,7 @@ namespace UndoRedo {
 
 namespace Common {
     class BasicMetadataModel;
+    class IMetadataOperator;
 }
 
 namespace Models {
@@ -81,7 +82,6 @@ namespace MetadataIO {
 namespace SpellCheck {
     class SpellCheckerService;
     class SpellCheckSuggestionModel;
-    class ISpellCheckable;
 }
 
 namespace Conectivity {
@@ -226,7 +226,7 @@ namespace Commands {
         void submitForSpellCheck(const QVector<Models::ArtworkMetadata*> &items) const;
         void submitForSpellCheck(const QVector<Common::BasicKeywordsModel *> &items) const;
         void submitItemForSpellCheck(Common::BasicKeywordsModel *item, Common::SpellCheckFlags flags = Common::SpellCheckFlags::All) const;
-        void setupSpellCheckSuggestions(Common::BasicMetadataModel *item, int index, Common::SuggestionFlags flags);
+        void setupSpellCheckSuggestions(Common::IMetadataOperator *item, int index, Common::SuggestionFlags flags);
         void submitForSpellCheck(const QVector<Common::BasicKeywordsModel *> &items, const QStringList &wordsToCheck) const;
 
     public:

@@ -35,8 +35,6 @@ namespace Common {
 }
 
 namespace SpellCheck {
-    class ISpellCheckable;
-
     class SpellCheckQueryItem
     {
     public:

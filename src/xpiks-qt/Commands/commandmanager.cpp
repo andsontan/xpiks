@@ -39,7 +39,6 @@
 #include "../SpellCheck/spellcheckerservice.h"
 #include "../Models/settingsmodel.h"
 #include "../SpellCheck/spellchecksuggestionmodel.h"
-#include "../SpellCheck/ispellcheckable.h"
 #include "../MetadataIO/backupsaverservice.h"
 #include "../Conectivity/telemetryservice.h"
 #include "../Conectivity/updateservice.h"
@@ -57,6 +56,7 @@
 #include "../Models/deletekeywordsviewmodel.h"
 #include "../Helpers/helpersqmlwrapper.h"
 #include "../Helpers/updatehelpers.h"
+#include "../Common/imetadataoperator.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -534,7 +534,7 @@ void Commands::CommandManager::submitItemForSpellCheck(Common::BasicKeywordsMode
     }
 }
 
-void Commands::CommandManager::setupSpellCheckSuggestions(Common::BasicMetadataModel *item, int index, Common::SuggestionFlags flags) {
+void Commands::CommandManager::setupSpellCheckSuggestions(Common::IMetadataOperator *item, int index, Common::SuggestionFlags flags) {
     Q_ASSERT(item != NULL);
     if (m_SpellCheckSuggestionModel) {
         m_SpellCheckSuggestionModel->setupModel(item, index, flags);

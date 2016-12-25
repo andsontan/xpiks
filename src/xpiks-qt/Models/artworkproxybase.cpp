@@ -150,8 +150,8 @@ namespace Models {
 
     void ArtworkProxyBase::doSuggestCorrections() {
         LOG_DEBUG << "#";
-        auto *keywordsModel = getBasicMetadataModel();
-        m_CommandManager->setupSpellCheckSuggestions(keywordsModel, -1, Common::SuggestionFlags::All);
+        auto *metadataOperator = getMetadataOperator();
+        m_CommandManager->setupSpellCheckSuggestions(metadataOperator, -1, Common::SuggestionFlags::All);
     }
 
     void ArtworkProxyBase::doInitDescriptionHighlighting(QQuickTextDocument *document) {

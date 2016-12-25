@@ -26,7 +26,6 @@
 #include "spellsuggestionsitem.h"
 #include "../Models/artworkmetadata.h"
 #include "spellcheckerservice.h"
-#include "ispellcheckable.h"
 #include "../Commands/commandmanager.h"
 #include "../Common/flags.h"
 #include "../Common/defines.h"
@@ -119,7 +118,7 @@ namespace SpellCheck {
 
         if (anyChanged) {
             m_CurrentItem->afterReplaceCallback();
-            m_CommandManager->submitItemForSpellCheck(m_CurrentItem);
+            m_CommandManager->submitItemForSpellCheck(m_CurrentItem->getBasicKeywordsModel());
         }
 
         if (m_ItemIndex != -1) {
@@ -134,7 +133,7 @@ namespace SpellCheck {
         }
     }
 
-    void SpellCheckSuggestionModel::setupModel(Common::BasicMetadataModel *item, int index, Common::SuggestionFlags flags) {
+    void SpellCheckSuggestionModel::setupModel(Common::IMetadataOperator *item, int index, Common::SuggestionFlags flags) {
         Q_ASSERT(item != NULL);
         LOG_INFO << "flags =" << (int)flags;
         auto requests = createSuggestionsRequests(item, flags);
@@ -160,7 +159,7 @@ namespace SpellCheck {
         m_ItemIndex = index;
     }
 
-    SuggestionsVector SpellCheckSuggestionModel::createSuggestionsRequests(Common::BasicMetadataModel *item, Common::SuggestionFlags flags) {
+    SuggestionsVector SpellCheckSuggestionModel::createSuggestionsRequests(Common::IMetadataOperator *item, Common::SuggestionFlags flags) {
         SuggestionsVector requests;
 
         using namespace Common;

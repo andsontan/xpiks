@@ -29,7 +29,6 @@
 #include "../Commands/commandmanager.h"
 #include "../Commands/combinededitcommand.h"
 #include "../Common/flags.h"
-#include "../SpellCheck/ispellcheckable.h"
 #include "../Helpers/indiceshelper.h"
 #include "../Common/defines.h"
 #include "../Helpers/filterhelpers.h"

@@ -278,8 +278,7 @@ namespace Models {
             Common::SetFlag(flags, SuggestionFlags::Title);
             Common::SetFlag(flags, SuggestionFlags::Keywords);
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-            auto *keywordsModel = metadata->getBasicModel();
-            m_CommandManager->setupSpellCheckSuggestions(keywordsModel, metadataIndex, (SuggestionFlags)flags);
+            m_CommandManager->setupSpellCheckSuggestions(metadata, metadataIndex, (SuggestionFlags)flags);
         }
     }
 

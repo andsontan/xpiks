@@ -25,7 +25,6 @@
 #include "../Commands/commandmanager.h"
 #include "../Models/settingsmodel.h"
 #include "../Common/defines.h"
-#include "../SpellCheck/ispellcheckable.h"
 
 void UndoRedo::ModifyArtworksHistoryItem::undo(const Commands::ICommandManager *commandManagerInterface) const {
     LOG_INFO << m_Indices.count() << "item(s) affected";

@@ -20,9 +20,8 @@
  */
 
 #include "spellsuggestionsitem.h"
-#include "ispellcheckable.h"
 #include "../Common/defines.h"
-#include "../Common/basicmetadatamodel.h"
+#include "../Common/imetadataoperator.h"
 
 namespace SpellCheck {
     SpellSuggestionsItem::SpellSuggestionsItem(const QString &word, const QString &origin) :
@@ -150,7 +149,7 @@ namespace SpellCheck {
     {
     }
 
-    void KeywordSpellSuggestions::replaceToSuggested(Common::BasicKeywordsModel *item) {
+    void KeywordSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item) {
         if (anyReplacementSelected()) {
             const QString &word = getWord();
             const QString &replacement = getReplacement();
@@ -158,7 +157,7 @@ namespace SpellCheck {
         }
     }
 
-    void KeywordSpellSuggestions::replaceToSuggested(Common::BasicKeywordsModel *item, const QString &word, const QString &replacement) {
+    void KeywordSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
         Common::KeywordReplaceResult result = item->fixKeywordSpelling(m_OriginalIndex, word, replacement);
         setReplacementSucceeded(result == Common::KeywordReplaceResult::Succeeded);
@@ -170,7 +169,7 @@ namespace SpellCheck {
     {
     }
 
-    void DescriptionSpellSuggestions::replaceToSuggested(Common::BasicKeywordsModel *item) {
+    void DescriptionSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item) {
         if (anyReplacementSelected()) {
             const QString &word = getWord();
             const QString &replacement = getReplacement();
@@ -178,13 +177,10 @@ namespace SpellCheck {
         }
     }
 
-    void DescriptionSpellSuggestions::replaceToSuggested(Common::BasicKeywordsModel *item, const QString &word, const QString &replacement) {
+    void DescriptionSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
-        Common::BasicMetadataModel *model = dynamic_cast<Common::BasicMetadataModel*>(item);
-        if (model != nullptr) {
-            model->fixDescriptionSpelling(word, replacement);
-            setReplacementSucceeded(true);
-        }
+        item->fixDescriptionSpelling(word, replacement);
+        setReplacementSucceeded(true);
     }
 
     TitleSpellSuggestions::TitleSpellSuggestions(const QString &word):
@@ -192,7 +188,7 @@ namespace SpellCheck {
     {
     }
 
-    void TitleSpellSuggestions::replaceToSuggested(Common::BasicKeywordsModel *item) {
+    void TitleSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item) {
         if (anyReplacementSelected()) {
             const QString &word = getWord();
             const QString &replacement = getReplacement();
@@ -200,13 +196,10 @@ namespace SpellCheck {
         }
     }
 
-    void TitleSpellSuggestions::replaceToSuggested(Common::BasicKeywordsModel *item, const QString &word, const QString &replacement) {
+    void TitleSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
-        Common::BasicMetadataModel *model = dynamic_cast<Common::BasicMetadataModel*>(item);
-        if (model != nullptr) {
-            model->fixTitleSpelling(word, replacement);
-            setReplacementSucceeded(true);
-        }
+        item->fixTitleSpelling(word, replacement);
+        setReplacementSucceeded(true);
     }
 
     CombinedSpellSuggestions::CombinedSpellSuggestions(const QString &word, std::vector<std::shared_ptr<SpellSuggestionsItem> > &suggestions):
@@ -232,7 +225,7 @@ namespace SpellCheck {
         return keywordsSuggestions;
     }
 
-    void CombinedSpellSuggestions::replaceToSuggested(Common::BasicKeywordsModel *item) {
+    void CombinedSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item) {
         if (anyReplacementSelected()) {
             const QString &word = getWord();
             const QString &replacement = getReplacement();
@@ -240,7 +233,7 @@ namespace SpellCheck {
         }
     }
 
-    void CombinedSpellSuggestions::replaceToSuggested(Common::BasicKeywordsModel *item, const QString &word, const QString &replacement) {
+    void CombinedSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) {
         size_t size = m_SpellSuggestions.size();
         LOG_INFO << size << "item(s)";
         bool anyFault = false;

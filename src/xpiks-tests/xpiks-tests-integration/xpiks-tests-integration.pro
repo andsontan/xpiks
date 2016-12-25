@@ -246,7 +246,6 @@ HEADERS += \
     ../../xpiks-qt/Plugins/pluginwrapper.h \
     ../../xpiks-qt/Plugins/uiprovider.h \
     ../../xpiks-qt/Plugins/xpiksplugininterface.h \
-    ../../xpiks-qt/SpellCheck/ispellcheckable.h \
     ../../xpiks-qt/SpellCheck/spellcheckerrorshighlighter.h \
     ../../xpiks-qt/SpellCheck/spellcheckerservice.h \
     ../../xpiks-qt/SpellCheck/spellcheckitem.h \
