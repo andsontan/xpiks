@@ -205,6 +205,8 @@ namespace SpellCheck {
                 if (combinedItem) {
                     std::vector<std::shared_ptr<KeywordSpellSuggestions> > keywordsItems = combinedItem->getKeywordsDuplicateSuggestions();
                     candidatesToRemove.insert(candidatesToRemove.end(), keywordsItems.begin(), keywordsItems.end());
+                } else {
+                    LOG_WARNING << "Unsupported failed suggestion type";
                 }
             }
         }

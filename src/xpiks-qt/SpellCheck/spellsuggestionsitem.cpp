@@ -179,8 +179,12 @@ namespace SpellCheck {
 
     void DescriptionSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
-        item->fixDescriptionSpelling(word, replacement);
-        setReplacementSucceeded(true);
+        bool success = item->fixDescriptionSpelling(word, replacement);
+        setReplacementSucceeded(success);
+
+        if (!success) {
+            LOG_WARNING << "Failed to replace in description" << word << "to" << replacement;
+        }
     }
 
     TitleSpellSuggestions::TitleSpellSuggestions(const QString &word):
@@ -198,8 +202,12 @@ namespace SpellCheck {
 
     void TitleSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
-        item->fixTitleSpelling(word, replacement);
-        setReplacementSucceeded(true);
+        bool success = item->fixTitleSpelling(word, replacement);
+        setReplacementSucceeded(success);
+
+        if (!success) {
+            LOG_WARNING << "Failed to replace in title" << word << "to" << replacement;
+        }
     }
 
     CombinedSpellSuggestions::CombinedSpellSuggestions(const QString &word, std::vector<std::shared_ptr<SpellSuggestionsItem> > &suggestions):
