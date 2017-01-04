@@ -11,8 +11,7 @@
 #include "../../xpiks-qt/Models/artworkmetadata.h"
 #include "../../xpiks-qt/Models/settingsmodel.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
-#include "../../xpiks-qt/SpellCheck/spellchecksuggestionmodel.h"
-#include "../../xpiks-qt/SpellCheck/spellsuggestionsitem.h"
+#include "../../xpiks-qt/SpellCheck/spellcheckerservice.h"
 #include "../../xpiks-qt/Models/combinedartworksmodel.h"
 #include "../../xpiks-qt/Common/basickeywordsmodel.h"
 
@@ -46,18 +45,20 @@ int PlainTextEditTest::doTest() {
 
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
 
+    SpellCheck::SpellCheckerService *spellCheckService = m_CommandManager->getSpellCheckerService();
+    QObject::connect(spellCheckService, SIGNAL(spellCheckQueueIsEmpty()), &waiter, SIGNAL(finished()));
+
     Models::FilteredArtItemsProxyModel *filteredModel = m_CommandManager->getFilteredArtItemsModel();
     filteredModel->selectFilteredArtworks();
     filteredModel->combineSelectedArtworks();
 
     // wait for after-add spellchecking
-    QThread::sleep(1);
+    if (!waiter.wait(5)) {
+        VERIFY(false, "Timeout for waiting for initial spellchecks");
+    }
 
     Models::CombinedArtworksModel *combinedModel = m_CommandManager->getCombinedArtworksModel();
-
     auto *basicModel = combinedModel->retrieveBasicMetadataModel();
-    QObject::connect(basicModel, SIGNAL(spellCheckErrorsChanged()),
-                     &waiter, SIGNAL(finished()));
 
     combinedModel->plainTextEdit("test, keyword, abbreviatoe");
 
