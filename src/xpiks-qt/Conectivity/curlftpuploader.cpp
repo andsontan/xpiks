@@ -113,7 +113,7 @@ namespace Conectivity {
         long uploaded_len = 0;
         CURLcode r = CURLE_GOT_NOTHING;
 #ifdef Q_OS_WIN
-        struct _stat64i32 file_info;
+        struct _stati64 file_info;
 #else
         struct stat file_info;
 #endif
@@ -122,7 +122,7 @@ namespace Conectivity {
 
         /* get the file size of the local file */
 #ifdef Q_OS_WIN
-        if (_wstat(filepath.toStdWString().c_str(), &file_info)) {
+        if (_wstati64(filepath.toStdWString().c_str(), &file_info)) {
             LOG_WARNING << "Failed to stat file" << filepath;
             return result;
         }
