@@ -197,6 +197,17 @@ void Commands::CommandManager::InjectDependency(Helpers::HelpersQmlWrapper *help
     m_HelpersQmlWrapper->setCommandManager(this);
 }
 
+void Commands::CommandManager::InjectDependency(KeywordsPreset::PresetKeywordsModel *presetsModel) {
+    Q_ASSERT(presetsModel != NULL); m_PresetsModel = presetsModel;
+    m_PresetsModel->setCommandManager(this);
+}
+
+void Commands::CommandManager::InjectDependency(KeywordsPreset::PresetKeywordsModelConfig *presetsModelConfig)
+{
+    Q_ASSERT(presetsModelConfig != NULL); m_PresetsModelConfig = presetsModelConfig;
+    m_PresetsModelConfig->setCommandManager(this);
+}
+
 std::shared_ptr<Commands::ICommandResult> Commands::CommandManager::processCommand(const std::shared_ptr<ICommandBase> &command)
 #ifndef CORE_TESTS
 const
@@ -281,6 +292,10 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
         QObject::connect(m_UpdateService, SIGNAL(updateDownloaded(QString)),
                          m_HelpersQmlWrapper, SLOT(updateIsDownloaded(QString)));
     }
+
+    if (m_PresetsModel != NULL && m_PresetsModelConfig != NULL) {
+        QObject::connect(m_PresetsModelConfig, SIGNAL(presetsUpdated()), m_PresetsModel, SLOT (onPresetsUpdated()));
+    }
 }
 
 void Commands::CommandManager::ensureDependenciesInjected() {
@@ -312,6 +327,8 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_ImageCachingService != NULL);
     Q_ASSERT(m_FindAndReplaceModel != NULL);
     Q_ASSERT(m_DeleteKeywordsViewModel != NULL);
+    Q_ASSERT(m_PresetsModel != NULL);
+    Q_ASSERT(m_PresetsModelConfig != NULL);
 
 #ifndef INTEGRATION_TESTS
     Q_ASSERT(m_HelpersQmlWrapper != NULL);

@@ -120,6 +120,8 @@ SOURCES += main.cpp \
     Conectivity/simplecurldownloader.cpp \
     Helpers/updatehelpers.cpp \
     Common/basicmetadatamodel.cpp \
+    PresetKeywords/presetkeywordsmodel.cpp \
+    PresetKeywords/presetkeywordsmodelconfig.cpp \
     QMLExtensions/folderelement.cpp \
     Models/artworkproxymodel.cpp \
     Models/artworkproxybase.cpp
@@ -299,6 +301,8 @@ HEADERS += \
     Conectivity/apimanager.h \
     Helpers/updatehelpers.h \
     Common/basicmetadatamodel.h \
+    PresetKeywords/presetkeywordsmodel.h \
+    PresetKeywords/presetkeywordsmodelconfig.h \
     QMLExtensions/folderelement.h \
     Models/artworkproxymodel.h \
     Models/artworkproxybase.h \
@@ -367,6 +371,7 @@ DISTFILES += \
     Dialogs/DeleteKeywordsDialog.qml \
     Dialogs/FailedUploadArtworks.qml \
     Dialogs/InstallUpdateDialog.qml \
+    Dialogs/PresetEditDialog.qml \
     StyledControls/StyledMainTabView.qml \
     Components/CustomTab.qml \
     StackViews/MainGrid.qml \

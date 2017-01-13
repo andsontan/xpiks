@@ -283,6 +283,14 @@ namespace Common {
         return result;
     }
 
+    bool BasicMetadataModel::replaceFromPreset(int keywordsIndex, const QStringList &presetList) {
+        return expandPreset(keywordsIndex, presetList);
+    }
+
+    bool BasicMetadataModel::addFromPreset(const QStringList &presetList) {
+        return appendKeywords(presetList) != 0;
+    }
+
     bool BasicMetadataModel::setDescription(const QString &value) {
         QWriteLocker writeLocker(&m_DescriptionLock);
 

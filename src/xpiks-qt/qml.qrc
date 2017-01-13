@@ -63,6 +63,7 @@
         <file>Dialogs/DeleteKeywordsDialog.qml</file>
         <file>Dialogs/FailedUploadArtworks.qml</file>
         <file>Dialogs/InstallUpdateDialog.qml</file>
+        <file>Dialogs/PresetEditDialog.qml</file>
         <file>StyledControls/StyledMainTabView.qml</file>
         <file>StackViews/MainGrid.qml</file>
         <file>StackViews/ArtworkEditView.qml</file>

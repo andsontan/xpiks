@@ -62,6 +62,10 @@ namespace Conectivity {
             return m_BaseUrl + "warnings_settings.json";
         }
 
+        QString getPresetsSourceAddr() const {
+            return m_BaseUrl + "presets.json";
+        }
+
     private:
         ApiManager() {
 #ifdef QT_DEBUG

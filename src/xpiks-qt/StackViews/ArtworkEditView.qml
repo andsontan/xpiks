@@ -97,12 +97,52 @@ Rectangle {
     }
 
     Menu {
-        id: addWordContextMenu
+        id: wordRightClickMenu
         property string word
+        property int keywordIndex
+        property bool showAddToDict : true
+        property bool showExpandPreset : false
 
         MenuItem {
+            visible: wordRightClickMenu.showAddToDict
             text: qsTr("Add to dictionary")
-            onTriggered: spellCheckService.addWordToUserDictionary(addWordContextMenu.word);
+            onTriggered: spellCheckService.addWordToUserDictionary(wordRightClickMenu.word);
+        }
+
+        Menu {
+            id : presetSubMenu
+            visible: wordRightClickMenu.showExpandPreset
+            title: i18.n + qsTr("Expand as preset")
+            Instantiator {
+                id : presetsInstantiator
+                model: filteredPresetsModel
+                onObjectAdded: presetSubMenu.insertItem( index, object )
+                onObjectRemoved: presetSubMenu.removeItem( object )
+                delegate: MenuItem {
+                    text: i18.n + qsTr("\"%1\"").arg(filteredPresetsModel.getName(index))
+                    onTriggered: {
+                        artworkProxy.replaceFromPreset(wordRightClickMenu.word);
+                    }
+                }
+            }
+        }
+    }
+
+    Menu {
+        id: presetsMenu
+        Instantiator {
+            model: presetsModel
+            onObjectAdded:{
+                presetsMenu.insertItem( index, object )
+            }
+            onObjectRemoved: presetsMenu.removeItem( object )
+            delegate: MenuItem {
+                text: i18.n + qsTr("Expand as preset \"%1\"").arg(name)
+                onTriggered: {
+                    artworkProxy.appendFromPreset(index);
+                }
+
+            }
         }
     }
 
@@ -464,10 +504,13 @@ Rectangle {
                                     }
 
                                     onActionRightClicked: {
-                                        if (artworkProxy.hasTitleWordSpellError(rightClickedWord)) {
-                                            console.log("Context menu for add word " + rightClickedWord)
-                                            addWordContextMenu.word = rightClickedWord
-                                            addWordContextMenu.popup()
+                                        var showAddToDict = artworkProxy.hasTitleWordSpellError(rowWrapper.delegateIndex, rightClickedWord)
+                                        wordRightClickMenu.showAddToDict = showAddToDict
+                                        wordRightClickMenu.word = rightClickedWord
+                                        wordRightClickMenu.showExpandPreset = false
+                                        if (wordRightClickMenu.showAddToDict ||
+                                                wordRightClickMenu.showExpandPreset) {
+                                            wordRightClickMenu.popup()
                                         }
                                     }
 
@@ -583,10 +626,13 @@ Rectangle {
                                     }
 
                                     onActionRightClicked: {
-                                        if (artworkProxy.hasDescriptionWordSpellError(rightClickedWord)) {
-                                            console.log("Context menu for add word " + rightClickedWord)
-                                            addWordContextMenu.word = rightClickedWord
-                                            addWordContextMenu.popup()
+                                        var showAddToDict = artworkProxy.hasDescriptionWordSpellError(rowWrapper.delegateIndex, rightClickedWord)
+                                        wordRightClickMenu.showAddToDict = showAddToDict
+                                        wordRightClickMenu.word = rightClickedWord
+                                        wordRightClickMenu.showExpandPreset = false
+                                        if (wordRightClickMenu.showAddToDict ||
+                                                wordRightClickMenu.showExpandPreset) {
+                                            wordRightClickMenu.popup()
                                         }
                                     }
 
@@ -713,10 +759,15 @@ Rectangle {
                                     }
 
                                     onActionRightClicked: {
-                                        if (!iscorrect) {
-                                            console.log("Context menu for add word")
-                                            addWordContextMenu.word = kw.keywordText;
-                                            addWordContextMenu.popup()
+                                        wordRightClickMenu.showAddToDict = !iscorrect
+                                        var keyword = kw.keywordText
+                                        wordRightClickMenu.word = keyword
+                                        filteredPresetsModel.searchTerm = keyword
+                                        wordRightClickMenu.showExpandPreset = (filteredPresetsModel.getItemsCount() !== 0 )
+                                        wordRightClickMenu.keywordIndex = kw.delegateIndex
+                                        if (wordRightClickMenu.showAddToDict ||
+                                                wordRightClickMenu.showExpandPreset) {
+                                            wordRightClickMenu.popup()
                                         }
                                     }
                                 }
@@ -741,6 +792,10 @@ Rectangle {
                                 onCompletionRequested: {
                                     helpersWrapper.autoCompleteKeyword(prefix,
                                                                        artworkProxy.getBasicModel())
+                                }
+
+                                onRightClickedInside: {
+                                    presetsMenu.popup()
                                 }
                             }
 

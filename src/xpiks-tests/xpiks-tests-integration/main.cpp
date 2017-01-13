@@ -47,6 +47,8 @@
 #include "../../xpiks-qt/Helpers/logger.h"
 #include "../../xpiks-qt/Common/version.h"
 #include "../../xpiks-qt/Common/defines.h"
+#include "../../xpiks-qt/PresetKeywords/presetkeywordsmodel.h"
+#include "../../xpiks-qt/PresetKeywords/presetkeywordsmodelconfig.h"
 
 #include "integrationtestbase.h"
 #include "addfilesbasictest.h"
@@ -71,6 +73,7 @@
 #include "artworkuploaderbasictest.h"
 #include "plaintextedittest.h"
 #include "fixspellingmarksmodifiedtest.h"
+#include "preset_tests.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -124,6 +127,8 @@ int main(int argc, char *argv[]) {
     Models::ArtItemsModel artItemsModel;
     Models::CombinedArtworksModel combinedArtworksModel;
     Models::UploadInfoRepository uploadInfoRepository;
+    KeywordsPreset::PresetKeywordsModel presetsModel;
+    KeywordsPreset::PresetKeywordsModelConfig presetsModelConfig;
     Warnings::WarningsService warningsService;
     Models::SettingsModel settingsModel;
     settingsModel.readAllValues();
@@ -183,6 +188,8 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&imageCachingService);
     commandManager.InjectDependency(&findAndReplaceModel);
     commandManager.InjectDependency(&deleteKeywordsModel);
+    commandManager.InjectDependency(&presetsModel);
+    commandManager.InjectDependency(&presetsModelConfig);
 
     commandManager.ensureDependenciesInjected();
 
@@ -225,6 +232,8 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new ArtworkUploaderBasicTest(&commandManager));
     integrationTests.append(new PlainTextEditTest(&commandManager));
     integrationTests.append(new FixSpellingMarksModifiedTest(&commandManager));
+    integrationTests.append(new PresetTests(&commandManager));
+
 
     qDebug("\n");
     int succeededTestsCount = 0, failedTestsCount = 0;

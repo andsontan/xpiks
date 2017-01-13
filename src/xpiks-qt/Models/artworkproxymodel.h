@@ -113,6 +113,8 @@ namespace Models {
         Q_INVOKABLE QString retrieveFileSize() const;
         Q_INVOKABLE QString getDateTaken() const;
         Q_INVOKABLE QString getAttachedVectorPath() const;
+        Q_INVOKABLE void replaceFromPreset(int keywordsIndex, int presetIndex);
+        Q_INVOKABLE void appendFromPreset(int presetIndex);
 
     protected:
         virtual Common::BasicMetadataModel *getBasicMetadataModel() {

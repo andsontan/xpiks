@@ -393,6 +393,47 @@ namespace Models {
         return result;
     }
 
+    void FilteredArtItemsProxyModel::appendFromPreset(int index, int presetIndex) {
+        if (0 <= index && index < rowCount()) {
+            int originalIndex = getOriginalIndex(index);
+            LOG_INFO << "preset index" << presetIndex << "original index" << originalIndex;
+            auto *presetsModel = m_CommandManager->getPresetsModel();
+            QStringList keywords;
+            if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+                ArtItemsModel *artItemsModel = getArtItemsModel();
+                ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+
+                if (metadata != NULL) {
+                    metadata->addFromPreset(keywords);
+                    auto *keywordsModel = metadata->getBasicModel();
+                    m_CommandManager->submitItemForSpellCheck(keywordsModel);
+                }
+            }
+        }
+    }
+
+    void FilteredArtItemsProxyModel::replaceFromPreset(int index, int keywordsIndex, int presetIndex) {
+        if (0 <= index && index < rowCount()) {
+            int originalIndex = getOriginalIndex(index);
+            LOG_INFO << originalIndex;
+            auto *presetsModel = m_CommandManager->getPresetsModel();
+            QString presetName;
+            if (presetsModel->tryGetNameFromIndex(presetIndex, presetName)) {
+                QStringList keywords;
+                if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+                    ArtItemsModel *artItemsModel = getArtItemsModel();
+                    ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+
+                    if (metadata != NULL) {
+                        metadata->replaceFromPreset(keywordsIndex, keywords);
+                        auto *keywordsModel = metadata->getBasicModel();
+                        m_CommandManager->submitItemForSpellCheck(keywordsModel);
+                    }
+                }
+            }
+        }
+    }
+
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {
         int plus = value ? +1 : -1;
 

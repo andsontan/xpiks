@@ -274,6 +274,32 @@ namespace Models {
         return getHasDescriptionWordSpellError(word);
     }
 
+    void CombinedArtworksModel::replaceFromPreset(int keywordsIndex, int presetIndex) {
+        auto *presetsModel = m_CommandManager->getPresetsModel();
+        QStringList keywords;
+
+        if (!presetsModel->tryGetPreset(presetIndex, keywords)) {
+            return;
+        }
+
+        m_CommonKeywordsModel.replaceFromPreset(keywordsIndex, keywords);
+        emit keywordsCountChanged();
+        setKeywordsModified(true);
+        m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckFlags::Keywords);
+    }
+
+    void CombinedArtworksModel::appendFromPreset(int presetIndex) {
+        auto *presetsModel = m_CommandManager->getPresetsModel();
+        QStringList keywords;
+
+        if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+            m_CommonKeywordsModel.addFromPreset(keywords);
+            emit keywordsCountChanged();
+            setKeywordsModified(true);
+            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckFlags::Keywords);
+        }
+    }
+
     void CombinedArtworksModel::processCombinedEditCommand() {
         auto &artworksList = getArtworksList();
 

@@ -37,6 +37,8 @@
 #include "../Common/iservicebase.h"
 #include "../Helpers/ifilenotavailablemodel.h"
 #include "../Models/metadataelement.h"
+#include "../PresetKeywords/presetkeywordsmodel.h"
+#include "../PresetKeywords/presetkeywordsmodelconfig.h"
 
 namespace Encryption {
     class SecretsManager;
@@ -144,6 +146,8 @@ namespace Commands {
             m_DeleteKeywordsViewModel(NULL),
             m_FindAndReplaceModel(NULL),
             m_HelpersQmlWrapper(NULL),
+            m_PresetsModel(NULL),
+            m_PresetsModelConfig(NULL),
             m_AfterInitCalled(false)
         { }
 
@@ -179,6 +183,8 @@ namespace Commands {
         void InjectDependency(Models::FindAndReplaceModel *findAndReplaceModel);
         void InjectDependency(Models::DeleteKeywordsViewModel *deleteKeywordsViewModel);
         void InjectDependency(Helpers::HelpersQmlWrapper *helpersQmlWrapper);
+        void InjectDependency(KeywordsPreset::PresetKeywordsModel *presetsModel);
+        void InjectDependency(KeywordsPreset::PresetKeywordsModelConfig *presetsModelConfig);
 
     public:
         virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<ICommandBase> &command)
@@ -272,6 +278,8 @@ namespace Commands {
         virtual Models::ZipArchiver *getZipArchiver() const { return m_ZipArchiver; }
         virtual Models::DeleteKeywordsViewModel *getDeleteKeywordsModel() const { return m_DeleteKeywordsViewModel; }
         virtual SpellCheck::SpellCheckSuggestionModel *getSpellSuggestionsModel() const { return m_SpellCheckSuggestionModel; }
+        virtual KeywordsPreset::PresetKeywordsModel *getPresetsModel() const { return m_PresetsModel; }
+        virtual KeywordsPreset::PresetKeywordsModelConfig *getPresetsModelConfig() const { return m_PresetsModelConfig; }
 
 #ifdef INTEGRATION_TESTS
         virtual MetadataIO::MetadataIOCoordinator *getMetadataIOCoordinator() const { return m_MetadataIOCoordinator; }
@@ -311,6 +319,8 @@ namespace Commands {
         Models::DeleteKeywordsViewModel *m_DeleteKeywordsViewModel;
         Models::FindAndReplaceModel *m_FindAndReplaceModel;
         Helpers::HelpersQmlWrapper *m_HelpersQmlWrapper;
+        KeywordsPreset::PresetKeywordsModel *m_PresetsModel;
+        KeywordsPreset::PresetKeywordsModelConfig *m_PresetsModelConfig;
 
         QVector<Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;

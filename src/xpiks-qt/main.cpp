@@ -88,6 +88,8 @@
 #include "MetadataIO/exiv2inithelper.h"
 #include "Models/findandreplacemodel.h"
 #include "Models/previewmetadataelement.h"
+#include "PresetKeywords/presetkeywordsmodel.h"
+#include "PresetKeywords/presetkeywordsmodelconfig.h"
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
@@ -298,6 +300,10 @@ int main(int argc, char *argv[]) {
     Models::ArtItemsModel artItemsModel;
     Models::CombinedArtworksModel combinedArtworksModel;
     Models::UploadInfoRepository uploadInfoRepository;
+    KeywordsPreset::PresetKeywordsModel presetsModel;
+    KeywordsPreset::PresetKeywordsModelConfig presetsModelConfig;
+    KeywordsPreset::FilteredPresetKeywordsModel filteredPresetsModel;
+    filteredPresetsModel.setSourceModel(&presetsModel);
     Warnings::WarningsService warningsService;
     Models::SettingsModel settingsModel;
     settingsModel.readAllValues();
@@ -373,6 +379,8 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&replaceModel);
     commandManager.InjectDependency(&deleteKeywordsModel);
     commandManager.InjectDependency(&helpersQmlWrapper);
+    commandManager.InjectDependency(&presetsModel);
+    commandManager.InjectDependency(&presetsModelConfig);
 
     artworkProxyModel.setCommandManager(&commandManager);
     QObject::connect(&artItemsModel, SIGNAL(fileWithIndexUnavailable(int)),
@@ -393,6 +401,7 @@ int main(int argc, char *argv[]) {
     languagesModel.loadLanguages();
 
     telemetryService.setInterfaceLanguage(languagesModel.getCurrentLanguage());
+    presetsModelConfig.initializeConfigs();
     colorsModel.applyTheme(settingsModel.getSelectedThemeIndex());
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");
@@ -425,6 +434,8 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("Colors", &colorsModel);
     rootContext->setContextProperty("acSource", &autoCompleteModel);
     rootContext->setContextProperty("replaceModel", &replaceModel);
+    rootContext->setContextProperty("presetsModel", &presetsModel);
+    rootContext->setContextProperty("filteredPresetsModel", &filteredPresetsModel);
     rootContext->setContextProperty("artworkProxy", &artworkProxyModel);
 
 #ifdef QT_DEBUG

@@ -476,6 +476,14 @@ ApplicationWindow {
                     openUploadDialog(true)
                 }
             }
+
+            MenuItem {
+                text: i18.n + qsTr("&Presets")
+                onTriggered: {
+                    console.info("Presets triggered")
+                    Common.launchDialog("Dialogs/PresetEditDialog.qml", applicationWindow, {})
+                }
+            }
         }
 
         Menu {

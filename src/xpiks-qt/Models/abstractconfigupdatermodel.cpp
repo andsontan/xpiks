@@ -34,22 +34,14 @@ namespace Models {
 
     void AbstractConfigUpdaterModel::initializeConfigs(const QString &configUrl, const QString &filePath) {
         LOG_DEBUG << "#";
-        m_LocalConfig.initConfig(filePath);
-
-        Q_ASSERT(m_CommandManager != NULL);
-        Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
-        ProxySettings *proxySettings = settingsModel->retrieveProxySettings();
-
-        m_RemoteConfig.requestInitConfig(configUrl, proxySettings);
+        initLocalConfig(filePath);
+        initRemoteConfig(configUrl);
     }
 
     void AbstractConfigUpdaterModel::remoteConfigArrived() {
         LOG_DEBUG << "#";
         const QJsonDocument &remoteDocument = m_RemoteConfig.getConfig();
         processRemoteConfig(remoteDocument, m_ForceOverwrite);
-
-        const QJsonDocument &localDocument = m_LocalConfig.getConfig();
-        parseConfig(localDocument);
     }
 
     void AbstractConfigUpdaterModel::processRemoteConfig(const QJsonDocument &remoteDocument, bool overwriteLocal) {
@@ -57,5 +49,19 @@ namespace Models {
         QJsonDocument &localDocument = m_LocalConfig.getConfig();
         Helpers::mergeJson(remoteDocument, localDocument, overwriteLocal, *this);
         m_LocalConfig.saveToFile();
+    }
+
+    void AbstractConfigUpdaterModel::initRemoteConfig(const QString &configUrl)
+    {
+        Q_ASSERT(m_CommandManager != NULL);
+        Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+        ProxySettings *proxySettings = settingsModel->retrieveProxySettings();
+        Q_ASSERT(!configUrl.isEmpty());
+        m_RemoteConfig.requestInitConfig(configUrl, proxySettings);
+    }
+    void AbstractConfigUpdaterModel::initLocalConfig(const QString &filePath){
+        m_LocalConfig.initConfig(filePath);
+        const QJsonDocument &localDocument = m_LocalConfig.getConfig();
+        parseConfig(localDocument);
     }
 }

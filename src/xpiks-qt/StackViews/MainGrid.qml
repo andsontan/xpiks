@@ -60,12 +60,55 @@ ColumnLayout {
     }
 
     Menu {
-        id: addWordContextMenu
+        id: wordRightClickMenu
         property string word
+        property int artworkIndex
+        property int keywordIndex
+        property bool showAddToDict : true
+        property bool showExpandPreset : false
 
         MenuItem {
+            visible: wordRightClickMenu.showAddToDict
             text: i18.n + qsTr("Add to dictionary")
-            onTriggered: spellCheckService.addWordToUserDictionary(addWordContextMenu.word);
+            onTriggered: spellCheckService.addWordToUserDictionary(wordRightClickMenu.word);
+        }
+
+        Menu {
+            id : presetSubMenu
+            visible: wordRightClickMenu.showExpandPreset
+            title: i18.n + qsTr("Expand as preset")
+            Instantiator {
+                id : presetsInstantiator
+                model: filteredPresetsModel
+                onObjectAdded: presetSubMenu.insertItem( index, object )
+                onObjectRemoved: presetSubMenu.removeItem( object )
+                delegate: MenuItem {
+                    text: i18.n + qsTr("\"%1\"").arg(filteredPresetsModel.getName(index))
+                    onTriggered: {
+                        filteredArtItemsModel.replaceFromPreset(wordRightClickMenu.artworkIndex, wordRightClickMenu.word,  filteredPresetsModel.getOriginalIndex(index));
+                    }
+
+                }
+            }
+        }
+    }
+
+    Menu {
+        id: presetsMenu
+        property int artworkIndex
+        Instantiator {
+            model: filteredPresetsModel
+            onObjectAdded:{
+                presetsMenu.insertItem( index, object )
+            }
+            onObjectRemoved: presetsMenu.removeItem( object )
+            delegate: MenuItem {
+                text: i18.n + qsTr("Expand as preset \"%1\"").arg(name)
+                onTriggered: {
+                    filteredArtItemsModel.appendFromPreset(presetsMenu.artworkIndex, filteredPresetsModel.getOriginalIndex(index));
+                }
+
+            }
         }
     }
 
@@ -871,10 +914,14 @@ ColumnLayout {
                                                     userDictEnabled: true
 
                                                     onActionRightClicked: {
-                                                        if (filteredArtItemsModel.hasDescriptionWordSpellError(rowWrapper.delegateIndex, rightClickedWord)){
-                                                            console.log("Context menu for add word " + rightClickedWord)
-                                                            addWordContextMenu.word = rightClickedWord
-                                                            addWordContextMenu.popup()
+                                                        console.log("Context menu for add word " + rightClickedWord)
+                                                        var showAddToDict = filteredArtItemsModel.hasDescriptionWordSpellError(rowWrapper.delegateIndex, rightClickedWord)
+                                                        wordRightClickMenu.showAddToDict = showAddToDict
+                                                        wordRightClickMenu.word = rightClickedWord
+                                                        wordRightClickMenu.showExpandPreset = false
+                                                        if (wordRightClickMenu.showAddToDict ||
+                                                                wordRightClickMenu.showExpandPreset) {
+                                                            wordRightClickMenu.popup()
                                                         }
 
                                                     }
@@ -977,10 +1024,14 @@ ColumnLayout {
                                                     userDictEnabled: true
 
                                                     onActionRightClicked: {
-                                                        if (filteredArtItemsModel.hasTitleWordSpellError(rowWrapper.delegateIndex, rightClickedWord)){
-                                                            console.log("Context menu for add word " + rightClickedWord)
-                                                            addWordContextMenu.word = rightClickedWord
-                                                            addWordContextMenu.popup()
+                                                        console.log("Context menu for add word " + rightClickedWord)
+                                                        var showAddToDict = filteredArtItemsModel.hasTitleWordSpellError(rowWrapper.delegateIndex, rightClickedWord)
+                                                        wordRightClickMenu.showAddToDict = showAddToDict
+                                                        wordRightClickMenu.word = rightClickedWord
+                                                        wordRightClickMenu.showExpandPreset = false
+                                                        if (wordRightClickMenu.showAddToDict ||
+                                                                wordRightClickMenu.showExpandPreset) {
+                                                            wordRightClickMenu.popup()
                                                         }
                                                     }
 
@@ -1113,10 +1164,16 @@ ColumnLayout {
                                                     }
 
                                                     onActionRightClicked: {
-                                                        if (!iscorrect) {
-                                                            console.log("Context menu for add word " + kw.keywordText);
-                                                            addWordContextMenu.word = kw.keywordText;
-                                                            addWordContextMenu.popup()
+                                                        wordRightClickMenu.showAddToDict = !iscorrect
+                                                        var keyword = kw.keywordText
+                                                        wordRightClickMenu.word = keyword
+                                                        filteredPresetsModel.searchTerm = keyword
+                                                        wordRightClickMenu.showExpandPreset = (filteredPresetsModel.getItemsCount() !== 0 )
+                                                        wordRightClickMenu.artworkIndex =  rowWrapper.delegateIndex
+                                                        wordRightClickMenu.keywordIndex = kw.delegateIndex
+                                                        if (wordRightClickMenu.showAddToDict ||
+                                                                wordRightClickMenu.showExpandPreset) {
+                                                            wordRightClickMenu.popup()
                                                         }
                                                     }
                                                 }
@@ -1157,6 +1214,11 @@ ColumnLayout {
                                                 onEditActivated: {
                                                     wrappersScope.updateCurrentIndex()
                                                     flv.activateEdit()
+                                                }
+
+                                                onRightClickedInside: {
+                                                    presetsMenu.artworkIndex = rowWrapper.delegateIndex
+                                                    presetsMenu.popup()
                                                 }
                                             }
 

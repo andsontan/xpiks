@@ -230,6 +230,34 @@ namespace Models {
         }
     }
 
+    void ArtworkProxyModel::replaceFromPreset(int keywordsIndex, int presetIndex)
+    {
+        auto *presetsModel = m_CommandManager->getPresetsModel();
+        QStringList keywords;
+
+        if (!presetsModel->tryGetPreset(presetIndex, keywords)) {
+            return;
+        }
+
+        m_ArtworkMetadata->replaceFromPreset(keywordsIndex, keywords);
+        emit keywordsCountChanged();
+        auto *basicModel = getBasicMetadataModel();
+        m_CommandManager->submitItemForSpellCheck(basicModel, Common::SpellCheckFlags::Keywords);
+    }
+
+    void ArtworkProxyModel::appendFromPreset(int presetIndex)
+    {
+        auto *presetsModel = m_CommandManager->getPresetsModel();
+        QStringList keywords;
+
+        if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+            m_ArtworkMetadata->addFromPreset(keywords);
+            emit keywordsCountChanged();
+            auto *basicModel = getBasicMetadataModel();
+            m_CommandManager->submitItemForSpellCheck(basicModel, Common::SpellCheckFlags::Keywords);
+        }
+    }
+
     void ArtworkProxyModel::updateCurrentArtwork() {
         if (m_ArtworkOriginalIndex != -1) {
             m_CommandManager->updateArtworks(QVector<int>() << m_ArtworkOriginalIndex);

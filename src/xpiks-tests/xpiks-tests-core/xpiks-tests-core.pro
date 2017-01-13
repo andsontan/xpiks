@@ -153,7 +153,9 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Conectivity/uploadwatcher.cpp \
     ../../xpiks-qt/Helpers/updatehelpers.cpp \
     basicmetadatamodel_tests.cpp \
-    ../../xpiks-qt/Models/artworkproxybase.cpp
+    ../../xpiks-qt/PresetKeywords/presetkeywordsmodel.cpp \
+    ../../xpiks-qt/Models/artworkproxybase.cpp \
+    preset_tests.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -262,6 +264,8 @@ HEADERS += \
     ../../xpiks-qt/Conectivity/uploadwatcher.h \
     ../../xpiks-qt/Helpers/updatehelpers.h \
     basicmetadatamodel_tests.h \
+    ../../xpiks-qt/PresetKeywords/presetkeywordsmodel.h \
     ../../xpiks-qt/Common/imetadataoperator.h \
-    ../../xpiks-qt/Models/artworkproxybase.h
+    ../../xpiks-qt/Models/artworkproxybase.h \
+    preset_tests.h
 
