@@ -120,8 +120,8 @@ SOURCES += main.cpp \
     Conectivity/simplecurldownloader.cpp \
     Helpers/updatehelpers.cpp \
     Common/basicmetadatamodel.cpp \
-    PresetKeywords/presetkeywordsmodel.cpp \
-    PresetKeywords/presetkeywordsmodelconfig.cpp \
+    KeywordsPresets/presetkeywordsmodel.cpp \
+    KeywordsPresets/presetkeywordsmodelconfig.cpp \
     QMLExtensions/folderelement.cpp \
     Models/artworkproxymodel.cpp \
     Models/artworkproxybase.cpp
@@ -301,8 +301,8 @@ HEADERS += \
     Conectivity/apimanager.h \
     Helpers/updatehelpers.h \
     Common/basicmetadatamodel.h \
-    PresetKeywords/presetkeywordsmodel.h \
-    PresetKeywords/presetkeywordsmodelconfig.h \
+    KeywordsPresets/presetkeywordsmodel.h \
+    KeywordsPresets/presetkeywordsmodelconfig.h \
     QMLExtensions/folderelement.h \
     Models/artworkproxymodel.h \
     Models/artworkproxybase.h \
@@ -371,7 +371,6 @@ DISTFILES += \
     Dialogs/DeleteKeywordsDialog.qml \
     Dialogs/FailedUploadArtworks.qml \
     Dialogs/InstallUpdateDialog.qml \
-    Dialogs/PresetEditDialog.qml \
     StyledControls/StyledMainTabView.qml \
     Components/CustomTab.qml \
     StackViews/MainGrid.qml \
@@ -380,7 +379,8 @@ DISTFILES += \
     StackViews/WarningsView.qml \
     Components/GlyphButton.qml \
     Components/BackGlyphButton.qml \
-    StackViews/CombinedEditView.qml
+    StackViews/CombinedEditView.qml \
+    Dialogs/PresetsEditDialog.qml
 
 lupdate_only {
 SOURCES += *.qml \

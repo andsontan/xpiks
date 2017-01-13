@@ -178,19 +178,7 @@ namespace Models {
         void resetModified() { setIsModifiedFlag(false); }
         void requestFocus(int directionSign) { emit focusRequested(directionSign); }
         void requestBackup() { m_BackupTimer.start(1000); }
-        void replaceFromPreset(int keywordsIndex, const QStringList &presetList) {
-            bool result = m_MetadataModel.replaceFromPreset(keywordsIndex, presetList);
-            if (result) {
-                markModified();
-            }
-        }
-
-        void addFromPreset(const QStringList &presetList) {
-            bool result = m_MetadataModel.addFromPreset(presetList);
-            if (result) {
-                markModified();
-            }
-        }
+        virtual bool expandPreset(int keywordIndex, const QStringList &presetList);
 
 #ifndef CORE_TESTS
     private:

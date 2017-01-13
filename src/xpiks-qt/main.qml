@@ -481,7 +481,7 @@ ApplicationWindow {
                 text: i18.n + qsTr("&Presets")
                 onTriggered: {
                     console.info("Presets triggered")
-                    Common.launchDialog("Dialogs/PresetEditDialog.qml", applicationWindow, {})
+                    Common.launchDialog("Dialogs/PresetsEditDialog.qml", applicationWindow, {})
                 }
             }
         }

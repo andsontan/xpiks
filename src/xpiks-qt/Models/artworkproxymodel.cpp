@@ -230,32 +230,12 @@ namespace Models {
         }
     }
 
-    void ArtworkProxyModel::replaceFromPreset(int keywordsIndex, int presetIndex)
-    {
-        auto *presetsModel = m_CommandManager->getPresetsModel();
-        QStringList keywords;
-
-        if (!presetsModel->tryGetPreset(presetIndex, keywords)) {
-            return;
-        }
-
-        m_ArtworkMetadata->replaceFromPreset(keywordsIndex, keywords);
-        emit keywordsCountChanged();
-        auto *basicModel = getBasicMetadataModel();
-        m_CommandManager->submitItemForSpellCheck(basicModel, Common::SpellCheckFlags::Keywords);
+    void ArtworkProxyModel::expandPreset(int keywordsIndex, int presetIndex) {
+        doExpandPreset(keywordsIndex, presetIndex);
     }
 
-    void ArtworkProxyModel::appendFromPreset(int presetIndex)
-    {
-        auto *presetsModel = m_CommandManager->getPresetsModel();
-        QStringList keywords;
-
-        if (presetsModel->tryGetPreset(presetIndex, keywords)) {
-            m_ArtworkMetadata->addFromPreset(keywords);
-            emit keywordsCountChanged();
-            auto *basicModel = getBasicMetadataModel();
-            m_CommandManager->submitItemForSpellCheck(basicModel, Common::SpellCheckFlags::Keywords);
-        }
+    void ArtworkProxyModel::addPreset(int presetIndex) {
+        doAddPreset(presetIndex);
     }
 
     void ArtworkProxyModel::updateCurrentArtwork() {

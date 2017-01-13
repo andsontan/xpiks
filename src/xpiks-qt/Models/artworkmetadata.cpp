@@ -227,4 +227,13 @@ namespace Models {
             emit modifiedChanged(true);
         }
     }
+
+    bool ArtworkMetadata::expandPreset(int keywordIndex, const QStringList &presetList)  {
+        bool result = m_MetadataModel.expandPreset(keywordIndex, presetList);
+        if (result) {
+            markModified();
+        }
+
+        return result;
+    }
 }

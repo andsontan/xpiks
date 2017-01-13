@@ -6,10 +6,10 @@
 #include <QJsonArray>
 #include "../Conectivity/apimanager.h"
 
-namespace  KeywordsPreset {
+namespace KeywordsPresets {
 #define OVERWRITE_KEY QLatin1String("overwrite")
-#define PRESETKEYS_KEY QLatin1String("presetkeys")
-#define LOCAL_PRESETKEYWORDS_LIST_FILE "preset_keywords.json"
+#define PRESETKEYS_KEY QLatin1String("presetkeywords")
+#define LOCAL_PRESETKEYWORDS_LIST_FILE "keywords_presets.json"
 #define OVERWRITE_PRESETS_CONFIG false
 
     PresetKeywordsModelConfig::PresetKeywordsModelConfig(QObject *parent):
@@ -34,19 +34,20 @@ namespace  KeywordsPreset {
         emit presetsUpdated();
     }
 
-    void PresetKeywordsModelConfig::saveFromModel(const std::vector<Preset> &presets) {
+    void PresetKeywordsModelConfig::saveFromModel(const std::vector<PresetModel *> &presets) {
         int size = presets.size();
         LOG_INTEGR_TESTS_OR_DEBUG << size;
 
         m_PresetData.resize(size);
         for (int i = 0; i < size; i++) {
-            auto &item = presets[i];
-            auto &name = item.m_PresetName;
-            auto &keywordsModel = item.m_KeywordsModel;
-            auto keywords = keywordsModel->getKeywords();
-            m_PresetData[i].m_Keys = keywords;
+            auto *item = presets[i];
+            auto &name = item->m_PresetName;
+            auto &keywordsModel = item->m_KeywordsModel;
+
+            m_PresetData[i].m_Keywords = keywordsModel.getKeywords();
             m_PresetData[i].m_Name = name;
         }
+
 #ifndef INTEGRATION_TESTS
         writeToConfig();
 #endif
@@ -141,6 +142,7 @@ namespace  KeywordsPreset {
             QStringList list;
             int size = jsonArray.size();
             list.reserve(size);
+
             for (auto item: jsonArray) {
                 if (!item.isString()) {
                     LOG_WARNING << "value is not string";
@@ -157,21 +159,20 @@ namespace  KeywordsPreset {
     void PresetKeywordsModelConfig::writeToConfig() {
         QJsonArray jsonArray;
 
-        for (auto &item : m_PresetData) {
+        for (auto &item: m_PresetData) {
             QJsonObject object;
-            QJsonArray keys;
-            LOG_WARNING << item.m_Name<< " " << item.m_Keys;
-            keys = QJsonArray::fromStringList(item.m_Keys);
-            object.insert(item.m_Name, keys);
+            QJsonArray keywords;
+            keywords = QJsonArray::fromStringList(item.m_Keywords);
+            object.insert(item.m_Name, keywords);
             jsonArray.append(object);
         }
 
-        QJsonObject topObject;
-        topObject.insert(OVERWRITE_KEY, OVERWRITE_PRESETS_CONFIG);
-        topObject.insert(PRESETKEYS_KEY, jsonArray);
+        QJsonObject rootObject;
+        rootObject.insert(OVERWRITE_KEY, OVERWRITE_PRESETS_CONFIG);
+        rootObject.insert(PRESETKEYS_KEY, jsonArray);
         QJsonDocument doc;
-        doc.setObject(topObject);
-        LOG_WARNING << doc;
+        doc.setObject(rootObject);
+
         Helpers::LocalConfig &localConfig = getLocalConfig();
         localConfig.setConfig(doc);
         localConfig.saveToFile();
@@ -180,9 +181,5 @@ namespace  KeywordsPreset {
     void PresetKeywordsModelConfig::initialize(const QVector<PresetData> &presetData){
         m_PresetData = presetData;
         emit presetsUpdated();
-    }
-
-    const QVector<PresetData> & PresetKeywordsModelConfig::getPresetData(){
-        return m_PresetData;
     }
 }

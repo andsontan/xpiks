@@ -74,7 +74,7 @@ ColumnLayout {
         }
 
         Menu {
-            id : presetSubMenu
+            id: presetSubMenu
             visible: wordRightClickMenu.showExpandPreset
             title: i18.n + qsTr("Expand as preset")
             Instantiator {
@@ -83,9 +83,9 @@ ColumnLayout {
                 onObjectAdded: presetSubMenu.insertItem( index, object )
                 onObjectRemoved: presetSubMenu.removeItem( object )
                 delegate: MenuItem {
-                    text: i18.n + qsTr("\"%1\"").arg(filteredPresetsModel.getName(index))
+                    text: filteredPresetsModel.getName(index)
                     onTriggered: {
-                        filteredArtItemsModel.replaceFromPreset(wordRightClickMenu.artworkIndex, wordRightClickMenu.word,  filteredPresetsModel.getOriginalIndex(index));
+                        filteredArtItemsModel.expandPreset(wordRightClickMenu.artworkIndex, wordRightClickMenu.word,  filteredPresetsModel.getOriginalIndex(index));
                     }
 
                 }
@@ -105,7 +105,7 @@ ColumnLayout {
             delegate: MenuItem {
                 text: i18.n + qsTr("Expand as preset \"%1\"").arg(name)
                 onTriggered: {
-                    filteredArtItemsModel.appendFromPreset(presetsMenu.artworkIndex, filteredPresetsModel.getOriginalIndex(index));
+                    filteredArtItemsModel.addPreset(presetsMenu.artworkIndex, filteredPresetsModel.getOriginalIndex(index));
                 }
 
             }

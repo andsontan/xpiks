@@ -88,8 +88,8 @@
 #include "MetadataIO/exiv2inithelper.h"
 #include "Models/findandreplacemodel.h"
 #include "Models/previewmetadataelement.h"
-#include "PresetKeywords/presetkeywordsmodel.h"
-#include "PresetKeywords/presetkeywordsmodelconfig.h"
+#include "KeywordsPresets/presetkeywordsmodel.h"
+#include "KeywordsPresets/presetkeywordsmodelconfig.h"
 
 void myMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg) {
     Q_UNUSED(context);
@@ -300,9 +300,9 @@ int main(int argc, char *argv[]) {
     Models::ArtItemsModel artItemsModel;
     Models::CombinedArtworksModel combinedArtworksModel;
     Models::UploadInfoRepository uploadInfoRepository;
-    KeywordsPreset::PresetKeywordsModel presetsModel;
-    KeywordsPreset::PresetKeywordsModelConfig presetsModelConfig;
-    KeywordsPreset::FilteredPresetKeywordsModel filteredPresetsModel;
+    KeywordsPresets::PresetKeywordsModel presetsModel;
+    KeywordsPresets::PresetKeywordsModelConfig presetsModelConfig;
+    KeywordsPresets::FilteredPresetKeywordsModel filteredPresetsModel;
     filteredPresetsModel.setSourceModel(&presetsModel);
     Warnings::WarningsService warningsService;
     Models::SettingsModel settingsModel;

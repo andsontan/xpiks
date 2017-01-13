@@ -214,6 +214,37 @@ namespace Models {
         return keywordsModel->hasDescriptionWordSpellError(word);
     }
 
+    bool ArtworkProxyBase::doExpandPreset(int keywordIndex, int presetIndex) {
+        bool success = false;
+        LOG_INFO << "keyword" << keywordIndex << "preset" << presetIndex;
+        auto *presetsModel = m_CommandManager->getPresetsModel();
+        QStringList keywords;
+
+        if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+            auto *metadataOperator = getMetadataOperator();
+            if (metadataOperator->expandPreset(keywordIndex, keywords)) {
+                signalKeywordsCountChanged();
+                spellCheckKeywords();
+                success = true;
+            }
+        }
+
+        return success;
+    }
+
+    bool ArtworkProxyBase::doAddPreset(int presetIndex) {
+        LOG_INFO << presetIndex;
+        bool success = false;
+        auto *presetsModel = m_CommandManager->getPresetsModel();
+        QStringList keywords;
+
+        if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+            success = doAppendKeywords(keywords) > 0;
+        }
+
+        return success;
+    }
+
     void ArtworkProxyBase::spellCheckKeywords() {
         auto *basicModel = getBasicMetadataModel();
         m_CommandManager->submitItemForSpellCheck(basicModel, Common::SpellCheckFlags::Keywords);

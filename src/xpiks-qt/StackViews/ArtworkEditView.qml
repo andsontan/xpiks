@@ -100,8 +100,8 @@ Rectangle {
         id: wordRightClickMenu
         property string word
         property int keywordIndex
-        property bool showAddToDict : true
-        property bool showExpandPreset : false
+        property bool showAddToDict: true
+        property bool showExpandPreset: false
 
         MenuItem {
             visible: wordRightClickMenu.showAddToDict
@@ -110,7 +110,7 @@ Rectangle {
         }
 
         Menu {
-            id : presetSubMenu
+            id: presetSubMenu
             visible: wordRightClickMenu.showExpandPreset
             title: i18.n + qsTr("Expand as preset")
             Instantiator {
@@ -119,9 +119,9 @@ Rectangle {
                 onObjectAdded: presetSubMenu.insertItem( index, object )
                 onObjectRemoved: presetSubMenu.removeItem( object )
                 delegate: MenuItem {
-                    text: i18.n + qsTr("\"%1\"").arg(filteredPresetsModel.getName(index))
+                    text: filteredPresetsModel.getName(index)
                     onTriggered: {
-                        artworkProxy.replaceFromPreset(wordRightClickMenu.word);
+                        artworkProxy.expandPreset(wordRightClickMenu.word);
                     }
                 }
             }
@@ -139,7 +139,7 @@ Rectangle {
             delegate: MenuItem {
                 text: i18.n + qsTr("Expand as preset \"%1\"").arg(name)
                 onTriggered: {
-                    artworkProxy.appendFromPreset(index);
+                    artworkProxy.addPreset(index);
                 }
 
             }

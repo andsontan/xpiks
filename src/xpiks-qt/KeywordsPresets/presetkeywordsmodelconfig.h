@@ -4,22 +4,22 @@
 #include "../Models/abstractconfigupdatermodel.h"
 #include "presetkeywordsmodel.h"
 
-namespace  KeywordsPreset {
+namespace KeywordsPresets {
     struct PresetData {
-        QStringList m_Keys;
+        QStringList m_Keywords;
         QString m_Name;
     };
 
     class PresetKeywordsModelConfig:
         public Models::AbstractConfigUpdaterModel
     {
-    Q_OBJECT
+        Q_OBJECT
     friend class PresetKeywordsModel;
 
     public:
         PresetKeywordsModelConfig(QObject *parent=0);
         void initializeConfigs();
-        void saveFromModel(const std::vector<Preset> &presets);
+        void saveFromModel(const std::vector<PresetModel *> &presets);
 
     public:
         // AbstractConfigUpdaterModel interface
@@ -35,7 +35,7 @@ namespace  KeywordsPreset {
 
     public:
         void initialize(const QVector<PresetData> &presetData);
-        const QVector<PresetData> & getPresetData();
+        const QVector<PresetData> &getPresetData() const { return m_PresetData; }
 
     signals:
         void presetsUpdated();
@@ -45,7 +45,7 @@ namespace  KeywordsPreset {
         void writeToConfig();
 
     private:
-        QString localConfigPath;
+        QString m_LocalConfigPath;
         QVector<PresetData> m_PresetData;
     };
 }

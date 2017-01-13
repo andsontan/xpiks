@@ -71,6 +71,8 @@ namespace Models {
         void doPlainTextEdit(const QString &rawKeywords);
         bool getHasTitleWordSpellError(const QString &word);
         bool getHasDescriptionWordSpellError(const QString &word);
+        bool doExpandPreset(int keywordIndex, int presetIndex);
+        bool doAddPreset(int presetIndex);
 
     private:
         void spellCheckKeywords();

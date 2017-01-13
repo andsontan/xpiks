@@ -173,13 +173,6 @@ namespace Common {
         setKeywordsUnsafe(keywordsList);
     }
 
-    bool BasicKeywordsModel::expandPreset(int keywordsIndex, const QStringList &keywordsList) {
-        QWriteLocker writeLocker(&m_KeywordsLock);
-
-        Q_UNUSED(writeLocker);
-        return expandPresetUnsafe(keywordsIndex, keywordsList);
-    }
-
     int BasicKeywordsModel::appendKeywords(const QStringList &keywordsList) {
         QWriteLocker writeLocker(&m_KeywordsLock);
 
@@ -219,6 +212,20 @@ namespace Common {
 
         if (result) {
             emit spellCheckErrorsChanged();
+        }
+
+        return result;
+    }
+
+    bool BasicKeywordsModel::expandPreset(int keywordIndex, const QStringList &presetList) {
+        LOG_INFO << keywordIndex;
+        bool result = false;
+        QWriteLocker writeLocker(&m_KeywordsLock);
+
+        Q_UNUSED(writeLocker);
+        if ((0 <= keywordIndex) && (keywordIndex < m_KeywordsList.length())) {
+            expandPresetUnsafe(keywordIndex, presetList);
+            result = true;
         }
 
         return result;
@@ -493,26 +500,21 @@ namespace Common {
         return anythingRemoved;
     }
 
-    bool BasicKeywordsModel::expandPresetUnsafe(int keywordsIndex, const QStringList &keywordsList) {
-        int size = m_KeywordsList.size();
+    void BasicKeywordsModel::expandPresetUnsafe(int keywordsIndex, const QStringList &keywordsList) {
+        Q_ASSERT((0 <= keywordsIndex) && (keywordsIndex < m_KeywordsList.size()));
 
-        if (keywordsIndex >= size || keywordsIndex < 0) {
-            return false;
-        }
-
-        LOG_DEBUG << "target word index" << keywordsIndex << " " << keywordsList;
+        LOG_INFO << "index" << keywordsIndex << "list:" << keywordsList;
         QString removedKeyword;
         bool wasCorrect = false;
 
         beginRemoveRows(QModelIndex(), keywordsIndex, keywordsIndex);
         this->takeKeywordAtUnsafe(keywordsIndex, removedKeyword, wasCorrect);
         endRemoveRows();
-        Q_UNUSED(removedKeyword);
+        LOG_INFO << "replaced keyword" << removedKeyword;
         Q_UNUSED(wasCorrect);
 
-        appendKeywordsUnsafe(keywordsList);
-
-        return true;
+        int addedCount = appendKeywordsUnsafe(keywordsList);
+        LOG_INFO << addedCount << "new added";
     }
 
     void BasicKeywordsModel::removeKeywordsAtIndicesUnsafe(const QVector<int> &indices) {

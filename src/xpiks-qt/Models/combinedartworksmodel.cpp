@@ -274,29 +274,15 @@ namespace Models {
         return getHasDescriptionWordSpellError(word);
     }
 
-    void CombinedArtworksModel::replaceFromPreset(int keywordsIndex, int presetIndex) {
-        auto *presetsModel = m_CommandManager->getPresetsModel();
-        QStringList keywords;
-
-        if (!presetsModel->tryGetPreset(presetIndex, keywords)) {
-            return;
+    void CombinedArtworksModel::expandPreset(int keywordIndex, int presetIndex) {
+        if (doExpandPreset(keywordIndex, presetIndex)) {
+            setKeywordsModified(true);
         }
-
-        m_CommonKeywordsModel.replaceFromPreset(keywordsIndex, keywords);
-        emit keywordsCountChanged();
-        setKeywordsModified(true);
-        m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckFlags::Keywords);
     }
 
-    void CombinedArtworksModel::appendFromPreset(int presetIndex) {
-        auto *presetsModel = m_CommandManager->getPresetsModel();
-        QStringList keywords;
-
-        if (presetsModel->tryGetPreset(presetIndex, keywords)) {
-            m_CommonKeywordsModel.addFromPreset(keywords);
-            emit keywordsCountChanged();
+    void CombinedArtworksModel::addPreset(int presetIndex) {
+        if (doAddPreset(presetIndex)) {
             setKeywordsModified(true);
-            m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel, Common::SpellCheckFlags::Keywords);
         }
     }
 

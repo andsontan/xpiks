@@ -69,6 +69,7 @@ namespace Common {
         virtual Common::BasicKeywordsModel *getBasicKeywordsModel();
         virtual QStringList getDescriptionWords();
         virtual QStringList getTitleWords();
+        virtual bool expandPreset(int keywordIndex, const QStringList &presetList);
 
     private:
         bool replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
@@ -83,8 +84,6 @@ namespace Common {
         bool hasDescriptionWordSpellError(const QString &word);
         bool hasTitleWordSpellError(const QString &word);
         virtual bool hasSpellErrors();
-        bool replaceFromPreset(int keywordsIndex, const QStringList &presetList);
-        bool addFromPreset(const QStringList &presetList);
 
     public:
         // IMetadataOperator

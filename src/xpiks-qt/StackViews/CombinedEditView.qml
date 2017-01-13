@@ -106,7 +106,7 @@ Rectangle {
         }
 
         Menu {
-            id : presetSubMenu
+            id: presetSubMenu
             visible: wordRightClickMenu.showExpandPreset
             title: i18.n + qsTr("Expand as preset")
             Instantiator {
@@ -115,9 +115,9 @@ Rectangle {
                 onObjectAdded: presetSubMenu.insertItem( index, object )
                 onObjectRemoved: presetSubMenu.removeItem( object )
                 delegate: MenuItem {
-                    text: i18.n + qsTr("\"%1\"").arg(filteredPresetsModel.getName(index))
+                    text: filteredPresetsModel.getName(index)
                     onTriggered: {
-                        combinedArtworks.replaceFromPreset(wordRightClickMenu.artworkIndex, filteredPresetsModel.getOriginalIndex(index));
+                        combinedArtworks.expandPreset(wordRightClickMenu.artworkIndex, filteredPresetsModel.getOriginalIndex(index));
                     }
                 }
             }
@@ -137,7 +137,7 @@ Rectangle {
             delegate: MenuItem {
                 text: i18.n + qsTr("Expand as preset \"%1\"").arg(name)
                 onTriggered: {
-                    combinedArtworks.appendFromPreset(index);
+                    combinedArtworks.addPreset(index);
                 }
 
             }

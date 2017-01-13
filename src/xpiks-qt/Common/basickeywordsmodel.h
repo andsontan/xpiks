@@ -88,7 +88,7 @@ namespace Common {
         virtual int appendKeywords(const QStringList &keywordsList);
         virtual bool editKeyword(int index, const QString &replacement);
         virtual bool clearKeywords();
-		bool expandPreset(int keywordsIndex, const QStringList &keywordsList);
+        virtual bool expandPreset(int keywordIndex, const QStringList &presetList);
         bool areKeywordsEmpty();
         virtual bool replace(const QString &replaceWhat, const QString &replaceTo, Common::SearchFlags flags);
         bool removeKeywords(const QSet<QString> &keywords, bool caseSensitive);
@@ -105,7 +105,7 @@ namespace Common {
         bool containsKeywordUnsafe(const QString &searchTerm, Common::SearchFlags searchFlags=Common::SearchFlags::Keywords);
         bool hasKeywordsSpellErrorUnsafe() const;
         bool removeKeywordsUnsafe(const QSet<QString> &keywordsToRemove, bool caseSensitive);
-        bool expandPresetUnsafe(int keywordsIndex, const QStringList &keywordsList);
+        void expandPresetUnsafe(int keywordsIndex, const QStringList &keywordsList);
 
         void lockKeywordsRead() { m_KeywordsLock.lockForRead(); }
         void unlockKeywords() { m_KeywordsLock.unlock(); }

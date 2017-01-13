@@ -43,6 +43,7 @@ namespace Common {
         virtual void setKeywords(const QStringList &keywords) = 0;
         virtual bool setDescription(const QString &value) = 0;
         virtual bool setTitle(const QString &value) = 0;
+        virtual bool expandPreset(int keywordIndex, const QStringList &presetList) = 0;
 
         virtual Common::BasicKeywordsModel *getBasicKeywordsModel() = 0;
 

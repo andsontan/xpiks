@@ -175,6 +175,10 @@ namespace Common {
         return words;
     }
 
+    bool BasicMetadataModel::expandPreset(int keywordIndex, const QStringList &presetList) {
+        return BasicKeywordsModel::expandPreset(keywordIndex, presetList);
+    }
+
     bool BasicMetadataModel::replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
                                                   Common::SearchFlags flags) {
         LOG_DEBUG << "#";
@@ -281,14 +285,6 @@ namespace Common {
                 BasicKeywordsModel::hasSpellErrors();
 
         return result;
-    }
-
-    bool BasicMetadataModel::replaceFromPreset(int keywordsIndex, const QStringList &presetList) {
-        return expandPreset(keywordsIndex, presetList);
-    }
-
-    bool BasicMetadataModel::addFromPreset(const QStringList &presetList) {
-        return appendKeywords(presetList) != 0;
     }
 
     bool BasicMetadataModel::setDescription(const QString &value) {

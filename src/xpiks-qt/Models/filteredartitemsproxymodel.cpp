@@ -393,18 +393,20 @@ namespace Models {
         return result;
     }
 
-    void FilteredArtItemsProxyModel::appendFromPreset(int index, int presetIndex) {
+    void FilteredArtItemsProxyModel::expandPreset(int index, int keywordIndex, int presetIndex) {
+        LOG_INFO << "item" << index << "keyword" << keywordIndex << "preset" << presetIndex;
+
         if (0 <= index && index < rowCount()) {
             int originalIndex = getOriginalIndex(index);
-            LOG_INFO << "preset index" << presetIndex << "original index" << originalIndex;
             auto *presetsModel = m_CommandManager->getPresetsModel();
             QStringList keywords;
+
             if (presetsModel->tryGetPreset(presetIndex, keywords)) {
                 ArtItemsModel *artItemsModel = getArtItemsModel();
                 ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
 
                 if (metadata != NULL) {
-                    metadata->addFromPreset(keywords);
+                    metadata->expandPreset(keywordIndex, keywords);
                     auto *keywordsModel = metadata->getBasicModel();
                     m_CommandManager->submitItemForSpellCheck(keywordsModel);
                 }
@@ -412,23 +414,22 @@ namespace Models {
         }
     }
 
-    void FilteredArtItemsProxyModel::replaceFromPreset(int index, int keywordsIndex, int presetIndex) {
+    void FilteredArtItemsProxyModel::addPreset(int index, int presetIndex) {
+        LOG_INFO << "item" << index << "preset" << presetIndex;
+
         if (0 <= index && index < rowCount()) {
             int originalIndex = getOriginalIndex(index);
-            LOG_INFO << originalIndex;
             auto *presetsModel = m_CommandManager->getPresetsModel();
-            QString presetName;
-            if (presetsModel->tryGetNameFromIndex(presetIndex, presetName)) {
-                QStringList keywords;
-                if (presetsModel->tryGetPreset(presetIndex, keywords)) {
-                    ArtItemsModel *artItemsModel = getArtItemsModel();
-                    ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+            QStringList keywords;
 
-                    if (metadata != NULL) {
-                        metadata->replaceFromPreset(keywordsIndex, keywords);
-                        auto *keywordsModel = metadata->getBasicModel();
-                        m_CommandManager->submitItemForSpellCheck(keywordsModel);
-                    }
+            if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+                ArtItemsModel *artItemsModel = getArtItemsModel();
+                ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+
+                if (metadata != NULL) {
+                    metadata->appendKeywords(keywords);
+                    auto *keywordsModel = metadata->getBasicModel();
+                    m_CommandManager->submitItemForSpellCheck(keywordsModel);
                 }
             }
         }
