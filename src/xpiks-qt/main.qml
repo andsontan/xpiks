@@ -416,6 +416,14 @@ ApplicationWindow {
             enabled: applicationWindow.openedDialogsCount == 0
 
             MenuItem {
+                text: i18.n + qsTr("&Presets")
+                onTriggered: {
+                    console.info("Presets triggered")
+                    Common.launchDialog("Dialogs/PresetsEditDialog.qml", applicationWindow, {})
+                }
+            }
+
+            MenuItem {
                 text: i18.n + qsTr("&Invert selection")
                 onTriggered: {
                     console.info("Invert selection triggered")
@@ -474,14 +482,6 @@ ApplicationWindow {
                 onTriggered: {
                     console.info("Manage upload hosts triggered")
                     openUploadDialog(true)
-                }
-            }
-
-            MenuItem {
-                text: i18.n + qsTr("&Presets")
-                onTriggered: {
-                    console.info("Presets triggered")
-                    Common.launchDialog("Dialogs/PresetsEditDialog.qml", applicationWindow, {})
                 }
             }
         }

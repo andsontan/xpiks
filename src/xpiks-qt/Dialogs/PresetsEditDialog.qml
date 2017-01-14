@@ -316,7 +316,9 @@ Item {
 
                             onEditingFinished: {
                                 if (text.length == 0) {
-                                    presetNamesListView.currentItem.myData.editname = qsTr("Untitled")
+                                    if (presetNamesListView.currentItem) {
+                                        presetNamesListView.currentItem.myData.editname = qsTr("Untitled")
+                                    }
                                 }
                             }
 
@@ -415,25 +417,16 @@ Item {
                                         }
                                     }
 
+                                    var basicModel = presetsModel.getBasicModel(presetNamesListView.currentIndex)
+
                                     Common.launchDialog("Dialogs/EditKeywordDialog.qml",
                                                         componentParent,
                                                         {
                                                             callbackObject: callbackObject,
                                                             previousKeyword: keyword,
                                                             keywordIndex: kw.delegateIndex,
-                                                            keywordsModel:  presetsModel.getBasicModel(presetNamesListView.currentIndex)
+                                                            keywordsModel: basicModel
                                                         })
-                                }
-
-                                onActionRightClicked: {
-                                    var showAddToDict = !iscorrect
-                                    wordRightClickMenu.showAddToDict = showAddToDict
-                                    wordRightClickMenu.word = kw.keywordText;
-                                    wordRightClickMenu.showExpandPreset = false
-                                    if (wordRightClickMenu.showAddToDict ||
-                                            wordRightClickMenu.showExpandPreset) {
-                                        wordRightClickMenu.popup()
-                                    }
                                 }
                             }
 

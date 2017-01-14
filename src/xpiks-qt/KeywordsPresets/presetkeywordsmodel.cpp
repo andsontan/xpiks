@@ -222,12 +222,7 @@ namespace KeywordsPresets {
             QString sanitized = newName.simplified();
 
             if (name != sanitized) {
-                if (sanitized.isEmpty()) {
-                    sanitized = QObject::tr("Untitled");
-                }
-
-                name = sanitized;
-                m_PresetsList[row]->m_PresetName = name;
+                m_PresetsList[row]->m_PresetName = sanitized;
                 emit dataChanged(index, index);
                 return true;
             }
