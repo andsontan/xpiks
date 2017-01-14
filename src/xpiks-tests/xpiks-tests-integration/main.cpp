@@ -47,8 +47,8 @@
 #include "../../xpiks-qt/Helpers/logger.h"
 #include "../../xpiks-qt/Common/version.h"
 #include "../../xpiks-qt/Common/defines.h"
-#include "../../xpiks-qt/PresetKeywords/presetkeywordsmodel.h"
-#include "../../xpiks-qt/PresetKeywords/presetkeywordsmodelconfig.h"
+#include "../../xpiks-qt/KeywordsPresets/presetkeywordsmodel.h"
+#include "../../xpiks-qt/KeywordsPresets/presetkeywordsmodelconfig.h"
 
 #include "integrationtestbase.h"
 #include "addfilesbasictest.h"
@@ -73,7 +73,7 @@
 #include "artworkuploaderbasictest.h"
 #include "plaintextedittest.h"
 #include "fixspellingmarksmodifiedtest.h"
-#include "preset_tests.h"
+#include "presetstest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -127,8 +127,8 @@ int main(int argc, char *argv[]) {
     Models::ArtItemsModel artItemsModel;
     Models::CombinedArtworksModel combinedArtworksModel;
     Models::UploadInfoRepository uploadInfoRepository;
-    KeywordsPreset::PresetKeywordsModel presetsModel;
-    KeywordsPreset::PresetKeywordsModelConfig presetsModelConfig;
+    KeywordsPresets::PresetKeywordsModel presetsModel;
+    KeywordsPresets::PresetKeywordsModelConfig presetsModelConfig;
     Warnings::WarningsService warningsService;
     Models::SettingsModel settingsModel;
     settingsModel.readAllValues();
@@ -232,7 +232,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new ArtworkUploaderBasicTest(&commandManager));
     integrationTests.append(new PlainTextEditTest(&commandManager));
     integrationTests.append(new FixSpellingMarksModifiedTest(&commandManager));
-    integrationTests.append(new PresetTests(&commandManager));
+    integrationTests.append(new PresetsTest(&commandManager));
 
 
     qDebug("\n");

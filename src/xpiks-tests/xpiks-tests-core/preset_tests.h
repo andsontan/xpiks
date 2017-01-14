@@ -1,7 +1,6 @@
 #ifndef PRESETTESTS_H
 #define PRESETTESTS_H
 
-
 #include <QObject>
 #include <QtTest/QtTest>
 

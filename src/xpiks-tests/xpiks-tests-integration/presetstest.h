@@ -3,16 +3,14 @@
 
 #include "integrationtestbase.h"
 
-class PresetTests:
-    public IntegrationTestBase
+class PresetsTest: public IntegrationTestBase
 {
 public:
-PresetTests(Commands::CommandManager *commandManager):
-    IntegrationTestBase(commandManager)
-{}
+    PresetsTest(Commands::CommandManager *commandManager):
+        IntegrationTestBase(commandManager)
+    {}
 
-// IntegrationTestBase interface
-
+    // IntegrationTestBase interface
 public:
     virtual QString testName();
     virtual void setup();

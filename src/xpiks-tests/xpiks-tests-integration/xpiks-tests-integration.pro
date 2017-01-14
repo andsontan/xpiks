@@ -155,12 +155,12 @@ SOURCES += main.cpp \
     ../../xpiks-qt/MetadataIO/exiv2inithelper.cpp \
     ../../xpiks-qt/Warnings/warningssettingsmodel.cpp \
     ../../xpiks-qt/Helpers/updatehelpers.cpp \
-    ../../xpiks-qt/PresetKeywords/presetkeywordsmodel.cpp \
-    ../../xpiks-qt/PresetKeywords/presetkeywordsmodelconfig.cpp \
+    ../../xpiks-qt/KeywordsPresets/PresetKeywordsModel.cpp \
+    ../../xpiks-qt/KeywordsPresets/PresetKeywordsModelConfig.cpp \
     ../../xpiks-qt/Models/artworkproxybase.cpp \
     plaintextedittest.cpp \
     fixspellingmarksmodifiedtest.cpp \
-    preset_tests.cpp
+    presetstest.cpp
 
 RESOURCES +=
 
@@ -343,13 +343,13 @@ HEADERS += \
     ../../xpiks-qt/Warnings/warningssettingsmodel.h \
     ../../xpiks-qt/Conectivity/apimanager.h \
     ../../xpiks-qt/Helpers/updatehelpers.h \
-    ../../xpiks-qt/PresetKeywords/presetkeywordsmodel.h \
-    ../../xpiks-qt/PresetKeywords/presetkeywordsmodelconfig.h \
+    ../../xpiks-qt/KeywordsPresets/PresetKeywordsModel.h \
+    ../../xpiks-qt/KeywordsPresets/PresetKeywordsModelConfig.h \
     ../../xpiks-qt/Common/imetadataoperator.h \
     ../../xpiks-qt/Models/artworkproxybase.h \
     plaintextedittest.h \
     fixspellingmarksmodifiedtest.h \
-    preset_tests.h
+    presetstest.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

@@ -1,5 +1,5 @@
 #include "preset_tests.h"
-#include "../xpiks-qt/PresetKeywords/presetkeywordsmodel.h"
+#include "../xpiks-qt/KeywordsPresets/presetkeywordsmodel.h"
 #include "Mocks/artitemsmodelmock.h"
 #include "Mocks/commandmanagermock.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"
@@ -17,7 +17,7 @@
     commandManagerMock.generateAndAddArtworks(count); \
     KeywordsPreset::PresetKeywordsModel presetKeywordsModel; \
     commandManagerMock.InjectDependency(&presetKeywordsModel); \
-    KeywordsPreset::FilteredPresetKeywordsModel filteredPresetKeywordsModel; \
+    KeywordsPresets::FilteredPresetKeywordsModel filteredPresetKeywordsModel; \
     filteredPresetKeywordsModel.setSourceModel(&presetKeywordsModel);
 
 void PresetTests::expandFromPresetTrivial()
