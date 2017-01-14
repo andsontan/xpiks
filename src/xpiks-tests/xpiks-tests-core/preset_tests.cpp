@@ -15,7 +15,7 @@
     filteredItemsModel.setSourceModel(&artItemsModelMock); \
     commandManagerMock.InjectDependency(&filteredItemsModel); \
     commandManagerMock.generateAndAddArtworks(count); \
-    KeywordsPreset::PresetKeywordsModel presetKeywordsModel; \
+    KeywordsPresets::PresetKeywordsModel presetKeywordsModel; \
     commandManagerMock.InjectDependency(&presetKeywordsModel); \
     KeywordsPresets::FilteredPresetKeywordsModel filteredPresetKeywordsModel; \
     filteredPresetKeywordsModel.setSourceModel(&presetKeywordsModel);
@@ -37,7 +37,7 @@ void PresetTests::expandFromPresetTrivial()
         metadata->initialize("title", "description", QStringList() << "keyword_0");
     }
 
-    filteredItemsModel.replaceFromPreset(0,0,0);
+    filteredItemsModel.expandPreset(0, 0, 0);
     Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(0);
     QStringList finalString;
     finalString << "keyword_1" << "keyword_2" << "keyword_3" << "keyword_4" << "keyword_5";
@@ -62,7 +62,7 @@ void PresetTests::expandFromPresetWithDublicates()
         metadata->initialize("title", "description", QStringList() << "keyword_0" << "keyword_1" << "keyword_2");
     }
 
-    filteredItemsModel.replaceFromPreset(0,0,0);
+    filteredItemsModel.expandPreset(0, 0, 0);
     Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(0);
     QStringList finalString;
     finalString << "keyword_1" << "keyword_2" << "keyword_3" << "keyword_4" << "keyword_5";
@@ -87,7 +87,7 @@ void PresetTests::appendFromPresetTrivial()
         metadata->initialize("title", "description", QStringList() << "keyword_0" << "keyword_1" << "keyword_2");
     }
 
-    filteredItemsModel.appendFromPreset(0,0);
+    filteredItemsModel.addPreset(0, 0);
     Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(0);
     QStringList finalString;
     finalString << "keyword_0" << "keyword_1" << "keyword_2" << "keyword_3" << "keyword_4" << "keyword_5";
@@ -112,7 +112,7 @@ void PresetTests::appendFromPresetWithDublicates()
         metadata->initialize("title", "description", QStringList() << "keyword_0" << "keyword_1" << "keyword_2");
     }
 
-    filteredItemsModel.appendFromPreset(0,0);
+    filteredItemsModel.addPreset(0, 0);
     Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(0);
     QStringList finalString;
     finalString << "keyword_0" << "keyword_1" << "keyword_2" << "keyword_3" << "keyword_4" << "keyword_5";
