@@ -5,6 +5,7 @@
 #include <QStringList>
 #include "integrationtestbase.h"
 #include "signalwaiter.h"
+#include "testshelpers.h"
 #include "../../xpiks-qt/Commands/commandmanager.h"
 #include "../../xpiks-qt/Models/artitemsmodel.h"
 #include "../../xpiks-qt/MetadataIO/metadataiocoordinator.h"
@@ -59,12 +60,13 @@ int PlainTextEditTest::doTest() {
 
     Models::CombinedArtworksModel *combinedModel = m_CommandManager->getCombinedArtworksModel();
     auto *basicModel = combinedModel->retrieveBasicMetadataModel();
+    VERIFY(!basicModel->hasKeywordsSpellError(), "Should not have errors initially");
 
     combinedModel->plainTextEdit("test, keyword, abbreviatoe");
 
-    if (!waiter.wait(5)) {
-        VERIFY(false, "Timeout for waiting for spellcheck results");
-    }
+    sleepWait(5, [&]() {
+        return (!spellCheckService->isBusy()) && basicModel->hasKeywordsSpellError();
+    });
 
     VERIFY(basicModel->hasKeywordsSpellError(), "Keywords spell error not detected");
 
