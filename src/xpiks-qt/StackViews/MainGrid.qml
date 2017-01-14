@@ -52,8 +52,7 @@ ColumnLayout {
         onTriggered: {
             if (selectAllCheckbox.checked) {
                 filteredArtItemsModel.selectFilteredArtworks();
-            }
-            else {
+            } else {
                 filteredArtItemsModel.unselectFilteredArtworks();
             }
         }
@@ -64,8 +63,14 @@ ColumnLayout {
         property string word
         property int artworkIndex
         property int keywordIndex
-        property bool showAddToDict : true
-        property bool showExpandPreset : false
+        property bool showAddToDict: true
+        property bool showExpandPreset: false
+
+        function popupIfNeeded() {
+            if (showAddToDict || showExpandPreset) {
+                popup()
+            }
+        }
 
         MenuItem {
             visible: wordRightClickMenu.showAddToDict
@@ -77,6 +82,7 @@ ColumnLayout {
             id: presetSubMenu
             visible: wordRightClickMenu.showExpandPreset
             title: i18.n + qsTr("Expand as preset")
+
             Instantiator {
                 id : presetsInstantiator
                 model: filteredPresetsModel
@@ -85,7 +91,8 @@ ColumnLayout {
                 delegate: MenuItem {
                     text: filteredPresetsModel.getName(index)
                     onTriggered: {
-                        filteredArtItemsModel.expandPreset(wordRightClickMenu.artworkIndex, wordRightClickMenu.word,  filteredPresetsModel.getOriginalIndex(index));
+                        var presetIndex = filteredPresetsModel.getOriginalIndex(index)
+                        artItemsModel.expandPreset(wordRightClickMenu.artworkIndex, wordRightClickMenu.keywordIndex,  presetIndex);
                     }
 
                 }
@@ -110,7 +117,7 @@ ColumnLayout {
                 delegate: MenuItem {
                     text: name
                     onTriggered: {
-                        filteredArtItemsModel.addPreset(subMenu.artworkIndex, filteredPresetsModel.getOriginalIndex(index));
+                        artItemsModel.addPreset(subMenu.artworkIndex, filteredPresetsModel.getOriginalIndex(index));
                     }
                 }
             }
@@ -924,11 +931,7 @@ ColumnLayout {
                                                         wordRightClickMenu.showAddToDict = showAddToDict
                                                         wordRightClickMenu.word = rightClickedWord
                                                         wordRightClickMenu.showExpandPreset = false
-                                                        if (wordRightClickMenu.showAddToDict ||
-                                                                wordRightClickMenu.showExpandPreset) {
-                                                            wordRightClickMenu.popup()
-                                                        }
-
+                                                        wordRightClickMenu.popupIfNeeded()
                                                     }
 
 
@@ -1034,10 +1037,7 @@ ColumnLayout {
                                                         wordRightClickMenu.showAddToDict = showAddToDict
                                                         wordRightClickMenu.word = rightClickedWord
                                                         wordRightClickMenu.showExpandPreset = false
-                                                        if (wordRightClickMenu.showAddToDict ||
-                                                                wordRightClickMenu.showExpandPreset) {
-                                                            wordRightClickMenu.popup()
-                                                        }
+                                                        wordRightClickMenu.popupIfNeeded()
                                                     }
 
                                                     Keys.onTabPressed: {
@@ -1174,12 +1174,9 @@ ColumnLayout {
                                                         wordRightClickMenu.word = keyword
                                                         filteredPresetsModel.searchTerm = keyword
                                                         wordRightClickMenu.showExpandPreset = (filteredPresetsModel.getItemsCount() !== 0 )
-                                                        wordRightClickMenu.artworkIndex =  rowWrapper.delegateIndex
+                                                        wordRightClickMenu.artworkIndex = rowWrapper.getIndex()
                                                         wordRightClickMenu.keywordIndex = kw.delegateIndex
-                                                        if (wordRightClickMenu.showAddToDict ||
-                                                                wordRightClickMenu.showExpandPreset) {
-                                                            wordRightClickMenu.popup()
-                                                        }
+                                                        wordRightClickMenu.popupIfNeeded()
                                                     }
                                                 }
 

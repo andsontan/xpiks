@@ -393,48 +393,6 @@ namespace Models {
         return result;
     }
 
-    void FilteredArtItemsProxyModel::expandPreset(int index, int keywordIndex, int presetIndex) {
-        LOG_INFO << "item" << index << "keyword" << keywordIndex << "preset" << presetIndex;
-
-        if (0 <= index && index < rowCount()) {
-            int originalIndex = getOriginalIndex(index);
-            auto *presetsModel = m_CommandManager->getPresetsModel();
-            QStringList keywords;
-
-            if (presetsModel->tryGetPreset(presetIndex, keywords)) {
-                ArtItemsModel *artItemsModel = getArtItemsModel();
-                ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
-
-                if (metadata != NULL) {
-                    metadata->expandPreset(keywordIndex, keywords);
-                    auto *keywordsModel = metadata->getBasicModel();
-                    m_CommandManager->submitItemForSpellCheck(keywordsModel);
-                }
-            }
-        }
-    }
-
-    void FilteredArtItemsProxyModel::addPreset(int index, int presetIndex) {
-        LOG_INFO << "item" << index << "preset" << presetIndex;
-
-        if (0 <= index && index < rowCount()) {
-            int originalIndex = getOriginalIndex(index);
-            auto *presetsModel = m_CommandManager->getPresetsModel();
-            QStringList keywords;
-
-            if (presetsModel->tryGetPreset(presetIndex, keywords)) {
-                ArtItemsModel *artItemsModel = getArtItemsModel();
-                ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
-
-                if (metadata != NULL) {
-                    metadata->appendKeywords(keywords);
-                    auto *keywordsModel = metadata->getBasicModel();
-                    m_CommandManager->submitItemForSpellCheck(keywordsModel);
-                }
-            }
-        }
-    }
-
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {
         int plus = value ? +1 : -1;
 

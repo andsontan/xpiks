@@ -108,11 +108,22 @@ Item {
                 height: itemHeight + 1
 
                 StyledText {
+                    id: completionText
                     text: parent.itemText
                     anchors.left: parent.left
                     anchors.verticalCenter: parent.verticalCenter
                     anchors.leftMargin: 16
                     color: isSelected ? Colors.whiteColor : Colors.inputBackgroundColor
+                }
+
+                StyledText {
+                    text: "p"
+                    visible: ispreset
+                    font.pixelSize: 10
+                    color: completionText.color
+                    anchors.right: parent.right
+                    anchors.rightMargin: 25
+                    anchors.verticalCenter: parent.verticalCenter
                 }
 
                 Rectangle {

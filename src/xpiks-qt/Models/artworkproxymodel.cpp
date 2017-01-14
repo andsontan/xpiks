@@ -230,8 +230,8 @@ namespace Models {
         }
     }
 
-    void ArtworkProxyModel::expandPreset(int keywordsIndex, int presetIndex) {
-        doExpandPreset(keywordsIndex, presetIndex);
+    void ArtworkProxyModel::expandPreset(int keywordIndex, int presetIndex) {
+        doExpandPreset(keywordIndex, presetIndex);
     }
 
     void ArtworkProxyModel::addPreset(int presetIndex) {

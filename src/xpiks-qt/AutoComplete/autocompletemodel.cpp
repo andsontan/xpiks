@@ -21,6 +21,8 @@
 
 #include "autocompletemodel.h"
 #include "../Common/defines.h"
+#include "../Commands/commandmanager.h"
+#include "../KeywordsPresets/presetkeywordsmodel.h"
 
 namespace AutoComplete {
     AutoCompleteModel::AutoCompleteModel(QObject *parent):
@@ -89,11 +91,16 @@ namespace AutoComplete {
         int row = index.row();
         if (row < 0 || row >= m_CompletionList.length()) return QVariant();
         if (role == Qt::DisplayRole) { return m_CompletionList.at(index.row()); }
+        else if (role == IsPresetRole) {
+            auto *presetsModel = m_CommandManager->getPresetsModel();
+            return presetsModel->isPresetName(m_CompletionList.at(index.row()));
+        }
         return QVariant();
     }
 
     QHash<int, QByteArray> AutoCompleteModel::roleNames() const {
         QHash<int, QByteArray> roles = QAbstractListModel::roleNames();
+        roles[IsPresetRole] = "ispreset";
         return roles;
     }
 }

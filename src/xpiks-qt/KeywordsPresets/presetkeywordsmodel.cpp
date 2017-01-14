@@ -39,6 +39,11 @@ namespace KeywordsPresets {
         m_PresetsList[presetIndex]->m_PresetName = name;
     }
 
+    bool PresetKeywordsModel::isPresetName(const QString &name) const {
+        bool hasName = m_NamesSet.contains(name.toLower());
+        return hasName;
+    }
+
     void PresetKeywordsModel::removeItem(int row) {
         if (row < 0 || row >= getPresetsCount()){
             return;
@@ -127,12 +132,14 @@ namespace KeywordsPresets {
 #ifndef CORE_TESTS
         auto *presetConfig = m_CommandManager->getPresetsModelConfig();
         presetConfig->saveFromModel(m_PresetsList);
+        updateNamesSet();
 #endif
     }
 
     void PresetKeywordsModel::loadModelFromConfig() {
         beginResetModel();
         doLoadFromConfig();
+        updateNamesSet();
         endResetModel();
     }
 
@@ -165,6 +172,16 @@ namespace KeywordsPresets {
         }
 
         m_PresetsList.clear();
+    }
+
+    void PresetKeywordsModel::updateNamesSet() {
+        QSet<QString> names;
+
+        for (auto *preset: m_PresetsList) {
+            names.insert(preset->m_PresetName.toLower());
+        }
+
+        m_NamesSet.swap(names);
     }
 
     int PresetKeywordsModel::rowCount(const QModelIndex &parent) const {
@@ -202,9 +219,9 @@ namespace KeywordsPresets {
         case EditNameRole: {
             auto &name = m_PresetsList[row]->m_PresetName;
             auto newName = value.toString();
+            QString sanitized = newName.simplified();
 
-            if (name != newName) {
-                QString sanitized = newName.simplified();
+            if (name != sanitized) {
                 if (sanitized.isEmpty()) {
                     sanitized = QObject::tr("Untitled");
                 }

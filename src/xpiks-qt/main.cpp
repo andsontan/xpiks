@@ -383,6 +383,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&presetsModelConfig);
 
     artworkProxyModel.setCommandManager(&commandManager);
+    autoCompleteModel.setCommandManager(&commandManager);
     QObject::connect(&artItemsModel, SIGNAL(fileWithIndexUnavailable(int)),
                      &artworkProxyModel, SLOT(itemUnavailableHandler(int)));
 

@@ -43,6 +43,7 @@ namespace KeywordsPresets {
         bool tryGetNameFromIndex(int index, QString &name);
         bool tryGetPreset(int presetIndex, QStringList &keywords);
         void setName(int presetIndex, const QString &name);
+        bool isPresetName(const QString &name) const;
 
     private:
         enum PresetKeywords_Roles {
@@ -78,10 +79,12 @@ namespace KeywordsPresets {
     private:
         void doLoadFromConfig();
         void removeAllPresets();
+        void updateNamesSet();
 
     private:
         std::vector<PresetModel *> m_PresetsList;
         std::vector<PresetModel *> m_Finalizers;
+        QSet<QString> m_NamesSet;
     };
 
     class FilteredPresetKeywordsModel:

@@ -130,6 +130,9 @@ namespace Models {
 
         /*Q_INVOKABLE*/ void detachVectorsFromSelected(const QVector<int> &selectedIndices);
 
+        Q_INVOKABLE void expandPreset(int metadataIndex, int keywordIndex, int presetIndex);
+        Q_INVOKABLE void addPreset(int metadataIndex, int presetIndex);
+
     public:
         virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
         virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;

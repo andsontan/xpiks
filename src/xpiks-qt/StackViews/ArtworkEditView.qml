@@ -103,6 +103,12 @@ Rectangle {
         property bool showAddToDict: true
         property bool showExpandPreset: false
 
+        function popupIfNeeded() {
+            if (showAddToDict || showExpandPreset) {
+                popup()
+            }
+        }
+
         MenuItem {
             visible: wordRightClickMenu.showAddToDict
             text: qsTr("Add to dictionary")
@@ -113,6 +119,7 @@ Rectangle {
             id: presetSubMenu
             visible: wordRightClickMenu.showExpandPreset
             title: i18.n + qsTr("Expand as preset")
+
             Instantiator {
                 id : presetsInstantiator
                 model: filteredPresetsModel
@@ -121,7 +128,8 @@ Rectangle {
                 delegate: MenuItem {
                     text: filteredPresetsModel.getName(index)
                     onTriggered: {
-                        artworkProxy.expandPreset(wordRightClickMenu.word);
+                        var presetIndex = filteredPresetsModel.getOriginalIndex(index)
+                        artworkProxy.expandPreset(wordRightClickMenu.keywordIndex, presetIndex);
                     }
                 }
             }
@@ -514,10 +522,7 @@ Rectangle {
                                         wordRightClickMenu.showAddToDict = showAddToDict
                                         wordRightClickMenu.word = rightClickedWord
                                         wordRightClickMenu.showExpandPreset = false
-                                        if (wordRightClickMenu.showAddToDict ||
-                                                wordRightClickMenu.showExpandPreset) {
-                                            wordRightClickMenu.popup()
-                                        }
+                                        wordRightClickMenu.popupIfNeeded()
                                     }
 
                                     Keys.onBacktabPressed: {
@@ -636,10 +641,7 @@ Rectangle {
                                         wordRightClickMenu.showAddToDict = showAddToDict
                                         wordRightClickMenu.word = rightClickedWord
                                         wordRightClickMenu.showExpandPreset = false
-                                        if (wordRightClickMenu.showAddToDict ||
-                                                wordRightClickMenu.showExpandPreset) {
-                                            wordRightClickMenu.popup()
-                                        }
+                                        wordRightClickMenu.popupIfNeeded()
                                     }
 
                                     wrapMode: TextEdit.Wrap
@@ -771,10 +773,7 @@ Rectangle {
                                         filteredPresetsModel.searchTerm = keyword
                                         wordRightClickMenu.showExpandPreset = (filteredPresetsModel.getItemsCount() !== 0 )
                                         wordRightClickMenu.keywordIndex = kw.delegateIndex
-                                        if (wordRightClickMenu.showAddToDict ||
-                                                wordRightClickMenu.showExpandPreset) {
-                                            wordRightClickMenu.popup()
-                                        }
+                                        wordRightClickMenu.popupIfNeeded()
                                     }
                                 }
 

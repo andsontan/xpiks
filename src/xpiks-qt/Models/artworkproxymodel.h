@@ -113,7 +113,7 @@ namespace Models {
         Q_INVOKABLE QString retrieveFileSize() const;
         Q_INVOKABLE QString getDateTaken() const;
         Q_INVOKABLE QString getAttachedVectorPath() const;
-        Q_INVOKABLE void expandPreset(int keywordsIndex, int presetIndex);
+        Q_INVOKABLE void expandPreset(int keywordIndex, int presetIndex);
         Q_INVOKABLE void addPreset(int presetIndex);
 
     protected:

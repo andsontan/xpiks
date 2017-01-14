@@ -568,6 +568,50 @@ namespace Models {
         }
     }
 
+    void ArtItemsModel::expandPreset(int metadataIndex, int keywordIndex, int presetIndex) {
+        LOG_INFO << "item" << metadataIndex << "keyword" << keywordIndex << "preset" << presetIndex;
+
+        if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
+            auto *presetsModel = m_CommandManager->getPresetsModel();
+            QStringList keywords;
+
+            if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+                ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+
+                if (metadata != NULL) {
+                    metadata->expandPreset(keywordIndex, keywords);
+                    QModelIndex index = this->index(metadataIndex);
+                    emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
+
+                    auto *keywordsModel = metadata->getBasicModel();
+                    m_CommandManager->submitItemForSpellCheck(keywordsModel);
+                }
+            }
+        }
+    }
+
+    void ArtItemsModel::addPreset(int metadataIndex, int presetIndex) {
+        LOG_INFO << "item" << metadataIndex << "preset" << presetIndex;
+
+        if (0 <= metadataIndex && metadataIndex < rowCount()) {
+            auto *presetsModel = m_CommandManager->getPresetsModel();
+            QStringList keywords;
+
+            if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+                ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+
+                if (metadata != NULL) {
+                    metadata->appendKeywords(keywords);
+                    QModelIndex index = this->index(metadataIndex);
+                    emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
+
+                    auto *keywordsModel = metadata->getBasicModel();
+                    m_CommandManager->submitItemForSpellCheck(keywordsModel);
+                }
+            }
+        }
+    }
+
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return (int)getArtworksCount();

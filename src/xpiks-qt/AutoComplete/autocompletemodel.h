@@ -37,6 +37,11 @@ namespace AutoComplete {
         AutoCompleteModel(QObject *parent=0);
 
     public:
+        enum AutoCompleteModelRoles {
+            IsPresetRole = Qt::UserRole + 1,
+        };
+
+    public:
         void setCompletions(const QStringList &completions);
 
     public:
