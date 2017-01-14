@@ -37,7 +37,7 @@ void PresetTests::expandFromPresetTrivial()
         metadata->initialize("title", "description", QStringList() << "keyword_0");
     }
 
-    filteredItemsModel.expandPreset(0, 0, 0);
+    artItemsModelMock.expandPreset(0, 0, 0);
     Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(0);
     QStringList finalString;
     finalString << "keyword_1" << "keyword_2" << "keyword_3" << "keyword_4" << "keyword_5";
@@ -62,7 +62,7 @@ void PresetTests::expandFromPresetWithDublicates()
         metadata->initialize("title", "description", QStringList() << "keyword_0" << "keyword_1" << "keyword_2");
     }
 
-    filteredItemsModel.expandPreset(0, 0, 0);
+    artItemsModelMock.expandPreset(0, 0, 0);
     Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(0);
     QStringList finalString;
     finalString << "keyword_1" << "keyword_2" << "keyword_3" << "keyword_4" << "keyword_5";
@@ -87,7 +87,7 @@ void PresetTests::appendFromPresetTrivial()
         metadata->initialize("title", "description", QStringList() << "keyword_0" << "keyword_1" << "keyword_2");
     }
 
-    filteredItemsModel.addPreset(0, 0);
+    artItemsModelMock.addPreset(0, 0);
     Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(0);
     QStringList finalString;
     finalString << "keyword_0" << "keyword_1" << "keyword_2" << "keyword_3" << "keyword_4" << "keyword_5";
@@ -112,7 +112,7 @@ void PresetTests::appendFromPresetWithDublicates()
         metadata->initialize("title", "description", QStringList() << "keyword_0" << "keyword_1" << "keyword_2");
     }
 
-    filteredItemsModel.addPreset(0, 0);
+    artItemsModelMock.addPreset(0, 0);
     Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(0);
     QStringList finalString;
     finalString << "keyword_0" << "keyword_1" << "keyword_2" << "keyword_3" << "keyword_4" << "keyword_5";
