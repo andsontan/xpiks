@@ -133,13 +133,15 @@ Item {
                 id: listPanel
                 anchors.left: parent.left
                 anchors.top: parent.top
-                anchors.bottom: bottomPanel.top
+                anchors.bottom: parent.bottom
                 width: 250
 
                 ColumnLayout {
                     id: presetsStack
                     anchors.fill: parent
-                    anchors.margins: 20
+                    anchors.leftMargin: 20
+                    anchors.topMargin: 20
+                    anchors.bottomMargin: 20
                     spacing: 0
 
                     Rectangle {
@@ -196,6 +198,15 @@ Item {
                                     anchors.left: parent.left
                                     anchors.leftMargin: 5
                                     height: 31
+
+                                    MouseArea {
+                                        anchors.fill: parent
+                                        onClicked: {
+                                            if (presetNamesListView.currentIndex != sourceWrapper.delegateIndex) {
+                                                presetNamesListView.currentIndex = sourceWrapper.delegateIndex
+                                            }
+                                        }
+                                    }
 
                                     RowLayout {
                                         spacing: 10
@@ -323,6 +334,7 @@ Item {
                             Keys.onPressed: {
                                 if (event.matches(StandardKey.Paste)) {
                                     var clipboardText = clipboard.getText();
+                                    clipboardText = clipboardText.replace(/(\r\n|\n|\r)/gm, '');
                                     // same regexp as in validator
                                     var sanitizedText = clipboardText.replace(/[^a-zA-Z0-9 _-]/g, '');
                                     titleText.paste(sanitizedText)
@@ -377,80 +389,82 @@ Item {
                             presetsModel.pasteKeywords(presetNamesListView.currentIndex, keywordsList)
                         }
 
-                        StyledScrollView {
+                        EditableTags {
+                            id: flv
                             anchors.fill: parent
-                            anchors.margins: { left: 5; top: 5; right: 5; bottom: 5 }
+                            enabled: presetNamesListView.currentIndex >= 0
+                            model: presetsModel.getKeywordsModel(presetNamesListView.currentIndex)
+                            property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
+                            scrollStep: keywordHeight
 
-                            EditableTags {
-                                id: flv
-                                anchors.fill: parent
-                                enabled: presetNamesListView.currentIndex >= 0
-                                model: presetsModel.getKeywordsModel(presetNamesListView.currentIndex)
-                                property int keywordHeight: 20 * settingsModel.keywordSizeScale + (settingsModel.keywordSizeScale - 1)*10
-                                scrollStep: keywordHeight
-
-                                delegate: KeywordWrapper {
-                                    id: kw
-                                    isHighlighted: true
-                                    keywordText: keyword
-                                    hasSpellCheckError: !iscorrect
-                                    delegateIndex: index
-                                    itemHeight: flv.keywordHeight
-                                    onRemoveClicked: presetsModel.removeKeywordAt(presetNamesListView.currentIndex, index)
-                                    onActionDoubleClicked: {
-                                        var callbackObject = {
-                                            onSuccess: function(replacement) {
-                                                presetsModel.editKeyword(kw.delegateIndex, replacement)
-                                            },
-                                            onClose: function() {
-                                                flv.activateEdit()
-                                            }
-                                        }
-
-                                        Common.launchDialog("Dialogs/EditKeywordDialog.qml",
-                                                            componentParent,
-                                                            {
-                                                                callbackObject: callbackObject,
-                                                                previousKeyword: keyword,
-                                                                keywordIndex: kw.delegateIndex,
-                                                                keywordsModel:  presetsModel.getBasicModel(sourceWrapper.delegateIndex)
-                                                            })
-                                    }
-
-                                    onActionRightClicked: {
-                                        var showAddToDict = !iscorrect
-                                        wordRightClickMenu.showAddToDict = showAddToDict
-                                        wordRightClickMenu.word = kw.keywordText;
-                                        wordRightClickMenu.showExpandPreset = false
-                                        if (wordRightClickMenu.showAddToDict ||
-                                                wordRightClickMenu.showExpandPreset) {
-                                            wordRightClickMenu.popup()
+                            delegate: KeywordWrapper {
+                                id: kw
+                                isHighlighted: true
+                                keywordText: keyword
+                                hasSpellCheckError: !iscorrect
+                                delegateIndex: index
+                                itemHeight: flv.keywordHeight
+                                onRemoveClicked: presetsModel.removeKeywordAt(presetNamesListView.currentIndex, index)
+                                onActionDoubleClicked: {
+                                    var callbackObject = {
+                                        onSuccess: function(replacement) {
+                                            presetsModel.editKeyword(kw.delegateIndex, replacement)
+                                        },
+                                        onClose: function() {
+                                            flv.activateEdit()
                                         }
                                     }
+
+                                    Common.launchDialog("Dialogs/EditKeywordDialog.qml",
+                                                        componentParent,
+                                                        {
+                                                            callbackObject: callbackObject,
+                                                            previousKeyword: keyword,
+                                                            keywordIndex: kw.delegateIndex,
+                                                            keywordsModel:  presetsModel.getBasicModel(presetNamesListView.currentIndex)
+                                                        })
                                 }
 
-                                onTagAdded: {
-                                    keywordsWrapper.appendKeyword(text)
-                                }
-
-                                onRemoveLast: {
-                                    keywordsWrapper.removeLastKeyword()
-                                }
-
-                                onTagsPasted: {
-                                    keywordsWrapper.pasteKeywords(tagsList)
-                                }
-
-                                onBackTabPressed: {
-                                    titleText.forceActiveFocus()
-                                    titleText.cursorPosition = titleText.text.length
-                                }
-
-                                onCompletionRequested: {
-                                    helpersWrapper.autoCompleteKeyword(prefix,
-                                                                       flv.model)
+                                onActionRightClicked: {
+                                    var showAddToDict = !iscorrect
+                                    wordRightClickMenu.showAddToDict = showAddToDict
+                                    wordRightClickMenu.word = kw.keywordText;
+                                    wordRightClickMenu.showExpandPreset = false
+                                    if (wordRightClickMenu.showAddToDict ||
+                                            wordRightClickMenu.showExpandPreset) {
+                                        wordRightClickMenu.popup()
+                                    }
                                 }
                             }
+
+                            onTagAdded: {
+                                keywordsWrapper.appendKeyword(text)
+                            }
+
+                            onRemoveLast: {
+                                keywordsWrapper.removeLastKeyword()
+                            }
+
+                            onTagsPasted: {
+                                keywordsWrapper.pasteKeywords(tagsList)
+                            }
+
+                            onBackTabPressed: {
+                                titleText.forceActiveFocus()
+                                titleText.cursorPosition = titleText.text.length
+                            }
+
+                            onCompletionRequested: {
+                                helpersWrapper.autoCompleteKeyword(prefix,
+                                                                   flv.model)
+                            }
+                        }
+
+                        CustomScrollbar {
+                            anchors.topMargin: -5
+                            anchors.bottomMargin: -5
+                            anchors.rightMargin: -15
+                            flickable: flv
                         }
                     }
                 }

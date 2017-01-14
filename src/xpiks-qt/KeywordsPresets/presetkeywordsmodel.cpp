@@ -108,6 +108,7 @@ namespace KeywordsPresets {
         if (0 <= index && index < getPresetsCount()) {
             auto &keywordsModel = m_PresetsList.at(index)->m_KeywordsModel;
             keywordsModel.appendKeyword(keyword);
+            m_CommandManager->submitKeywordForSpellCheck(&keywordsModel, keywordsModel.getKeywordsCount() - 1);
         }
     }
 
@@ -149,6 +150,7 @@ namespace KeywordsPresets {
             PresetModel *model = new PresetModel(name);
             model->m_KeywordsModel.setKeywords(keywords);
             m_PresetsList.push_back(model);
+            m_CommandManager->submitItemForSpellCheck(&model->m_KeywordsModel, Common::SpellCheckFlags::Keywords);
         }
 #endif
     }

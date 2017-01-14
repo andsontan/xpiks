@@ -126,20 +126,24 @@ Rectangle {
 
     Menu {
         id: presetsMenu
-        property int maxSize : 10
+        property int artworkIndex
 
-        Instantiator {
-            model: presetsModel
-            onObjectAdded:{
-                presetsMenu.insertItem( index, object )
-            }
-            onObjectRemoved: presetsMenu.removeItem( object )
-            delegate: MenuItem {
-                text: i18.n + qsTr("Expand as preset \"%1\"").arg(name)
-                onTriggered: {
-                    combinedArtworks.addPreset(index);
+        Menu {
+            id: subMenu
+            title: i18.n + qsTr("Expand preset")
+
+            Instantiator {
+                model: presetsModel
+                onObjectAdded:{
+                    subMenu.insertItem( index, object )
                 }
-
+                onObjectRemoved: subMenu.removeItem( object )
+                delegate: MenuItem {
+                    text: name
+                    onTriggered: {
+                        combinedArtworks.addPreset(index);
+                    }
+                }
             }
         }
     }

@@ -130,18 +130,24 @@ Rectangle {
 
     Menu {
         id: presetsMenu
-        Instantiator {
-            model: presetsModel
-            onObjectAdded:{
-                presetsMenu.insertItem( index, object )
-            }
-            onObjectRemoved: presetsMenu.removeItem( object )
-            delegate: MenuItem {
-                text: i18.n + qsTr("Expand as preset \"%1\"").arg(name)
-                onTriggered: {
-                    artworkProxy.addPreset(index);
-                }
+        property int artworkIndex
 
+        Menu {
+            id: subMenu
+            title: i18.n + qsTr("Expand preset")
+
+            Instantiator {
+                model: presetsModel
+                onObjectAdded:{
+                    subMenu.insertItem( index, object )
+                }
+                onObjectRemoved: subMenu.removeItem( object )
+                delegate: MenuItem {
+                    text: name
+                    onTriggered: {
+                        artworkProxy.addPreset(index);
+                    }
+                }
             }
         }
     }

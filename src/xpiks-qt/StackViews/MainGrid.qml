@@ -96,18 +96,23 @@ ColumnLayout {
     Menu {
         id: presetsMenu
         property int artworkIndex
-        Instantiator {
-            model: filteredPresetsModel
-            onObjectAdded:{
-                presetsMenu.insertItem( index, object )
-            }
-            onObjectRemoved: presetsMenu.removeItem( object )
-            delegate: MenuItem {
-                text: i18.n + qsTr("Expand as preset \"%1\"").arg(name)
-                onTriggered: {
-                    filteredArtItemsModel.addPreset(presetsMenu.artworkIndex, filteredPresetsModel.getOriginalIndex(index));
-                }
 
+        Menu {
+            id: subMenu
+            title: i18.n + qsTr("Expand preset")
+
+            Instantiator {
+                model: presetsModel
+                onObjectAdded:{
+                    subMenu.insertItem( index, object )
+                }
+                onObjectRemoved: subMenu.removeItem( object )
+                delegate: MenuItem {
+                    text: name
+                    onTriggered: {
+                        filteredArtItemsModel.addPreset(subMenu.artworkIndex, filteredPresetsModel.getOriginalIndex(index));
+                    }
+                }
             }
         }
     }
