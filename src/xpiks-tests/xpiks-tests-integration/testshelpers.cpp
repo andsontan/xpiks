@@ -13,7 +13,7 @@ void sleepWait(int seconds, const std::function<bool ()> &condition) {
             QThread::sleep(1);
             times++;
         } else {
-            qDebug() << "Condition became true in" << times << "try out of" << seconds;
+            qDebug() << "Condition became true in" << (times + 1) << "try out of" << seconds;
             becameTrue = true;
             break;
         }
