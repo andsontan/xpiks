@@ -142,7 +142,7 @@ Rectangle {
 
         Menu {
             id: subMenu
-            title: i18.n + qsTr("Expand preset")
+            title: i18.n + qsTr("Insert preset")
 
             Instantiator {
                 model: presetsModel
