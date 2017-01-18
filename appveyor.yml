@@ -69,7 +69,7 @@ build_script:
   - cmd: 'copy %configuration%\face.* ..\..\libs'
   - cmd: 'cd ..\..'
   - cmd: 'cd ssdll\src\ssdll'
-  - qmake "CONFIG+=%configuration%" ssdll.pro
+  - qmake "CONFIG+=%configuration% appveyor" ssdll.pro
   - nmake.exe
   - cmd: 'copy %configuration%\ssdll.* ..\..\..\libs'
   - cmd: 'cd ..\..\..'
