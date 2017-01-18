@@ -392,6 +392,7 @@ SOURCES += *.qml \
 
 INCLUDEPATH += ../tiny-aes
 INCLUDEPATH += ../cpp-libface
+INCLUDEPATH += ../ssdll/src/ssdll
 
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lhunspell
@@ -400,6 +401,7 @@ LIBS += -lcurl
 LIBS += -lquazip
 LIBS += -lface
 LIBS += -lexiv2
+LIBS += -lssdll
 
 BUILDNO=$$system(git log -n 1 --pretty=format:"%h")
 

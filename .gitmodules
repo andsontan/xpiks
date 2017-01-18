@@ -4,3 +4,6 @@
 [submodule "src/cpp-libface"]
 	path = src/cpp-libface
 	url = https://github.com/Ribtoks/cpp-libface.git
+[submodule "src/ssdll"]
+	path = src/ssdll
+	url = https://github.com/Ribtoks/ssdll.git

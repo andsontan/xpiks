@@ -55,6 +55,11 @@ script:
   - make lib-face
   - cp libface.a ../libs/
   - cd ../
+  - cd ssdll/src/ssdll
+  - qmake "CONFIG+=debug" ssdll.pro
+  - make
+  - cp libssdll.so.1.0.0 ../../../libs/
+  - cd ../../../
   - ls -la libs/
   - if [ -n "$XPIKS_BINARY" ]; then cd xpiks-qt/; fi
   - if [ -n "$CORE_TESTS" ]; then cd xpiks-tests/xpiks-tests-core; fi
