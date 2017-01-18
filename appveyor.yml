@@ -68,6 +68,11 @@ build_script:
   - nmake.exe
   - cmd: 'copy %configuration%\face.* ..\..\libs'
   - cmd: 'cd ..\..'
+  - cmd: 'cd ssdll\src\ssdll'
+  - qmake "CONFIG+=%configuration%" ssdll.pro
+  - nmake.exe
+  - cmd: 'copy %configuration%\ssdll.* ..\..\..\libs'
+  - cmd: 'cd ..\..\..'
   - if defined XPIKS_BINARY cd xpiks-qt
   - if defined CORE_TESTS cd xpiks-tests\xpiks-tests-core
   - if defined INTEGRATION_TESTS cd xpiks-tests\xpiks-tests-integration
