@@ -98,7 +98,7 @@ namespace AutoComplete {
 #if QT_NO_DEBUG
         LOG_WARNING << "Cannot use this API for autocomplete";
 #else
-        throw -1;
+        Q_ASSERT(false);
 #endif
     }
 

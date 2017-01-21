@@ -751,7 +751,6 @@ void Commands::CommandManager::autoCompleteKeyword(const QString &keyword, QObje
         m_AutoCompleteService->findKeywordCompletions(keyword, notifyObject);
     }
 }
-
 #endif
 
 void Commands::CommandManager::removeUnavailableFiles() {

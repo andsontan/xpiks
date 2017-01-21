@@ -124,7 +124,11 @@ SOURCES += main.cpp \
     KeywordsPresets/presetkeywordsmodelconfig.cpp \
     QMLExtensions/folderelement.cpp \
     Models/artworkproxymodel.cpp \
-    Models/artworkproxybase.cpp
+    Models/artworkproxybase.cpp \
+    Translation/translationservice.cpp \
+    Translation/translationmanager.cpp \
+    Translation/translationworker.cpp \
+    Translation/translationquery.cpp
 
 RESOURCES += qml.qrc
 
@@ -306,7 +310,11 @@ HEADERS += \
     QMLExtensions/folderelement.h \
     Models/artworkproxymodel.h \
     Models/artworkproxybase.h \
-    Common/imetadataoperator.h
+    Common/imetadataoperator.h \
+    Translation/translationservice.h \
+    Translation/translationmanager.h \
+    Translation/translationworker.h \
+    Translation/translationquery.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
