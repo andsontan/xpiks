@@ -35,7 +35,7 @@ namespace Helpers {
 
         virtual ~GlobalImageProvider() {}
 
-        virtual QImage requestImage(const QString &id, QSize *size, const QSize& requestedSize);
+        virtual QImage requestImage(const QString &url, QSize *size, const QSize& requestedSize);
     };
 }
 #endif // GLOBALIMAGEPROVIDER_H

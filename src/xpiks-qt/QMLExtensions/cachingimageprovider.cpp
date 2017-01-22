@@ -26,7 +26,16 @@
 #define RECACHE true
 
 namespace QMLExtensions {
-    QImage CachingImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize) {
+    QImage CachingImageProvider::requestImage(const QString &url, QSize *size, const QSize &requestedSize) {
+        QString id;
+
+        if (url.contains(QChar('%'))) {
+            QUrl initialUrl(url);
+            id = initialUrl.path();
+        } else {
+            id = url;
+        }
+
         QString cachedPath;
         bool needsUpdate = false;
 

@@ -22,7 +22,16 @@
 #include "globalimageprovider.h"
 
 namespace Helpers {
-    QImage GlobalImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize) {
+    QImage GlobalImageProvider::requestImage(const QString &url, QSize *size, const QSize &requestedSize) {
+        QString id;
+
+        if (url.contains(QChar('%'))) {
+            QUrl initialUrl(url);
+            id = initialUrl.path();
+        } else {
+            id = url;
+        }
+
         QImage image(id);
         QImage result;
 
