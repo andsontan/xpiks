@@ -22,10 +22,12 @@
 #include "translationservice.h"
 #include <QThread>
 #include "translationworker.h"
+#include "translationquery.h"
 
 namespace Translation {
-    TranslationService::TranslationService(QObject *parent) :
+    TranslationService::TranslationService(TranslationManager &manager, QObject *parent) :
         QObject(parent),
+        m_TranslationManager(manager),
         m_TranslationWorker(nullptr),
         m_RestartRequired(false)
     {
@@ -56,8 +58,6 @@ namespace Translation {
 
         LOG_DEBUG << "starting thread...";
         thread->start();
-
-        emit serviceAvailable();
     }
 
     void TranslationService::stopService() {
@@ -67,6 +67,11 @@ namespace Translation {
         } else {
             LOG_WARNING << "TranslationWorker was NULL";
         }
+    }
+
+    bool TranslationService::isBusy() const {
+        bool isBusy = (m_TranslationWorker != NULL) && m_TranslationWorker->hasPendingJobs();
+        return isBusy;
     }
 
     void TranslationService::submitItem(QString *item) {
@@ -85,6 +90,25 @@ namespace Translation {
 #else
         Q_ASSERT(false);
 #endif
+    }
+
+    void TranslationService::selectDictionary(const QString &dictionaryPath) {
+        Q_ASSERT(m_TranslationWorker != nullptr);
+        m_TranslationWorker->selectDictionary(dictionaryPath);
+    }
+
+    void TranslationService::translate(const QString &what) {
+        LOG_INFO << what;
+
+        if (what.simplified().isEmpty()) { return; }
+
+        QStringList words = what.split(QChar(' '), QString::SkipEmptyParts);
+        QString wordToTranslate = words.last();
+
+        std::shared_ptr<TranslationQuery> query(new TranslationQuery(wordToTranslate));
+        QObject::connect(query.get(), SIGNAL(translationAvailable()), &m_TranslationManager, SLOT(translationArrived()));
+
+        m_TranslationWorker->submitItem(query);
     }
 
     void TranslationService::workerFinished() {

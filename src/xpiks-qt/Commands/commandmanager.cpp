@@ -207,6 +207,10 @@ void Commands::CommandManager::InjectDependency(KeywordsPresets::PresetKeywordsM
     m_PresetsModelConfig->setCommandManager(this);
 }
 
+void Commands::CommandManager::InjectDependency(Translation::TranslationService *translationService) {
+    Q_ASSERT(translationService != NULL); m_TranslationService = translationService;
+}
+
 std::shared_ptr<Commands::ICommandResult> Commands::CommandManager::processCommand(const std::shared_ptr<ICommandBase> &command)
 #ifndef CORE_TESTS
 const
@@ -328,6 +332,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_DeleteKeywordsViewModel != NULL);
     Q_ASSERT(m_PresetsModel != NULL);
     Q_ASSERT(m_PresetsModelConfig != NULL);
+    Q_ASSERT(m_TranslationService != NULL);
 
 #ifndef INTEGRATION_TESTS
     Q_ASSERT(m_HelpersQmlWrapper != NULL);

@@ -23,6 +23,7 @@
 #define TRANSLATIONSERVICE_H
 
 #include <QObject>
+#include "translationmanager.h"
 #include "../Common/iservicebase.h"
 
 namespace Translation {
@@ -34,8 +35,8 @@ namespace Translation {
     {
         Q_OBJECT
     public:
-        explicit TranslationService(QObject *parent = 0);
-        virtual ~TranslationService();
+        explicit TranslationService(TranslationManager &manager, QObject *parent = 0);
+        virtual ~TranslationService() {}
 
         virtual void startService();
         virtual void stopService();
@@ -50,12 +51,14 @@ namespace Translation {
 
     public:
         void selectDictionary(const QString &dictionaryPath);
+        void translate(const QString &what);
 
     private slots:
         void workerFinished();
         void workerDestroyed(QObject* object);
 
     private:
+        TranslationManager &m_TranslationManager;
         TranslationWorker *m_TranslationWorker;
         volatile bool m_RestartRequired;
     };

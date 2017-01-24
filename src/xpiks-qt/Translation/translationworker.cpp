@@ -20,10 +20,73 @@
  */
 
 #include "translationworker.h"
+#include <lookupdictionary.h>
+#include <string>
+#include "../Common/defines.h"
 
 namespace Translation {
-    TranslationWorker::TranslationWorker(QObject *parent) : QObject(parent)
+    TranslationWorker::TranslationWorker(QObject *parent) :
+        QObject(parent)
     {
+    }
 
+    TranslationWorker::~TranslationWorker() {
+    }
+
+    void TranslationWorker::selectDictionary(const QString &dictionaryPath) {
+        LOG_INFO << dictionaryPath;
+
+        if (m_LookupDictionary->isLoaded()) {
+            LOG_INFO << "Unloading old dictionary";
+            m_LookupDictionary.reset(new LookupDictionary());
+        }
+
+#ifdef Q_OS_WIN
+        m_LookupDictionary->setIfoFilePath(dictionaryPath.toStdWString());
+#else
+        m_LookupDictionary->setIfoFilePath(dictionaryPath.toStdString());
+#endif
+    }
+
+    bool TranslationWorker::initWorker() {
+        LOG_DEBUG << "#";
+        m_LookupDictionary.reset(new LookupDictionary());
+
+        return true;
+    }
+
+    void TranslationWorker::processOneItem(std::shared_ptr<TranslationQuery> &item) {
+        std::string translationData;
+        auto &query = item->getQuery();
+
+        LOG_INFO << "translation request:" << query;
+        Q_ASSERT(!query.simplified().isEmpty());
+
+        ensureDictionaryLoaded();
+
+        std::string word = query.toUtf8().toStdString();
+
+        if (m_LookupDictionary->translate(word, translationData)) {
+            QString translation = QString::fromUtf8(translationData.c_str());
+            item->setTranslation(translation);
+        } else {
+            item->setFailed();
+        }
+    }
+
+    void TranslationWorker::deleteItem(TranslationQuery *item) const {
+        item->deleteLater();
+    }
+
+    void TranslationWorker::ensureDictionaryLoaded() {
+        Q_ASSERT(m_LookupDictionary);
+
+        if (!m_LookupDictionary->isLoaded()) {
+            LOG_INFO << "Loading current dictionary";
+            bool result = m_LookupDictionary->loadDictionary();
+            if (!result) {
+                LOG_WARNING << "Loading dictionary failed!";
+            }
+        }
     }
 }

@@ -30,14 +30,24 @@ namespace Translation {
     {
         Q_OBJECT
     public:
-        explicit TranslationQuery(QObject *parent = 0);
+        explicit TranslationQuery(const QString &query, QObject *parent = 0);
+
+    public:
+        const QString &getQuery() const { return m_Query; }
+        const QString &getTranslation() const { return m_Translation; }
+        bool hasTranslation() const { return m_Success; }
+
+    public:
+        void setTranslation(const QString &translation);
+        void setFailed();
 
     signals:
-        void translationAvailable(const QString &translation);
+        void translationAvailable();
 
     private:
-        QString m_WordToTranslate;
+        QString m_Query;
         QString m_Translation;
+        bool m_Success;
     };
 }
 

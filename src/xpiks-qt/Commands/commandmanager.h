@@ -112,6 +112,10 @@ namespace Helpers {
     class HelpersQmlWrapper;
 }
 
+namespace Translation {
+    class TranslationService;
+}
+
 namespace Commands {
     class CommandManager : public ICommandManager
     {
@@ -148,6 +152,7 @@ namespace Commands {
             m_HelpersQmlWrapper(NULL),
             m_PresetsModel(NULL),
             m_PresetsModelConfig(NULL),
+            m_TranslationService(NULL),
             m_AfterInitCalled(false)
         { }
 
@@ -185,6 +190,7 @@ namespace Commands {
         void InjectDependency(Helpers::HelpersQmlWrapper *helpersQmlWrapper);
         void InjectDependency(KeywordsPresets::PresetKeywordsModel *presetsModel);
         void InjectDependency(KeywordsPresets::PresetKeywordsModelConfig *presetsModelConfig);
+        void InjectDependency(Translation::TranslationService *translationService);
 
     public:
         virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<ICommandBase> &command)
@@ -280,6 +286,7 @@ namespace Commands {
         virtual SpellCheck::SpellCheckSuggestionModel *getSpellSuggestionsModel() const { return m_SpellCheckSuggestionModel; }
         virtual KeywordsPresets::PresetKeywordsModel *getPresetsModel() const { return m_PresetsModel; }
         virtual KeywordsPresets::PresetKeywordsModelConfig *getPresetsModelConfig() const { return m_PresetsModelConfig; }
+        virtual Translation::TranslationService *getTranslationService() const { return m_TranslationService; }
 
 #ifdef INTEGRATION_TESTS
         virtual MetadataIO::MetadataIOCoordinator *getMetadataIOCoordinator() const { return m_MetadataIOCoordinator; }
@@ -321,6 +328,7 @@ namespace Commands {
         Helpers::HelpersQmlWrapper *m_HelpersQmlWrapper;
         KeywordsPresets::PresetKeywordsModel *m_PresetsModel;
         KeywordsPresets::PresetKeywordsModelConfig *m_PresetsModelConfig;
+        Translation::TranslationService *m_TranslationService;
 
         QVector<Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;

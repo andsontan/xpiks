@@ -27,6 +27,8 @@
 #include "../Common/itemprocessingworker.h"
 #include "translationquery.h"
 
+class LookupDictionary;
+
 namespace Translation {
     class TranslationWorker :
             public QObject,
@@ -36,6 +38,9 @@ namespace Translation {
     public:
         explicit TranslationWorker(QObject *parent = 0);
         virtual ~TranslationWorker();
+
+    public:
+        void selectDictionary(const QString &dictionaryPath);
 
     protected:
         virtual bool initWorker();
@@ -55,7 +60,10 @@ namespace Translation {
         void queueIsEmpty();
 
     private:
+        void ensureDictionaryLoaded();
 
+    private:
+        std::unique_ptr<LookupDictionary> m_LookupDictionary;
     };
 }
 
