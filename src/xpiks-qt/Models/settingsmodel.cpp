@@ -59,6 +59,7 @@
 #define DEFAULT_USE_EXIFTOOL false
 #define DEFAULT_USE_PROXY false
 #define DEFAULT_ARTWORK_EDIT_RIGHT_PANE_WIDTH 300
+#define DEFAULT_SELECTED_DICT_INDEX -1
 
 #ifndef INTEGRATION_TESTS
 #define DEFAULT_AUTO_CACHE_IMAGES true
@@ -79,6 +80,7 @@ namespace Models {
         m_DismissDuration(DEFAULT_DISMISS_DURATION),
         m_MaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS),
         m_SelectedThemeIndex(DEFAULT_SELECTED_THEME_INDEX),
+        m_SelectedDictIndex(DEFAULT_SELECTED_DICT_INDEX),
         m_MustUseMasterPassword(DEFAULT_USE_MASTERPASSWORD),
         m_MustUseConfirmations(DEFAULT_USE_CONFIRMATIONS),
         m_SaveBackups(DEFAULT_SAVE_BACKUPS),
@@ -223,6 +225,7 @@ namespace Models {
         setAutoCacheImages(appSettings.boolValue(appSettings.getCacheImagesKey(), DEFAULT_AUTO_CACHE_IMAGES));
 
         setArtworkEditRightPaneWidth(appSettings.intValue(appSettings.getArtworkEditRightPaneWidthKey(), DEFAULT_ARTWORK_EDIT_RIGHT_PANE_WIDTH));
+        setSelectedDictIndex(appSettings.intValue(appSettings.getSelectedDictIndexKey(), DEFAULT_SELECTED_DICT_INDEX));
     }
 
     void SettingsModel::resetToDefault() {
@@ -253,6 +256,7 @@ namespace Models {
         resetProxySetting();
         setAutoCacheImages(DEFAULT_AUTO_CACHE_IMAGES);
         setArtworkEditRightPaneWidth(DEFAULT_ARTWORK_EDIT_RIGHT_PANE_WIDTH);
+        setSelectedDictIndex(DEFAULT_SELECTED_DICT_INDEX);
 
         Helpers::AppSettings appSettings;
 #if defined(QT_DEBUG)
@@ -332,6 +336,11 @@ namespace Models {
     void SettingsModel::saveArtworkEditUISettings() {
         Helpers::AppSettings appSettings;
         appSettings.setValue(appSettings.getArtworkEditRightPaneWidthKey(), m_ArtworkEditRightPaneWidth);
+    }
+
+    void SettingsModel::saveSelectedDictionaryIndex() {
+        Helpers::AppSettings appSettings;
+        appSettings.setValue(appSettings.getSelectedDictIndexKey(), m_SelectedDictIndex);
     }
 
     void SettingsModel::resetProxySetting() {

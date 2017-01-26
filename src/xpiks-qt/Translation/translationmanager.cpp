@@ -28,12 +28,14 @@
 #include "translationquery.h"
 #include "translationservice.h"
 #include "../Commands/commandmanager.h"
+#include "../Models/settingsmodel.h"
 
 #define SHORT_TRANSLATION_SYMBOLS 200
 #define BOOKNAME QLatin1String("bookname")
 
 namespace Translation {
     bool parseIfoFile(const QString &fullIfoPath, DictionaryInfo &info) {
+        LOG_INFO << fullIfoPath;
         QFile file(fullIfoPath);
         bool success = true;
 
@@ -97,6 +99,10 @@ namespace Translation {
             emit selectedDictionaryIndexChanged();
 
             m_TranslateTimer.start(1000);
+
+            auto *settingsModel = m_CommandManager->getSettingsModel();
+            settingsModel->setSelectedDictIndex(value);
+            settingsModel->saveSelectedDictionaryIndex();
         }
     }
 
@@ -115,9 +121,9 @@ namespace Translation {
         setQuery("");
         m_FullTranslation.clear();
         m_ShortenedTranslation.clear();
+        m_HasMore = false;
         emit fullTranslationChanged();
         emit shortTranslationChanged();
-        m_HasMore = false;
         emit hasMoreChanged();
     }
 

@@ -105,7 +105,8 @@ namespace Translation {
         QStringList words = what.split(QChar(' '), QString::SkipEmptyParts);
         QString wordToTranslate = words.last();
 
-        std::shared_ptr<TranslationQuery> query(new TranslationQuery(wordToTranslate));
+        std::shared_ptr<TranslationQuery> query(new TranslationQuery(wordToTranslate),
+                                                [](TranslationQuery *tq) { tq->deleteLater(); });
         QObject::connect(query.get(), SIGNAL(translationAvailable()), &m_TranslationManager, SLOT(translationArrived()));
 
         m_TranslationWorker->submitItem(query);

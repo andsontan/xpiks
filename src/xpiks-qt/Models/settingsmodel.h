@@ -88,6 +88,7 @@ namespace Models {
         Q_INVOKABLE void raiseMasterPasswordSignal() { emit mustUseMasterPasswordChanged(m_MustUseMasterPassword); }
         Q_INVOKABLE void saveProxySetting(const QString &address, const QString &user, const QString &password, const QString &port);
         Q_INVOKABLE void saveArtworkEditUISettings();
+        Q_INVOKABLE void saveSelectedDictionaryIndex();
 
     public:
         QString getExifToolPath() const { return m_ExifToolPath; }
@@ -119,6 +120,7 @@ namespace Models {
         ProxySettings *getProxySettings() { return &m_ProxySettings; }
         bool getAutoCacheImages() const { return m_AutoCacheImages; }
         int getArtworkEditRightPaneWidth() const { return m_ArtworkEditRightPaneWidth; }
+        int getSelectedDictIndex() const { return m_SelectedDictIndex; }
 
     signals:
         void settingsReset();
@@ -150,6 +152,7 @@ namespace Models {
         void proxyPortChanged(QString value);
         void autoCacheImagesChanged(bool value);
         void artworkEditRightPaneWidthChanged(int value);
+        void selectedDictIndexChanged(int value);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -336,6 +339,13 @@ namespace Models {
             }
         }
 
+        void setSelectedDictIndex(int value) {
+            if (value != m_SelectedDictIndex) {
+                m_SelectedDictIndex = value;
+                emit selectedDictIndexChanged(value);
+            }
+        }
+
 #ifndef INTEGRATION_TESTS
     private:
 #else
@@ -357,6 +367,7 @@ namespace Models {
         int m_DismissDuration;
         int m_MaxParallelUploads;
         int m_SelectedThemeIndex;
+        int m_SelectedDictIndex;
         bool m_MustUseMasterPassword;
         bool m_MustUseConfirmations;
         bool m_SaveBackups;
