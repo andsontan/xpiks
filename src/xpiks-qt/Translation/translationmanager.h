@@ -66,9 +66,14 @@ namespace Translation {
         int getSelectedDictionaryIndex() const { return m_SelectedDictionaryIndex; }
 
     public:
+        void initializeDictionaries();
         void setQuery(const QString &value);
         void setSelectedDictionaryIndex(int value);
         QStringList getDictionariesDescriptions() const;
+
+    private:
+        void doInitializeDictionaries();
+        bool acquireDictionary(const QString &anyDictFilePath);
 
     public:
         Q_INVOKABLE void clear();
@@ -90,8 +95,10 @@ namespace Translation {
         void updateTranslationTimer();
 
     private:
+        QStringList m_AllowedSuffixes;
         QVector<DictionaryInfo> m_DictionariesList;
         QTimer m_TranslateTimer;
+        QString m_DictionariesDirPath;
         QString m_Query;
         QString m_FullTranslation;
         QString m_ShortenedTranslation;

@@ -47,6 +47,8 @@
 #include "SpellCheck/spellcheckerservice.h"
 #include "AutoComplete/autocompletemodel.h"
 #include "Models/deletekeywordsviewmodel.h"
+#include "Translation/translationmanager.h"
+#include "Translation/translationservice.h"
 #include "Models/recentdirectoriesmodel.h"
 #include "MetadataIO/backupsaverservice.h"
 #include "QMLExtensions/triangleelement.h"
@@ -329,6 +331,8 @@ int main(int argc, char *argv[]) {
     Models::FindAndReplaceModel replaceModel(&colorsModel);
     Models::DeleteKeywordsViewModel deleteKeywordsModel;
     Models::ArtworkProxyModel artworkProxyModel;
+    Translation::TranslationManager translationManager;
+    Translation::TranslationService translationService(translationManager);
 
     Conectivity::UpdateService updateService(&settingsModel);
 
@@ -381,6 +385,8 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&helpersQmlWrapper);
     commandManager.InjectDependency(&presetsModel);
     commandManager.InjectDependency(&presetsModelConfig);
+    commandManager.InjectDependency(&translationManager);
+    commandManager.InjectDependency(&translationService);
 
     artworkProxyModel.setCommandManager(&commandManager);
     autoCompleteModel.setCommandManager(&commandManager);
@@ -438,6 +444,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("presetsModel", &presetsModel);
     rootContext->setContextProperty("filteredPresetsModel", &filteredPresetsModel);
     rootContext->setContextProperty("artworkProxy", &artworkProxyModel);
+    rootContext->setContextProperty("translationManager", &translationManager);
 
 #ifdef QT_DEBUG
     QVariant isDebug(true);

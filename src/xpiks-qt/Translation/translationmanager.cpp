@@ -24,11 +24,14 @@
 #include <QSet>
 #include <QFile>
 #include <QTextStream>
+#include <QDirIterator>
+#include <QtConcurrent>
 #include "../Common/defines.h"
 #include "translationquery.h"
 #include "translationservice.h"
 #include "../Commands/commandmanager.h"
 #include "../Models/settingsmodel.h"
+#include "../Helpers/constants.h"
 
 #define SHORT_TRANSLATION_SYMBOLS 200
 #define BOOKNAME QLatin1String("bookname")
@@ -72,12 +75,18 @@ namespace Translation {
     TranslationManager::TranslationManager(QObject *parent) :
         QObject(parent),
         Common::BaseEntity(),
+        m_AllowedSuffixes({"idx", "idx.dz", "idx.oft", "dict.dz", "dict", "ifo"}),
         m_SelectedDictionaryIndex(-1),
         m_IsBusy(false),
         m_HasMore(false)
     {
         m_TranslateTimer.setSingleShot(true);
         QObject::connect(&m_TranslateTimer, SIGNAL(timeout()), this, SLOT(updateTranslationTimer()));
+    }
+
+    void TranslationManager::initializeDictionaries() {
+        LOG_DEBUG << "#";
+        QtConcurrent::run(this, &TranslationManager::doInitializeDictionaries);
     }
 
     void TranslationManager::setQuery(const QString &value) {
@@ -95,6 +104,7 @@ namespace Translation {
 
     void TranslationManager::setSelectedDictionaryIndex(int value) {
         if (m_SelectedDictionaryIndex != value) {
+            LOG_INFO << value;
             m_SelectedDictionaryIndex = value;
             emit selectedDictionaryIndexChanged();
 
@@ -117,6 +127,79 @@ namespace Translation {
         return descriptions;
     }
 
+    void TranslationManager::doInitializeDictionaries() {
+        QString appDataPath = XPIKS_USERDATA_PATH;
+
+        if (!appDataPath.isEmpty()) {
+            m_DictionariesDirPath = QDir::cleanPath(appDataPath + QDir::separator() + Constants::TRANSLATOR_DIR);
+
+            QDir dictionariesDir(m_DictionariesDirPath);
+            if (!dictionariesDir.exists()) {
+                LOG_INFO << "Creating dictionaries dir" << m_DictionariesDirPath;
+                QDir().mkpath(m_DictionariesDirPath);
+            }
+        } else {
+            m_DictionariesDirPath = QDir::currentPath();
+        }
+
+        QDirIterator it(m_DictionariesDirPath, QStringList() << "*.ifo", QDir::Files, QDirIterator::NoIteratorFlags);
+
+        while (it.hasNext()) {
+            QString ifoFullPath = it.next();
+
+            DictionaryInfo di;
+            if (parseIfoFile(ifoFullPath, di)) {
+                m_DictionariesList.append(di);
+                LOG_INFO << "Parsed" << di.m_Description;
+            } else {
+                LOG_WARNING << "Failed to parse IFO:" << ifoFullPath;
+            }
+        }
+
+        emit dictionariesChanged();
+    }
+
+    bool TranslationManager::acquireDictionary(const QString &anyDictFilePath) {
+        QFileInfo fi(anyDictFilePath);
+        Q_ASSERT(fi.exists());
+        QString longPrefix = QDir::cleanPath(fi.absolutePath() + QDir::separator() + fi.baseName());
+        QString shortPrefix = fi.baseName();
+
+        bool anyError = false, anyFileCopied = false,
+                indexFound = false, dictFound = false, ifoFound = false;
+
+        foreach (const QString &suffix, m_AllowedSuffixes) {
+            QString probablePath = longPrefix + "." + suffix;
+
+            if (QFileInfo(probablePath).exists()) {
+                LOG_INFO << "File found:" << probablePath;
+                QString localDict = QDir::cleanPath(m_DictionariesDirPath + QDir::separator() + shortPrefix + "." + suffix);
+
+                if (QFile::copy(probablePath, localDict)) {
+                    LOG_INFO << "Copied to" << localDict;
+                    anyFileCopied = true;
+
+                    // TODO: refactor this someday to check just needed
+                    // extensions instead of looping all of them
+                    indexFound = indexFound || suffix.contains("idx");
+                    dictFound = dictFound || suffix.contains("dict");
+                    ifoFound = ifoFound || suffix.contains("ifo");
+                } else {
+                    LOG_WARNING << "Failed to copy as:" << localDict;
+                    anyError = true;
+                    break;
+                }
+            } else {
+                LOG_INFO << "File NOT found:" << probablePath;
+            }
+        }
+
+        LOG_INFO << "IFO found" << ifoFound << "Index found" << indexFound << "Dictionary found" << dictFound;
+
+        bool success = (anyFileCopied) && (!anyError) && (ifoFound && dictFound && indexFound);
+        return success;
+    }
+
     void TranslationManager::clear() {
         setQuery("");
         m_FullTranslation.clear();
@@ -132,7 +215,7 @@ namespace Translation {
         QFileInfo fi(anyDictFilePath);
         bool success = false;
 
-        QSet<QString> allowedSuffixes = {"idx", "idx.dz", "idx.oft", "dict.dz", "dict", "ifo"};
+        QSet<QString> allowedSuffixes = m_AllowedSuffixes.toSet();
 
         do {
             if (!fi.exists()) {
@@ -154,9 +237,13 @@ namespace Translation {
                                                       fi.baseName() + ".ifo");
             DictionaryInfo di;
             if (parseIfoFile(probableIfoPath, di)) {
-                m_DictionariesList.append(di);
                 LOG_INFO << "Parsed" << di.m_Description;
-                success = true;
+                if (acquireDictionary(probableIfoPath)) {
+                    m_DictionariesList.append(di);
+                    success = true;
+                } else {
+                    LOG_WARNING << "Failed to acquire dictionary" << probableIfoPath;
+                }
             } else {
                 LOG_WARNING << "Failed to parse IFO:" << probableIfoPath;
             }

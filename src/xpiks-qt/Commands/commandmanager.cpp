@@ -57,6 +57,7 @@
 #include "../Helpers/helpersqmlwrapper.h"
 #include "../Helpers/updatehelpers.h"
 #include "../Common/imetadataoperator.h"
+#include "../Translation/translationmanager.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -211,6 +212,11 @@ void Commands::CommandManager::InjectDependency(Translation::TranslationService 
     Q_ASSERT(translationService != NULL); m_TranslationService = translationService;
 }
 
+void Commands::CommandManager::InjectDependency(Translation::TranslationManager *translationManager) {
+    Q_ASSERT(translationManager != NULL); m_TranslationManager = translationManager;
+    m_TranslationManager->setCommandManager(this);
+}
+
 std::shared_ptr<Commands::ICommandResult> Commands::CommandManager::processCommand(const std::shared_ptr<ICommandBase> &command)
 #ifndef CORE_TESTS
 const
@@ -333,6 +339,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_PresetsModel != NULL);
     Q_ASSERT(m_PresetsModelConfig != NULL);
     Q_ASSERT(m_TranslationService != NULL);
+    Q_ASSERT(m_TranslationManager != NULL);
 
 #ifndef INTEGRATION_TESTS
     Q_ASSERT(m_HelpersQmlWrapper != NULL);
@@ -685,6 +692,7 @@ void Commands::CommandManager::afterConstructionCallback() {
     m_UpdateService->startChecking();
     m_ArtworkUploader->initializeStocksList();
     m_WarningsService->initWarningsSettings();
+    m_TranslationManager->initializeDictionaries();
 #endif
 
 #ifdef Q_OS_MAC

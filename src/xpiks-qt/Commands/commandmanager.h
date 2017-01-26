@@ -114,6 +114,7 @@ namespace Helpers {
 
 namespace Translation {
     class TranslationService;
+    class TranslationManager;
 }
 
 namespace Commands {
@@ -153,6 +154,7 @@ namespace Commands {
             m_PresetsModel(NULL),
             m_PresetsModelConfig(NULL),
             m_TranslationService(NULL),
+            m_TranslationManager(NULL),
             m_AfterInitCalled(false)
         { }
 
@@ -191,6 +193,7 @@ namespace Commands {
         void InjectDependency(KeywordsPresets::PresetKeywordsModel *presetsModel);
         void InjectDependency(KeywordsPresets::PresetKeywordsModelConfig *presetsModelConfig);
         void InjectDependency(Translation::TranslationService *translationService);
+        void InjectDependency(Translation::TranslationManager *translationManager);
 
     public:
         virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<ICommandBase> &command)
@@ -329,6 +332,7 @@ namespace Commands {
         KeywordsPresets::PresetKeywordsModel *m_PresetsModel;
         KeywordsPresets::PresetKeywordsModelConfig *m_PresetsModelConfig;
         Translation::TranslationService *m_TranslationService;
+        Translation::TranslationManager *m_TranslationManager;
 
         QVector<Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;

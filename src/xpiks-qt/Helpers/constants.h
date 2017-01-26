@@ -83,6 +83,7 @@ namespace Constants {
     const char AVAILABLE_UPDATE_VERSION[] = "AVAILABLE_UPDATE_VERSION";
     const char ARTWORK_EDIT_RIGHT_PANE_WIDTH[] = "ARTWORK_EDIT_RIGHT_PANE_WIDTH";
     const char TRANSLATOR_SELECTED_DICT_INDEX[] = "TRANSLATOR_SELECTED_DICT_INDEX";
+    const char TRANSLATOR_DIR[] = "dictionaries";
 #else
     const char MAX_KEYWORD_COUNT[] = "DEBUG_MAX_KEYWORD_COUNT";
     const char MAX_DESCRIPTION_LENGTH[] = "DEBUG_MAX_DESCRIPTION_LENGTH";
@@ -107,6 +108,7 @@ namespace Constants {
     const char AVAILABLE_UPDATE_VERSION[] = "DEBUG_AVAILABLE_UPDATE_VERSION";
     const char ARTWORK_EDIT_RIGHT_PANE_WIDTH[] = "DEBUG_ARTWORK_EDIT_RIGHT_PANE_WIDTH";
     const char TRANSLATOR_SELECTED_DICT_INDEX[] = "DEBUG_TRANSLATOR_SELECTED_DICT_INDEX";
+    const char TRANSLATOR_DIR[] = "debug_dictionaries";
 
 #ifdef INTEGRATION_TESTS
     const char LIBRARY_FILENAME[] = "xpiks.integration.library";
