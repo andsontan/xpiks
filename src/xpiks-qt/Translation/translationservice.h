@@ -38,16 +38,16 @@ namespace Translation {
         explicit TranslationService(TranslationManager &manager, QObject *parent = 0);
         virtual ~TranslationService() {}
 
-        virtual void startService();
-        virtual void stopService();
+        virtual void startService() override;
+        virtual void stopService() override;
 
-        virtual bool isAvailable() const { return true; }
-        virtual bool isBusy() const;
+        virtual bool isAvailable() const override { return true; }
+        virtual bool isBusy() const override;
 
     protected:
-        virtual void submitItem(QString *item);
-        virtual void submitItem(QString *item, int flags);
-        virtual void submitItems(const QVector<QString*> &items);
+        virtual void submitItem(QString *item) override;
+        virtual void submitItem(QString *item, int flags) override;
+        virtual void submitItems(const QVector<QString*> &items) override;
 
     public:
         void selectDictionary(const QString &dictionaryPath);

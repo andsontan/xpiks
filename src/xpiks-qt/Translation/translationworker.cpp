@@ -74,10 +74,6 @@ namespace Translation {
         }
     }
 
-    void TranslationWorker::deleteItem(TranslationQuery *item) const {
-        item->deleteLater();
-    }
-
     void TranslationWorker::ensureDictionaryLoaded() {
         Q_ASSERT(m_LookupDictionary);
 
