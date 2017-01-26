@@ -62,9 +62,9 @@ namespace Warnings {
 
         // QSortFilterProxyModel interface
     protected:
-        virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+        virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
     public:
-        virtual void setSourceModel(QAbstractItemModel *sourceModel);
+        virtual void setSourceModel(QAbstractItemModel *sourceModel) override;
 
     private:
         bool m_ShowOnlySelected;

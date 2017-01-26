@@ -45,10 +45,10 @@ namespace UndoRedo {
         virtual ~RemoveArtworksHistoryItem() { }
 
     public:
-        virtual void undo(const Commands::ICommandManager *commandManagerInterface) const;
+        virtual void undo(const Commands::ICommandManager *commandManagerInterface) const override;
 
     public:
-        virtual QString getDescription() const {
+        virtual QString getDescription() const override {
             int count = m_RemovedArtworksIndices.length();
             return count > 1 ? QObject::tr("%1 items removed").arg(count) :
                                QObject::tr("1 item removed");

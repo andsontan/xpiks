@@ -53,12 +53,12 @@ namespace KeywordsPresets {
         };
 
     public:
-        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
-        virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
-        virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
+        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const override;
+        virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const override;
+        virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole) override;
 
     protected:
-        virtual QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const override;
         virtual void removeInnerItem(int row);
 
     public:
@@ -103,7 +103,7 @@ namespace KeywordsPresets {
         void searchTermChanged(const QString &searchTerm);
         // QSortFilterProxyModel interface
     protected:
-        virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+        virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
     private:
         PresetKeywordsModel *getPresetsModel() const;
     private:

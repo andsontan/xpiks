@@ -62,7 +62,7 @@ namespace UndoRedo {
         QString getUndoDescription() const { return m_HistoryStack.empty() ? "" : m_HistoryStack.top()->getDescription(); }
 
     public:
-        virtual void recordHistoryItem(std::unique_ptr<UndoRedo::IHistoryItem> &historyItem);
+        virtual void recordHistoryItem(std::unique_ptr<UndoRedo::IHistoryItem> &historyItem) override;
         Q_INVOKABLE bool undoLastAction();
         Q_INVOKABLE void discardLastAction();
 

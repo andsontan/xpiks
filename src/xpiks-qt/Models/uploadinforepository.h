@@ -113,17 +113,17 @@ namespace Models {
         std::vector<std::shared_ptr<UploadInfo> > retrieveSelectedUploadInfos() const;
 
     public:
-        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
-        virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
-        virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-        virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
+        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const override;
+        virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const override;
+        virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
+        virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole) override;
 
     public slots:
         void onBeforeMasterPasswordChanged(const QString &oldMasterPassword, const QString &newMasterPassword);
         void onAfterMasterPasswordReset();
 
     protected:
-        virtual QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const override;
 
         void removeInnerItem(int row);
 

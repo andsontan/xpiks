@@ -37,8 +37,8 @@ namespace Suggestion {
 
         // ISuggestionQueryEngine interface
     public:
-        virtual void submitQuery(const QStringList &queryKeywords, QueryResultsType resultsType);
-        virtual QString getName() const { return tr("Local files"); }
+        virtual void submitQuery(const QStringList &queryKeywords, QueryResultsType resultsType) override;
+        virtual QString getName() const override { return tr("Local files"); }
 
     private slots:
         void resultsFoundHandler();

@@ -38,15 +38,15 @@ namespace Warnings {
         WarningsCheckingWorker(WarningsSettingsModel *warningsSettingsModel, QObject *parent=0);
 
     protected:
-        virtual bool initWorker();
-        virtual void processOneItem(std::shared_ptr<WarningsItem> &item);
+        virtual bool initWorker() override;
+        virtual void processOneItem(std::shared_ptr<WarningsItem> &item) override;
 
     private:
         void initValuesFromSettings();
 
     protected:
-        virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
-        virtual void workerStopped() { emit stopped(); }
+        virtual void notifyQueueIsEmpty() override { emit queueIsEmpty(); }
+        virtual void workerStopped() override { emit stopped(); }
 
     public slots:
         void process() { doWork(); }

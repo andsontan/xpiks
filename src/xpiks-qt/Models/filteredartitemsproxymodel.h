@@ -135,8 +135,8 @@ namespace Models {
         ArtItemsModel *getArtItemsModel() const;
 
     protected:
-        virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
-        virtual bool lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const;
+        virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+        virtual bool lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const override;
 
     private:
         // ignore default regexp from proxymodel

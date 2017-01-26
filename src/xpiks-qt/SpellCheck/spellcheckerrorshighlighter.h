@@ -41,7 +41,7 @@ namespace SpellCheck {
                                     SpellCheckErrorsInfo *errorsInfo);
 
     protected:
-        virtual void highlightBlock(const QString &text);
+        virtual void highlightBlock(const QString &text) override;
 
     private:
         SpellCheckErrorsInfo *m_SpellCheckErrors;

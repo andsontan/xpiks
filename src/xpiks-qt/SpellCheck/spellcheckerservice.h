@@ -49,15 +49,15 @@ namespace SpellCheck {
         virtual ~SpellCheckerService();
 
     public:
-        virtual void startService();
-        virtual void stopService();
+        virtual void startService() override;
+        virtual void stopService() override;
 
-        virtual bool isAvailable() const { return true; }
-        virtual bool isBusy() const;
+        virtual bool isAvailable() const override { return true; }
+        virtual bool isBusy() const override;
 
-        virtual void submitItem(Common::BasicKeywordsModel *itemToCheck);
-        virtual void submitItem(Common::BasicKeywordsModel *itemToCheck, Common::SpellCheckFlags flags);
-        virtual void submitItems(const QVector<Common::BasicKeywordsModel *> &itemsToCheck);
+        virtual void submitItem(Common::BasicKeywordsModel *itemToCheck) override;
+        virtual void submitItem(Common::BasicKeywordsModel *itemToCheck, Common::SpellCheckFlags flags) override;
+        virtual void submitItems(const QVector<Common::BasicKeywordsModel *> &itemsToCheck) override;
         void submitItems(const QVector<Common::BasicKeywordsModel *> &itemsToCheck, const QStringList &wordsToCheck);
         void submitKeyword(Common::BasicKeywordsModel *itemToCheck, int keywordIndex);
         virtual QStringList suggestCorrections(const QString &word) const;

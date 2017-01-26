@@ -39,7 +39,7 @@ namespace QMLExtensions {
 
         virtual ~CachingImageProvider() {}
 
-        virtual QImage requestImage(const QString &url, QSize *size, const QSize& requestedSize);
+        virtual QImage requestImage(const QString &url, QSize *size, const QSize& requestedSize) override;
 
     public:
         void setImageCachingService(QMLExtensions::ImageCachingService *cachingService) {

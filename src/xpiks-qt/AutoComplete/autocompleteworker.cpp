@@ -119,8 +119,4 @@ namespace AutoComplete {
             item->setCompletions(completionsList);
         }
     }
-
-    void AutoCompleteWorker::deleteItem(CompletionQuery *item) const {
-        item->deleteLater();
-    }
 }

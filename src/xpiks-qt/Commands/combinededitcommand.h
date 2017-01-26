@@ -61,7 +61,7 @@ namespace Commands {
         virtual ~CombinedEditCommand();
 
     public:
-        virtual std::shared_ptr<ICommandResult> execute(const ICommandManager *commandManagerInterface) const;
+        virtual std::shared_ptr<ICommandResult> execute(const ICommandManager *commandManagerInterface) const override;
 
     private:
         void setKeywords(Models::ArtworkMetadata *metadata) const;
@@ -88,7 +88,7 @@ namespace Commands {
         }
 
     public:
-        virtual void afterExecCallback(const ICommandManager *commandManagerInterface) const;
+        virtual void afterExecCallback(const ICommandManager *commandManagerInterface) const override;
 
 #ifndef CORE_TESTS
     private:

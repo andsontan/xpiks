@@ -56,11 +56,11 @@ namespace Models {
         Q_INVOKABLE void switchLanguage(int index);
 
     public:
-        int rowCount(const QModelIndex & parent = QModelIndex()) const { Q_UNUSED(parent); return m_LanguagesList.length(); }
-        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const override { Q_UNUSED(parent); return m_LanguagesList.length(); }
+        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const override;
 
     protected:
-        virtual QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const override;
 
     private:
         void loadTranslators(const QDir &dir, const QString &selectedLocale);

@@ -53,7 +53,7 @@ namespace QMLExtensions {
         void isVerticalChanged(bool value);
 
     protected:
-        virtual QSGNode *updatePaintNode(QSGNode*, UpdatePaintNodeData *data);
+        virtual QSGNode *updatePaintNode(QSGNode*, UpdatePaintNodeData *data) override;
 
     private:
         void updateTriangle(QSGGeometry *geometry);

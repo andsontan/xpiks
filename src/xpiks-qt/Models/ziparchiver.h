@@ -39,7 +39,7 @@ namespace Models {
         virtual ~ZipArchiver() { delete m_ArchiveCreator; }
 
     public:
-        virtual int getItemsCount() const;
+        virtual int getItemsCount() const override;
 
     public slots:
         void archiveCreated(int);
@@ -47,7 +47,7 @@ namespace Models {
 
     public:
         Q_INVOKABLE void archiveArtworks();
-        virtual void cancelProcessing() { /*BUMP*/ }
+        virtual void cancelProcessing() override { /*BUMP*/ }
 
     private:
         void fillFilenamesHash(QHash<QString, QStringList> &hash);

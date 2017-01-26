@@ -57,14 +57,14 @@ namespace Models {
         // used to test UI of artwork upload
         // virtual bool getInProgress() const { return true; }
         AutoComplete::StringFilterProxyModel *getStocksCompletionSource() { return &m_StocksCompletionSource; }
-        virtual void setCommandManager(Commands::CommandManager *commandManager);
+        virtual void setCommandManager(Commands::CommandManager *commandManager) override;
 
     signals:
         void percentChanged();
         void credentialsChecked(bool result, const QString &url);
 
     public:
-        int getPercent() const { return m_Percent; }
+        virtual int getPercent() const override { return m_Percent; }
 
     public slots:
         void onUploadStarted();
@@ -98,9 +98,9 @@ namespace Models {
         void doUploadArtworks(const QVector<ArtworkMetadata *> &artworkList);
 
     protected:
-        virtual void cancelProcessing();
+        virtual void cancelProcessing() override;
 
-        virtual void innerResetModel() { m_Percent = 0; }
+        virtual void innerResetModel() override { m_Percent = 0; }
 
     private:
         Conectivity::UploadWatcher m_UploadWatcher;

@@ -105,14 +105,14 @@ namespace Models {
 #endif
 
     public:
-        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const override;
+        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const override;
 
     protected:
-        virtual QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const override;
 
     protected:
-        void removeInnerItem(int index) {
+        virtual void removeInnerItem(int index) override {
             QString directoryToRemove = m_DirectoriesList.takeAt(index);
             m_DirectoriesSelectedHash.remove(directoryToRemove);
             m_DirectoriesHash.remove(directoryToRemove);

@@ -87,7 +87,7 @@ namespace Models {
         void updateItems(const QVector<int> &indices, const QVector<int> &roles);
         void forceUnselectAllItems() const;
         Q_INVOKABLE void updateAllItems();
-        virtual bool removeUnavailableItems();
+        virtual bool removeUnavailableItems() override;
         void generateAboutToBeRemoved();
 
     public:
@@ -134,10 +134,10 @@ namespace Models {
         Q_INVOKABLE void addPreset(int metadataIndex, int presetIndex);
 
     public:
-        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
-        virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
-        virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-        virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
+        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const override;
+        virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const override;
+        virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
+        virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole) override;
 
     public slots:
         int addLocalArtworks(const QList<QUrl> &artworksPaths);
@@ -152,7 +152,7 @@ namespace Models {
         void userDictClearedHandler();
 
     public:
-        virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);
+        virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges) override;
         void beginAccountingFiles(int filesCount);
         void beginAccountingFiles(int start, int end);
         void endAccountingFiles();
@@ -172,9 +172,9 @@ namespace Models {
 
     public:
         // IARTWORKSSOURCE
-        virtual Common::IBasicArtwork *getBasicArtwork(int index) const;
+        virtual Common::IBasicArtwork *getBasicArtwork(int index) const override;
 
-        virtual int getArtworksCount() const { return (int)m_ArtworkList.size(); }
+        virtual int getArtworksCount() const override { return (int)m_ArtworkList.size(); }
 
     private:
         void updateItemAtIndex(int metadataIndex);
@@ -196,12 +196,12 @@ namespace Models {
         void userDictUpdate(const QString &word);
 
     protected:
-        virtual QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const override;
 
     protected:
-        virtual bool shouldRemoveInRanges(int rangesLength) const;
-        virtual void removeInnerItem(int row);
-        virtual void removeInnerItemRange(int start, int end);
+        virtual bool shouldRemoveInRanges(int rangesLength) const override;
+        virtual void removeInnerItem(int row) override;
+        virtual void removeInnerItemRange(int start, int end) override;
 
     private:
         void destroyInnerItem(ArtworkMetadata *metadata);

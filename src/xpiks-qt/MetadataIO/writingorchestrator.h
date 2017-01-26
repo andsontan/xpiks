@@ -40,7 +40,7 @@ namespace MetadataIO {
         virtual ~WritingOrchestrator();
 
     public:
-        virtual const QVector<Models::ArtworkMetadata *> &getItemsToWrite() const { return m_ItemsToWrite; }
+        virtual const QVector<Models::ArtworkMetadata *> &getItemsToWrite() const override { return m_ItemsToWrite; }
         void startWriting();
 
     signals:

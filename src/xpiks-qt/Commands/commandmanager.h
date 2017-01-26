@@ -191,8 +191,8 @@ namespace Commands {
 #ifndef CORE_TESTS
         const
 #endif
-        ;
-        virtual void addWarningsService(Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *service);
+        override;
+        virtual void addWarningsService(Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *service) override;
 
     public:
         void recordHistoryItem(std::unique_ptr<UndoRedo::IHistoryItem> &historyItem) const;

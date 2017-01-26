@@ -44,9 +44,9 @@ namespace MetadataIO {
         virtual ~ReadingOrchestrator();
 
     public:
-        virtual const QHash<QString, ImportDataResult> &getImportResult() const { return m_ImportResult; }
-        virtual const QVector<Models::ArtworkMetadata *> &getItemsToRead() const { return m_ItemsToRead; }
-        virtual const QVector<QPair<int, int> > &getRangesToUpdate() const { return m_RangesToUpdate; }
+        virtual const QHash<QString, ImportDataResult> &getImportResult() const override { return m_ImportResult; }
+        virtual const QVector<Models::ArtworkMetadata *> &getItemsToRead() const override { return m_ItemsToRead; }
+        virtual const QVector<QPair<int, int> > &getRangesToUpdate() const override { return m_RangesToUpdate; }
 
     public:
         void startReading();

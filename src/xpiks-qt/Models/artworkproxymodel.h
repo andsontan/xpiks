@@ -64,8 +64,8 @@ namespace Models {
         QString getBasename() const { return m_ArtworkMetadata->getBaseFilename(); }
 
     public:
-        virtual void setDescription(const QString &description);
-        virtual void setTitle(const QString &title);
+        virtual void setDescription(const QString &description) override;
+        virtual void setTitle(const QString &title) override;
 
     signals:
         void imagePathChanged();
@@ -76,9 +76,9 @@ namespace Models {
         void itemBecomeUnavailable();
 
     protected:
-        virtual void signalDescriptionChanged() { emit descriptionChanged(); }
-        virtual void signalTitleChanged() { emit titleChanged(); }
-        virtual void signalKeywordsCountChanged() { emit keywordsCountChanged(); }
+        virtual void signalDescriptionChanged() override { emit descriptionChanged(); }
+        virtual void signalTitleChanged() override { emit titleChanged(); }
+        virtual void signalKeywordsCountChanged() override { emit keywordsCountChanged(); }
 
     public slots:
         void afterSpellingErrorsFixedHandler();
@@ -117,12 +117,12 @@ namespace Models {
         Q_INVOKABLE void addPreset(int presetIndex);
 
     protected:
-        virtual Common::BasicMetadataModel *getBasicMetadataModel() {
+        virtual Common::BasicMetadataModel *getBasicMetadataModel() override {
             Q_ASSERT(m_ArtworkMetadata != nullptr);
             return m_ArtworkMetadata->getBasicModel();
         }
 
-        virtual Common::IMetadataOperator *getMetadataOperator() {
+        virtual Common::IMetadataOperator *getMetadataOperator() override {
             Q_ASSERT(m_ArtworkMetadata != nullptr);
             return m_ArtworkMetadata;
         }

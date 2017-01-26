@@ -73,7 +73,7 @@ namespace AutoComplete {
 
         // QSortFilterProxyModel interface
     protected:
-        virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+        virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
     private:
         // ignore default regexp from proxymodel

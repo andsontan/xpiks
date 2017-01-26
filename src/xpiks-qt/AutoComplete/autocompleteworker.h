@@ -38,13 +38,12 @@ namespace AutoComplete {
         virtual ~AutoCompleteWorker();
 
     protected:
-        virtual bool initWorker();
-        virtual void processOneItem(std::shared_ptr<CompletionQuery> &item);
-        virtual void deleteItem(CompletionQuery* item) const;
+        virtual bool initWorker() override;
+        virtual void processOneItem(std::shared_ptr<CompletionQuery> &item) override;
 
     protected:
-        virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
-        virtual void workerStopped() { emit stopped(); }
+        virtual void notifyQueueIsEmpty() override { emit queueIsEmpty(); }
+        virtual void workerStopped() override { emit stopped(); }
 
     public slots:
         void process() { doWork(); }

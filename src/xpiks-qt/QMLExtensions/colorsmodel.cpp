@@ -223,7 +223,7 @@ namespace QMLExtensions {
         {}
 
     public:
-        virtual bool tryGetColor(const std::string &colorName, QColor &color) const {
+        virtual bool tryGetColor(const std::string &colorName, QColor &color) const override {
             auto it = m_ColorsMap.find(colorName);
             bool contains = it != m_ColorsMap.end();
             if (contains) {
@@ -233,7 +233,7 @@ namespace QMLExtensions {
             return contains;
         }
 
-        virtual QString getThemeName() const {
+        virtual QString getThemeName() const override {
             auto it = m_ColorsMap.find("name");
             if (it != m_ColorsMap.end()) {
                 return QString::fromStdString(it->second);

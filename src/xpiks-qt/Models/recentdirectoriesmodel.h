@@ -51,11 +51,11 @@ namespace Models {
         bool doPushDirectory(const QString &directoryPath);
 
     public:
-        int rowCount(const QModelIndex & parent = QModelIndex()) const { Q_UNUSED(parent); return m_RecentDirectories.length(); }
-        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
+        int rowCount(const QModelIndex & parent = QModelIndex()) const override { Q_UNUSED(parent); return m_RecentDirectories.length(); }
+        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const override;
 
     protected:
-        virtual QHash<int, QByteArray> roleNames() const { return QAbstractListModel::roleNames(); }
+        virtual QHash<int, QByteArray> roleNames() const override { return QAbstractListModel::roleNames(); }
 
     private:
         QSet<QString> m_DirectoriesSet;

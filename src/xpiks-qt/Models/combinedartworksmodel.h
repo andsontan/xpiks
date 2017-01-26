@@ -59,7 +59,7 @@ namespace Models {
         virtual ~CombinedArtworksModel() {}
 
     public:
-        virtual void setArtworks(std::vector<MetadataElement> &artworks);
+        virtual void setArtworks(std::vector<MetadataElement> &artworks) override;
 
     private:
         enum CombinedEditModifiedFlags {
@@ -101,13 +101,13 @@ namespace Models {
 
     public:
         void setKeywords(const QStringList &keywords) { m_CommonKeywordsModel.setKeywords(keywords); }
-        void setDescription(const QString &value) {
+        virtual void setDescription(const QString &value) override {
             if (doSetDescription(value)) {
                 setDescriptionModified(true);
             }
         }
 
-        void setTitle(const QString &value) {
+        virtual void setTitle(const QString &value) override {
             if (doSetTitle(value)) {
                 setTitleModified(true);
             }
@@ -137,9 +137,9 @@ namespace Models {
         void completionsAvailable();
 
     protected:
-        virtual void signalDescriptionChanged() { emit descriptionChanged(); }
-        virtual void signalTitleChanged() { emit titleChanged(); }
-        virtual void signalKeywordsCountChanged() { emit keywordsCountChanged(); }
+        virtual void signalDescriptionChanged() override { emit descriptionChanged(); }
+        virtual void signalTitleChanged() override { emit titleChanged(); }
+        virtual void signalKeywordsCountChanged() override { emit keywordsCountChanged(); }
 
     public:
         void generateAboutToBeRemoved();
@@ -198,15 +198,15 @@ namespace Models {
 #endif
 
     protected:
-        virtual Common::BasicMetadataModel *getBasicMetadataModel() { return &m_CommonKeywordsModel; }
-        virtual Common::IMetadataOperator *getMetadataOperator() { return &m_CommonKeywordsModel; }
+        virtual Common::BasicMetadataModel *getBasicMetadataModel() override { return &m_CommonKeywordsModel; }
+        virtual Common::IMetadataOperator *getMetadataOperator() override { return &m_CommonKeywordsModel; }
 
     protected:
-        virtual bool doRemoveSelectedArtworks();
-        virtual void doResetModel();
+        virtual bool doRemoveSelectedArtworks() override;
+        virtual void doResetModel() override;
 
     public:
-        virtual bool removeUnavailableItems();
+        virtual bool removeUnavailableItems() override;
 
     private:
         Common::Hold m_HoldPlaceholder;

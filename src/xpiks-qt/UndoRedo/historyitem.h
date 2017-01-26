@@ -45,7 +45,7 @@ namespace UndoRedo {
         virtual ~HistoryItem() {}
 
     public:
-        virtual int getActionType() const { return (int)m_ActionType; }
+        virtual int getActionType() const override { return (int)m_ActionType; }
 
     private:
         HistoryActionType m_ActionType;

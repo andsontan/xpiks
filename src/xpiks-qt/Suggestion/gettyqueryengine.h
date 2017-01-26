@@ -37,8 +37,8 @@ namespace Suggestion {
         GettyQueryEngine(int engineID, Models::SettingsModel *settingsModel);
 
     public:
-        virtual void submitQuery(const QStringList &queryKeywords, QueryResultsType resultsType);
-        virtual QString getName() const { return tr("iStock"); }
+        virtual void submitQuery(const QStringList &queryKeywords, QueryResultsType resultsType) override;
+        virtual QString getName() const override { return tr("iStock"); }
 
     private slots:
         void requestFinishedHandler(bool success);

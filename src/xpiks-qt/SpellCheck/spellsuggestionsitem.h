@@ -82,13 +82,13 @@ namespace SpellCheck {
         void replacementIndexChanged();
 
     public:
-        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const;
-        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const;
-        virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-        virtual bool setData(const QModelIndex &index, const QVariant &value, int role);
+        virtual int rowCount(const QModelIndex & parent = QModelIndex()) const override;
+        virtual QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const override;
+        virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
+        virtual bool setData(const QModelIndex &index, const QVariant &value, int role) override;
 
     protected:
-        virtual QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const override;
         void setReplacementSucceeded(bool succeeded) { m_ReplacementSucceeded = succeeded; }
         const QStringList &getSuggestions() const { return m_Suggestions; }
 
@@ -113,11 +113,11 @@ namespace SpellCheck {
 #endif
         int getOriginalIndex() const { return m_OriginalIndex; }
         bool isPotentialDuplicate() const { return m_ReplaceResult == Common::KeywordReplaceResult::FailedDuplicate; }
-        virtual void replaceToSuggested(Common::IMetadataOperator *item);
+        virtual void replaceToSuggested(Common::IMetadataOperator *item) override;
 
         // TODO: fix this back in future when c++ will be normal language (see comments in base class)
     //protected:
-        virtual void replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement);
+        virtual void replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) override;
 
     private:
         int m_OriginalIndex;
@@ -134,10 +134,10 @@ namespace SpellCheck {
 #if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
         virtual QString toDebugString() const { return "DescReplace: " + SpellSuggestionsItem::toDebugString(); }
 #endif
-        virtual void replaceToSuggested(Common::IMetadataOperator *item);
+        virtual void replaceToSuggested(Common::IMetadataOperator *item) override;
 
     //protected:
-        virtual void replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement);
+        virtual void replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) override;
     };
 
     class TitleSpellSuggestions: public SpellSuggestionsItem
@@ -150,10 +150,10 @@ namespace SpellCheck {
 #if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
         virtual QString toDebugString() const { return "TitleReplace: " + SpellSuggestionsItem::toDebugString(); }
 #endif
-        virtual void replaceToSuggested(Common::IMetadataOperator *item);
+        virtual void replaceToSuggested(Common::IMetadataOperator *item) override;
 
     //protected:
-        virtual void replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement);
+        virtual void replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) override;
     };
 
     class CombinedSpellSuggestions: public SpellSuggestionsItem {
@@ -167,10 +167,10 @@ namespace SpellCheck {
         virtual QString toDebugString() const { return "Multireplace: " + SpellSuggestionsItem::toDebugString(); }
 #endif
         std::vector<std::shared_ptr<KeywordSpellSuggestions> > getKeywordsDuplicateSuggestions() const;
-        virtual void replaceToSuggested(Common::IMetadataOperator *item);
+        virtual void replaceToSuggested(Common::IMetadataOperator *item) override;
 
     //protected:
-        virtual void replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement);
+        virtual void replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) override;
 
     private:
         std::vector<std::shared_ptr<SpellSuggestionsItem> > m_SpellSuggestions;

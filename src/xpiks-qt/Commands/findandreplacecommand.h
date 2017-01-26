@@ -70,7 +70,7 @@ namespace Commands {
         {}
 
     public:
-        virtual void afterExecCallback(const ICommandManager *commandManagerInterface) const;
+        virtual void afterExecCallback(const ICommandManager *commandManagerInterface) const override;
 
 #ifndef CORE_TESTS
 

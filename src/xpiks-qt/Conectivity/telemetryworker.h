@@ -36,15 +36,15 @@ namespace Conectivity {
         TelemetryWorker(const QString &userAgent, const QString &reportingEndpoint, const QString &interfaceLanguage);
 
     protected:
-        virtual bool initWorker();
-        virtual void processOneItem(std::shared_ptr<AnalyticsUserEvent> &item);
+        virtual bool initWorker() override;
+        virtual void processOneItem(std::shared_ptr<AnalyticsUserEvent> &item) override;
 
     private:
         bool sendOneReport(const QString &resource, const QString &payload);
 
     protected:
-        virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
-        virtual void workerStopped() { emit stopped(); }
+        virtual void notifyQueueIsEmpty() override { emit queueIsEmpty(); }
+        virtual void workerStopped() override { emit stopped(); }
 
     public slots:
         void process() { doWork(); }

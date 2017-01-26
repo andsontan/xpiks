@@ -47,7 +47,7 @@ namespace Commands {
         virtual ~CommandBase() {}
 
     public:
-        virtual int getCommandType() const { return (int)m_CommandType; }
+        virtual int getCommandType() const override { return (int)m_CommandType; }
 
     private:
         CommandType m_CommandType;
@@ -59,7 +59,7 @@ namespace Commands {
         virtual ~CommandResult() {}
 
     public:
-        virtual int getStatus() const { return 0; }
+        virtual int getStatus() const override { return 0; }
     };
 }
 

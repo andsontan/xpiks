@@ -28,8 +28,8 @@ namespace Conectivity {
         };
 
     public:
-        virtual int rowCount(const QModelIndex &parent) const;
-        virtual QVariant data(const QModelIndex &index, int role) const;
+        virtual int rowCount(const QModelIndex &parent) const override;
+        virtual QVariant data(const QModelIndex &index, int role) const override;
 
     public slots:
         void reportUploadErrorHandler(const QString &filepath, const QString &host);
@@ -38,7 +38,7 @@ namespace Conectivity {
         void failedImagesCountChanged();
 
     protected:
-        virtual QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const override;
 
     private:
         QVector<QPair<QString, QStringList> > m_FtpInfo;

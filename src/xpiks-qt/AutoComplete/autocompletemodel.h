@@ -85,9 +85,9 @@ namespace AutoComplete {
 
         // QAbstractItemModel interface
     public:
-        virtual int rowCount(const QModelIndex &parent) const { Q_UNUSED(parent); return m_CompletionList.length(); }
-        virtual QVariant data(const QModelIndex &index, int role) const;
-        virtual QHash<int, QByteArray> roleNames() const;
+        virtual int rowCount(const QModelIndex &parent) const override { Q_UNUSED(parent); return m_CompletionList.length(); }
+        virtual QVariant data(const QModelIndex &index, int role) const override;
+        virtual QHash<int, QByteArray> roleNames() const override;
 
 #ifdef INTEGRATION_TESTS
         bool containsWord(const QString &word) { return m_CompletionList.contains(word); }

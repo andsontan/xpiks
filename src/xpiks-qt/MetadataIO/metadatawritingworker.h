@@ -47,7 +47,7 @@ namespace MetadataIO {
         void finished(bool success);
 
     public:
-        virtual const QVector<Models::ArtworkMetadata *> &getItemsToWrite() const { return m_ItemsToWrite; }
+        virtual const QVector<Models::ArtworkMetadata *> &getItemsToWrite() const override { return m_ItemsToWrite; }
 
     public slots:
         void process();

@@ -25,13 +25,13 @@ namespace KeywordsPresets {
         // AbstractConfigUpdaterModel interface
 
     protected:
-        virtual bool parseConfig(const QJsonDocument &document);
+        virtual bool parseConfig(const QJsonDocument &document) override;
 
-        virtual void processRemoteConfig(const QJsonDocument &remoteDocument, bool overwriteLocal);
+        virtual void processRemoteConfig(const QJsonDocument &remoteDocument, bool overwriteLocal) override;
         // CompareValuesJson interface
 
     public:
-        virtual int operator ()(const QJsonObject &val1, const QJsonObject &val2);
+        virtual int operator ()(const QJsonObject &val1, const QJsonObject &val2) override;
 
     public:
         void initialize(const QVector<PresetData> &presetData);

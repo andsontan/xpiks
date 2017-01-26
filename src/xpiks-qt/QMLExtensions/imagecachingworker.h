@@ -50,12 +50,12 @@ namespace QMLExtensions {
         ImageCachingWorker(QObject *parent=0);
 
     protected:
-        virtual bool initWorker();
-        virtual void processOneItem(std::shared_ptr<ImageCacheRequest> &item);
+        virtual bool initWorker() override;
+        virtual void processOneItem(std::shared_ptr<ImageCacheRequest> &item) override;
 
     protected:
-        virtual void notifyQueueIsEmpty() { emit queueIsEmpty(); }
-        virtual void workerStopped() { saveIndex(); emit stopped(); }
+        virtual void notifyQueueIsEmpty() override { emit queueIsEmpty(); }
+        virtual void workerStopped() override { saveIndex(); emit stopped(); }
 
     public slots:
         void process() { doWork(); }

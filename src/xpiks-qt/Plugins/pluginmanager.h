@@ -64,10 +64,10 @@ namespace Plugins {
 
         // QAbstractItemModel interface
     public:
-        virtual int rowCount(const QModelIndex &parent) const;
-        virtual QVariant data(const QModelIndex &index, int role) const;
+        virtual int rowCount(const QModelIndex &parent) const override;
+        virtual QVariant data(const QModelIndex &index, int role) const override;
     protected:
-        virtual QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const override;
 
     private:
         int getNextPluginID() { return m_LastPluginID++; }

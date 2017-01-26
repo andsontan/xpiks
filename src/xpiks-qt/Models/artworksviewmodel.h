@@ -84,17 +84,17 @@ namespace Models {
 
         // QAbstractItemModel interface
     public:
-        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
-        virtual QVariant data(const QModelIndex &index, int role) const;
-        virtual QHash<int, QByteArray> roleNames() const;
+        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const override;
+        virtual QVariant data(const QModelIndex &index, int role) const override;
+        virtual QHash<int, QByteArray> roleNames() const override;
 
         // IFileNotAvailableModel interface
     public:
-        virtual bool removeUnavailableItems();
+        virtual bool removeUnavailableItems() override;
 
         // AbstractListModel interface
     protected:
-        virtual void removeInnerItem(int row);
+        virtual void removeInnerItem(int row) override;
 
     private:
         std::vector<MetadataElement> m_ArtworksList;

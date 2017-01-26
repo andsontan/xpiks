@@ -41,8 +41,8 @@ namespace Suggestion {
         ShutterstockQueryEngine(int engineID, Models::SettingsModel *settingsModel);
 
     public:
-        virtual void submitQuery(const QStringList &queryKeywords, QueryResultsType resultsType);
-        virtual QString getName() const { return tr("Shutterstock"); }
+        virtual void submitQuery(const QStringList &queryKeywords, QueryResultsType resultsType) override;
+        virtual QString getName() const override { return tr("Shutterstock"); }
 
     private slots:
         void requestFinishedHandler(bool success);

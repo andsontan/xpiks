@@ -46,12 +46,12 @@ namespace Warnings {
 
         // AbstractConfigUpdaterModel interface
     protected:
-        virtual void processRemoteConfig(const QJsonDocument &remoteDocument, bool overwriteLocal);
-        virtual bool parseConfig(const QJsonDocument &document);
+        virtual void processRemoteConfig(const QJsonDocument &remoteDocument, bool overwriteLocal) override;
+        virtual bool parseConfig(const QJsonDocument &document) override;
 
         // CompareValuesJson interface
     public:
-        virtual int operator ()(const QJsonObject &val1, const QJsonObject &val2);
+        virtual int operator ()(const QJsonObject &val1, const QJsonObject &val2) override;
 
     private:
         QString m_AllowedFilenameCharacters;

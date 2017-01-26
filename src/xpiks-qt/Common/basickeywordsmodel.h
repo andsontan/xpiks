@@ -65,15 +65,15 @@ namespace Common {
         QVector<bool> &getSpellCheckResults() { return m_SpellCheckResults; }
         const QString &getKeywordAt(int index) const { return m_KeywordsList.at(index); }
 #endif
-        virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges);
+        virtual void removeItemsAtIndices(const QVector<QPair<int, int> > &ranges) override;
 
     protected:
         // UNSAFE
-        virtual void removeInnerItem(int row);
+        virtual void removeInnerItem(int row) override;
 
     public:
-        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
-        virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
+        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const override;
+        virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const override;
 
     public:
         int getKeywordsCount();
@@ -168,7 +168,7 @@ namespace Common {
         void emitSpellCheckChanged(int index=-1);
 
     protected:
-        virtual QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const override;
 
     private:
         Common::Hold &m_Hold;

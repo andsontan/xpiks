@@ -78,7 +78,7 @@ namespace Models {
                         const QString &description, const QStringList &rawKeywords, bool overwrite=true);
 
     public:
-        virtual const QString &getFilepath() const { return m_ArtworkFilepath; }
+        virtual const QString &getFilepath() const override { return m_ArtworkFilepath; }
         virtual QString getDirectory() const { QFileInfo fi(m_ArtworkFilepath); return fi.absolutePath(); }
         QString getBaseFilename() const;
         bool isInDirectory(const QString &directoryAbsolutePath) const;
@@ -88,7 +88,7 @@ namespace Models {
         bool isUnavailable() const { return getIsUnavailableFlag(); }
         bool isInitialized() const { return getIsInitializedFlag(); }
         virtual qint64 getFileSize() const { return m_FileSize; }
-        virtual qint64 getItemID() const { return m_ID; }
+        virtual qint64 getItemID() const override { return m_ID; }
 
     public:
         Common::WarningFlags getWarningsFlags() const { return m_WarningsFlags; }
@@ -101,12 +101,12 @@ namespace Models {
         const Common::BasicMetadataModel *getBasicModel() const { return &m_MetadataModel; }
 
         virtual void clearModel();
-        virtual bool clearKeywords();
-        virtual bool editKeyword(int index, const QString &replacement);
+        virtual bool clearKeywords() override;
+        virtual bool editKeyword(int index, const QString &replacement) override;
         virtual bool replace(const QString &replaceWhat, const QString &replaceTo, Common::SearchFlags flags);
 
     public:
-        virtual bool setDescription(const QString &value) {
+        virtual bool setDescription(const QString &value) override {
             bool result = m_MetadataModel.setDescription(value);
 
             if (result) { markModified(); }
@@ -114,7 +114,7 @@ namespace Models {
             return result;
         }
 
-        virtual bool setTitle(const QString &value) {
+        virtual bool setTitle(const QString &value) override {
             bool result = m_MetadataModel.setTitle(value);
 
             if (result) { markModified(); }
@@ -122,7 +122,7 @@ namespace Models {
             return result;
         }
 
-        virtual void setKeywords(const QStringList &keywords) {
+        virtual void setKeywords(const QStringList &keywords) override {
             m_MetadataModel.setKeywords(keywords);
             markModified();
         }
@@ -142,23 +142,23 @@ namespace Models {
 
     public:
         bool areKeywordsEmpty() { return m_MetadataModel.areKeywordsEmpty(); }
-        virtual bool removeKeywordAt(int index, QString &removed);
-        virtual bool removeLastKeyword(QString &removed);
-        virtual bool appendKeyword(const QString &keyword);
-        virtual int appendKeywords(const QStringList &keywordsList);
+        virtual bool removeKeywordAt(int index, QString &removed) override;
+        virtual bool removeLastKeyword(QString &removed) override;
+        virtual bool appendKeyword(const QString &keyword) override;
+        virtual int appendKeywords(const QStringList &keywordsList) override;
         bool removeKeywords(const QSet<QString> &keywordsSet, bool caseSensitive=true);
-        virtual QString getKeywordsString() { return m_MetadataModel.getKeywordsString(); }
+        virtual QString getKeywordsString() override { return m_MetadataModel.getKeywordsString(); }
 
     public:
-        virtual Common::KeywordReplaceResult fixKeywordSpelling(int index, const QString &existing, const QString &replacement);
-        virtual bool fixDescriptionSpelling(const QString &word, const QString &replacement);
-        virtual bool fixTitleSpelling(const QString &word, const QString &replacement);
-        virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createDescriptionSuggestionsList();
-        virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createTitleSuggestionsList();
-        virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createKeywordsSuggestionsList();
-        virtual bool processFailedKeywordReplacements(const std::vector<std::shared_ptr<SpellCheck::KeywordSpellSuggestions> > &candidatesForRemoval);
-        virtual void afterReplaceCallback();
-        virtual Common::BasicKeywordsModel *getBasicKeywordsModel();
+        virtual Common::KeywordReplaceResult fixKeywordSpelling(int index, const QString &existing, const QString &replacement) override;
+        virtual bool fixDescriptionSpelling(const QString &word, const QString &replacement) override;
+        virtual bool fixTitleSpelling(const QString &word, const QString &replacement) override;
+        virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createDescriptionSuggestionsList() override;
+        virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createTitleSuggestionsList() override;
+        virtual std::vector<std::shared_ptr<SpellCheck::SpellSuggestionsItem> > createKeywordsSuggestionsList() override;
+        virtual bool processFailedKeywordReplacements(const std::vector<std::shared_ptr<SpellCheck::KeywordSpellSuggestions> > &candidatesForRemoval) override;
+        virtual void afterReplaceCallback() override;
+        virtual Common::BasicKeywordsModel *getBasicKeywordsModel() override;
 
     public:
         void acquire() { m_Hold.acquire(); }
@@ -166,11 +166,11 @@ namespace Models {
 
     public:
         // IBasicArtwork interface
-        virtual QSet<QString> getKeywordsSet() { return m_MetadataModel.getKeywordsSet(); }
-        virtual QStringList getKeywords() { return m_MetadataModel.getKeywords(); }
-        virtual bool isEmpty() { return m_MetadataModel.isEmpty(); }
-        virtual QString getDescription() { return m_MetadataModel.getDescription(); }
-        virtual QString getTitle() { return m_MetadataModel.getTitle(); }
+        virtual QSet<QString> getKeywordsSet() override { return m_MetadataModel.getKeywordsSet(); }
+        virtual QStringList getKeywords() override { return m_MetadataModel.getKeywords(); }
+        virtual bool isEmpty() override { return m_MetadataModel.isEmpty(); }
+        virtual QString getDescription() override { return m_MetadataModel.getDescription(); }
+        virtual QString getTitle() override { return m_MetadataModel.getTitle(); }
 
     public:
         void markModified();
@@ -178,7 +178,7 @@ namespace Models {
         void resetModified() { setIsModifiedFlag(false); }
         void requestFocus(int directionSign) { emit focusRequested(directionSign); }
         void requestBackup() { m_BackupTimer.start(1000); }
-        virtual bool expandPreset(int keywordIndex, const QStringList &presetList);
+        virtual bool expandPreset(int keywordIndex, const QStringList &presetList) override;
 
 #ifndef CORE_TESTS
     private:

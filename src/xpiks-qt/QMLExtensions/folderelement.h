@@ -53,8 +53,8 @@ namespace QMLExtensions {
         void thicknessChanged(qreal value);
 
     protected:
-        virtual QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *);
-        virtual void itemChange(ItemChange item, const ItemChangeData &data);
+        virtual QSGNode *updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *) override;
+        virtual void itemChange(ItemChange item, const ItemChangeData &data) override;
 
     private:
         void updateView(QSGGeometry *geometry);

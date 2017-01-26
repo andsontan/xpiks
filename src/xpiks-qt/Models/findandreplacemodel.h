@@ -51,8 +51,8 @@ namespace Models {
         virtual ~FindAndReplaceModel() {}
 
     public:
-        virtual int getFlags() const { return (int)m_Flags; }
-        const QString &getReplaceFrom() const { return m_ReplaceFrom; }
+        virtual int getFlags() const override { return (int)m_Flags; }
+        const QString &getReplaceFrom() const{ return m_ReplaceFrom; }
         const QString &getReplaceTo() const { return m_ReplaceTo; }
         int getArtworksCount() const { return (int)m_ArtworksList.size(); }
 
@@ -164,13 +164,13 @@ namespace Models {
 #endif
 
     public:
-        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
-        virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
-        virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-        virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
+        virtual int rowCount(const QModelIndex &parent=QModelIndex()) const override;
+        virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const override;
+        virtual Qt::ItemFlags flags(const QModelIndex &index) const override;
+        virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole) override;
 
     protected:
-        virtual QHash<int, QByteArray> roleNames() const;
+        virtual QHash<int, QByteArray> roleNames() const override;
 
     signals:
         void replaceFromChanged(const QString &value);

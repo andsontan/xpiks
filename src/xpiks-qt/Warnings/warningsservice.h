@@ -48,16 +48,16 @@ namespace Warnings {
         const WarningsSettingsModel *getWarningsSettingsModel() const { return &m_WarningsSettingsModel; }
 
     public:
-        virtual void startService();
-        virtual void stopService();
+        virtual void startService() override;
+        virtual void stopService() override;
 
-        virtual bool isAvailable() const { return true; }
-        virtual bool isBusy() const;
+        virtual bool isAvailable() const override { return true; }
+        virtual bool isBusy() const override;
 
-        virtual void submitItem(Models::ArtworkMetadata *item);
-        virtual void submitItem(Models::ArtworkMetadata *item, Common::WarningsCheckFlags flags);
-        virtual void submitItems(const QVector<Models::ArtworkMetadata *> &items);
-        virtual void setCommandManager(Commands::CommandManager *commandManager);
+        virtual void submitItem(Models::ArtworkMetadata *item) override;
+        virtual void submitItem(Models::ArtworkMetadata *item, Common::WarningsCheckFlags flags) override;
+        virtual void submitItems(const QVector<Models::ArtworkMetadata *> &items) override;
+        virtual void setCommandManager(Commands::CommandManager *commandManager) override;
 
     private slots:
         void workerDestoyed(QObject *object);

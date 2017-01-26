@@ -58,8 +58,8 @@ namespace Models {
         void caseSensitiveChanged();
 
     public:
-        virtual void setArtworks(std::vector<MetadataElement> &artworks);
-        virtual bool removeUnavailableItems();
+        virtual void setArtworks(std::vector<MetadataElement> &artworks) override;
+        virtual bool removeUnavailableItems() override;
 
 #ifdef CORE_TESTS
     public:
@@ -67,8 +67,8 @@ namespace Models {
 #endif
 
     protected:
-        virtual bool doRemoveSelectedArtworks();
-        virtual void doResetModel();
+        virtual bool doRemoveSelectedArtworks() override;
+        virtual void doResetModel() override;
 
     public:
         Q_INVOKABLE QObject *getCommonKeywordsModel() {
