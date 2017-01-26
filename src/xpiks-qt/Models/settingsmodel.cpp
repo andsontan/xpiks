@@ -26,11 +26,11 @@
 #include "../Commands/commandmanager.h"
 
 #ifdef Q_OS_MAC
-#define DEFAULT_EXIFTOOL "/usr/bin/exiftool"
+#  define DEFAULT_EXIFTOOL "/usr/bin/exiftool"
 #elif APPVEYOR
-#define DEFAULT_EXIFTOOL "c:/projects/xpiks-deps/windows-3rd-party-bin/exiftool.exe"
+#  define DEFAULT_EXIFTOOL "c:/projects/xpiks-deps/windows-3rd-party-bin/exiftool.exe"
 #else
-#define DEFAULT_EXIFTOOL "exiftool"
+#  define DEFAULT_EXIFTOOL "exiftool"
 #endif
 
 #define DEFAULT_DICT_PATH ""

@@ -75,13 +75,13 @@ namespace Conectivity {
 #else
         query.addQueryItem(QLatin1String("_cvar"),
                            customVarsStr
-#ifdef Q_OS_WIN
+#  ifdef Q_OS_WIN
                            .arg(QString("windows"))
-#elsif Q_OS_DARWIN
+#  elsif Q_OS_DARWIN
                            .arg(QString("osx"))
-#else
+#  else
                            .arg(QString("Linux QT<5.4"))
-#endif
+#  endif
                            .arg(QString("-"))
                            .arg(XPIKS_VERSION_STRING)
                            .arg(m_InterfaceLanguage));
@@ -117,11 +117,11 @@ namespace Conectivity {
                 .arg(QSysInfo::productVersion());
 #elif defined(Q_OS_LINUX)
         userAgent = QString("Mozilla/5.0 (Linux %2; rv:1.1) Qt Xpiks/1.1")
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+#  if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
                 .arg(QSysInfo::productVersion());
-#else
+#  else
                 .arg("?");
-#endif
+#  endif
 #endif
         std::string userAgentString = userAgent.toStdString();
         const char *userAgentData = userAgentString.data();

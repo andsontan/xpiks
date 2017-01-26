@@ -64,13 +64,13 @@ namespace SpellCheck {
         resourcesPath = QCoreApplication::applicationDirPath();
         LOG_DEBUG << "App path:" << resourcesPath;
 
-#if defined(Q_OS_MAC)
+#  if defined(Q_OS_MAC)
         resourcesPath += "/../Resources/";
-#elif defined(APPVEYOR)
+#  elif defined(APPVEYOR)
         resourcesPath += "/../../../xpiks-qt/deps/dict/";
-#elif defined(Q_OS_WIN)
+#  elif defined(Q_OS_WIN)
         resourcesPath += "/dict/";
-#endif
+#  endif
 
         QDir resourcesDir(resourcesPath);
         affPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_AFF);

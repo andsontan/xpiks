@@ -25,13 +25,13 @@
 #include <QString>
 
 #if defined(Q_OS_DARWIN)
-#define UPDATE_JSON_URL_SUFFIX "update-osx.json"
+#  define UPDATE_JSON_URL_SUFFIX "update-osx.json"
 #elif defined(Q_OS_WIN64)
-#define UPDATE_JSON_URL_SUFFIX "update-windows.json"
+#  define UPDATE_JSON_URL_SUFFIX "update-windows.json"
 #elif defined(Q_OS_WIN32)
-#define UPDATE_JSON_URL_SUFFIX "update-windows-32.json"
+#  define UPDATE_JSON_URL_SUFFIX "update-windows-32.json"
 #else
-#define UPDATE_JSON_URL_SUFFIX "update.json"
+#  define UPDATE_JSON_URL_SUFFIX "update.json"
 #endif
 
 namespace Conectivity {
