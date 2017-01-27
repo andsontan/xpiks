@@ -74,6 +74,7 @@ namespace Translation {
     private:
         void doInitializeDictionaries();
         bool acquireDictionary(const QString &anyDictFilePath);
+        bool hasAllNeededComponents(const QString &anyDictFilePath) const;
 
     public:
         Q_INVOKABLE void clear();

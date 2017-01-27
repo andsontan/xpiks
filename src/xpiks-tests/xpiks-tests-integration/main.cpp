@@ -11,6 +11,8 @@
 #include "../../xpiks-qt/Conectivity/analyticsuserevent.h"
 #include "../../xpiks-qt/SpellCheck/spellcheckerservice.h"
 #include "../../xpiks-qt/AutoComplete/autocompletemodel.h"
+#include "../../xpiks-qt/Translation/translationmanager.h"
+#include "../../xpiks-qt/Translation/translationservice.h"
 #include "../../xpiks-qt/Models/recentdirectoriesmodel.h"
 #include "../../xpiks-qt/MetadataIO/backupsaverservice.h"
 #include "../../xpiks-qt/Suggestion/keywordssuggestor.h"
@@ -152,6 +154,8 @@ int main(int argc, char *argv[]) {
     QMLExtensions::ImageCachingService imageCachingService;
     Models::FindAndReplaceModel findAndReplaceModel(&colorsModel);
     Models::DeleteKeywordsViewModel deleteKeywordsModel;
+    Translation::TranslationManager translationManager;
+    Translation::TranslationService translationService(translationManager);
 
     Conectivity::UpdateService updateService(&settingsModel);
 
@@ -190,6 +194,8 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&deleteKeywordsModel);
     commandManager.InjectDependency(&presetsModel);
     commandManager.InjectDependency(&presetsModelConfig);
+    commandManager.InjectDependency(&translationManager);
+    commandManager.InjectDependency(&translationService);
 
     commandManager.ensureDependenciesInjected();
 

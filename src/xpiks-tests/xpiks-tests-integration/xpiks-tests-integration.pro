@@ -160,7 +160,11 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Models/artworkproxybase.cpp \
     plaintextedittest.cpp \
     fixspellingmarksmodifiedtest.cpp \
-    presetstest.cpp
+    presetstest.cpp \
+    ../../xpiks-qt/Translation/translationmanager.cpp \
+    ../../xpiks-qt/Translation/translationquery.cpp \
+    ../../xpiks-qt/Translation/translationservice.cpp \
+    ../../xpiks-qt/Translation/translationworker.cpp
 
 RESOURCES +=
 
@@ -349,7 +353,11 @@ HEADERS += \
     ../../xpiks-qt/Models/artworkproxybase.h \
     plaintextedittest.h \
     fixspellingmarksmodifiedtest.h \
-    presetstest.h
+    presetstest.h \
+    ../../xpiks-qt/Translation/translationmanager.h \
+    ../../xpiks-qt/Translation/translationquery.h \
+    ../../xpiks-qt/Translation/translationservice.h \
+    ../../xpiks-qt/Translation/translationworker.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

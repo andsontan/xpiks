@@ -148,7 +148,8 @@ namespace Translation {
             QString ifoFullPath = it.next();
 
             DictionaryInfo di;
-            if (parseIfoFile(ifoFullPath, di)) {
+            if (parseIfoFile(ifoFullPath, di) &&
+                    hasAllNeededComponents(ifoFullPath)) {
                 m_DictionariesList.append(di);
                 LOG_INFO << "Parsed" << di.m_Description;
             } else {
@@ -156,7 +157,16 @@ namespace Translation {
             }
         }
 
+        auto *settingsModel = m_CommandManager->getSettingsModel();
+        int selectedDictIndex = settingsModel->getSelectedDictIndex();
+        if ((0 <= selectedDictIndex) && (selectedDictIndex < m_DictionariesList.length())) {
+            m_SelectedDictionaryIndex = selectedDictIndex;
+        } else {
+            m_SelectedDictionaryIndex = 0;
+        }
+
         emit dictionariesChanged();
+        emit selectedDictionaryIndexChanged();
     }
 
     bool TranslationManager::acquireDictionary(const QString &anyDictFilePath) {
@@ -197,6 +207,29 @@ namespace Translation {
         LOG_INFO << "IFO found" << ifoFound << "Index found" << indexFound << "Dictionary found" << dictFound;
 
         bool success = (anyFileCopied) && (!anyError) && (ifoFound && dictFound && indexFound);
+        return success;
+    }
+
+    bool TranslationManager::hasAllNeededComponents(const QString &anyDictFilePath) const {
+        QFileInfo fi(anyDictFilePath);
+        Q_ASSERT(fi.exists());
+
+        QString longPrefix = QDir::cleanPath(fi.absolutePath() + QDir::separator() + fi.baseName());
+        bool indexFound = false, dictFound = false, ifoFound = false;
+
+        foreach (const QString &suffix, m_AllowedSuffixes) {
+            QString probablePath = longPrefix + "." + suffix;
+
+            if (QFileInfo(probablePath).exists()) {
+                // TODO: refactor this someday to check just needed
+                // extensions instead of looping all of them
+                indexFound = indexFound || suffix.contains("idx");
+                dictFound = dictFound || suffix.contains("dict");
+                ifoFound = ifoFound || suffix.contains("ifo");
+            }
+        }
+
+        bool success = ifoFound && dictFound && indexFound;
         return success;
     }
 

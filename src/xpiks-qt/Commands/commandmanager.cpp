@@ -58,6 +58,7 @@
 #include "../Helpers/updatehelpers.h"
 #include "../Common/imetadataoperator.h"
 #include "../Translation/translationmanager.h"
+#include "../Translation/translationservice.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -674,6 +675,7 @@ void Commands::CommandManager::afterConstructionCallback() {
     m_WarningsService->startService();
     m_MetadataSaverService->startSaving();
     m_AutoCompleteService->startService();
+    m_TranslationService->startService();
 
     QCoreApplication::processEvents();
 
@@ -732,6 +734,7 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     m_WarningsService->stopService();
     m_MetadataSaverService->stopSaving();
     m_AutoCompleteService->stopService();
+    m_TranslationService->stopService();
 
 #ifdef WITH_PLUGINS
     m_PluginManager->unloadPlugins();
