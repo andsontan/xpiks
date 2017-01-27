@@ -30,12 +30,16 @@ Item {
     id: comboBox
     property color highlightedItemColor: Colors.artworkActiveColor
     property bool showColorSign: true
+    property bool hasLastItemAction: false
+    property string lastActionText: ''
     property double headerHeight: comboBox.height
     property double itemHeight: comboBox.height
     property double maxCount: 5
     property alias model: dropDownItems.model
     property alias selectedIndex: dropDownItems.currentIndex
+    property color comboboxBackgroundColor: Colors.defaultControlColor
     signal comboIndexChanged();
+    signal lastItemActionInvoked();
 
     function closePopup() {
         comboBox.state = ""
@@ -78,15 +82,17 @@ Item {
             anchors.right: arrowRect.left
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            color: Colors.defaultControlColor
+            color: comboboxBackgroundColor
 
             StyledText {
                 id: selectedText
-                text: dropDownItems.currentItem.itemText
+                text: dropDownItems.currentItem ? dropDownItems.currentItem.itemText : ""
                 anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.leftMargin: 10
+                width: parent.width - 10
+                elide: Text.ElideRight
                 verticalAlignment: TextInput.AlignVCenter
             }
         }
@@ -139,6 +145,7 @@ Item {
 
         ListView {
             id: dropDownItems
+            property int itemsCount: count + (hasLastItemAction ? 1 : 0)
             anchors.fill: parent
             anchors.topMargin: 5
             anchors.bottomMargin: 5
@@ -165,8 +172,8 @@ Item {
                 }
 
                 Rectangle {
-                    visible: !currentDelegate.isLastItem
-                    enabled: !currentDelegate.isLastItem
+                    visible: !currentDelegate.isLastItem || hasLastItemAction
+                    enabled: !currentDelegate.isLastItem || hasLastItemAction
                     height: 1
                     color: itemMA.containsMouse ? highlightedItemColor : Colors.inputBackgroundColor
                     anchors.bottom: parent.bottom
@@ -192,11 +199,38 @@ Item {
                     }
                 }
             }
+
+            footer: Rectangle {
+                visible: hasLastItemAction
+                enabled: hasLastItemAction
+                color: lastItemMA.containsMouse ? highlightedItemColor : dropDown.color
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: itemHeight + 1
+
+                StyledText {
+                    text: lastActionText
+                    anchors.left: parent.left
+                    anchors.verticalCenter: parent.verticalCenter
+                    anchors.leftMargin: 16
+                    color: lastItemMA.containsMouse ? Colors.whiteColor : Colors.labelActiveForeground
+                }
+
+                MouseArea {
+                    id: lastItemMA
+                    anchors.fill: parent
+                    hoverEnabled: true
+                    onClicked: {
+                        comboBox.state = ""
+                        lastItemActionInvoked()
+                    }
+                }
+            }
         }
 
         CustomScrollbar {
             id: scrollBar
-            visible: dropDownItems.count > maxCount
+            visible: dropDownItems.itemsCount > maxCount
             anchors.rightMargin: -12
             flickable: dropDownItems
         }
@@ -206,7 +240,7 @@ Item {
         name: "dropDown";
         PropertyChanges {
             target: dropDown;
-            height: dropDownItems.count > maxCount ? (maxCount * (comboBox.itemHeight + 1) + 10) : ((comboBox.itemHeight + 1) * dropDownItems.count + 10)
+            height: dropDownItems.itemsCount > maxCount ? (maxCount * (comboBox.itemHeight + 1) + 10) : ((comboBox.itemHeight + 1) * dropDownItems.itemsCount + 10)
             visible: true
         }
     }

@@ -78,7 +78,7 @@ namespace Translation {
 
     public:
         Q_INVOKABLE void clear();
-        Q_INVOKABLE bool addDictionary(const QString &anyDictFilePath);
+        Q_INVOKABLE bool addDictionary(const QUrl &url);
 
     signals:
         void isBusyChanged();

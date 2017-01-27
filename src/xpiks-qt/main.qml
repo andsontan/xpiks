@@ -840,6 +840,33 @@ ApplicationWindow {
         }
     }
 
+    FileDialog {
+        id: openDictionaryDialog
+        title: "Select any dictionary file"
+        selectExisting: true
+        selectMultiple: false
+        folder: shortcuts.home
+        nameFilters: [ "StarDict files (*.ifo *.idx *.dict *.idx.dz *.dict.dz)"]
+
+        onAccepted: {
+            console.debug("You chose: " + openDictionaryDialog.fileUrl)
+            var added = translationManager.addDictionary(openDictionaryDialog.fileUrl)
+            if (added) {
+                dictionaryAddedMB.open()
+            }
+        }
+
+        onRejected: {
+            console.debug("Add dictionary dialog canceled")
+        }
+    }
+
+    MessageDialog {
+        id: dictionaryAddedMB
+        title: i18.n + qsTr("Info")
+        text: i18.n + qsTr("Dictionary has been added")
+    }
+
     MessageDialog {
         id: mustSaveWarning
         title: i18.n + qsTr("Warning")
@@ -1001,8 +1028,8 @@ ApplicationWindow {
                     hovered: (!isSelected) && foldersMA.containsMouse
 
                     FolderElement {
-                        width: 25
-                        height: 20
+                        width: 20
+                        height: 17
                         anchors.centerIn: parent
                         color: (parent.isSelected || parent.hovered) ? Colors.labelActiveForeground : Colors.inactiveControlColor
                     }
@@ -1021,12 +1048,23 @@ ApplicationWindow {
                     isSelected: mainTabView.currentIndex == tabIndex
                     hovered: (!isSelected) && translatorMA.containsMouse
 
-                    FolderElement {
-                        id: folders2
-                        width: 25
+                    Rectangle {
+                        id: translatorIconWrapper
+                        width: 24
                         height: 20
                         anchors.centerIn: parent
-                        color: (parent.isSelected || parent.hovered) ? Colors.labelActiveForeground : Colors.inactiveControlColor
+                        border.color: (parent.isSelected || parent.hovered) ? Colors.labelActiveForeground : Colors.inactiveControlColor
+                        border.width: 2
+                        color: "transparent"
+
+                        StyledText {
+                            text: "A"
+                            font.pixelSize: 12
+                            font.bold: true
+                            color: translatorIconWrapper.border.color
+                            anchors.centerIn: parent
+                            anchors.verticalCenterOffset: 1
+                        }
                     }
 
                     MouseArea {
@@ -1175,6 +1213,196 @@ ApplicationWindow {
                                     }
                                 }
                             }
+                        }
+                    }
+                }
+
+                Tab {
+                    ColumnLayout {
+                        anchors.fill: parent
+                        anchors.leftMargin: 10
+                        anchors.rightMargin: 10
+                        anchors.topMargin: 20
+                        anchors.bottomMargin: 10
+                        spacing: 0
+
+                        StyledText {
+                            text: i18.n + qsTr("Dictionary:")
+                        }
+
+                        Item {
+                            height: 10
+                        }
+
+                        CustomComboBox {
+                            id: dictionariesComboBox
+                            model: translationManager.dictionaries
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 28
+                            itemHeight: 28
+                            showColorSign: true
+                            hasLastItemAction: true
+                            lastActionText: i18.n + qsTr("Add dictionary...")
+                            comboboxBackgroundColor: Colors.popupBackgroundColor
+                            z: 100500
+
+                            onLastItemActionInvoked: {
+                                openDictionaryDialog.open()
+                            }
+                        }
+
+                        Item {
+                            height: 20
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 150
+                            color: Colors.popupDarkInputBackground
+
+                            Flickable {
+                                id: trFlick
+                                anchors.fill: parent
+                                anchors.margins: 10
+                                clip: true
+                                contentWidth: trTextEdit.paintedWidth
+                                contentHeight: trTextEdit.paintedHeight
+
+                                function ensureVisible(r) {
+                                    if (contentX >= r.x)
+                                        contentX = r.x;
+                                    else if (contentX+width <= r.x+r.width)
+                                        contentX = r.x+r.width-width;
+                                    if (contentY >= r.y)
+                                        contentY = r.y;
+                                    else if (contentY+height <= r.y+r.height)
+                                        contentY = r.y+r.height-height;
+                                }
+
+                                StyledTextEdit {
+                                    id: trTextEdit
+                                    anchors.top: parent.top
+                                    width: trFlick.width - 10
+                                    height: trFlick.height
+                                    focus: true
+                                    text: translationManager.query
+                                    font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
+                                    wrapMode: TextEdit.Wrap
+                                    horizontalAlignment: TextEdit.AlignLeft
+                                    verticalAlignment: TextEdit.AlignTop
+                                    textFormat: TextEdit.PlainText
+                                    onTextChanged: translationManager.query = text
+                                    selectionColor: Colors.inputInactiveForeground
+                                    selectedTextColor: Colors.whiteColor
+
+                                    Component.onCompleted: {
+                                        // scrollToBottom()
+                                    }
+
+                                    Keys.onBacktabPressed: {
+                                        event.accepted = true
+                                    }
+
+                                    Keys.onTabPressed: {
+                                        event.accepted = true
+                                    }
+
+                                    onCursorRectangleChanged: trFlick.ensureVisible(cursorRectangle)
+                                }
+                            }
+
+                            CustomScrollbar {
+                                anchors.topMargin: -5
+                                anchors.bottomMargin: -5
+                                anchors.rightMargin: -5
+                                flickable: trFlick
+                            }
+                        }
+
+                        Item {
+                            height: 20
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            height: 150
+                            color: Colors.popupDarkInputBackground
+
+                            Flickable {
+                                id: trFlickOther
+                                anchors.fill: parent
+                                anchors.margins: 10
+                                clip: true
+                                contentWidth: trTextEdit.paintedWidth
+                                contentHeight: trTextEdit.paintedHeight
+
+                                function ensureVisible(r) {
+                                    if (contentX >= r.x)
+                                        contentX = r.x;
+                                    else if (contentX+width <= r.x+r.width)
+                                        contentX = r.x+r.width-width;
+                                    if (contentY >= r.y)
+                                        contentY = r.y;
+                                    else if (contentY+height <= r.y+r.height)
+                                        contentY = r.y+r.height-height;
+                                }
+
+                                StyledTextEdit {
+                                    id: trTextEditOther
+                                    anchors.top: parent.top
+                                    width: trFlickOther.width - 10
+                                    height: trFlickOther.height
+                                    focus: false
+                                    readOnly: true
+                                    text: translationManager.shortTranslation
+                                    font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
+                                    selectionColor: Colors.inputBackgroundColor
+                                    wrapMode: TextEdit.Wrap
+                                    horizontalAlignment: TextEdit.AlignLeft
+                                    verticalAlignment: TextEdit.AlignTop
+                                    textFormat: TextEdit.RichText
+
+                                    Component.onCompleted: {
+                                        // scrollToBottom()
+                                    }
+
+                                    Keys.onBacktabPressed: {
+                                        event.accepted = true
+                                    }
+
+                                    Keys.onTabPressed: {
+                                        event.accepted = true
+                                    }
+                                }
+                            }
+
+                            CustomScrollbar {
+                                anchors.topMargin: -5
+                                anchors.bottomMargin: -5
+                                anchors.rightMargin: -5
+                                flickable: trFlickOther
+                            }
+
+                            Rectangle {
+                                anchors.fill: parent
+                                color: Colors.selectedArtworkBackground
+                                opacity: 0.2
+                                visible: translationManager.isBusy
+                            }
+
+                            StyledBusyIndicator {
+                                width: parent.width/2
+                                height: parent.width/2
+                                anchors.centerIn: parent
+                                running: translationManager.isBusy
+                            }
+                        }
+
+                        Item {
+                            Layout.fillHeight: true
                         }
                     }
                 }

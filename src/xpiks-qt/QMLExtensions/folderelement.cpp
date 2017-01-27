@@ -104,10 +104,10 @@ namespace QMLExtensions {
 
         v[0].x = rect.left();
         v[0].y = rect.top();
-        v[1].x = rect.left() + rect.width()/3.0;
+        v[1].x = rect.left() + rect.width()/2.5;
         v[1].y = rect.top();
-        v[2].x = rect.left() + rect.width()/2.0;
-        v[2].y = rect.top() + rect.height()/5.0;
+        v[2].x = rect.left() + rect.width()/2.5;
+        v[2].y = rect.top() + rect.height()/7.0;
         v[3].x = rect.right();
         v[3].y = v[2].y;
         v[4].x = rect.right();

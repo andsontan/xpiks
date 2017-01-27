@@ -40,7 +40,7 @@ namespace Translation {
     bool parseIfoFile(const QString &fullIfoPath, DictionaryInfo &info) {
         LOG_INFO << fullIfoPath;
         QFile file(fullIfoPath);
-        bool success = true;
+        bool success = false;
 
         if (file.open(QIODevice::ReadOnly)) {
             QTextStream in(&file);
@@ -50,7 +50,7 @@ namespace Translation {
             do {
                 if (!in.atEnd()) {
                     line = in.readLine();
-                    if ((line != "StarDict's treedict ifo file") ||
+                    if ((line != "StarDict's treedict ifo file") &&
                             (line != "StarDict's dict ifo file")) {
                         LOG_WARNING << "Wrong header" << line;
                         break;
@@ -113,6 +113,13 @@ namespace Translation {
             auto *settingsModel = m_CommandManager->getSettingsModel();
             settingsModel->setSelectedDictIndex(value);
             settingsModel->saveSelectedDictionaryIndex();
+
+            if ((0 <= value) && (value < m_DictionariesList.length())) {
+                auto *translationService = m_CommandManager->getTranslationService();
+                translationService->selectDictionary(m_DictionariesList[value].m_FullIfoPath);
+            } else {
+                LOG_WARNING << "Cannot select dictionary path: indices to not match";
+            }
         }
     }
 
@@ -160,9 +167,9 @@ namespace Translation {
         auto *settingsModel = m_CommandManager->getSettingsModel();
         int selectedDictIndex = settingsModel->getSelectedDictIndex();
         if ((0 <= selectedDictIndex) && (selectedDictIndex < m_DictionariesList.length())) {
-            m_SelectedDictionaryIndex = selectedDictIndex;
+            setSelectedDictionaryIndex(selectedDictIndex);
         } else {
-            m_SelectedDictionaryIndex = 0;
+            setSelectedDictionaryIndex(0);
         }
 
         emit dictionariesChanged();
@@ -243,7 +250,9 @@ namespace Translation {
         emit hasMoreChanged();
     }
 
-    bool TranslationManager::addDictionary(const QString &anyDictFilePath) {
+    bool TranslationManager::addDictionary(const QUrl &url) {
+        Q_ASSERT(url.isLocalFile());
+        QString anyDictFilePath = url.toLocalFile();
         LOG_INFO << anyDictFilePath;
         QFileInfo fi(anyDictFilePath);
         bool success = false;
@@ -281,6 +290,12 @@ namespace Translation {
                 LOG_WARNING << "Failed to parse IFO:" << probableIfoPath;
             }
         } while (false);
+
+        if (success && (m_SelectedDictionaryIndex == -1)) {
+            setSelectedDictionaryIndex(0);
+        }
+
+        emit dictionariesChanged();
 
         return success;
     }
