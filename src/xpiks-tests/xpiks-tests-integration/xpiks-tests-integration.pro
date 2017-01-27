@@ -361,6 +361,7 @@ HEADERS += \
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
+INCLUDEPATH += ../../ssdll/src/ssdll
 
 LIBS += -L"$$PWD/../../libs/"
 LIBS += -lhunspell
@@ -368,6 +369,7 @@ LIBS += -lz
 LIBS += -lcurl
 LIBS += -lquazip
 LIBS += -lface
+LIBS += -lssdll
 
 macx {
     INCLUDEPATH += "../../hunspell-1.3.3/src"
