@@ -100,10 +100,8 @@ namespace Translation {
     void TranslationService::translate(const QString &what) {
         LOG_INFO << what;
 
-        if (what.simplified().isEmpty()) { return; }
-
         QStringList words = what.split(QChar(' '), QString::SkipEmptyParts);
-        QString wordToTranslate = words.last();
+        QString wordToTranslate = words.isEmpty() ? "" : words.last();
 
         std::shared_ptr<TranslationQuery> query(new TranslationQuery(wordToTranslate),
                                                 [](TranslationQuery *tq) { tq->deleteLater(); });

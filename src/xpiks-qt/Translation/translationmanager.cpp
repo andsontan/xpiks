@@ -111,7 +111,9 @@ namespace Translation {
             m_SelectedDictionaryIndex = value;
             emit selectedDictionaryIndexChanged();
 
-            m_TranslateTimer.start(1000);
+            if (!m_Query.isEmpty()) {
+                m_TranslateTimer.start(1000);
+            }
 
             auto *settingsModel = m_CommandManager->getSettingsModel();
             settingsModel->setSelectedDictIndex(value);

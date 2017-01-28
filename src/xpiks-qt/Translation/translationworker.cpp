@@ -58,17 +58,18 @@ namespace Translation {
     void TranslationWorker::processOneItem(std::shared_ptr<TranslationQuery> &item) {
         std::string translationData;
         auto &query = item->getQuery();
-
         LOG_INFO << "translation request:" << query;
-        Q_ASSERT(!query.simplified().isEmpty());
 
-        ensureDictionaryLoaded();
+        if (!query.simplified().isEmpty()) {
+            ensureDictionaryLoaded();
+            std::string word = query.toUtf8().toStdString();
 
-        std::string word = query.toUtf8().toStdString();
-
-        if (m_LookupDictionary->translate(word, translationData)) {
-            QString translation = QString::fromUtf8(translationData.c_str());
-            item->setTranslation(translation);
+            if (m_LookupDictionary->translate(word, translationData)) {
+                QString translation = QString::fromUtf8(translationData.c_str());
+                item->setTranslation(translation);
+            } else {
+                item->setFailed();
+            }
         } else {
             item->setFailed();
         }
