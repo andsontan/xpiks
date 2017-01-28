@@ -26,6 +26,7 @@
 #include <QString>
 #include <QTimer>
 #include <QVector>
+#include <QFutureWatcher>
 #include "../Common/baseentity.h"
 
 namespace Translation {
@@ -94,8 +95,10 @@ namespace Translation {
 
     private slots:
         void updateTranslationTimer();
+        void initializationFinished();
 
     private:
+        QFutureWatcher<void> m_InitializationWatcher;
         QStringList m_AllowedSuffixes;
         QVector<DictionaryInfo> m_DictionariesList;
         QTimer m_TranslateTimer;

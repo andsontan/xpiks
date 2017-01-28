@@ -82,11 +82,14 @@ namespace Translation {
     {
         m_TranslateTimer.setSingleShot(true);
         QObject::connect(&m_TranslateTimer, SIGNAL(timeout()), this, SLOT(updateTranslationTimer()));
+
+        QObject::connect(&m_InitializationWatcher, SIGNAL(finished()), this, SLOT(initializationFinished()));
     }
 
     void TranslationManager::initializeDictionaries() {
         LOG_DEBUG << "#";
-        QtConcurrent::run(this, &TranslationManager::doInitializeDictionaries);
+        QFuture<void> initializeFuture = QtConcurrent::run(this, &TranslationManager::doInitializeDictionaries);
+        m_InitializationWatcher.setFuture(initializeFuture);
     }
 
     void TranslationManager::setQuery(const QString &value) {
@@ -163,17 +166,6 @@ namespace Translation {
                 LOG_WARNING << "Failed to parse IFO:" << ifoFullPath;
             }
         }
-
-        auto *settingsModel = m_CommandManager->getSettingsModel();
-        int selectedDictIndex = settingsModel->getSelectedDictIndex();
-        if ((0 <= selectedDictIndex) && (selectedDictIndex < m_DictionariesList.length())) {
-            setSelectedDictionaryIndex(selectedDictIndex);
-        } else {
-            setSelectedDictionaryIndex(0);
-        }
-
-        emit dictionariesChanged();
-        emit selectedDictionaryIndexChanged();
     }
 
     bool TranslationManager::acquireDictionary(const QString &anyDictFilePath) {
@@ -330,5 +322,20 @@ namespace Translation {
         TranslationService *translationService = m_CommandManager->getTranslationService();
         translationService->translate(m_Query);
         setIsBusy(true);
+    }
+
+    void TranslationManager::initializationFinished() {
+        LOG_DEBUG << "#";
+
+        auto *settingsModel = m_CommandManager->getSettingsModel();
+        int selectedDictIndex = settingsModel->getSelectedDictIndex();
+        if ((0 <= selectedDictIndex) && (selectedDictIndex < m_DictionariesList.length())) {
+            setSelectedDictionaryIndex(selectedDictIndex);
+        } else {
+            setSelectedDictionaryIndex(0);
+        }
+
+        emit dictionariesChanged();
+        emit selectedDictionaryIndexChanged();
     }
 }
