@@ -388,7 +388,8 @@ DISTFILES += \
     Components/GlyphButton.qml \
     Components/BackGlyphButton.qml \
     StackViews/CombinedEditView.qml \
-    Dialogs/PresetsEditDialog.qml
+    Dialogs/PresetsEditDialog.qml \
+    Dialogs/TranslationPreviewDialog.qml
 
 lupdate_only {
 SOURCES += *.qml \

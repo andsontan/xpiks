@@ -1286,7 +1286,7 @@ ColumnLayout {
                                                 id: fixSpellingText
                                                 text: i18.n + qsTr("Fix spelling")
                                                 enabled: rowWrapper.keywordsModel ? rowWrapper.keywordsModel.hasSpellErrors : false
-                                                color: enabled ? (fixSpellingMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor)  : (rowWrapper.isHighlighted ? Colors.labelActiveForeground : Colors.labelInactiveForeground)
+                                                color: enabled ? (fixSpellingMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : (rowWrapper.isHighlighted ? Colors.labelActiveForeground : Colors.labelInactiveForeground)
 
                                                 MouseArea {
                                                     id: fixSpellingMA

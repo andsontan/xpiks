@@ -1218,6 +1218,8 @@ ApplicationWindow {
                 }
 
                 Tab {
+                    focus: true
+
                     ColumnLayout {
                         anchors.fill: parent
                         anchors.leftMargin: 10
@@ -1298,7 +1300,7 @@ ApplicationWindow {
                                     selectedTextColor: Colors.whiteColor
 
                                     Component.onCompleted: {
-                                        // scrollToBottom()
+                                        trTextEdit.forceActiveFocus()
                                     }
 
                                     Keys.onBacktabPressed: {
@@ -1398,6 +1400,33 @@ ApplicationWindow {
                                 height: parent.width/2
                                 anchors.centerIn: parent
                                 running: translationManager.isBusy
+                            }
+                        }
+
+                        Item {
+                            height: 5
+                        }
+
+                        Item {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+
+                            StyledText {
+                                anchors.right: parent.right
+                                text: i18.n + qsTr("Show more")
+                                enabled: translationManager.hasMore
+                                color: enabled ? (showMoreMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelInactiveForeground
+
+                                MouseArea {
+                                    id: showMoreMA
+                                    anchors.fill: parent
+                                    cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+
+                                    onClicked: {
+                                        Common.launchDialog("Dialogs/TranslationPreviewDialog.qml",
+                                                            applicationWindow, {})
+                                    }
+                                }
                             }
                         }
 

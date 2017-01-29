@@ -72,5 +72,6 @@
         <file>Components/GlyphButton.qml</file>
         <file>Components/BackGlyphButton.qml</file>
         <file>StackViews/CombinedEditView.qml</file>
+        <file>Dialogs/TranslationPreviewDialog.qml</file>
     </qresource>
 </RCC>
