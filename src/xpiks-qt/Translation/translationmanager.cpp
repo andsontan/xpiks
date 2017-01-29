@@ -33,7 +33,7 @@
 #include "../Models/settingsmodel.h"
 #include "../Helpers/constants.h"
 
-#define SHORT_TRANSLATION_SYMBOLS 200
+#define SHORT_TRANSLATION_SYMBOLS 300
 #define BOOKNAME QLatin1String("bookname")
 
 namespace Translation {
@@ -235,10 +235,11 @@ namespace Translation {
     }
 
     void TranslationManager::clear() {
-        setQuery("");
+        m_Query.clear();
         m_FullTranslation.clear();
         m_ShortenedTranslation.clear();
         m_HasMore = false;
+        emit queryChanged();
         emit fullTranslationChanged();
         emit shortTranslationChanged();
         emit hasMoreChanged();
@@ -311,11 +312,15 @@ namespace Translation {
             m_ShortenedTranslation = nothingFound;
         }
 
-        emit fullTranslationChanged();
-        emit shortTranslationChanged();
-
         m_HasMore = m_FullTranslation.length() != m_ShortenedTranslation.length();
         emit hasMoreChanged();
+
+        if (m_HasMore) {
+            m_ShortenedTranslation.append("...");
+        }
+
+        emit fullTranslationChanged();
+        emit shortTranslationChanged();
 
         setIsBusy(false);
     }

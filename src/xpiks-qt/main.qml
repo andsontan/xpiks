@@ -1324,13 +1324,36 @@ ApplicationWindow {
                         }
 
                         Item {
+                            height: 5
+                        }
+
+                        Item {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+
+                            StyledText {
+                                anchors.right: parent.right
+                                text: i18.n + qsTr("Clear")
+                                enabled: trTextEdit.text.length > 0
+                                color: enabled ? (clearTrMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelInactiveForeground
+
+                                MouseArea {
+                                    id: clearTrMA
+                                    anchors.fill: parent
+                                    cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                    onClicked: translationManager.clear()
+                                }
+                            }
+                        }
+
+                        Item {
                             height: 20
                         }
 
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            height: 150
+                            height: 200
                             color: Colors.popupDarkInputBackground
 
                             Flickable {
