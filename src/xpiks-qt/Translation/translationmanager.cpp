@@ -106,25 +106,29 @@ namespace Translation {
     }
 
     void TranslationManager::setSelectedDictionaryIndex(int value) {
+        LOG_INFO << value;
+
         if (m_SelectedDictionaryIndex != value) {
-            LOG_INFO << value;
             m_SelectedDictionaryIndex = value;
             emit selectedDictionaryIndexChanged();
 
+            if ((0 <= value) && (value < m_DictionariesList.length())) {
+                auto *translationService = m_CommandManager->getTranslationService();
+                auto &dictInfo = m_DictionariesList[value];
+                LOG_INFO << "Selecting" << dictInfo.m_Description;
+                translationService->selectDictionary(dictInfo.m_FullIfoPath);
+            } else {
+                LOG_WARNING << "Cannot select dictionary path: indices to not match";
+            }
+
             if (!m_Query.isEmpty()) {
                 m_TranslateTimer.start(1000);
+                setIsBusy(true);
             }
 
             auto *settingsModel = m_CommandManager->getSettingsModel();
             settingsModel->setSelectedDictIndex(value);
             settingsModel->saveSelectedDictionaryIndex();
-
-            if ((0 <= value) && (value < m_DictionariesList.length())) {
-                auto *translationService = m_CommandManager->getTranslationService();
-                translationService->selectDictionary(m_DictionariesList[value].m_FullIfoPath);
-            } else {
-                LOG_WARNING << "Cannot select dictionary path: indices to not match";
-            }
         }
     }
 

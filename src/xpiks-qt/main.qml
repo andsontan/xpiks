@@ -1252,6 +1252,14 @@ ApplicationWindow {
                             onLastItemActionInvoked: {
                                 openDictionaryDialog.open()
                             }
+
+                            onComboIndexChanged: {
+                                translationManager.selectedDictionaryIndex = dictionariesComboBox.selectedIndex
+                                trTextEdit.forceActiveFocus()
+                                trTextEdit.cursorPosition = trTextEdit.text.length
+                            }
+
+                            Component.onCompleted: dictionariesComboBox.selectedIndex = translationManager.selectedDictionaryIndex
                         }
 
                         Item {
