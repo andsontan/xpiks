@@ -190,6 +190,7 @@ Item {
                     hoverEnabled: true
                     onClicked: {
                         if (index === comboBox.selectedIndex) {
+                            comboBox.state = ""
                             return;
                         }
 
