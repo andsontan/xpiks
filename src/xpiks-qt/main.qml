@@ -1225,7 +1225,7 @@ ApplicationWindow {
                         anchors.leftMargin: 10
                         anchors.rightMargin: 10
                         anchors.topMargin: 20
-                        anchors.bottomMargin: 10
+                        anchors.bottomMargin: 20
                         spacing: 0
 
                         StyledText {
@@ -1269,88 +1269,42 @@ ApplicationWindow {
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            height: 150
+                            height: 30
                             color: Colors.popupDarkInputBackground
 
-                            Flickable {
-                                id: trFlick
-                                anchors.fill: parent
-                                anchors.margins: 10
+                            StyledTextEdit {
+                                id: trTextEdit
+                                width: parent.width - 10
+                                height: parent.height
                                 clip: true
-                                contentWidth: trTextEdit.paintedWidth
-                                contentHeight: trTextEdit.paintedHeight
+                                anchors.left: parent.left
+                                anchors.leftMargin: 5
+                                focus: true
+                                text: translationManager.query
+                                onTextChanged: translationManager.query = text
+                                isActive: false
 
-                                function ensureVisible(r) {
-                                    if (contentX >= r.x)
-                                        contentX = r.x;
-                                    else if (contentX+width <= r.x+r.width)
-                                        contentX = r.x+r.width-width;
-                                    if (contentY >= r.y)
-                                        contentY = r.y;
-                                    else if (contentY+height <= r.y+r.height)
-                                        contentY = r.y+r.height-height;
+                                Component.onCompleted: {
+                                    trTextEdit.forceActiveFocus()
                                 }
 
-                                StyledTextEdit {
-                                    id: trTextEdit
-                                    anchors.top: parent.top
-                                    width: trFlick.width - 10
-                                    height: trFlick.height
-                                    focus: true
-                                    text: translationManager.query
-                                    font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
-                                    wrapMode: TextEdit.Wrap
-                                    horizontalAlignment: TextEdit.AlignLeft
-                                    verticalAlignment: TextEdit.AlignTop
-                                    textFormat: TextEdit.PlainText
-                                    onTextChanged: translationManager.query = text
-                                    selectionColor: Colors.inputInactiveForeground
-                                    selectedTextColor: Colors.whiteColor
+                                Keys.onBacktabPressed: {
+                                    event.accepted = true
+                                }
 
-                                    Component.onCompleted: {
-                                        trTextEdit.forceActiveFocus()
-                                    }
-
-                                    Keys.onBacktabPressed: {
-                                        event.accepted = true
-                                    }
-
-                                    Keys.onTabPressed: {
-                                        event.accepted = true
-                                    }
-
-                                    onCursorRectangleChanged: trFlick.ensureVisible(cursorRectangle)
+                                Keys.onTabPressed: {
+                                    event.accepted = true
                                 }
                             }
 
-                            CustomScrollbar {
-                                anchors.topMargin: -5
-                                anchors.bottomMargin: -5
-                                anchors.rightMargin: -5
-                                flickable: trFlick
-                            }
-                        }
-
-                        Item {
-                            height: 5
-                        }
-
-                        Item {
-                            anchors.left: parent.left
-                            anchors.right: parent.right
-
-                            StyledText {
+                            CloseIcon {
+                                width: 14
+                                height: 14
                                 anchors.right: parent.right
-                                text: i18.n + qsTr("Clear")
-                                enabled: trTextEdit.text.length > 0
-                                color: enabled ? (clearTrMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelInactiveForeground
-
-                                MouseArea {
-                                    id: clearTrMA
-                                    anchors.fill: parent
-                                    cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-                                    onClicked: translationManager.clear()
-                                }
+                                anchors.rightMargin: 5
+                                enabled: trTextEdit.length > 0
+                                anchors.verticalCenter: parent.verticalCenter
+                                onItemClicked: translationManager.clear()
                             }
                         }
 
@@ -1361,7 +1315,7 @@ ApplicationWindow {
                         Rectangle {
                             anchors.left: parent.left
                             anchors.right: parent.right
-                            height: 200
+                            Layout.fillHeight: true
                             color: Colors.popupDarkInputBackground
 
                             Flickable {
@@ -1459,10 +1413,6 @@ ApplicationWindow {
                                     }
                                 }
                             }
-                        }
-
-                        Item {
-                            Layout.fillHeight: true
                         }
                     }
                 }

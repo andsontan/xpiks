@@ -33,7 +33,7 @@
 #include "../Models/settingsmodel.h"
 #include "../Helpers/constants.h"
 
-#define SHORT_TRANSLATION_SYMBOLS 300
+#define SHORT_TRANSLATION_SYMBOLS 500
 #define BOOKNAME QLatin1String("bookname")
 
 namespace Translation {
