@@ -29,6 +29,10 @@
 #include <QObject>
 #include <QUrl>
 
+namespace Models {
+    class UIManager;
+}
+
 namespace Plugins {
     class UIProvider : public QObject, public IUIProvider
     {
@@ -40,10 +44,12 @@ namespace Plugins {
     public:
         void setQmlEngine(QQmlEngine *engine) { m_QmlEngine = engine; }
         void setRoot(QQuickItem *root) { m_Root = root; }
+        void setUIManager(Models::UIManager *manager) { m_UiManager = manager; }
 
         // IUIProvider interface
     public:
-        virtual void openWindow(const QUrl &rcPath, const QHash<QString, QObject*> &contextModels = QHash<QString, QObject*>()) const;
+        virtual void openWindow(const QUrl &rcPath, const QHash<QString, QObject*> &contextModels = QHash<QString, QObject*>()) const override;
+        virtual void addTab(const QString &tabIconUrl, const QString &tabComponentUrl) const override;
 
     private slots:
         void viewStatusChanged(QQmlComponent::Status status);
@@ -54,6 +60,7 @@ namespace Plugins {
     private:
         QQmlEngine *m_QmlEngine;
         QQuickItem *m_Root;
+        Models::UIManager *m_UiManager;
     };
 }
 

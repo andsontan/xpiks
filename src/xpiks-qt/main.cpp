@@ -466,9 +466,12 @@ int main(int argc, char *argv[]) {
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
     LOG_DEBUG << "Main view loaded";
 
-    pluginManager.getUIProvider()->setQmlEngine(&engine);
+    auto *uiProvider = pluginManager.getUIProvider();
+    uiProvider->setQmlEngine(&engine);
     QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().at(0));
-    pluginManager.getUIProvider()->setRoot(window->contentItem());
+
+    uiProvider->setRoot(window->contentItem());
+    uiProvider->setUIManager(&uiManager);
 
 #ifdef QT_DEBUG
     if (argc > 1) {

@@ -29,6 +29,7 @@
 #include <QQmlContext>
 #include <QQuickWindow>
 #include <QHash>
+#include "../Models/uimanager.h"
 #include "../Common/defines.h"
 
 namespace Plugins {
@@ -106,5 +107,13 @@ namespace Plugins {
         Q_UNUSED(closeEvent);
         LOG_INFO << "#";
         sender()->deleteLater();
+    }
+
+    void UIProvider::addTab(const QString &tabIconUrl, const QString &tabComponentUrl) const {
+        LOG_INFO << "#";
+        Q_ASSERT(m_UiManager != nullptr);
+
+        m_UiManager->addTab(tabIconUrl, tabComponentUrl);
+        m_UiManager->updateTabs();
     }
 }

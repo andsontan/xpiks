@@ -41,6 +41,7 @@ namespace Models {
 
     public:
         void addTab(const QString tabIconComponent, const QString &tabComponent);
+        void updateTabs();
 
     signals:
         void tabsListChanged();

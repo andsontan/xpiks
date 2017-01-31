@@ -31,4 +31,9 @@ namespace Models {
         m_TabsList.append(tabComponent);
         m_TabsIconsList.append(tabIconComponent);
     }
+
+    void UIManager::updateTabs() {
+        emit tabsIconsChanged();
+        emit tabsListChanged();
+    }
 }
