@@ -1283,6 +1283,7 @@ ApplicationWindow {
                                 text: translationManager.query
                                 onTextChanged: translationManager.query = text
                                 isActive: false
+                                selectionColor: Colors.inputBackgroundColor
 
                                 Component.onCompleted: {
                                     trTextEdit.forceActiveFocus()
@@ -1345,12 +1346,12 @@ ApplicationWindow {
                                     focus: false
                                     readOnly: true
                                     text: translationManager.shortTranslation
-                                    font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                                     selectionColor: Colors.inputBackgroundColor
                                     wrapMode: TextEdit.Wrap
                                     horizontalAlignment: TextEdit.AlignLeft
                                     verticalAlignment: TextEdit.AlignTop
                                     textFormat: TextEdit.RichText
+                                    isActive: false
 
                                     Component.onCompleted: {
                                         // scrollToBottom()
