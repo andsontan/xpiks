@@ -73,5 +73,7 @@
         <file>Components/BackGlyphButton.qml</file>
         <file>StackViews/CombinedEditView.qml</file>
         <file>Dialogs/TranslationPreviewDialog.qml</file>
+        <file>CollapserTabs/FilesFoldersTab.qml</file>
+        <file>CollapserTabs/TranslatorTab.qml</file>
     </qresource>
 </RCC>

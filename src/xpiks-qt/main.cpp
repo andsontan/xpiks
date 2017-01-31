@@ -83,6 +83,7 @@
 #include "Helpers/constants.h"
 #include "Helpers/runguard.h"
 #include "Models/logsmodel.h"
+#include "Models/uimanager.h"
 #include "Helpers/logger.h"
 #include "Common/version.h"
 #include "Common/defines.h"
@@ -333,6 +334,7 @@ int main(int argc, char *argv[]) {
     Models::ArtworkProxyModel artworkProxyModel;
     Translation::TranslationManager translationManager;
     Translation::TranslationService translationService(translationManager);
+    Models::UIManager uiManager;
 
     Conectivity::UpdateService updateService(&settingsModel);
 
@@ -445,6 +447,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("filteredPresetsModel", &filteredPresetsModel);
     rootContext->setContextProperty("artworkProxy", &artworkProxyModel);
     rootContext->setContextProperty("translationManager", &translationManager);
+    rootContext->setContextProperty("uiManager", &uiManager);
 
 #ifdef QT_DEBUG
     QVariant isDebug(true);
@@ -455,6 +458,10 @@ int main(int argc, char *argv[]) {
 
     engine.addImageProvider("global", globalProvider);
     engine.addImageProvider("cached", cachingProvider);
+
+    uiManager
+            .addTab("qrc:/CollapserTabs/FilesFoldersTab.qml")
+            .addTab("qrc:/CollapserTabs/TranslatorTab.qml");
 
     LOG_DEBUG << "About to load main view...";
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

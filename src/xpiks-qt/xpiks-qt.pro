@@ -128,7 +128,8 @@ SOURCES += main.cpp \
     Translation/translationservice.cpp \
     Translation/translationmanager.cpp \
     Translation/translationworker.cpp \
-    Translation/translationquery.cpp
+    Translation/translationquery.cpp \
+    Models/uimanager.cpp
 
 RESOURCES += qml.qrc
 
@@ -314,7 +315,8 @@ HEADERS += \
     Translation/translationservice.h \
     Translation/translationmanager.h \
     Translation/translationworker.h \
-    Translation/translationquery.h
+    Translation/translationquery.h \
+    Models/uimanager.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -389,7 +391,9 @@ DISTFILES += \
     Components/BackGlyphButton.qml \
     StackViews/CombinedEditView.qml \
     Dialogs/PresetsEditDialog.qml \
-    Dialogs/TranslationPreviewDialog.qml
+    Dialogs/TranslationPreviewDialog.qml \
+    CollapserTabs/FilesFoldersTab.qml \
+    CollapserTabs/TranslatorTab.qml
 
 lupdate_only {
 SOURCES += *.qml \
