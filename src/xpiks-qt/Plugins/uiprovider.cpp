@@ -109,11 +109,17 @@ namespace Plugins {
         sender()->deleteLater();
     }
 
-    void UIProvider::addTab(const QString &tabIconUrl, const QString &tabComponentUrl) const {
+    int UIProvider::addTab(const QString &tabIconUrl, const QString &tabComponentUrl) const {
         LOG_INFO << "#";
         Q_ASSERT(m_UiManager != nullptr);
 
-        m_UiManager->addTab(tabIconUrl, tabComponentUrl);
+        int index = m_UiManager->addTab(tabIconUrl, tabComponentUrl);
         m_UiManager->updateTabs();
+        return index;
+    }
+
+    bool UIProvider::removeTab(int index) const {
+        bool success = m_UiManager->removeTab(index);
+        return success;
     }
 }

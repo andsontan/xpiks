@@ -40,7 +40,8 @@ namespace Models {
         QStringList getTabsIcons() const { return m_TabsIconsList; }
 
     public:
-        void addTab(const QString tabIconComponent, const QString &tabComponent);
+        int addTab(const QString tabIconComponent, const QString &tabComponent);
+        bool removeTab(int index);
         void updateTabs();
 
     signals:

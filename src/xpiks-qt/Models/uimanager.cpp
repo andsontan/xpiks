@@ -27,9 +27,21 @@ namespace Models {
     {
     }
 
-    void UIManager::addTab(const QString tabIconComponent, const QString &tabComponent) {
+    int UIManager::addTab(const QString tabIconComponent, const QString &tabComponent) {
+        int index = m_TabsList.length();
         m_TabsList.append(tabComponent);
         m_TabsIconsList.append(tabIconComponent);
+        return index;
+    }
+
+    bool UIManager::removeTab(int index) {
+        bool result = (0 <= index) && (index < m_TabsList.length());
+        if (result) {
+            m_TabsList.removeAt(index);
+            m_TabsIconsList.removeAt(index);
+        }
+
+        return result;
     }
 
     void UIManager::updateTabs() {

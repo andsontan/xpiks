@@ -32,7 +32,7 @@
 #define WITH_LOGS
 #else
 // will be enabled in Xpiks 1.3 at least
-// #define WITH_PLUGINS
+#define WITH_PLUGINS
 #endif
 
 // 4*(avg word size 10 * avg keywords size 50)
