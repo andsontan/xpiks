@@ -27,8 +27,8 @@ namespace Models {
     {
     }
 
-    UIManager &UIManager::addTab(const QString &url) {
-        m_TabsList.append(url);
-        return *this;
+    void UIManager::addTab(const QString tabIconComponent, const QString &tabComponent) {
+        m_TabsList.append(tabComponent);
+        m_TabsIconsList.append(tabIconComponent);
     }
 }

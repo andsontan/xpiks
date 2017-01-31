@@ -393,7 +393,9 @@ DISTFILES += \
     Dialogs/PresetsEditDialog.qml \
     Dialogs/TranslationPreviewDialog.qml \
     CollapserTabs/FilesFoldersTab.qml \
-    CollapserTabs/TranslatorTab.qml
+    CollapserTabs/TranslatorTab.qml \
+    CollapserTabs/FilesFoldersIcon.qml \
+    CollapserTabs/TranslatorIcon.qml
 
 lupdate_only {
 SOURCES += *.qml \

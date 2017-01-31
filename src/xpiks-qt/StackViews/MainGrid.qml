@@ -94,7 +94,6 @@ ColumnLayout {
                         var presetIndex = filteredPresetsModel.getOriginalIndex(index)
                         artItemsModel.expandPreset(wordRightClickMenu.artworkIndex, wordRightClickMenu.keywordIndex,  presetIndex);
                     }
-
                 }
             }
         }

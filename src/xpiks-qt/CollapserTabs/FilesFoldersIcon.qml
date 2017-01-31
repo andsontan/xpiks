@@ -19,37 +19,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UIMANAGER_H
-#define UIMANAGER_H
+import QtQuick 2.0
+import QtQuick.Layouts 1.1
+import "../Constants" 1.0
+import "../Components"
+import "../StyledControls"
+import "../Dialogs"
+import "../Common.js" as Common
+import "../Constants/UIConfig.js" as UIConfig
+import xpiks 1.0
 
-#include <QObject>
-#include <QString>
-#include <QStringList>
-
-namespace Models {
-    class UIManager : public QObject
-    {
-        Q_OBJECT
-        Q_PROPERTY(QStringList tabsList READ getTabsList NOTIFY tabsListChanged)
-        Q_PROPERTY(QStringList tabsIcons READ getTabsIcons NOTIFY tabsIconsChanged)
-    public:
-        explicit UIManager(QObject *parent = 0);
-
-    public:
-        QStringList getTabsList() const { return m_TabsList; }
-        QStringList getTabsIcons() const { return m_TabsIconsList; }
-
-    public:
-        void addTab(const QString tabIconComponent, const QString &tabComponent);
-
-    signals:
-        void tabsListChanged();
-        void tabsIconsChanged();
-
-    private:
-        QStringList m_TabsList;
-        QStringList m_TabsIconsList;
-    };
+FolderElement {
+    width: 20
+    height: 17
+    color: isHighlighted ? Colors.labelActiveForeground : Colors.inactiveControlColor
 }
-
-#endif // UIMANAGER_H

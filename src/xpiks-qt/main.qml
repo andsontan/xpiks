@@ -1021,57 +1021,27 @@ ApplicationWindow {
                 height: 45
                 spacing: 0
 
-                CustomTab {
-                    id: foldersTab
-                    tabIndex: 0
-                    isSelected: mainTabView.currentIndex == tabIndex
-                    hovered: (!isSelected) && foldersMA.containsMouse
+                Repeater {
+                    model: uiManager.tabsIcons
 
-                    FolderElement {
-                        width: 20
-                        height: 17
-                        anchors.centerIn: parent
-                        color: (parent.isSelected || parent.hovered) ? Colors.labelActiveForeground : Colors.inactiveControlColor
-                    }
+                    CustomTab {
+                        id: customTab
+                        tabIndex: index
+                        isSelected: mainTabView.currentIndex == tabIndex
+                        hovered: (!isSelected) && tabMA.containsMouse
 
-                    MouseArea {
-                        id: foldersMA
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onClicked: mainTabView.currentIndex = parent.tabIndex
-                    }
-                }
-
-                CustomTab {
-                    id: translatorTab
-                    tabIndex: 1
-                    isSelected: mainTabView.currentIndex == tabIndex
-                    hovered: (!isSelected) && translatorMA.containsMouse
-
-                    Rectangle {
-                        id: translatorIconWrapper
-                        width: 24
-                        height: 20
-                        anchors.centerIn: parent
-                        border.color: (parent.isSelected || parent.hovered) ? Colors.labelActiveForeground : Colors.inactiveControlColor
-                        border.width: 2
-                        color: "transparent"
-
-                        StyledText {
-                            text: "A"
-                            font.pixelSize: 12
-                            font.bold: true
-                            color: translatorIconWrapper.border.color
+                        Loader {
+                            property bool isHighlighted: customTab.isSelected || customTab.hovered
                             anchors.centerIn: parent
-                            anchors.verticalCenterOffset: 1
+                            source: modelData
                         }
-                    }
 
-                    MouseArea {
-                        id: translatorMA
-                        anchors.fill: parent
-                        hoverEnabled: true
-                        onClicked: mainTabView.currentIndex = parent.tabIndex
+                        MouseArea {
+                            id: tabMA
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            onClicked: mainTabView.currentIndex = parent.tabIndex
+                        }
                     }
                 }
 
