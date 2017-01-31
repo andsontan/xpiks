@@ -222,6 +222,7 @@ namespace KeywordsPresets {
             QString sanitized = newName.simplified();
 
             if (name != sanitized) {
+                LOG_INFO << "Preset" << name << "renamed to" << sanitized;
                 m_PresetsList[row]->m_PresetName = sanitized;
                 emit dataChanged(index, index);
                 return true;

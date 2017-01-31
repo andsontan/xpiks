@@ -122,7 +122,7 @@ Rectangle {
                 onObjectAdded: presetSubMenu.insertItem( index, object )
                 onObjectRemoved: presetSubMenu.removeItem( object )
                 delegate: MenuItem {
-                    text: filteredPresetsModel.getName(index)
+                    text: name
                     onTriggered: {
                         var presetIndex = filteredPresetsModel.getOriginalIndex(index)
                         combinedArtworks.expandPreset(wordRightClickMenu.keywordIndex, presetIndex);
