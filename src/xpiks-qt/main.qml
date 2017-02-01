@@ -23,7 +23,7 @@ import QtQuick 2.2
 import QtQuick.Dialogs 1.1
 import QtQuick.Controls 1.1
 import QtQuick.Controls.Styles 1.1
-import QtQuick.Layouts 1.1
+import QtQuick.Layouts 1.3
 import QtQuick.Window 2.0
 import xpiks 1.0
 import "Constants" 1.0
@@ -1018,6 +1018,7 @@ ApplicationWindow {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: parent.top
+                property int currentIndex: 0
                 height: 45
                 spacing: 0
 
@@ -1027,7 +1028,7 @@ ApplicationWindow {
                     CustomTab {
                         id: customTab
                         tabIndex: index
-                        isSelected: mainTabView.currentIndex == tabIndex
+                        isSelected: tabsHolder.currentIndex == tabIndex
                         hovered: (!isSelected) && tabMA.containsMouse
 
                         Loader {
@@ -1040,7 +1041,7 @@ ApplicationWindow {
                             id: tabMA
                             anchors.fill: parent
                             hoverEnabled: true
-                            onClicked: mainTabView.currentIndex = parent.tabIndex
+                            onClicked: tabsHolder.currentIndex = parent.tabIndex
                         }
                     }
                 }
@@ -1050,17 +1051,19 @@ ApplicationWindow {
                 }
             }
 
-            StyledMainTabView {
+            StackLayout {
                 id: mainTabView
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: tabsHolder.bottom
                 anchors.bottom: parent.bottom
+                currentIndex: tabsHolder.currentIndex
 
                 Repeater {
                     model: uiManager.tabsList
 
-                    Tab {
+                    Loader
+                    {
                         source: modelData
                     }
                 }

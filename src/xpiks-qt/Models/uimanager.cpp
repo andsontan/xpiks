@@ -45,7 +45,7 @@ namespace Models {
     }
 
     void UIManager::updateTabs() {
-        emit tabsIconsChanged();
         emit tabsListChanged();
+        emit tabsIconsChanged();
     }
 }
