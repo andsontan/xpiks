@@ -64,7 +64,6 @@
         <file>Dialogs/FailedUploadArtworks.qml</file>
         <file>Dialogs/InstallUpdateDialog.qml</file>
         <file>Dialogs/PresetsEditDialog.qml</file>
-        <file>StyledControls/StyledMainTabView.qml</file>
         <file>StackViews/MainGrid.qml</file>
         <file>StackViews/ArtworkEditView.qml</file>
         <file>Components/ZoomAmplifier.qml</file>

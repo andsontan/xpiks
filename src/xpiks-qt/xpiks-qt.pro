@@ -381,7 +381,6 @@ DISTFILES += \
     Dialogs/DeleteKeywordsDialog.qml \
     Dialogs/FailedUploadArtworks.qml \
     Dialogs/InstallUpdateDialog.qml \
-    StyledControls/StyledMainTabView.qml \
     Components/CustomTab.qml \
     StackViews/MainGrid.qml \
     StackViews/ArtworkEditView.qml \
