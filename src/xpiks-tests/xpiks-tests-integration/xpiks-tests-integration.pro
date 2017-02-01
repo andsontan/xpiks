@@ -164,7 +164,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Translation/translationmanager.cpp \
     ../../xpiks-qt/Translation/translationquery.cpp \
     ../../xpiks-qt/Translation/translationservice.cpp \
-    ../../xpiks-qt/Translation/translationworker.cpp
+    ../../xpiks-qt/Translation/translationworker.cpp \
+    ../../xpiks-qt/Models/uimanager.cpp
 
 RESOURCES +=
 
@@ -357,7 +358,8 @@ HEADERS += \
     ../../xpiks-qt/Translation/translationmanager.h \
     ../../xpiks-qt/Translation/translationquery.h \
     ../../xpiks-qt/Translation/translationservice.h \
-    ../../xpiks-qt/Translation/translationworker.h
+    ../../xpiks-qt/Translation/translationworker.h \
+    ../../xpiks-qt/Models/uimanager.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

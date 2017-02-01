@@ -155,7 +155,8 @@ SOURCES += main.cpp \
     basicmetadatamodel_tests.cpp \
     ../../xpiks-qt/KeywordsPresets/presetkeywordsmodel.cpp \
     ../../xpiks-qt/Models/artworkproxybase.cpp \
-    preset_tests.cpp
+    preset_tests.cpp \
+    ../../xpiks-qt/Models/uimanager.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -267,5 +268,6 @@ HEADERS += \
     ../../xpiks-qt/KeywordsPresets/presetkeywordsmodel.h \
     ../../xpiks-qt/Common/imetadataoperator.h \
     ../../xpiks-qt/Models/artworkproxybase.h \
-    preset_tests.h
+    preset_tests.h \
+    ../../xpiks-qt/Models/uimanager.h
 
