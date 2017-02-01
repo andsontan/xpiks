@@ -736,11 +736,12 @@ void Commands::CommandManager::beforeDestructionCallback() const {
     m_AutoCompleteService->stopService();
     m_TranslationService->stopService();
 
+#ifndef CORE_TESTS
+
 #ifdef WITH_PLUGINS
     m_PluginManager->unloadPlugins();
 #endif
 
-#ifndef CORE_TESTS
     // we have a second for important stuff
     m_TelemetryService->reportAction(Conectivity::UserAction::Close);
     m_TelemetryService->stopReporting();
