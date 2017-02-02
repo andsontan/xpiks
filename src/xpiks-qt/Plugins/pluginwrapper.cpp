@@ -30,7 +30,7 @@ namespace Plugins {
     PluginWrapper::PluginWrapper(XpiksPluginInterface *pluginInterface, int pluginID, UIProvider *realUIProvider):
         m_PluginInterface(pluginInterface),
         m_ActionsModel(pluginInterface->getExportedActions(), pluginID),
-        m_UIProviderSafe(pluginID, realUIProvider->getUIManager(), realUIProvider),
+        m_UIProviderSafe(pluginID, realUIProvider),
         m_PluginID(pluginID),
         m_IsEnabled(true),
         m_PrettyName(pluginInterface->getPrettyName()),
