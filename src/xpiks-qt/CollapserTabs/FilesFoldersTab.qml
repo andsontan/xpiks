@@ -28,129 +28,124 @@ import "../Dialogs"
 import "../Common.js" as Common
 import "../Constants/UIConfig.js" as UIConfig
 
-Rectangle {
+ColumnLayout {
     anchors.fill: parent
-    color: Colors.defaultControlColor
+    anchors.leftMargin: 10
+    anchors.rightMargin: 10
+    anchors.topMargin: 15
+    anchors.bottomMargin: 10
+    spacing: 0
 
-    ColumnLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 10
-        anchors.rightMargin: 10
-        anchors.topMargin: 15
-        anchors.bottomMargin: 10
-        spacing: 0
+    StyledBlackButton {
+        implicitHeight: 30
+        height: 30
+        anchors.left: parent.left
+        anchors.right: parent.right
+        text: i18.n + qsTr("Add directory")
+        onClicked: chooseDirectoryDialog.open()
+        enabled: (applicationWindow.openedDialogsCount == 0)
+    }
 
-        StyledBlackButton {
-            implicitHeight: 30
-            height: 30
-            anchors.left: parent.left
-            anchors.right: parent.right
-            text: i18.n + qsTr("Add directory")
-            onClicked: chooseDirectoryDialog.open()
-            enabled: (applicationWindow.openedDialogsCount == 0)
-        }
+    Item {
+        height: 10
+    }
 
-        Item {
-            height: 10
-        }
+    StyledBlackButton {
+        implicitHeight: 30
+        height: 30
+        anchors.left: parent.left
+        anchors.right: parent.right
+        text: i18.n + qsTr("Add files", "button")
+        action: addFilesAction
+    }
 
-        StyledBlackButton {
-            implicitHeight: 30
-            height: 30
-            anchors.left: parent.left
-            anchors.right: parent.right
-            text: i18.n + qsTr("Add files", "button")
-            action: addFilesAction
-        }
+    Item {
+        height: 20
+    }
 
-        Item {
-            height: 20
-        }
+    Item {
+        Layout.fillHeight: true
+        anchors.left: parent.left
+        anchors.right: parent.right
 
-        Item {
-            Layout.fillHeight: true
-            anchors.left: parent.left
-            anchors.right: parent.right
+        StyledScrollView {
+            anchors.fill: parent
+            anchors.topMargin: 5
 
-            StyledScrollView {
+            ListView {
+                id: sourcesListView
+                model: artworkRepository
+                boundsBehavior: Flickable.StopAtBounds
                 anchors.fill: parent
-                anchors.topMargin: 5
 
-                ListView {
-                    id: sourcesListView
-                    model: artworkRepository
-                    boundsBehavior: Flickable.StopAtBounds
-                    anchors.fill: parent
+                spacing: 10
 
-                    spacing: 10
+                displaced: Transition {
+                    NumberAnimation { properties: "x,y"; duration: 230 }
+                }
 
-                    displaced: Transition {
-                        NumberAnimation { properties: "x,y"; duration: 230 }
-                    }
+                addDisplaced: Transition {
+                    NumberAnimation { properties: "x,y"; duration: 230 }
+                }
 
-                    addDisplaced: Transition {
-                        NumberAnimation { properties: "x,y"; duration: 230 }
-                    }
+                removeDisplaced: Transition {
+                    NumberAnimation { properties: "x,y"; duration: 230 }
+                }
 
-                    removeDisplaced: Transition {
-                        NumberAnimation { properties: "x,y"; duration: 230 }
-                    }
+                delegate: Rectangle {
+                    id: sourceWrapper
+                    property int delegateIndex: index
+                    color: isselected ? Colors.itemsSourceSelected : Colors.itemsSourceBackground
+                    width: parent.width
+                    height: 31
+                    Layout.minimumWidth: 237
 
-                    delegate: Rectangle {
-                        id: sourceWrapper
-                        property int delegateIndex: index
-                        color: isselected ? Colors.itemsSourceSelected : Colors.itemsSourceBackground
-                        width: parent.width
-                        height: 31
-                        Layout.minimumWidth: 237
-
-                        /*MouseArea {
+                    /*MouseArea {
                         anchors.fill: parent
                         onClicked: {
                             filteredArtItemsModel.selectDirectory(sourceWrapper.delegateIndex)
                         }
                     }*/
 
-                        RowLayout {
-                            spacing: 10
-                            anchors.fill: parent
+                    RowLayout {
+                        spacing: 10
+                        anchors.fill: parent
 
-                            Item {
-                                id: placeholder1
-                                width: 1
-                            }
+                        Item {
+                            id: placeholder1
+                            width: 1
+                        }
 
-                            StyledText {
-                                id: directoryPath
-                                Layout.fillWidth: true
-                                anchors.verticalCenter: parent.verticalCenter
-                                height: 31
-                                color: Colors.itemsSourceForeground
-                                text: path + " (" + usedimagescount + ")"
-                                elide: Text.ElideMiddle
-                            }
+                        StyledText {
+                            id: directoryPath
+                            Layout.fillWidth: true
+                            anchors.verticalCenter: parent.verticalCenter
+                            height: 31
+                            color: Colors.itemsSourceForeground
+                            text: path + " (" + usedimagescount + ")"
+                            elide: Text.ElideMiddle
+                        }
 
-                            CloseIcon {
-                                width: 14
-                                height: 14
-                                anchors.verticalCenter: parent.verticalCenter
-                                isActive: false
-                                crossOpacity: 1
+                        CloseIcon {
+                            width: 14
+                            height: 14
+                            anchors.verticalCenter: parent.verticalCenter
+                            isActive: false
+                            crossOpacity: 1
 
-                                onItemClicked: {
-                                    if (mustUseConfirmation()) {
-                                        confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.delegateIndex
-                                        confirmRemoveDirectoryDialog.open()
-                                    } else {
-                                        filteredArtItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
-                                    }
+                            onItemClicked: {
+                                if (mustUseConfirmation()) {
+                                    confirmRemoveDirectoryDialog.directoryIndex = sourceWrapper.delegateIndex
+                                    confirmRemoveDirectoryDialog.open()
+                                } else {
+                                    filteredArtItemsModel.removeArtworksDirectory(sourceWrapper.delegateIndex)
                                 }
                             }
+                        }
 
-                            Item {
-                                id: placeholder2
-                                width: 1
-                            }
+                        Item {
+                            id: placeholder2
+                            width: 1
                         }
                     }
                 }

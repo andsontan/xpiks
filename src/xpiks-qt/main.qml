@@ -1051,23 +1051,43 @@ ApplicationWindow {
                 }
             }
 
-            StackLayout {
-                id: mainTabView
+            Rectangle {
+                color: Colors.defaultControlColor
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: tabsHolder.bottom
                 anchors.bottom: parent.bottom
-                currentIndex: tabsHolder.currentIndex
 
-                Repeater {
-                    model: uiManager.tabsList
+                StackLayout {
+                    id: mainTabView
+                    anchors.fill: parent
+                    currentIndex: tabsHolder.currentIndex
 
-                    Loader
-                    {
-                        source: modelData
+                    Repeater {
+                        model: uiManager.tabsList
+
+                        Loader {
+                            id: tabLoader
+                            source: modelData
+                            property int myIndex: index
+
+                            Connections {
+                                target: mainTabView
+                                onCurrentIndexChanged: {
+                                    if (tabLoader.myIndex == mainTabView.currentIndex) {
+                                        if (tabLoader.status == Loader.Ready) {
+                                            if (typeof tabLoader.item.initializeTab() !== "undefined") {
+                                                tabLoader.item.initializeTab()
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
+
         }
 
         // hack for visual order of components (slider will be created after left panel)
