@@ -50,7 +50,7 @@ namespace Plugins {
     public:
         virtual void openWindow(const QUrl &rcPath, const QHash<QString, QObject*> &contextModels = QHash<QString, QObject*>()) const override;
         virtual int addTab(const QString &tabIconUrl, const QString &tabComponentUrl) const override;
-        virtual bool removeTab(int index) const override;
+        virtual bool removeTab(int tabID) const override;
 
     private slots:
         void viewStatusChanged(QQmlComponent::Status status);

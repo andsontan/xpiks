@@ -95,22 +95,22 @@ namespace Plugins {
 
     void UIProvider::windowDestroyed(QObject *object) {
         Q_UNUSED(object);
-        LOG_INFO << "Plugin window destroyed";
+        LOG_DEBUG << "Plugin window destroyed";
     }
 
     void UIProvider::contextDestroyed(QObject *object) {
         Q_UNUSED(object);
-        LOG_INFO << "#";
+        LOG_DEBUG << "#";
     }
 
     void UIProvider::windowClosing(QQuickCloseEvent *closeEvent) {
         Q_UNUSED(closeEvent);
-        LOG_INFO << "#";
+        LOG_DEBUG << "#";
         sender()->deleteLater();
     }
 
     int UIProvider::addTab(const QString &tabIconUrl, const QString &tabComponentUrl) const {
-        LOG_INFO << "#";
+        LOG_DEBUG << "#";
         Q_ASSERT(m_UiManager != nullptr);
 
         int index = m_UiManager->addTab(tabIconUrl, tabComponentUrl);
@@ -118,8 +118,11 @@ namespace Plugins {
         return index;
     }
 
-    bool UIProvider::removeTab(int index) const {
-        bool success = m_UiManager->removeTab(index);
+    bool UIProvider::removeTab(int tabID) const {
+        LOG_DEBUG << "#";
+        Q_ASSERT(m_UiManager != nullptr);
+
+        bool success = m_UiManager->removeTab(tabID);
         return success;
     }
 }

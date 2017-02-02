@@ -487,51 +487,6 @@ ApplicationWindow {
         }
 
         Menu {
-            title: i18.n + qsTr("&Plugins")
-            id: pluginsMenu
-            enabled: helpersWrapper.pluginsAvailable
-            visible: helpersWrapper.pluginsAvailable
-
-            Instantiator {
-                model: pluginsWithActions
-                onObjectAdded: pluginsMenu.insertItem( index, object )
-                onObjectRemoved: pluginsMenu.removeItem( object )
-
-                delegate: Menu {
-                    id: pluginActionsMenu
-                    title: model.prettyname
-                    enabled: model.enabled
-                    property var actionsModel: pluginManager.getPluginActions(index)
-
-                    Instantiator {
-                        model: actionsModel
-                        onObjectAdded: pluginActionsMenu.insertItem( index, object )
-                        onObjectRemoved: pluginActionsMenu.removeItem( object )
-
-                        delegate: MenuItem {
-                            text: aname
-                            onTriggered: {
-                                pluginManager.triggerPluginAction(pluginID, acode)
-                            }
-                        }
-                    }
-                }
-            }
-
-            MenuSeparator {
-                visible: pluginsMenu.items.length > 2
-            }
-
-            MenuItem {
-                text: i18.n + qsTr("&Plugin manager")
-                onTriggered: {
-                    Common.launchDialog("Dialogs/PluginsDialog.qml",
-                                        applicationWindow, {});
-                }
-            }
-        }
-
-        Menu {
             title: i18.n + qsTr("&Tools")
             enabled: (applicationWindow.openedDialogsCount == 0) || debug
 
@@ -551,6 +506,51 @@ ApplicationWindow {
                         onTriggered: {
                             languagesModel.switchLanguage(index)
                         }
+                    }
+                }
+            }
+
+            Menu {
+                title: i18.n + qsTr("&Plugins")
+                id: pluginsMenu
+                enabled: helpersWrapper.pluginsAvailable
+                visible: helpersWrapper.pluginsAvailable
+
+                Instantiator {
+                    model: pluginsWithActions
+                    onObjectAdded: pluginsMenu.insertItem( index, object )
+                    onObjectRemoved: pluginsMenu.removeItem( object )
+
+                    delegate: Menu {
+                        id: pluginActionsMenu
+                        title: model.prettyname
+                        enabled: model.enabled
+                        property var actionsModel: pluginManager.getPluginActions(index)
+
+                        Instantiator {
+                            model: actionsModel
+                            onObjectAdded: pluginActionsMenu.insertItem( index, object )
+                            onObjectRemoved: pluginActionsMenu.removeItem( object )
+
+                            delegate: MenuItem {
+                                text: aname
+                                onTriggered: {
+                                    pluginManager.triggerPluginAction(pluginID, acode)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                MenuSeparator {
+                    visible: pluginsMenu.items.length > 2
+                }
+
+                MenuItem {
+                    text: i18.n + qsTr("&Plugin manager")
+                    onTriggered: {
+                        Common.launchDialog("Dialogs/PluginsDialog.qml",
+                                            applicationWindow, {});
                     }
                 }
             }

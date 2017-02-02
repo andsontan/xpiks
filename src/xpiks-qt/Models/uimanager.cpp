@@ -20,32 +20,53 @@
  */
 
 #include "uimanager.h"
+#include "../Common/defines.h"
 
 namespace Models {
     UIManager::UIManager(QObject *parent) :
-        QObject(parent)
+        QObject(parent),
+        m_TabID(0)
     {
     }
 
     int UIManager::addTab(const QString tabIconComponent, const QString &tabComponent) {
+        LOG_INFO << "icon" << tabIconComponent << "contents" << tabComponent;
         int index = m_TabsList.length();
         m_TabsList.append(tabComponent);
         m_TabsIconsList.append(tabIconComponent);
-        return index;
+
+        int id = generateNextTabID();
+        Q_ASSERT(!m_TabsIDsToIndex.contains(id));
+        m_TabsIDsToIndex.insert(id, index);
+
+        LOG_INFO << "Added tab with ID" << id;
+
+        return id;
     }
 
-    bool UIManager::removeTab(int index) {
-        bool result = (0 <= index) && (index < m_TabsList.length());
+    bool UIManager::removeTab(int tabID) {
+        LOG_INFO << tabID;
+        bool result = m_TabsIDsToIndex.contains(tabID);
+
         if (result) {
-            m_TabsList.removeAt(index);
-            m_TabsIconsList.removeAt(index);
+            int index = m_TabsIDsToIndex.value(tabID);
+            result = result && ((0 <= index) && (index < m_TabsList.length()));
+
+            if (result) {
+                m_TabsList.removeAt(index);
+                m_TabsIconsList.removeAt(index);
+            } else {
+                LOG_WARNING << "Can't remove tab: it no longer exists";
+            }
+        } else {
+            LOG_WARNING << "Can't remove tab: unknown ID";
         }
 
         return result;
     }
 
     void UIManager::updateTabs() {
-        emit tabsListChanged();
         emit tabsIconsChanged();
+        emit tabsListChanged();
     }
 }
