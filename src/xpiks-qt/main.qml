@@ -1076,7 +1076,7 @@ ApplicationWindow {
                                 onCurrentIndexChanged: {
                                     if (tabLoader.myIndex == mainTabView.currentIndex) {
                                         if (tabLoader.status == Loader.Ready) {
-                                            if (typeof tabLoader.item.initializeTab() !== "undefined") {
+                                            if (typeof tabLoader.item.initializeTab !== "undefined") {
                                                 tabLoader.item.initializeTab()
                                             }
                                         }
