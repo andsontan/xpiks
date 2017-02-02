@@ -71,7 +71,7 @@ namespace KeywordsPresets {
         Q_INVOKABLE void pasteKeywords(int index, const QStringList &keywords);
         Q_INVOKABLE QObject *getKeywordsModel(int index);
         Q_INVOKABLE void saveToConfig();
-        Q_INVOKABLE void loadModelFromConfig();
+        /*Q_INVOKABLE*/ void loadModelFromConfig();
 
     public slots:
         void onPresetsUpdated() { LOG_INFO << "loading Model"; loadModelFromConfig(); }

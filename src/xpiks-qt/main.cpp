@@ -410,7 +410,6 @@ int main(int argc, char *argv[]) {
     languagesModel.loadLanguages();
 
     telemetryService.setInterfaceLanguage(languagesModel.getCurrentLanguage());
-    presetsModelConfig.initializeConfigs();
     colorsModel.applyTheme(settingsModel.getSelectedThemeIndex());
 
     qmlRegisterType<Helpers::ClipboardHelper>("xpiks", 1, 0, "ClipboardHelper");

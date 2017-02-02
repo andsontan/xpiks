@@ -695,6 +695,7 @@ void Commands::CommandManager::afterConstructionCallback() {
     m_ArtworkUploader->initializeStocksList();
     m_WarningsService->initWarningsSettings();
     m_TranslationManager->initializeDictionaries();
+    m_PresetsModelConfig->initializeConfigs();
 #endif
 
 #ifdef Q_OS_MAC
