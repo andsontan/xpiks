@@ -22,7 +22,8 @@
 #ifndef PLUGINMANAGER_H
 #define PLUGINMANAGER_H
 
-#include <QVector>
+#include <vector>
+#include <memory>
 #include <QHash>
 #include <QAbstractListModel>
 #include <QSortFilterProxyModel>
@@ -73,8 +74,8 @@ namespace Plugins {
         int getNextPluginID() { return m_LastPluginID++; }
 
     private:
-        QVector<PluginWrapper *> m_PluginsList;
-        QHash<int, PluginWrapper *> m_PluginsDict;
+        std::vector<std::shared_ptr<PluginWrapper> > m_PluginsList;
+        QHash<int, std::shared_ptr<PluginWrapper> > m_PluginsDict;
         UIProvider m_UIProvider;
         int m_LastPluginID;
     };

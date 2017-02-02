@@ -39,7 +39,6 @@ namespace Plugins {
     }
 
     PluginManager::~PluginManager() {
-        qDeleteAll(m_PluginsList);
     }
 
     void PluginManager::loadPlugins() {
@@ -89,11 +88,11 @@ namespace Plugins {
     }
 
     void PluginManager::unloadPlugins() {
-        int size = m_PluginsList.length();
+        size_t size = m_PluginsList.size();
         LOG_DEBUG << size << "plugin(s)";
 
-        for (int i = 0; i < size; ++i) {
-            PluginWrapper *wrapper = m_PluginsList.at(i);
+        for (size_t i = 0; i < size; ++i) {
+            auto &wrapper = m_PluginsList.at(i);
             wrapper->finalizePlugin();
         }
     }
@@ -101,7 +100,7 @@ namespace Plugins {
     bool PluginManager::hasExportedActions(int row) const {
         bool hasActions = false;
 
-        if (0 <= row && row < m_PluginsList.length()) {
+        if ((0 <= row) && (row < m_PluginsList.size())) {
             hasActions = m_PluginsList.at(row)->anyActionsProvided();
         }
 
@@ -112,7 +111,7 @@ namespace Plugins {
         LOG_DEBUG << index;
         PluginActionsModel *item = NULL;
 
-        if (0 <= index && index < m_PluginsList.length()) {
+        if ((0 <= index) && (index < m_PluginsList.size())) {
             item = m_PluginsList.at(index)->getActionsModel();
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
         }
@@ -122,8 +121,8 @@ namespace Plugins {
 
     void PluginManager::triggerPluginAction(int pluginID, int actionID) const {
         LOG_INFO << "Plugin ID" << pluginID << "action ID" << actionID;
-        PluginWrapper *pluginWrapper = m_PluginsDict.value(pluginID, NULL);
-        if (pluginWrapper != NULL) {
+        std::shared_ptr<PluginWrapper> pluginWrapper = m_PluginsDict.value(pluginID, std::shared_ptr<PluginWrapper>());
+        if (pluginWrapper) {
             pluginWrapper->triggerActionSafe(actionID);
         }
     }
@@ -132,39 +131,37 @@ namespace Plugins {
         int pluginID = getNextPluginID();
         LOG_INFO << "ID:" << pluginID << "name:" << plugin->getPrettyName() << "version:" << plugin->getVersionString();
 
-        PluginWrapper *pluginWrapper = NULL;
+        std::shared_ptr<PluginWrapper> pluginWrapper(new PluginWrapper(plugin, pluginID, &m_UIProvider));
 
         try {
             plugin->injectCommandManager(m_CommandManager);
             plugin->injectUndoRedoManager(m_CommandManager->getUndoRedoManager());
-            plugin->injectUIProvider(&m_UIProvider);
+            plugin->injectUIProvider(pluginWrapper->getUIProvider());
             plugin->injectArtworksSource(m_CommandManager->getArtItemsModel());
 
             plugin->initializePlugin();
-
-            pluginWrapper = new PluginWrapper(plugin, pluginID);
         }
         catch(...) {
             LOG_WARNING << "Fail initializing plugin with ID:" << pluginID;
-            pluginWrapper = NULL;
+            pluginWrapper.reset();
         }
 
-        if (pluginWrapper != NULL) {
-            m_PluginsList.append(pluginWrapper);
+        if (pluginWrapper) {
+            m_PluginsList.push_back(pluginWrapper);
             m_PluginsDict.insert(pluginID, pluginWrapper);
         }
     }
 
     int PluginManager::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
-        return m_PluginsList.length();
+        return m_PluginsList.size();
     }
 
     QVariant PluginManager::data(const QModelIndex &index, int role) const {
         int row = index.row();
-        if (row < 0 || row >= m_PluginsList.length()) { return QVariant(); }
+        if (row < 0 || row >= m_PluginsList.size()) { return QVariant(); }
 
-        PluginWrapper *plugin = m_PluginsList.at(row);
+        auto &plugin = m_PluginsList.at(row);
 
         switch (role) {
         case PrettyNameRole:

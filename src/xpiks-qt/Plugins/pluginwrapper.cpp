@@ -23,18 +23,21 @@
 #include "xpiksplugininterface.h"
 #include "ipluginaction.h"
 #include "pluginactionsmodel.h"
+#include "uiprovider.h"
 #include "../Common/defines.h"
 
 namespace Plugins {
-    PluginWrapper::PluginWrapper(XpiksPluginInterface *pluginInterface, int pluginID):
+    PluginWrapper::PluginWrapper(XpiksPluginInterface *pluginInterface, int pluginID, UIProvider *realUIProvider):
         m_PluginInterface(pluginInterface),
         m_ActionsModel(pluginInterface->getExportedActions(), pluginID),
+        m_UIProviderSafe(pluginID, realUIProvider->getUIManager(), realUIProvider),
         m_PluginID(pluginID),
         m_IsEnabled(true),
         m_PrettyName(pluginInterface->getPrettyName()),
         m_VersionString(pluginInterface->getVersionString()),
         m_Author(pluginInterface->getAuthor())
     {
+        Q_ASSERT(realUIProvider != nullptr);
     }
 
     void PluginWrapper::enablePlugin() {

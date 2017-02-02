@@ -22,7 +22,6 @@
 #ifndef UIPROVIDER_H
 #define UIPROVIDER_H
 
-#include "iuiprovider.h"
 #include <QQuickItem>
 #include <QQmlComponent>
 #include <QQuickWindow>
@@ -34,12 +33,15 @@ namespace Models {
 }
 
 namespace Plugins {
-    class UIProvider : public QObject, public IUIProvider
+    class UIProvider : public QObject
     {
         Q_OBJECT
     public:
         UIProvider(QObject *parent=0);
         virtual ~UIProvider() {}
+
+    public:
+        Models::UIManager *getUIManager() const { return m_UiManager; }
 
     public:
         void setQmlEngine(QQmlEngine *engine) { m_QmlEngine = engine; }
@@ -48,9 +50,7 @@ namespace Plugins {
 
         // IUIProvider interface
     public:
-        virtual void openWindow(const QUrl &rcPath, const QHash<QString, QObject*> &contextModels = QHash<QString, QObject*>()) const override;
-        virtual int addTab(const QString &tabIconUrl, const QString &tabComponentUrl) const override;
-        virtual bool removeTab(int tabID) const override;
+        void openWindow(const QUrl &rcPath, const QHash<QString, QObject*> &contextModels = QHash<QString, QObject*>()) const;
 
     private slots:
         void viewStatusChanged(QQmlComponent::Status status);

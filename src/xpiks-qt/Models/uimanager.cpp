@@ -29,8 +29,15 @@ namespace Models {
     {
     }
 
-    int UIManager::addTab(const QString tabIconComponent, const QString &tabComponent) {
+    void UIManager::addSystemTab(const QString tabIconComponent, const QString &tabComponent) {
         LOG_INFO << "icon" << tabIconComponent << "contents" << tabComponent;
+        m_TabsList.append(tabComponent);
+        m_TabsIconsList.append(tabIconComponent);
+    }
+
+    int UIManager::addPluginTab(int pluginID, const QString tabIconComponent, const QString &tabComponent) {
+        LOG_INFO << "plugin" << pluginID << "icon" << tabIconComponent << "contents" << tabComponent;
+
         int index = m_TabsList.length();
         m_TabsList.append(tabComponent);
         m_TabsIconsList.append(tabIconComponent);
@@ -39,30 +46,49 @@ namespace Models {
         Q_ASSERT(!m_TabsIDsToIndex.contains(id));
         m_TabsIDsToIndex.insert(id, index);
 
+        if (!m_PluginIDToTabIDs.contains(pluginID)) {
+            m_PluginIDToTabIDs.insert(pluginID, QSet<int>());
+        }
+
+        m_PluginIDToTabIDs[pluginID].insert(id);
+
         LOG_INFO << "Added tab with ID" << id;
 
         return id;
     }
 
-    bool UIManager::removeTab(int tabID) {
-        LOG_INFO << tabID;
-        bool result = m_TabsIDsToIndex.contains(tabID);
+    bool UIManager::removePluginTab(int pluginID, int tabID) {
+        LOG_INFO << "plugin" << pluginID << "tab" << tabID;
+        bool success = false;
 
-        if (result) {
-            int index = m_TabsIDsToIndex.value(tabID);
-            result = result && ((0 <= index) && (index < m_TabsList.length()));
-
-            if (result) {
-                m_TabsList.removeAt(index);
-                m_TabsIconsList.removeAt(index);
-            } else {
-                LOG_WARNING << "Can't remove tab: it no longer exists";
+        do {
+            if (!m_PluginIDToTabIDs.contains(pluginID)) {
+                break;
             }
-        } else {
-            LOG_WARNING << "Can't remove tab: unknown ID";
-        }
 
-        return result;
+            auto &tabsSet = m_PluginIDToTabIDs[pluginID];
+            if (!tabsSet.contains(tabID)) {
+                break;
+            }
+
+            if (!m_TabsIDsToIndex.contains(tabID)) {
+                break;
+            }
+
+            int index = m_TabsIDsToIndex.value(tabID);
+            if ((index < 0) || (index >= m_TabsList.length())) {
+                break;
+            }
+
+            tabsSet.remove(tabID);
+            m_TabsList.removeAt(index);
+            m_TabsIconsList.removeAt(index);
+
+            LOG_INFO << "Plugin's tab" << tabID << "removed";
+            success = true;
+        } while(false);
+
+        return success;
     }
 
     void UIManager::updateTabs() {

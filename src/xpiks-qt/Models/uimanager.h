@@ -22,6 +22,7 @@
 #ifndef UIMANAGER_H
 #define UIMANAGER_H
 
+#include <QSet>
 #include <QHash>
 #include <QObject>
 #include <QString>
@@ -44,8 +45,9 @@ namespace Models {
         QStringList getTabsIcons() const { return m_TabsIconsList; }
 
     public:
-        int addTab(const QString tabIconComponent, const QString &tabComponent);
-        bool removeTab(int tabID);
+        void addSystemTab(const QString tabIconComponent, const QString &tabComponent);
+        int addPluginTab(int pluginID, const QString tabIconComponent, const QString &tabComponent);
+        bool removePluginTab(int pluginID, int tabID);
         void updateTabs();
 
     signals:
@@ -53,6 +55,7 @@ namespace Models {
         void tabsIconsChanged();
 
     private:
+        QHash<int, QSet<int> > m_PluginIDToTabIDs;
         QHash<int, int> m_TabsIDsToIndex;
         volatile int m_TabID;
         QStringList m_TabsList;

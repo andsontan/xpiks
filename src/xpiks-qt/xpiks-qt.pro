@@ -129,7 +129,8 @@ SOURCES += main.cpp \
     Translation/translationmanager.cpp \
     Translation/translationworker.cpp \
     Translation/translationquery.cpp \
-    Models/uimanager.cpp
+    Models/uimanager.cpp \
+    Plugins/sandboxeddependencies.cpp
 
 RESOURCES += qml.qrc
 
@@ -316,7 +317,8 @@ HEADERS += \
     Translation/translationmanager.h \
     Translation/translationworker.h \
     Translation/translationquery.h \
-    Models/uimanager.h
+    Models/uimanager.h \
+    Plugins/sandboxeddependencies.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
