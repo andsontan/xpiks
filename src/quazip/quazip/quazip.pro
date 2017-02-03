@@ -5,8 +5,7 @@ QT -= gui
 win32 {
     LIBS += -L"$$PWD/../../libs" -lz
     INCLUDEPATH += "$$PWD/../../zlib-1.2.8/"
-    DEFINES += ZLIB_WINAPI \
-               ZLIB_DLL
+    DEFINES += ZLIB_DLL
 }
 
 macx {
