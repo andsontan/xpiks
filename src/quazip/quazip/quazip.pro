@@ -4,7 +4,7 @@ QT -= gui
 
 win32 {
     LIBS += -L"$$PWD/../../libs" -lz
-    INCLUDEPATH += "$$PWD/../../zlib-1.2.8/"
+    INCLUDEPATH += "$$PWD/../../zlib-1.2.11/"
     DEFINES += ZLIB_DLL
 }
 

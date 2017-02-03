@@ -6,6 +6,11 @@ QT += qml quick widgets concurrent svg
 CONFIG += qtquickcompiler
 CONFIG += c++11
 
+VERSION = 1.3.0.0
+QMAKE_TARGET_PRODUCT = Xpiks
+QMAKE_TARGET_DESCRIPTION = "Cross-Platform Image Keywording Software"
+QMAKE_TARGET_COPYRIGHT = "GNU GPLv3"
+
 SOURCES += main.cpp \
     Models/artitemsmodel.cpp \
     Models/artworkmetadata.cpp \
