@@ -101,6 +101,8 @@ Sample macdeployqt command for OS X can be found below: (depends on your build-*
 
 And for Windows as well:
 
-`windeployqt.exe --qmldir=../../xpiks-qt/Components/ --qmldir=../../xpiks-qt/Constants/ --qmldir=../../xpiks-qt/Dialogs/ --qmldir=../../xpiks-qt/StyledControls/ xpiks-qt.exe`
+`windeployqt.exe --qmldir=../../xpiks-qt/Components/ --qmldir=../../xpiks-qt/Constants/ --qmldir=../../xpiks-qt/Dialog
+s/ --qmldir=../../xpiks-qt/StyledControls/ --qmldir=../../xpiks-qt/CollapserTabs/ --qmldir=../../xpiks-qt/StackViews/ -
+-release xpiks-qt.exe`
 
 Xpiks uses English dictionaries from [Libreoffice collection](http://cgit.freedesktop.org/libreoffice/dictionaries/tree/). In Windows they are stored in the `dict/` subdirectory, in OS X they are in the `Resources/` directory of a bundle. As of Xpiks 1.1 these files are copied automatically.
