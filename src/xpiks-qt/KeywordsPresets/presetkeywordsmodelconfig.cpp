@@ -35,11 +35,11 @@ namespace KeywordsPresets {
     }
 
     void PresetKeywordsModelConfig::saveFromModel(const std::vector<PresetModel *> &presets) {
-        int size = presets.size();
+        size_t size = presets.size();
         LOG_INTEGR_TESTS_OR_DEBUG << size;
 
         m_PresetData.resize(size);
-        for (int i = 0; i < size; i++) {
+        for (size_t i = 0; i < size; i++) {
             auto *item = presets[i];
             auto &name = item->m_PresetName;
             auto &keywordsModel = item->m_KeywordsModel;

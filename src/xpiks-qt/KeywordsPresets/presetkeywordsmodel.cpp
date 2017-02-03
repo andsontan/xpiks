@@ -186,7 +186,7 @@ namespace KeywordsPresets {
 
     int PresetKeywordsModel::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
-        return m_PresetsList.size();
+        return (int)m_PresetsList.size();
     }
 
     QVariant PresetKeywordsModel::data(const QModelIndex &index, int role) const {
