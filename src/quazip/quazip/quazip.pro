@@ -3,6 +3,7 @@ CONFIG += qt warn_on
 QT -= gui
 
 win32 {
+    DEFINES += ZLIB_WINAPI
     LIBS += -L"$$PWD/../../libs" -lz
     INCLUDEPATH += "$$PWD/../../zlib-1.2.11/"
 }
