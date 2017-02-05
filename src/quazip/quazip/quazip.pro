@@ -4,7 +4,7 @@ QT -= gui
 
 win32 {
     DEFINES += ZLIB_WINAPI
-    LIBS += -L"$$PWD/../../libs" -lzlibwapi
+    LIBS += -L"$$PWD/../../libs" -lz
     INCLUDEPATH += "$$PWD/../../zlib-1.2.11/"
 }
 
@@ -12,7 +12,7 @@ macx {
     LIBS += -lz
 }
 
-#CONFIG += staticlib
+# CONFIG += staticlib
 CONFIG += c++11
 
 # The ABI version.
@@ -46,6 +46,12 @@ CONFIG(staticlib): DEFINES += QUAZIP_STATIC
 # Input
 include(quazip.pri)
 
+
+CONFIG(debug, debug|release) {
+     mac: TARGET = $$join(TARGET,,,_debug) 
+     win32: TARGET = $$join(TARGET,,,d)
+}
+
 unix:!symbian {
     headers.path=$$PREFIX/include/quazip
     headers.files=$$HEADERS
@@ -53,7 +59,8 @@ unix:!symbian {
     INSTALLS += headers target
 
 	OBJECTS_DIR=.obj
-	MOC_DIR=.moc	
+	MOC_DIR=.moc
+	
 }
 
 win32 {
@@ -64,6 +71,7 @@ win32 {
     # workaround for qdatetime.h macro bug
     DEFINES += NOMINMAX
 }
+
 
 symbian {
 
