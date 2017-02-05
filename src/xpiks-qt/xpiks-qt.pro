@@ -469,6 +469,7 @@ macx {
 win32 {
     DEFINES += QT_NO_PROCESS_COMBINED_ARGUMENT_START
     QT += winextras
+    DEFINES += ZLIB_WINAPI
     INCLUDEPATH += "../zlib-1.2.11"
     INCLUDEPATH += "../hunspell-1.3.3/src"
     INCLUDEPATH += "../quazip"
@@ -477,6 +478,9 @@ win32 {
 
     LIBS -= -lcurl
     LIBS -= -lexiv2
+
+    LIBS -= -lz
+    LIBS += -lzlibwapi
 
     CONFIG(debug, debug|release) {
 	EXE_DIR = debug

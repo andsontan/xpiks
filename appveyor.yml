@@ -92,7 +92,7 @@ after_build:
   - if defined XPIKS_BINARY copy /Y ..\..\libs\ssdll.dll .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\mman.dll .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\libexpat.dll .
-  - if defined XPIKS_BINARY copy /Y ..\..\libs\z.dll .
+  - if defined XPIKS_BINARY copy /Y ..\..\libs\zlibwapi.dll .
   - if defined XPIKS_BINARY del *.obj
   - if defined XPIKS_BINARY del *.cpp
   - if defined XPIKS_BINARY cd ..
