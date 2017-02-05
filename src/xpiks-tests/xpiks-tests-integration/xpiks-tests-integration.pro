@@ -20,7 +20,6 @@ DEFINES += QT_NO_CAST_TO_ASCII \
 
 DEFINES += HUNSPELL_STATIC
 DEFINES += TELEMETRY_ENABLED
-DEFINES += LIBFACE_STATIC
 
 DEFINES += INTEGRATION_TESTS
 
@@ -399,15 +398,14 @@ win32 {
     LIBS -= -lcurl
     LIBS += -lmman
 
-    LIBS -= -lz
-    LIBS += -lzlibwapi
-
     LIBS += -llibexpat
     LIBS += -llibexiv2
 
     CONFIG(debug, debug|release) {
         EXE_DIR = debug
         LIBS += -llibcurl_debug
+        LIBS -= -lquazip
+        LIBS += -lquazipd
     }
 
     CONFIG(release, debug|release) {
