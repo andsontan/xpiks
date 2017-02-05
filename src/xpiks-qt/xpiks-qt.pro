@@ -9,7 +9,7 @@ CONFIG += c++11
 VERSION = 1.3.0.0
 QMAKE_TARGET_PRODUCT = Xpiks
 QMAKE_TARGET_DESCRIPTION = "Cross-Platform Image Keywording Software"
-QMAKE_TARGET_COPYRIGHT = "GNU GPLv3"
+QMAKE_TARGET_COPYRIGHT = "Copyright (C) 2014-2017 Taras Kushnir"
 
 SOURCES += main.cpp \
     Models/artitemsmodel.cpp \
@@ -143,7 +143,6 @@ DEFINES += QT_NO_CAST_TO_ASCII \
            QT_RESTRICTED_CAST_FROM_ASCII \
            QT_NO_CAST_FROM_BYTEARRAY
 DEFINES += HUNSPELL_STATIC
-DEFINES += LIBFACE_STATIC
 DEFINES += QT_MESSAGELOGCONTEXT
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
@@ -469,7 +468,8 @@ macx {
 win32 {
     DEFINES += QT_NO_PROCESS_COMBINED_ARGUMENT_START
     QT += winextras
-    DEFINES += ZLIB_WINAPI
+    DEFINES += ZLIB_WINAPI \
+               ZLIB_DLL
     INCLUDEPATH += "../zlib-1.2.11"
     INCLUDEPATH += "../hunspell-1.3.3/src"
     INCLUDEPATH += "../quazip"
@@ -478,9 +478,6 @@ win32 {
 
     LIBS -= -lcurl
     LIBS -= -lexiv2
-
-    LIBS -= -lz
-    LIBS += -lzlibwapi
 
     CONFIG(debug, debug|release) {
 	EXE_DIR = debug
