@@ -482,6 +482,8 @@ win32 {
     CONFIG(debug, debug|release) {
 	EXE_DIR = debug
         LIBS += -llibcurl_debug
+        LIBS -= -lquazip
+        LIBS += -lquazipd
     }
 
     CONFIG(release, debug|release) {
