@@ -88,7 +88,7 @@ after_build:
   - if defined XPIKS_BINARY xcopy /Y /s c:\projects\xpiks\src\xpiks-qt\deps .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\libexiv2.dll .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\libcurl*.dll .
-  - if defined XPIKS_BINARY copy /Y ..\..\libs\quazip.dll .
+  - if defined XPIKS_BINARY copy /Y ..\..\libs\quazip*.dll .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\ssdll.dll .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\mman.dll .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\libexpat.dll .
