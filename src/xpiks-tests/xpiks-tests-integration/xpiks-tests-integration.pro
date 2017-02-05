@@ -399,6 +399,9 @@ win32 {
     LIBS -= -lcurl
     LIBS += -lmman
 
+    LIBS -= -lz
+    LIBS += -lzlibwapi
+
     LIBS += -llibexpat
     LIBS += -llibexiv2
 
