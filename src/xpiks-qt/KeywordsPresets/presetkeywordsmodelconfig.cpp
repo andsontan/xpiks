@@ -48,7 +48,7 @@ namespace KeywordsPresets {
             m_PresetData[i].m_Name = name;
         }
 
-#ifndef INTEGRATION_TESTS
+#if !defined(INTEGRATION_TESTS) && !defined(CORE_TESTS)
         writeToConfig();
 #endif
     }
