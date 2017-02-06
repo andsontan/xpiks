@@ -33,7 +33,7 @@ int TranslatorBasicTest::doTest() {
     VERIFY(!translationManager->getShortTranslation().simplified().isEmpty(), "Short translation is empty");
     qInfo() << "Translation arrived" << translationManager->getFullTranslation();
 
-    return true;
+    return 0;
 }
 
 
