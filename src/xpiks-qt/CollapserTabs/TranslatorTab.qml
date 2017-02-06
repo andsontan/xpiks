@@ -196,12 +196,13 @@ ColumnLayout {
     }
 
     Item {
-        height: 5
+        height: 10
     }
 
     Item {
         anchors.left: parent.left
         anchors.right: parent.right
+        height: childrenRect.height
 
         StyledText {
             anchors.right: parent.right
