@@ -181,7 +181,7 @@ Item {
                         isDefault: true
                         width: 130
                         text: i18.n + qsTr("Start Zipping")
-                        enabled: !zipArchiver.inProgress
+                        enabled: !zipArchiver.inProgress && (zipArchiver.itemsCount > 0)
                         onClicked: {
                             text = i18.n + qsTr("Zipping...")
                             zipArchiver.resetModel()
