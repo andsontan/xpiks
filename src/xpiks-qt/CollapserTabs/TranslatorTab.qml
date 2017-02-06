@@ -95,12 +95,19 @@ ColumnLayout {
             onTextChanged: translationManager.query = text
             isActive: false
             selectionColor: Colors.inputBackgroundColor
+
             Keys.onBacktabPressed: {
                 event.accepted = true
             }
 
             Keys.onTabPressed: {
                 event.accepted = true
+            }
+
+            Keys.onPressed: {
+                if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                    event.accepted = true
+                }
             }
         }
 
@@ -111,7 +118,10 @@ ColumnLayout {
             anchors.rightMargin: 5
             enabled: trTextEdit.length > 0
             anchors.verticalCenter: parent.verticalCenter
-            onItemClicked: translationManager.clear()
+            onItemClicked: {
+                translationManager.clear()
+                trTextEdit.forceActiveFocus()
+            }
         }
     }
 

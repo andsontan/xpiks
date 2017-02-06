@@ -62,7 +62,7 @@ namespace Translation {
 
         if (!query.simplified().isEmpty()) {
             ensureDictionaryLoaded();
-            std::string word = query.toUtf8().toStdString();
+            std::string word = query.simplified().toUtf8().toStdString();
 
             if (m_LookupDictionary->translate(word, translationData)) {
                 QString translation = QString::fromUtf8(translationData.c_str());
