@@ -133,6 +133,8 @@ namespace Models {
         Q_INVOKABLE void expandPreset(int metadataIndex, int keywordIndex, int presetIndex);
         Q_INVOKABLE void addPreset(int metadataIndex, int presetIndex);
 
+        Q_INVOKABLE void initSuggestion(int metadataIndex);
+
     public:
         virtual int rowCount(const QModelIndex &parent=QModelIndex()) const override;
         virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const override;

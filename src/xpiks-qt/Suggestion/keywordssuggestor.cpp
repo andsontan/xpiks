@@ -49,7 +49,12 @@ namespace Suggestion {
     }
 
     KeywordsSuggestor::~KeywordsSuggestor() {
-         qDeleteAll(m_QueryEngines);
+        qDeleteAll(m_QueryEngines);
+    }
+
+    void KeywordsSuggestor::setExistingKeywords(const QSet<QString> &keywords) {
+        LOG_DEBUG << "#";
+        m_ExistingKeywords.clear(); m_ExistingKeywords.unite(keywords);
     }
 
     void KeywordsSuggestor::initSuggestionEngines() {
@@ -98,6 +103,7 @@ namespace Suggestion {
         m_KeywordsHash.clear();
         m_SuggestedKeywords.clearKeywords();
         m_AllOtherKeywords.clearKeywords();
+        m_ExistingKeywords.clear();
         beginResetModel();
         m_Suggestions.clear();
         endResetModel();
@@ -302,15 +308,19 @@ namespace Suggestion {
             --it;
 
             int frequency = it.key();
+            const QString &frequentKeyword = it.value();
 
             if (frequency == 0) { continue; }
+            if (m_ExistingKeywords.contains(frequentKeyword.toLower())) {
+                LOG_DEBUG << "Skipping existing keyword" << frequentKeyword;
+                continue;
+            }
 
             int suggestedCount = suggestedKeywords.length();
 
             canAddToSuggested = (frequency >= upperThreshold) && (suggestedCount <= maxUpperBound);
             canAddToOthers = frequency >= lowerThreshold;
 
-            const QString &frequentKeyword = it.value();
 
             if (canAddToSuggested ||
                     (canAddToOthers && (suggestedCount <= maxSuggested))) {

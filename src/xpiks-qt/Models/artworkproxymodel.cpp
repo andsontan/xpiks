@@ -238,6 +238,10 @@ namespace Models {
         doAddPreset(presetIndex);
     }
 
+    void ArtworkProxyModel::initSuggestion() {
+        doInitSuggestion();
+    }
+
     void ArtworkProxyModel::updateCurrentArtwork() {
         if (m_ArtworkOriginalIndex != -1) {
             m_CommandManager->updateArtworks(QVector<int>() << m_ArtworkOriginalIndex);

@@ -1322,6 +1322,8 @@ ColumnLayout {
                                                             }
                                                         }
 
+                                                        artItemsModel.initSuggestion(rowWrapper.getIndex())
+
                                                         Common.launchDialog("../Dialogs/KeywordsSuggestion.qml",
                                                                             applicationWindow,
                                                                             {callbackObject: callbackObject});

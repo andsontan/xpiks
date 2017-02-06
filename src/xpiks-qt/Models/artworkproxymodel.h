@@ -115,6 +115,7 @@ namespace Models {
         Q_INVOKABLE QString getAttachedVectorPath() const;
         Q_INVOKABLE void expandPreset(int keywordIndex, int presetIndex);
         Q_INVOKABLE void addPreset(int presetIndex);
+        Q_INVOKABLE void initSuggestion();
 
     protected:
         virtual Common::BasicMetadataModel *getBasicMetadataModel() override {

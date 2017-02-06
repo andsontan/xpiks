@@ -896,6 +896,8 @@ Rectangle {
                                             }
                                         }
 
+                                        combinedArtworks.initSuggestion()
+
                                         Common.launchDialog("Dialogs/KeywordsSuggestion.qml",
                                                             componentParent,
                                                             {callbackObject: callbackObject});

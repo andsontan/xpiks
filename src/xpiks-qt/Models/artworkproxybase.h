@@ -73,6 +73,7 @@ namespace Models {
         bool getHasDescriptionWordSpellError(const QString &word);
         bool doExpandPreset(int keywordIndex, int presetIndex);
         bool doAddPreset(int presetIndex);
+        void doInitSuggestion();
 
     private:
         void spellCheckKeywords();

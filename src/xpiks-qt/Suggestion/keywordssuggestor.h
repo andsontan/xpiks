@@ -53,6 +53,7 @@ namespace Suggestion {
         virtual ~KeywordsSuggestor();
 
     public:
+        void setExistingKeywords(const QSet<QString> &keywords);
         void initSuggestionEngines();
         void setSuggestedArtworks(std::vector<std::shared_ptr<SuggestionArtwork> > &suggestedArtworks);
         void clear();
@@ -146,6 +147,7 @@ namespace Suggestion {
         LocalLibrary *m_LocalLibrary;
         QStringList m_QueryEnginesNames;
         QString m_LastErrorString;
+        QSet<QString> m_ExistingKeywords;
         Common::FakeHold m_HoldPlaceholder;
         Common::BasicKeywordsModel m_SuggestedKeywords;
         Common::BasicKeywordsModel m_AllOtherKeywords;

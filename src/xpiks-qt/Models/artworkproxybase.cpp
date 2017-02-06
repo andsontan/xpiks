@@ -21,6 +21,7 @@
 
 #include "artworkproxybase.h"
 #include "../Commands/commandmanager.h"
+#include "../Suggestion/keywordssuggestor.h"
 
 namespace Models {
     QString ArtworkProxyBase::getDescription() {
@@ -243,6 +244,12 @@ namespace Models {
         }
 
         return success;
+    }
+
+    void ArtworkProxyBase::doInitSuggestion() {
+        auto *suggestor = m_CommandManager->getKeywordsSuggestor();
+        auto *metadataModel = getBasicMetadataModel();
+        suggestor->setExistingKeywords(metadataModel->getKeywordsSet());
     }
 
     void ArtworkProxyBase::spellCheckKeywords() {
