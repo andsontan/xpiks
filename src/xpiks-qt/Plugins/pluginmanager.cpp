@@ -30,6 +30,7 @@
 #include "pluginwrapper.h"
 #include "../Models/artitemsmodel.h"
 #include "../Common/defines.h"
+#include "../Helpers/constants.h"
 
 namespace Plugins {
     PluginManager::PluginManager():
@@ -43,25 +44,38 @@ namespace Plugins {
 
     void PluginManager::loadPlugins() {
         LOG_DEBUG << "#";
+        QDir pluginsDir;
+        QString appDataPath = XPIKS_USERDATA_PATH;
+        bool pluginsFound = false;
 
-        QDir pluginsDir(QCoreApplication::applicationDirPath());
-#if defined(Q_OS_WIN)
-#elif defined(Q_OS_MAC)
-        if (pluginsDir.dirName() == "MacOS") {
-            pluginsDir.cdUp();
+        if (!appDataPath.isEmpty()) {
+            QString pluginsPath = QDir::cleanPath(appDataPath + QDir::separator() + Constants::PLUGINS_DIR);
+            if (QFileInfo(pluginsPath).exists()) {
+                pluginsDir.setPath(pluginsPath);
+                pluginsFound = true;
+            }
         }
-
-        pluginsDir.cd("PlugIns");
-#endif
-
-        bool pluginsFound = pluginsDir.cd("XpiksPlugins");
 
         if (!pluginsFound) {
-            LOG_WARNING << "Plugins directory not found";
-            return;
+            pluginsDir.setPath(QCoreApplication::applicationDirPath());
+#if defined(Q_OS_WIN)
+#elif defined(Q_OS_MAC)
+            if (pluginsDir.dirName() == "MacOS") {
+                pluginsDir.cdUp();
+            }
+
+            pluginsDir.cd("PlugIns");
+#endif
+
+            pluginsFound = pluginsDir.cd("XpiksPlugins");
+
+            if (!pluginsFound) {
+                LOG_WARNING << "Plugins directory not found";
+                return;
+            }
         }
 
-        LOG_INFO<< "Plugins dir:" << pluginsDir.absolutePath();
+        LOG_INFO << "Plugins dir:" << pluginsDir.absolutePath();
 
         beginResetModel();
         m_PluginsList.clear();
