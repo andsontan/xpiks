@@ -107,8 +107,11 @@ namespace Translation {
 
     void TranslationManager::setSelectedDictionaryIndex(int value) {
         LOG_INFO << value;
+        LOG_INTEGRATION_TESTS << "Current index" << m_SelectedDictionaryIndex;
+        LOG_INTEGRATION_TESTS << "Overall" << m_DictionariesList.length() << "dictionaries";
 
         if (m_SelectedDictionaryIndex != value) {
+            LOG_INFO << "Changing current dictionary";
             m_SelectedDictionaryIndex = value;
             emit selectedDictionaryIndexChanged();
 
@@ -343,7 +346,9 @@ namespace Translation {
         if ((0 <= selectedDictIndex) && (selectedDictIndex < m_DictionariesList.length())) {
             setSelectedDictionaryIndex(selectedDictIndex);
         } else {
-            setSelectedDictionaryIndex(0);
+            if (!m_DictionariesList.empty()) {
+                setSelectedDictionaryIndex(0);
+            }
         }
 
         emit dictionariesChanged();
