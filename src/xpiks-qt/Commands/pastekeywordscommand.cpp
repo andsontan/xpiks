@@ -39,11 +39,11 @@ std::shared_ptr<Commands::ICommandResult> Commands::PasteKeywordsCommand::execut
 
     QVector<int> indicesToUpdate;
     std::vector<UndoRedo::ArtworkMetadataBackup> artworksBackups;
-    QVector<Models::ArtworkMetadata*> itemsToSave;
+    QVector<Models::ArtworkMetadata*> affectedArtworks;
     size_t size = m_MetadataElements.size();
     indicesToUpdate.reserve((int)size);
     artworksBackups.reserve(size);
-    itemsToSave.reserve((int)size);
+    affectedArtworks.reserve((int)size);
 
     for (size_t i = 0; i < size; ++i) {
         const Models::MetadataElement &element = m_MetadataElements.at(i);
@@ -53,13 +53,13 @@ std::shared_ptr<Commands::ICommandResult> Commands::PasteKeywordsCommand::execut
         artworksBackups.emplace_back(metadata);
 
         metadata->appendKeywords(m_KeywordsList);
-        itemsToSave.append(metadata);
+        affectedArtworks.append(metadata);
     }
 
     if (size > 0) {
-        commandManager->submitForSpellCheck(itemsToSave);
-        commandManager->submitForWarningsCheck(itemsToSave);
-        commandManager->saveArtworksBackups(itemsToSave);
+        commandManager->submitForSpellCheck(affectedArtworks);
+        commandManager->submitForWarningsCheck(affectedArtworks);
+        commandManager->saveArtworksBackups(affectedArtworks);
 
         std::unique_ptr<UndoRedo::IHistoryItem> modifyArtworksItem(new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
                                                                                                            UndoRedo::PasteModificationType));

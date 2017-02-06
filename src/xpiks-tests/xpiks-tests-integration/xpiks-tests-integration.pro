@@ -166,7 +166,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Translation/translationworker.cpp \
     ../../xpiks-qt/Models/uimanager.cpp \
     ../../xpiks-qt/Plugins/sandboxeddependencies.cpp \
-    translatorbasictest.cpp
+    translatorbasictest.cpp \
+    ../../xpiks-qt/Commands/expandpresetcommand.cpp
 
 RESOURCES +=
 
@@ -362,7 +363,8 @@ HEADERS += \
     ../../xpiks-qt/Translation/translationworker.h \
     ../../xpiks-qt/Models/uimanager.h \
     ../../xpiks-qt/Plugins/sandboxeddependencies.h \
-    translatorbasictest.h
+    translatorbasictest.h \
+    ../../xpiks-qt/Commands/expandpresetcommand.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

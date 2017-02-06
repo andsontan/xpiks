@@ -41,6 +41,7 @@
 #include "../Common/defines.h"
 #include "../QMLExtensions/colorsmodel.h"
 #include "imageartwork.h"
+#include "../Commands/expandpresetcommand.h"
 
 namespace Models {
     ArtItemsModel::ArtItemsModel(QObject *parent):
@@ -572,21 +573,10 @@ namespace Models {
         LOG_INFO << "item" << metadataIndex << "keyword" << keywordIndex << "preset" << presetIndex;
 
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
-            auto *presetsModel = m_CommandManager->getPresetsModel();
-            QStringList keywords;
-
-            if (presetsModel->tryGetPreset(presetIndex, keywords)) {
-                ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-
-                if (metadata != NULL) {
-                    metadata->expandPreset(keywordIndex, keywords);
-                    QModelIndex index = this->index(metadataIndex);
-                    emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
-
-                    auto *keywordsModel = metadata->getBasicModel();
-                    m_CommandManager->submitItemForSpellCheck(keywordsModel);
-                }
-            }
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            std::shared_ptr<Commands::ExpandPresetCommand> expandPresetCommand(new Commands::ExpandPresetCommand(MetadataElement(metadata, metadataIndex), presetIndex, keywordIndex));
+            std::shared_ptr<Commands::ICommandResult> result = m_CommandManager->processCommand(expandPresetCommand);
+            Q_UNUSED(result);
         }
     }
 
@@ -594,21 +584,10 @@ namespace Models {
         LOG_INFO << "item" << metadataIndex << "preset" << presetIndex;
 
         if (0 <= metadataIndex && metadataIndex < rowCount()) {
-            auto *presetsModel = m_CommandManager->getPresetsModel();
-            QStringList keywords;
-
-            if (presetsModel->tryGetPreset(presetIndex, keywords)) {
-                ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
-
-                if (metadata != NULL) {
-                    metadata->appendKeywords(keywords);
-                    QModelIndex index = this->index(metadataIndex);
-                    emit dataChanged(index, index, QVector<int>() << IsModifiedRole << KeywordsCountRole);
-
-                    auto *keywordsModel = metadata->getBasicModel();
-                    m_CommandManager->submitItemForSpellCheck(keywordsModel);
-                }
-            }
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            std::shared_ptr<Commands::ExpandPresetCommand> expandPresetCommand(new Commands::ExpandPresetCommand(MetadataElement(metadata, metadataIndex), presetIndex));
+            std::shared_ptr<Commands::ICommandResult> result = m_CommandManager->processCommand(expandPresetCommand);
+            Q_UNUSED(result);
         }
     }
 

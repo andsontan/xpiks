@@ -32,7 +32,8 @@ namespace Commands {
         CombinedEdit = 2,
         PasteKeywords = 3,
         FindAndReplace = 4,
-        DeleteKeywords = 5
+        DeleteKeywords = 5,
+        ExpandPreset = 6
     };
 
     class CommandResult;
