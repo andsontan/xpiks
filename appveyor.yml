@@ -91,6 +91,7 @@ after_build:
   - if defined XPIKS_BINARY copy /Y ..\..\libs\quazip*.dll .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\ssdll.dll .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\mman.dll .
+  - if defined XPIKS_BINARY copy /Y ..\..\libs\face.dll .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\libexpat.dll .
   - if defined XPIKS_BINARY copy /Y ..\..\libs\z.dll .
   - if defined XPIKS_BINARY del *.obj
