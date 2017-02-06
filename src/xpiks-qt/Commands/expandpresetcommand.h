@@ -36,7 +36,7 @@ namespace Commands {
     class ExpandPresetCommand : public CommandBase
     {
     public:
-        ExpandPresetCommand(Models::MetadataElement &metadataElement,
+        ExpandPresetCommand(Models::MetadataElement &&metadataElement,
                             int presetIndex, int keywordIndex = -1):
             CommandBase(CommandType::ExpandPreset),
             m_MetadataElement(std::move(metadataElement)),
