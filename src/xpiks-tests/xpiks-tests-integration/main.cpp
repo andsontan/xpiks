@@ -76,6 +76,7 @@
 #include "plaintextedittest.h"
 #include "fixspellingmarksmodifiedtest.h"
 #include "presetstest.h"
+#include "translatorbasictest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -239,7 +240,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new PlainTextEditTest(&commandManager));
     integrationTests.append(new FixSpellingMarksModifiedTest(&commandManager));
     integrationTests.append(new PresetsTest(&commandManager));
-
+    integrationTests.append(new TranslatorBasicTest(&commandManager));
 
     qDebug("\n");
     int succeededTestsCount = 0, failedTestsCount = 0;

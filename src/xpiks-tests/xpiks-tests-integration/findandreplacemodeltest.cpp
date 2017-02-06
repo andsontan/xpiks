@@ -25,9 +25,9 @@ void FindAndReplaceModelTest::setup() {
 int FindAndReplaceModelTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
-    files << getImagePathForTest("images-for-tests/mixed/026.jpg");
-    files << getImagePathForTest("images-for-tests/mixed/027.jpg");
-    files << getImagePathForTest("images-for-tests/mixed/0267.jpg");
+    files << getFilePathForTest("images-for-tests/mixed/026.jpg");
+    files << getFilePathForTest("images-for-tests/mixed/027.jpg");
+    files << getFilePathForTest("images-for-tests/mixed/0267.jpg");
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 

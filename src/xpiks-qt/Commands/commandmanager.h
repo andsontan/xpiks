@@ -292,6 +292,7 @@ namespace Commands {
         virtual Translation::TranslationService *getTranslationService() const { return m_TranslationService; }
 
 #ifdef INTEGRATION_TESTS
+        virtual Translation::TranslationManager *getTranslationManager() const { return m_TranslationManager; }
         virtual MetadataIO::MetadataIOCoordinator *getMetadataIOCoordinator() const { return m_MetadataIOCoordinator; }
         virtual Models::CombinedArtworksModel *getCombinedArtworksModel() const { return m_CombinedArtworksModel; }
         virtual AutoComplete::AutoCompleteService *getAutoCompleteService() const { return m_AutoCompleteService; }

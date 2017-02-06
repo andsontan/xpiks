@@ -23,7 +23,7 @@ void AddFilesBasicTest::setup() {
 int AddFilesBasicTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
-    files << getImagePathForTest("images-for-tests/vector/026.jpg");
+    files << getFilePathForTest("images-for-tests/vector/026.jpg");
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 

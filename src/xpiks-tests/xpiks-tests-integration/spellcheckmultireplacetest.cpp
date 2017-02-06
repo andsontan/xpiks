@@ -27,8 +27,8 @@ void SpellCheckMultireplaceTest::setup() {
 int SpellCheckMultireplaceTest::doTest() {
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
     QList<QUrl> files;
-    files << getImagePathForTest("images-for-tests/vector/026.jpg");
-    files << getImagePathForTest("images-for-tests/vector/027.jpg");
+    files << getFilePathForTest("images-for-tests/vector/026.jpg");
+    files << getFilePathForTest("images-for-tests/vector/027.jpg");
 
     int addedCount = artItemsModel->addLocalArtworks(files);
 

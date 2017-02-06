@@ -24,7 +24,7 @@ public:
     virtual void teardown() { m_CommandManager->cleanup(); }
 
 protected:
-    QUrl getImagePathForTest(const QString &prefix) {
+    QUrl getFilePathForTest(const QString &prefix) {
         QFileInfo fi(prefix);
         int tries = 6;
         QStringList parents;
