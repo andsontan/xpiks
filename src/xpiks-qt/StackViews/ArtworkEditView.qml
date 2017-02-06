@@ -320,6 +320,13 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 property int imageMargin: 10
 
+                StyledBusyIndicator {
+                    width: parent.width/3
+                    height: parent.width/3
+                    anchors.centerIn: parent
+                    running: previewImage.status == Image.Loading
+                }
+
                 StyledScrollView {
                     id: scrollview
                     anchors.fill: parent
