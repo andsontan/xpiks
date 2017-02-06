@@ -105,7 +105,12 @@ ColumnLayout {
             }
 
             Keys.onPressed: {
-                if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                if(event.matches(StandardKey.Paste)) {
+                    var clipboardText = clipboard.getText();
+                    if (Common.safeInsert(trTextEdit, clipboardText)) {
+                        event.accepted = true
+                    }
+                } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
                     event.accepted = true
                 }
             }
