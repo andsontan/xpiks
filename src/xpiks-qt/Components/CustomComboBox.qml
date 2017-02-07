@@ -207,7 +207,7 @@ Item {
                 color: lastItemMA.containsMouse ? highlightedItemColor : dropDown.color
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: itemHeight + 1
+                height: hasLastItemAction ? (itemHeight + 1) : 0
 
                 StyledText {
                     text: lastActionText
