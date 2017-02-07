@@ -360,6 +360,7 @@ Item {
                         width: 200
                         height: 24
                         itemHeight: 28
+                        enabled: !keywordsSuggestor.isInProgress
                         onComboIndexChanged: {
                             keywordsSuggestor.selectedSourceIndex = sourceComboBox.selectedIndex
                         }
@@ -580,7 +581,7 @@ Item {
                         id: addKeywordsButton
                         isDefault: true
                         text: i18.n + qsTr("Add suggested")
-                        enabled: !keywordsSuggestor.isInProgress
+                        enabled: !keywordsSuggestor.isInProgress && (keywordsSuggestor.suggestedKeywordsCount > 0)
                         width: 150
                         onClicked: {
                             callbackObject.promoteKeywords(keywordsSuggestor.getSuggestedKeywords())
