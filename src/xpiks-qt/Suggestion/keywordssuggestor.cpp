@@ -303,6 +303,7 @@ namespace Suggestion {
         otherKeywords.reserve(maxOthers);
 
         bool canAddToSuggested, canAddToOthers;
+        const bool isOnlyOneArtwork = (m_SelectedArtworksCount == 1);
 
         while (it != itBegin) {
             --it;
@@ -321,8 +322,7 @@ namespace Suggestion {
             canAddToSuggested = (frequency >= upperThreshold) && (suggestedCount <= maxUpperBound);
             canAddToOthers = frequency >= lowerThreshold;
 
-
-            if (canAddToSuggested ||
+            if (isOnlyOneArtwork || canAddToSuggested ||
                     (canAddToOthers && (suggestedCount <= maxSuggested))) {
                 suggestedKeywords.append(frequentKeyword);
             } else if (canAddToOthers || (otherKeywords.length() <= maxOthers)) {
