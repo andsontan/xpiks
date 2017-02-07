@@ -593,12 +593,13 @@ namespace Models {
 
     void ArtItemsModel::initSuggestion(int metadataIndex) {
         LOG_INFO << "item" << metadataIndex;
-
+#ifndef CORE_TESTS
         if (0 <= metadataIndex && metadataIndex < rowCount()) {
             auto *suggestor = m_CommandManager->getKeywordsSuggestor();
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
             suggestor->setExistingKeywords(metadata->getKeywordsSet());
         }
+#endif
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {

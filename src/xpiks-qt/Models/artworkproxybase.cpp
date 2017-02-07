@@ -247,9 +247,11 @@ namespace Models {
     }
 
     void ArtworkProxyBase::doInitSuggestion() {
+#ifndef CORE_TESTS
         auto *suggestor = m_CommandManager->getKeywordsSuggestor();
         auto *metadataModel = getBasicMetadataModel();
         suggestor->setExistingKeywords(metadataModel->getKeywordsSet());
+#endif
     }
 
     void ArtworkProxyBase::spellCheckKeywords() {
