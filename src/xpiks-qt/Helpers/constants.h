@@ -65,7 +65,7 @@ namespace Constants {
     const char RECENT_DIRECTORIES[] = "RECENT_DIRECTORIES";
     const char MAX_PARALLEL_UPLOADS[] = "MAX_PARALLEL_UPLOADS";
     const char USE_SPELL_CHECK[] = "USE_SPELL_CHECK";
-    const char LIBRARY_FILENAME[] = "xpiks.library";
+    const char LIBRARY_FILENAME[] = "xpiks.v14.library";
     const char USER_AGENT_ID[] = "USER_AGENT_ID";
     const char INSTALLED_VERSION[] = "INSTALLED_VERSION";
     const char USER_CONSENT[] = "USER_CONSENT_1_0";
@@ -113,7 +113,7 @@ namespace Constants {
     const char PLUGINS_DIR[] = "debug_XpiksPlugins";
 
 #ifdef INTEGRATION_TESTS
-    const char LIBRARY_FILENAME[] = "xpiks.integration.library";
+    const char LIBRARY_FILENAME[] = "xpiks.integration.v14.library";
     const char UPLOAD_HOSTS[] = "INTEGRATION_UPLOAD_HOSTS_HASH";
     const char USE_MASTER_PASSWORD[] = "INTEGRATION_USE_MASTER_PASSWORD";
     const char MASTER_PASSWORD_HASH[] = "INTEGRATION_MASTER_PASSWORD_HASH";
@@ -121,7 +121,7 @@ namespace Constants {
     const char CACHE_IMAGES_AUTOMATICALLY[] = "INTEGRATION_CACHE_IMAGES_AUTOMATICALLY";
     const char USER_DICT_FILENAME[] = "userdict_debug_tests.dic";
 #else
-    const char LIBRARY_FILENAME[] = "xpiks.debug.library";
+    const char LIBRARY_FILENAME[] = "xpiks.debug.v14.library";
     const char UPLOAD_HOSTS[] = "DEBUG_UPLOAD_HOSTS_HASH";
     const char USE_MASTER_PASSWORD[] = "DEBUG_USE_MASTER_PASSWORD";
     const char MASTER_PASSWORD_HASH[] = "DEBUG_MASTER_PASSWORD_HASH";

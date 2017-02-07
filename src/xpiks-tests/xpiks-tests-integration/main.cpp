@@ -102,6 +102,8 @@ int main(int argc, char *argv[]) {
 
     qSetMessagePattern("%{time hh:mm:ss.zzz} %{type} T#%{threadid} %{function} - %{message}");
     qRegisterMetaType<Common::SpellCheckFlags>("Common::SpellCheckFlags");
+    qRegisterMetaTypeStreamOperators<Models::ProxySettings>("ProxySettings");
+    qRegisterMetaTypeStreamOperators<Suggestion::LocalArtworkData>("LocalArtworkData");
 
     Helpers::AppSettings appSettings;
     Suggestion::LocalLibrary localLibrary;

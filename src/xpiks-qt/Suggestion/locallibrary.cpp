@@ -29,8 +29,19 @@
 #include "suggestionartwork.h"
 #include "../Common/defines.h"
 #include "../Common/basickeywordsmodel.h"
+#include "../Models/imageartwork.h"
 
 namespace Suggestion {
+    QDataStream &operator<<(QDataStream &out, const LocalArtworkData &v) {
+        out << v.m_ArtworkType << v.m_Title << v.m_Description << v.m_Keywords << v.m_ReservedString << v.m_ReservedInt;
+        return out;
+    }
+
+    QDataStream &operator>>(QDataStream &in, LocalArtworkData &v) {
+        in >> v.m_ArtworkType >> v.m_Title >> v.m_Description >> v.m_Keywords >> v.m_ReservedString >> v.m_ReservedInt;
+        return in;
+    }
+
     LocalLibrary::LocalLibrary():
         QObject(),
         m_FutureWatcher(NULL)
@@ -53,7 +64,7 @@ namespace Suggestion {
 #endif
     }
 
-    void LocalLibrary::swap(QHash<QString, QStringList> &hash) {
+    void LocalLibrary::swap(QHash<QString, LocalArtworkData> &hash) {
         QMutexLocker locker(&m_Mutex);
         m_LocalArtworks.swap(hash);
         LOG_DEBUG << "swapped with read from db.";
@@ -86,14 +97,16 @@ namespace Suggestion {
         LOG_DEBUG << "max results" << maxResults;
         QMutexLocker locker(&m_Mutex);
 
-        QHashIterator<QString, QStringList> i(m_LocalArtworks);
+        QHashIterator<QString, LocalArtworkData> i(m_LocalArtworks);
 
         while (i.hasNext()) {
             i.next();
 
             bool anyError = false;
 
-            const QStringList &keywords = i.value();
+            auto &localData = i.value();
+
+            const QStringList &keywords = localData.m_Keywords;
             foreach (const QString &searchTerm, query) {
                 bool containsTerm = false;
 
@@ -104,6 +117,16 @@ namespace Suggestion {
                     }
                 }
 
+                if (localData.m_Title.contains(searchTerm, Qt::CaseInsensitive)) {
+                    containsTerm = true;
+                    break;
+                }
+
+                if (localData.m_Description.contains(searchTerm, Qt::CaseInsensitive)) {
+                    containsTerm = true;
+                    break;
+                }
+
                 if (!containsTerm) {
                     anyError = true;
                     break;
@@ -111,7 +134,7 @@ namespace Suggestion {
             }
 
             if (!anyError) {
-                if (QFile(i.key()).exists()) {
+                if (QFileInfo(i.key()).exists()) {
                     searchResults.emplace_back(new SuggestionArtwork(i.key(), keywords));
 
                     if (searchResults.size() >= maxResults) {
@@ -126,7 +149,7 @@ namespace Suggestion {
         QMutexLocker locker(&m_Mutex);
 
         QStringList itemsToRemove;
-        QHashIterator<QString, QStringList> i(m_LocalArtworks);
+        QHashIterator<QString, LocalArtworkData> i(m_LocalArtworks);
 
         while (i.hasNext()) {
             i.next();
@@ -178,18 +201,20 @@ namespace Suggestion {
             Models::ArtworkMetadata *metadata = artworksList.at(i);
             const QString &filepath = metadata->getFilepath();
 
-            QSet<QString> tags;
-            tags.unite(metadata->getKeywordsSet());
-
-            auto *metadataModel = metadata->getBasicModel();
-            QStringList descriptionWords = metadataModel->getDescriptionWords();
-            QStringList titleWords = metadataModel->getTitleWords();
-
-            tags.unite(descriptionWords.toSet());
-            tags.unite(titleWords.toSet());
+            LocalArtworkData data;
+            data.m_ArtworkType = LocalArtworkImage;
+            data.m_Title = metadata->getTitle();
+            data.m_Description = metadata->getDescription();
+            data.m_Keywords = metadata->getKeywords();
+            Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork *>(metadata);
+            if (image != nullptr) {
+                if (image->hasVectorAttached()) {
+                    data.m_ArtworkType = LocalArtworkVector;
+                }
+            }
 
             // replaces if exists
-            m_LocalArtworks.insert(filepath, tags.toList());
+            m_LocalArtworks.insert(filepath, data);
         }
 
         LOG_INFO << length << "item(s) updated or added";

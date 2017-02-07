@@ -29,6 +29,7 @@
 #include <QList>
 #include <QStringList>
 #include <QMutex>
+#include <QDataStream>
 #include <QFutureWatcher>
 #include "libraryloaderworker.h"
 
@@ -38,6 +39,25 @@ namespace Models {
 
 namespace Suggestion {
     class SuggestionArtwork;
+
+    enum LocalArtworkType {
+        LocalArtworkImage,
+        LocalArtworkVector,
+        LocalArtworkOtherArtwork,
+        LocalArtworkVideo
+    };
+
+    struct LocalArtworkData {
+        int m_ArtworkType;
+        QString m_Title;
+        QString m_Description;
+        QStringList m_Keywords;
+        QString m_ReservedString;
+        int m_ReservedInt;
+    };
+
+    QDataStream &operator<<(QDataStream &out, const LocalArtworkData &v);
+    QDataStream &operator>>(QDataStream &in, LocalArtworkData &v);
 
     class LocalLibrary : public QObject
     {
@@ -49,7 +69,7 @@ namespace Suggestion {
     public:
         void setLibraryPath(const QString &filename) { m_Filename = filename; }
         void addToLibrary(const QVector<Models::ArtworkMetadata *> artworksList);
-        void swap(QHash<QString, QStringList> &hash);
+        void swap(QHash<QString, LocalArtworkData> &hash);
         void saveToFile();
         void loadLibraryAsync();
         void searchArtworks(const QStringList &query,
@@ -68,10 +88,12 @@ namespace Suggestion {
 
     private:
         QFutureWatcher<void> *m_FutureWatcher;
-        QHash<QString, QStringList> m_LocalArtworks;
+        QHash<QString, LocalArtworkData> m_LocalArtworks;
         QMutex m_Mutex;
         QString m_Filename;
     };
 }
+
+Q_DECLARE_METATYPE(Suggestion::LocalArtworkData)
 
 #endif // LOCALLIBRARY_H

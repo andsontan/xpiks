@@ -55,7 +55,7 @@ namespace Suggestion {
 
         QFile file(m_Filepath);
         if (file.open(QIODevice::ReadOnly)) {
-            QHash<QString, QStringList> dict;
+            QHash<QString, LocalArtworkData> dict;
 
             QDataStream in(&file);   // read the data
             in >> dict;
