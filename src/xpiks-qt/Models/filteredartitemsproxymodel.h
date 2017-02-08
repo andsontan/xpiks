@@ -126,11 +126,12 @@ namespace Models {
 
         template<typename T>
         std::vector<T> getFilteredOriginalItems(std::function<bool (ArtworkMetadata *)> pred,
-                                                std::function<T(ArtworkMetadata *, int)> mapper) const;
+                                                std::function<T(ArtworkMetadata *, int, int)> mapper) const;
 
         QVector<ArtworkMetadata *> getAllOriginalItems() const;
 
         QVector<int> getSelectedOriginalIndices() const;
+        QVector<int> getSelectedIndices() const;
         void forceUnselectAllItems();
         ArtItemsModel *getArtItemsModel() const;
 

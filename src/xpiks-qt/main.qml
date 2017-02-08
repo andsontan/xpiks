@@ -266,16 +266,13 @@ ApplicationWindow {
             }
             else {
                 var launched = false
+                var index = filteredArtItemsModel.findSelectedItemIndex()
 
-                if (filteredArtItemsModel.selectedArtworksCount == 1) {
-                    var index = filteredArtItemsModel.findSelectedItemIndex()
-
-                    if (index !== -1) {
-                        var originalIndex = filteredArtItemsModel.getOriginalIndex(index)
-                        var metadata = filteredArtItemsModel.getArtworkMetadata(index)
-                        startOneItemEditing(metadata, index, originalIndex)
-                        launched = true
-                    }
+                if (index !== -1) {
+                    var originalIndex = filteredArtItemsModel.getOriginalIndex(index)
+                    var metadata = filteredArtItemsModel.getArtworkMetadata(index)
+                    startOneItemEditing(metadata, index, originalIndex)
+                    launched = true
                 }
 
                 if (!launched) {
