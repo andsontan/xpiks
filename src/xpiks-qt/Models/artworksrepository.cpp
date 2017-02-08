@@ -26,6 +26,7 @@
 #include <QRegExp>
 #include "../Common/defines.h"
 #include "../Helpers/indiceshelper.h"
+#include "../Commands/commandmanager.h"
 
 namespace Models {
     ArtworksRepository::ArtworksRepository(QObject *parent) :
@@ -146,19 +147,22 @@ namespace Models {
                 !m_FilesSet.contains(filepath)) {
 
             int occurances = 0;
-            if (!m_DirectoriesHash.contains(absolutePath)) {
+            QHash<QString, int>::iterator dirHashIterator = m_DirectoriesHash.find(absolutePath);
+
+            if (dirHashIterator == m_DirectoriesHash.end()) {
                 LOG_INFO << "Adding new directory" << absolutePath << "with index" << m_DirectoriesList.length();
                 m_DirectoriesList.append(absolutePath);
                 m_DirectoriesSelectedHash.insert(absolutePath, 0);
+                m_CommandManager->addToRecentDirectories(absolutePath);
+                dirHashIterator = m_DirectoriesHash.insert(absolutePath, 0);
                 emit artworksSourcesCountChanged();
-            }
-            else {
-                occurances = m_DirectoriesHash[absolutePath];
+            } else {
+                occurances = dirHashIterator.value();
             }
 
-            watchFilePath(filepath);
+            // watchFilePath(filepath);
             m_FilesSet.insert(filepath);
-            m_DirectoriesHash[absolutePath] = occurances + 1;
+            dirHashIterator.value() = occurances + 1;
             wasModified = true;
         }
 
@@ -208,6 +212,22 @@ namespace Models {
         LOG_DEBUG << "#";
         m_UnavailableFiles.clear();
         m_LastUnavailableFilesCount = 0;
+    }
+
+    void ArtworksRepository::watchFilePaths(const QStringList &filePaths) {
+#ifndef CORE_TESTS
+        m_FilesWatcher.addPaths(filePaths);
+#else
+        Q_UNUSED(filePaths);
+#endif
+    }
+
+    void ArtworksRepository::unwatchFilePaths(const QStringList &filePaths) {
+#ifndef CORE_TESTS
+        m_FilesWatcher.removePaths(filePaths);
+#else
+        Q_UNUSED(filePaths);
+#endif
     }
 
     void ArtworksRepository::watchFilePath(const QString &filepath) {

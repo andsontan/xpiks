@@ -67,7 +67,7 @@ namespace MetadataIO {
         QVector<QPair<int, int> > m_RangesToUpdate;
         QMutex m_ImportMutex;
         QHash<QString, ImportDataResult> m_ImportResult;
-        int m_ThreadsCount;
+        volatile int m_ThreadsCount;
         QAtomicInt m_FinishedCount;
         volatile bool m_AnyError;
     };

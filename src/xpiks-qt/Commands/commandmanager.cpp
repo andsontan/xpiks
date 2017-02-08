@@ -405,7 +405,9 @@ void Commands::CommandManager::setArtworksForZipping(const QVector<Models::Artwo
 
 /*virtual*/
 void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *metadata) const {
-    if (m_ArtItemsModel) {
+    Q_ASSERT(m_ArtItemsModel != nullptr);
+    //if (m_ArtItemsModel)
+    {
         LOG_INTEGRATION_TESTS << "Connecting to ArtItemsModel...";
 
         QObject::connect(metadata, SIGNAL(modifiedChanged(bool)),
@@ -418,14 +420,18 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
                          m_ArtItemsModel, SLOT(artworkBackupRequested()));
     }
 
-    if (m_FilteredItemsModel) {
+    Q_ASSERT(m_FilteredItemsModel != nullptr);
+    //if (m_FilteredItemsModel)
+    {
         LOG_INTEGRATION_TESTS << "Connecting to FilteredItemsModel...";
 
         QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
                          m_FilteredItemsModel, SLOT(itemSelectedChanged(bool)));
     }
 
-    if (m_ArtworksRepository) {
+    Q_ASSERT(m_ArtworksRepository != nullptr);
+    //if (m_ArtworksRepository)
+    {
         LOG_INTEGRATION_TESTS << "Connecting to ArtworksRepository...";
         // QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
         //                 m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));

@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QCoreApplication>
 #include <QStringList>
 #include <QDirIterator>
 #include <QImageReader>
@@ -812,6 +813,7 @@ namespace Models {
 
     void ArtItemsModel::raiseArtworksAdded(int imagesCount, int vectorsCount) {
         emit artworksAdded(imagesCount, vectorsCount);
+        QCoreApplication::processEvents(QEventLoop::AllEvents);
 
         LOG_INFO << imagesCount << "images" << vectorsCount << "vectors";
     }
@@ -848,6 +850,7 @@ namespace Models {
 
     int ArtItemsModel::attachVectors(const QHash<QString, QHash<QString, QString> > &vectorsPaths, QVector<int> &indicesToUpdate) const {
         LOG_DEBUG << "#";
+        if (vectorsPaths.isEmpty()) { return 0; }
 
         int attachedVectors = 0;
         QString defaultPath;

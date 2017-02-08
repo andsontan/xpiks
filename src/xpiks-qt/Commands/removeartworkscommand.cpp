@@ -88,6 +88,8 @@ namespace Commands {
             Models::ArtworksRepository *artworkRepository = commandManager->getArtworksRepository();
             artworkRepository->cleanupEmptyDirectories();
             artworkRepository->updateCountsForExistingDirectories();
+            artworkRepository->unwatchFilePaths(removedItemsFilepathes);
+            artworkRepository->unwatchFilePaths(removedAttachedVectors);
 
             artItemsModel->updateModifiedCount();
 

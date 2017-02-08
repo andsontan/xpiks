@@ -52,7 +52,7 @@ int findAndAttachVectors(const QVector<Models::ArtworkMetadata*> &artworksList, 
         }
 
         const QString &filepath = image->getFilepath();
-        QStringList vectors = Helpers::convertToVectorFilenames(QStringList() << filepath);
+        QStringList vectors = Helpers::convertToVectorFilenames(filepath);
 
         foreach (const QString &item, vectors) {
             if (QFileInfo(item).exists()) {
@@ -93,18 +93,19 @@ std::shared_ptr<Commands::ICommandResult> Commands::AddArtworksCommand::execute(
 
     const int newFilesCount = artworksRepository->getNewFilesCount(m_FilePathes);
     const int initialCount = artItemsModel->rowCount();
-    bool filesWereAccounted = artworksRepository->beginAccountingFiles(m_FilePathes);
+    const bool filesWereAccounted = artworksRepository->beginAccountingFiles(m_FilePathes);
 
     QVector<Models::ArtworkMetadata*> artworksToImport;
     artworksToImport.reserve(newFilesCount);
+    QStringList filesToWatch;
+    filesToWatch.reserve(newFilesCount);
 
     if (newFilesCount > 0) {
         LOG_INFO << newFilesCount << "new files found";
         LOG_INFO << "Current files count is" << initialCount;
         artItemsModel->beginAccountingFiles(newFilesCount);
 
-        int count = m_FilePathes.count();
-        artworksToImport.reserve(count);
+        const int count = m_FilePathes.count();
 
         for (int i = 0; i < count; ++i) {
             const QString &filename = m_FilePathes[i];
@@ -115,11 +116,7 @@ std::shared_ptr<Commands::ICommandResult> Commands::AddArtworksCommand::execute(
 
                 artItemsModel->appendMetadata(metadata);
                 artworksToImport.append(metadata);
-
-                LOG_INFO << "Added file:" << filename;
-
-                const QString &dirPath = QFileInfo(filename).absolutePath();
-                commandManager->addToRecentDirectories(dirPath);
+                filesToWatch.append(filename);
             } else {
                 LOG_INFO << "Rejected file:" << filename;
             }
@@ -129,6 +126,7 @@ std::shared_ptr<Commands::ICommandResult> Commands::AddArtworksCommand::execute(
     }
 
     artworksRepository->endAccountingFiles(filesWereAccounted);
+    artworksRepository->watchFilePaths(filesToWatch);
 
     QHash<QString, QHash<QString, QString> > vectorsHash;
     decomposeVectors(vectorsHash);

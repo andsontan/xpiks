@@ -98,6 +98,8 @@ namespace MetadataIO {
             LOG_INFO << "Started worker" << i;
         }
 
+        Q_ASSERT(m_SlicedItemsToRead.size() == m_ThreadsCount);
+
         emit allStarted();
     }
 
@@ -109,7 +111,7 @@ namespace MetadataIO {
         Exiv2ReadingWorker *worker = qobject_cast<Exiv2ReadingWorker *>(sender());
         Q_ASSERT(worker != NULL);
 
-        LOG_INFO << "#" << worker->getWorkerIndex() << "anyError:" << anyError;
+        LOG_INTEGR_TESTS_OR_DEBUG << "#" << worker->getWorkerIndex() << "[" << m_FinishedCount << "out of" << m_ThreadsCount << "] anyError:" << anyError;
 
         {
             QMutexLocker locker(&m_ImportMutex);

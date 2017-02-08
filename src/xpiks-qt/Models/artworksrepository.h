@@ -88,6 +88,8 @@ namespace Models {
         void removeVector(const QString &vectorPath);
         void setFileSelected(const QString &filepath, bool selected);
         void purgeUnavailableFiles();
+        void watchFilePaths(const QStringList &filePaths);
+        void unwatchFilePaths(const QStringList &filePaths);
 
     private:
         void watchFilePath(const QString &filepath);

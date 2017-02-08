@@ -43,6 +43,8 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *
 
     QVector<Models::ArtworkMetadata*> artworksToImport;
     artworksToImport.reserve(m_RemovedArtworksIndices.length());
+    QStringList watchList;
+    watchList.reserve(m_RemovedArtworksIndices.length());
 
     bool filesWereAccounted = artworksRepository->beginAccountingFiles(m_RemovedArtworksPathes);
     bool willResetModel = m_RemovedArtworksPathes.length() > 50;
@@ -72,6 +74,7 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *
 
                 artItemsModel->insertArtwork(j + startRow, metadata);
                 artworksToImport.append(metadata);
+                watchList.append(filepath);
 
                 const QString &vectorPath = m_RemovedAttachedVectors.at(j);
                 if (!vectorPath.isEmpty()) {
@@ -99,6 +102,7 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *
     }
 
     artworksRepository->endAccountingFiles(filesWereAccounted);
+    artworksRepository->watchFilePaths(watchList);
 
     std::unique_ptr<IHistoryItem> addArtworksItem(new AddArtworksHistoryItem(ranges));
     commandManager->recordHistoryItem(addArtworksItem);

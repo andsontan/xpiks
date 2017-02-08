@@ -27,22 +27,28 @@
 QStringList Helpers::convertToVectorFilenames(const QStringList &item) {
     QStringList converted;
     converted.reserve(item.length()*2);
-    QRegExp regExp("(.*)[.](jpg|jpeg|tiff)", Qt::CaseInsensitive);
 
     foreach (const QString &item, item) {
-        QString replacedEPS = QString(item).replace(regExp, "\\1.eps");
-        QString replacedAI = QString(item).replace(regExp, "\\1.ai");
-
-        if (replacedEPS != item) {
-            converted << replacedEPS;
-        }
-
-        if (replacedAI != item) {
-            converted << replacedAI;
-        }
+        converted.append(convertToVectorFilenames(item));
     }
 
     return converted;
+}
+
+QStringList Helpers::convertToVectorFilenames(const QString &path) {
+    QStringList result;
+
+    QString base;
+    if (path.endsWith(".jpg", Qt::CaseInsensitive)) {
+        base = path.mid(0, path.size() - 4);
+        result << (base + ".eps") << (base + ".ai");
+    } else if (path.endsWith(".jpeg", Qt::CaseInsensitive) ||
+               path.endsWith(".tiff", Qt::CaseInsensitive)) {
+        base = path.mid(0, path.size() - 5);
+        result << (base + ".eps") << (base + ".ai");
+    }
+
+    return result;
 }
 
 QString Helpers::getArchivePath(const QString &artworkPath) {
