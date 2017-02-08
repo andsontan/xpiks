@@ -1086,7 +1086,8 @@ Rectangle {
             Component.onCompleted: {
                 if (listViewEnabled) {
                     rosterListView.currentIndex = artworkEditComponent.artworkIndex
-                    rosterListView.positionViewAtIndex(artworkEditComponent.artworkIndex, ListView.Center)
+                    rosterListView.positionViewAtIndex(artworkEditComponent.artworkIndex, ListView.Contain)
+                    // TODO: fix bug with ListView.Center
                 }
             }
 
