@@ -445,6 +445,11 @@ Flickable {
                             completionCancel()
                             event.accepted = true;
                         }
+                    } else if ((event.key === Qt.Key_Left) && (nextTagTextInput.cursorPosition == 0)) {
+                        event.accepted = true
+                    } else if ((event.key === Qt.Key_Right) &&
+                               (nextTagTextInput.cursorPosition == nextTagTextInput.length)) {
+                        event.accepted = true
                     }
 
                     scrollToBottom()

@@ -962,6 +962,11 @@ ColumnLayout {
                                                             }
                                                         } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
                                                             event.accepted = true
+                                                        } else if ((event.key === Qt.Key_Left) && (descriptionTextInput.cursorPosition == 0)) {
+                                                            event.accepted = true
+                                                        } else if ((event.key === Qt.Key_Right) &&
+                                                                   (descriptionTextInput.cursorPosition == descriptionTextInput.length)) {
+                                                            event.accepted = true
                                                         }
                                                     }
 
@@ -1062,6 +1067,11 @@ ColumnLayout {
                                                                 event.accepted = true
                                                             }
                                                         } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                                                            event.accepted = true
+                                                        } else if ((event.key === Qt.Key_Left) && (titleTextInput.cursorPosition == 0)) {
+                                                            event.accepted = true
+                                                        } else if ((event.key === Qt.Key_Right) &&
+                                                                   (titleTextInput.cursorPosition == titleTextInput.length)) {
                                                             event.accepted = true
                                                         }
                                                     }
