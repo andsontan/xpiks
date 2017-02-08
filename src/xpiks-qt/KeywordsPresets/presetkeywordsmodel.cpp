@@ -27,7 +27,9 @@ namespace KeywordsPresets {
             return false;
         }
 
-        keywords = m_PresetsList[presetIndex]->m_KeywordsModel.getKeywords();
+        auto *preset = m_PresetsList[presetIndex];
+        auto &keywordsModel = preset->m_KeywordsModel;
+        keywords = keywordsModel.getKeywords();
         return true;
     }
 
@@ -37,11 +39,6 @@ namespace KeywordsPresets {
         }
 
         m_PresetsList[presetIndex]->m_PresetName = name;
-    }
-
-    bool PresetKeywordsModel::isPresetName(const QString &name) const {
-        bool hasName = m_NamesSet.contains(name.toLower());
-        return hasName;
     }
 
     bool PresetKeywordsModel::tryFindSinglePresetByName(const QString &name, int &index) const {
@@ -131,7 +128,8 @@ namespace KeywordsPresets {
         LOG_INFO << "index" << index << "keywords:" << keywords;
 
         if (0 <= index && index < getPresetsCount()) {
-            auto &keywordsModel = m_PresetsList.at(index)->m_KeywordsModel;
+            auto *preset = m_PresetsList.at(index);
+            auto &keywordsModel = preset->m_KeywordsModel;
             keywordsModel.appendKeywords(keywords);
         }
     }
@@ -139,8 +137,9 @@ namespace KeywordsPresets {
     void PresetKeywordsModel::appendKeyword(int index, const QString &keyword) {
         LOG_INFO << "item" << index << keyword << keyword;
 
-        if (0 <= index && index < getPresetsCount()) {
-            auto &keywordsModel = m_PresetsList.at(index)->m_KeywordsModel;
+        if (0 <= index && index < getPresetsCount()) {            
+            auto *preset = m_PresetsList.at(index);
+            auto &keywordsModel = preset->m_KeywordsModel;
             keywordsModel.appendKeyword(keyword);
             m_CommandManager->submitKeywordForSpellCheck(&keywordsModel, keywordsModel.getKeywordsCount() - 1);
         }
@@ -161,14 +160,12 @@ namespace KeywordsPresets {
 #ifndef CORE_TESTS
         auto *presetConfig = m_CommandManager->getPresetsModelConfig();
         presetConfig->saveFromModel(m_PresetsList);
-        updateNamesSet();
 #endif
     }
 
     void PresetKeywordsModel::loadModelFromConfig() {
         beginResetModel();
         doLoadFromConfig();
-        updateNamesSet();
         endResetModel();
     }
 
@@ -201,16 +198,6 @@ namespace KeywordsPresets {
         }
 
         m_PresetsList.clear();
-    }
-
-    void PresetKeywordsModel::updateNamesSet() {
-        QSet<QString> names;
-
-        for (auto *preset: m_PresetsList) {
-            names.insert(preset->m_PresetName.toLower());
-        }
-
-        m_NamesSet.swap(names);
     }
 
     int PresetKeywordsModel::rowCount(const QModelIndex &parent) const {
