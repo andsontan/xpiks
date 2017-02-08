@@ -19,6 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <QtAlgorithms>
 #include <QFile>
 #include <QDataStream>
 #include <QtConcurrent>
@@ -33,12 +34,12 @@
 
 namespace Suggestion {
     QDataStream &operator<<(QDataStream &out, const LocalArtworkData &v) {
-        out << v.m_ArtworkType << v.m_Title << v.m_Description << v.m_Keywords << v.m_ReservedString << v.m_ReservedInt;
+        out << v.m_ArtworkType << v.m_Title << v.m_Description << v.m_Keywords << v.m_CreationTime << v.m_ReservedString << v.m_ReservedInt;
         return out;
     }
 
     QDataStream &operator>>(QDataStream &in, LocalArtworkData &v) {
-        in >> v.m_ArtworkType >> v.m_Title >> v.m_Description >> v.m_Keywords >> v.m_ReservedString >> v.m_ReservedInt;
+        in >> v.m_ArtworkType >> v.m_Title >> v.m_Description >> v.m_Keywords >> v.m_CreationTime >> v.m_ReservedString >> v.m_ReservedInt;
         return in;
     }
 
@@ -98,6 +99,7 @@ namespace Suggestion {
         QMutexLocker locker(&m_Mutex);
 
         QHashIterator<QString, LocalArtworkData> i(m_LocalArtworks);
+        QVector<QPair<QDateTime, QString> > results;
 
         while (i.hasNext()) {
             i.next();
@@ -135,13 +137,26 @@ namespace Suggestion {
 
             if (!anyError) {
                 if (QFileInfo(i.key()).exists()) {
-                    searchResults.emplace_back(new SuggestionArtwork(i.key(), keywords));
+                    results.append(qMakePair(localData.m_CreationTime, i.key()));
 
                     if (searchResults.size() >= maxResults) {
                         break;
                     }
                 }
             }
+        }
+
+        // earlier datetimes go last
+        qSort(results.begin(), results.end(),
+              [](const QPair<QDateTime, QString> &a1, const QPair<QDateTime, QString> &a2) -> bool {
+            return a1.first > a2.first;
+        });
+
+        foreach (auto &pair, results) {
+            auto &filepath = pair.second;
+            Q_ASSERT(m_LocalArtworks.contains(filepath));
+            auto &localData = m_LocalArtworks[filepath];
+            searchResults.emplace_back(new SuggestionArtwork(filepath, localData.m_Keywords));
         }
     }
 
@@ -200,6 +215,7 @@ namespace Suggestion {
         for (int i = 0; i < length; ++i) {
             Models::ArtworkMetadata *metadata = artworksList.at(i);
             const QString &filepath = metadata->getFilepath();
+            QFileInfo fi(filepath);
 
             LocalArtworkData data;
             data.m_ArtworkType = LocalArtworkImage;
@@ -211,6 +227,10 @@ namespace Suggestion {
                 if (image->hasVectorAttached()) {
                     data.m_ArtworkType = LocalArtworkVector;
                 }
+            }
+
+            if (fi.exists()) {
+                data.m_CreationTime = fi.created();
             }
 
             // replaces if exists

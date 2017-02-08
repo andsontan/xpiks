@@ -28,6 +28,7 @@
 #include <QString>
 #include <QList>
 #include <QStringList>
+#include <QDateTime>
 #include <QMutex>
 #include <QDataStream>
 #include <QFutureWatcher>
@@ -52,6 +53,7 @@ namespace Suggestion {
         QString m_Title;
         QString m_Description;
         QStringList m_Keywords;
+        QDateTime m_CreationTime;
         QString m_ReservedString;
         int m_ReservedInt;
     };
