@@ -93,7 +93,10 @@ namespace AutoComplete {
         if (role == Qt::DisplayRole) { return m_CompletionList.at(index.row()); }
         else if (role == IsPresetRole) {
             auto *presetsModel = m_CommandManager->getPresetsModel();
-            return presetsModel->isPresetName(m_CompletionList.at(index.row()));
+            QString completion = m_CompletionList.at(index.row());
+            int dummy;
+            bool haveOnePreset = presetsModel->tryFindSinglePresetByName(completion, dummy);
+            return haveOnePreset;
         }
         return QVariant();
     }

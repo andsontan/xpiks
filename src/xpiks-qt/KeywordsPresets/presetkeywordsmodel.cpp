@@ -55,6 +55,7 @@ namespace KeywordsPresets {
             if (preset->m_PresetName.contains(name, Qt::CaseInsensitive)) {
                 if (foundIndex != -1) {
                     anyError = true;
+                    foundIndex = -1;
                     break;
                 } else {
                     foundIndex = (int)i;
@@ -62,12 +63,14 @@ namespace KeywordsPresets {
             }
         }
 
-        if (!anyError) {
+        bool found = !anyError && (foundIndex != -1);
+
+        if (found) {
             index = foundIndex;
-            LOG_INFO << "found index" << foundIndex;
+            LOG_INFO << "found [" << m_PresetsList[foundIndex]->m_PresetName << "] with index" << foundIndex;
         }
 
-        return !anyError;
+        return found;
     }
 
     void PresetKeywordsModel::removeItem(int row) {
