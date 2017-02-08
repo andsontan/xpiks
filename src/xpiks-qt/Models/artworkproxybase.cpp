@@ -233,6 +233,25 @@ namespace Models {
         return success;
     }
 
+    bool ArtworkProxyBase::doExpandLastKeywordAsPreset() {
+        LOG_DEBUG << "#";
+        bool success = false;
+
+        auto *keywordsModel = getBasicMetadataModel();
+        int keywordIndex = keywordsModel->getKeywordsCount() - 1;
+        QString lastKeyword = keywordsModel->retrieveKeyword(keywordIndex);
+        auto *presetsModel = m_CommandManager->getPresetsModel();
+        int presetIndex = -1;
+
+        if (presetsModel->tryFindSinglePresetByName(lastKeyword, presetIndex)) {
+            success = doExpandPreset(keywordIndex, presetIndex);
+        } else {
+            LOG_DEBUG << "Preset not found";
+        }
+
+        return success;
+    }
+
     bool ArtworkProxyBase::doAddPreset(int presetIndex) {
         LOG_INFO << presetIndex;
         bool success = false;

@@ -66,6 +66,7 @@ Flickable {
     signal editActivated();
     signal clickedInside();
     signal rightClickedInside();
+    signal expandLastAsPreset();
 
     signal completionRequested(string prefix);
 
@@ -81,8 +82,8 @@ Flickable {
         acSource.moveSelectionDown();
     }
 
-    function acceptSelected() {
-        acSource.acceptSelected()
+    function acceptSelected(tryExpandAsPreset) {
+        acSource.acceptSelected(tryExpandAsPreset)
     }
 
     function hasSelectedCompletion() {
@@ -150,12 +151,16 @@ Flickable {
     }
 
     function submitCurrentKeyword() {
+        var result = false;
         var tagText = getEditedText();
         console.debug("Submit current keyword: " + tagText)
 
         if (raiseAddTag(tagText)) {
             nextTagTextInput.text = '';
+            result = true
         }
+
+        return result
     }
 
     function onBeforeClose() {
@@ -324,7 +329,7 @@ Flickable {
                     return array.length;
                 }
 
-                function acceptCompletion(completion) {
+                function acceptCompletion(completion, expandPreset) {
                     var start = getCurrentWordStart()
                     var end = getCurrentWordEnd()
                     var currText = nextTagTextInput.text;
@@ -335,7 +340,11 @@ Flickable {
                     nextTagTextInput.cursorPosition = newCursorPosition
 
                     if (getWordsCount() === 1) {
-                        submitCurrentKeyword()
+                        if (submitCurrentKeyword()) {
+                            if (expandPreset) {
+                                expandLastAsPreset()
+                            }
+                        }
                     }
                 }
 
@@ -411,7 +420,13 @@ Flickable {
                             completionCancel()
                         }
                     } else if (autoCompleteActive && (event.key === Qt.Key_Return)) {
-                        acceptSelected();
+                        var tryExpandPreset = false;
+                        if (event.modifiers & Qt.ControlModifier) {
+                            tryExpandPreset = true
+                        }
+
+                        acceptSelected(tryExpandPreset);
+
                         if (hasSelectedCompletion()) {
                             event.accepted = true
                         }

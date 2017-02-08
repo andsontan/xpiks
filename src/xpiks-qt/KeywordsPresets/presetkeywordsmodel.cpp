@@ -44,6 +44,32 @@ namespace KeywordsPresets {
         return hasName;
     }
 
+    bool PresetKeywordsModel::tryFindSinglePresetByName(const QString &name, int &index) const {
+        LOG_INFO << name;
+        int foundIndex = -1;
+        size_t size = m_PresetsList.size();
+        bool anyError = false;
+
+        for (size_t i = 0; i < size; ++i) {
+            PresetModel *preset = m_PresetsList[i];
+            if (preset->m_PresetName.contains(name, Qt::CaseInsensitive)) {
+                if (foundIndex != -1) {
+                    anyError = true;
+                    break;
+                } else {
+                    foundIndex = (int)i;
+                }
+            }
+        }
+
+        if (!anyError) {
+            index = foundIndex;
+            LOG_INFO << "found index" << foundIndex;
+        }
+
+        return !anyError;
+    }
+
     void PresetKeywordsModel::removeItem(int row) {
         if (row < 0 || row >= getPresetsCount()){
             return;

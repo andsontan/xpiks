@@ -67,14 +67,14 @@ namespace AutoComplete {
         Q_INVOKABLE bool moveSelectionUp();
         Q_INVOKABLE bool moveSelectionDown();
         Q_INVOKABLE void cancelCompletion() { setIsActive(false); emit dismissPopupRequested(); }
-        Q_INVOKABLE void acceptSelected();
+        Q_INVOKABLE void acceptSelected(bool tryExpandPreset=false);
         Q_INVOKABLE int getCount() const { return qMax(m_CompletionList.length(), m_LastGeneratedCompletions.length()); }
-        Q_INVOKABLE bool hasSelectedCompletion() { return (0 <= m_SelectedIndex) && (m_SelectedIndex < m_CompletionList.length()); }
+        Q_INVOKABLE bool hasSelectedCompletion() const { return (0 <= m_SelectedIndex) && (m_SelectedIndex < m_CompletionList.length()); }
 
     signals:
         void selectedIndexChanged(int index);
         void dismissPopupRequested();
-        void completionAccepted(const QString &completion);
+        void completionAccepted(const QString &completion, bool expandPreset);
         void isActiveChanged(bool value);
 #ifdef INTEGRATION_TESTS
         void completionsUpdated();

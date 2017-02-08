@@ -717,6 +717,10 @@ Rectangle {
                             combinedArtworks.pasteKeywords(keywordsList)
                         }
 
+                        function expandLastKeywordAsPreset() {
+                            combinedArtworks.expandLastKeywordAsPreset();
+                        }
+
                         EditableTags {
                             id: flv
                             objectName: "keywordsInput"
@@ -791,6 +795,10 @@ Rectangle {
                             onCompletionRequested: {
                                 helpersWrapper.autoCompleteKeyword(prefix,
                                                                    keywordsWrapper.keywordsModel)
+                            }
+
+                            onExpandLastAsPreset: {
+                                keywordsWrapper.expandLastKeywordAsPreset()
                             }
 
                             onRightClickedInside: {

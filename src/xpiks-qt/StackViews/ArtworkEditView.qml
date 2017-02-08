@@ -737,6 +737,10 @@ Rectangle {
                                 artworkProxy.pasteKeywords(keywords)
                             }
 
+                            function expandLastKeywordAsPreset() {
+                                artworkProxy.expandLastKeywordAsPreset();
+                            }
+
                             EditableTags {
                                 id: flv
                                 anchors.fill: parent
@@ -804,6 +808,10 @@ Rectangle {
                                 onCompletionRequested: {
                                     helpersWrapper.autoCompleteKeyword(prefix,
                                                                        artworkProxy.getBasicModel())
+                                }
+
+                                onExpandLastAsPreset: {
+                                    keywordsWrapper.expandLastKeywordAsPreset()
                                 }
 
                                 onRightClickedInside: {

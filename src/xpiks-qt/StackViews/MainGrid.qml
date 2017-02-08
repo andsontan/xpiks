@@ -92,7 +92,7 @@ ColumnLayout {
                     text: name
                     onTriggered: {
                         var presetIndex = filteredPresetsModel.getOriginalIndex(index)
-                        artItemsModel.expandPreset(wordRightClickMenu.artworkIndex, wordRightClickMenu.keywordIndex,  presetIndex);
+                        artItemsModel.expandPreset(wordRightClickMenu.artworkIndex, wordRightClickMenu.keywordIndex, presetIndex);
                     }
                 }
             }
@@ -1129,6 +1129,10 @@ ColumnLayout {
                                                 artItemsModel.pasteKeywords(rowWrapper.getIndex(), keywords)
                                             }
 
+                                            function expandLastKeywordAsPreset() {
+                                                artItemsModel.expandLastAsPreset(rowWrapper.getIndex())
+                                            }
+
                                             EditableTags {
                                                 id: flv
                                                 model: rowWrapper.keywordsModel
@@ -1210,6 +1214,10 @@ ColumnLayout {
                                                 onCompletionRequested: {
                                                     helpersWrapper.autoCompleteKeyword(prefix,
                                                                                        rowWrapper.keywordsModel)
+                                                }
+
+                                                onExpandLastAsPreset: {
+                                                    keywordsWrapper.expandLastKeywordAsPreset()
                                                 }
 
                                                 onEditActivated: {

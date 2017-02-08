@@ -38,7 +38,7 @@ Item {
     width: 200
     height: childrenRect.height
 
-    signal itemSelected(string completion);
+    signal itemSelected(string completion, bool expandPreset);
 
     function openPopup() {
         completeBox.state = "dropDown"
@@ -53,7 +53,7 @@ Item {
     Connections {
         target: autoCompleteSource
         onDismissPopupRequested: closePopup()
-        onCompletionAccepted: itemSelected(completion)
+        onCompletionAccepted: itemSelected(completion, expandPreset)
         onSelectedIndexChanged: dropDownItems.positionViewAtIndex(autoCompleteSource.selectedIndex, ListView.Contain)
     }
 

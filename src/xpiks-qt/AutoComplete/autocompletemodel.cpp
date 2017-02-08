@@ -54,11 +54,11 @@ namespace AutoComplete {
         return canMove;
     }
 
-    void AutoCompleteModel::acceptSelected() {
-        LOG_DEBUG << "Selected index:" << m_SelectedIndex;
+    void AutoCompleteModel::acceptSelected(bool tryExpandPreset) {
+        LOG_DEBUG << "Selected index:" << m_SelectedIndex << "expand preset" << tryExpandPreset;
 
         if (0 <= m_SelectedIndex && m_SelectedIndex < m_CompletionList.length()) {
-            emit completionAccepted(m_CompletionList.at(m_SelectedIndex));
+            emit completionAccepted(m_CompletionList.at(m_SelectedIndex), tryExpandPreset);
         }
 
         emit dismissPopupRequested();

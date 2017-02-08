@@ -176,6 +176,7 @@ namespace Models {
         Q_INVOKABLE bool hasTitleWordSpellError(const QString &word);
         Q_INVOKABLE bool hasDescriptionWordSpellError(const QString &word);
         Q_INVOKABLE void expandPreset(int keywordIndex, int presetIndex);
+        Q_INVOKABLE void expandLastKeywordAsPreset();
         Q_INVOKABLE void addPreset(int presetIndex);
         Q_INVOKABLE void initSuggestion();
 

@@ -280,6 +280,10 @@ namespace Models {
         }
     }
 
+    void CombinedArtworksModel::expandLastKeywordAsPreset() {
+        doExpandLastKeywordAsPreset();
+    }
+
     void CombinedArtworksModel::addPreset(int presetIndex) {
         if (doAddPreset(presetIndex)) {
             setKeywordsModified(true);

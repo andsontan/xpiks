@@ -44,6 +44,7 @@ namespace KeywordsPresets {
         bool tryGetPreset(int presetIndex, QStringList &keywords);
         void setName(int presetIndex, const QString &name);
         bool isPresetName(const QString &name) const;
+        bool tryFindSinglePresetByName(const QString &name, int &index) const;
 
     private:
         enum PresetKeywords_Roles {

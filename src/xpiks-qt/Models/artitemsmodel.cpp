@@ -580,6 +580,25 @@ namespace Models {
         }
     }
 
+    void ArtItemsModel::expandLastAsPreset(int metadataIndex) {
+        LOG_INFO << "item" << metadataIndex;
+
+        if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            auto *basicModel = metadata->getBasicModel();
+            int keywordIndex = basicModel->getKeywordsCount() - 1;
+            QString lastKeyword = basicModel->retrieveKeyword(keywordIndex);
+
+            auto *presetsModel = m_CommandManager->getPresetsModel();
+            int presetIndex = -1;
+            if (presetsModel->tryFindSinglePresetByName(lastKeyword, presetIndex)) {
+                std::shared_ptr<Commands::ExpandPresetCommand> expandPresetCommand(new Commands::ExpandPresetCommand(MetadataElement(metadata, metadataIndex), presetIndex, keywordIndex));
+                std::shared_ptr<Commands::ICommandResult> result = m_CommandManager->processCommand(expandPresetCommand);
+                Q_UNUSED(result);
+            }
+        }
+    }
+
     void ArtItemsModel::addPreset(int metadataIndex, int presetIndex) {
         LOG_INFO << "item" << metadataIndex << "preset" << presetIndex;
 

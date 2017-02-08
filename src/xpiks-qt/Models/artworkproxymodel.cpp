@@ -234,6 +234,10 @@ namespace Models {
         doExpandPreset(keywordIndex, presetIndex);
     }
 
+    void ArtworkProxyModel::expandLastKeywordAsPreset() {
+        doExpandLastKeywordAsPreset();
+    }
+
     void ArtworkProxyModel::addPreset(int presetIndex) {
         doAddPreset(presetIndex);
     }
