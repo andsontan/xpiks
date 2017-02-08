@@ -24,7 +24,7 @@
 #include <QThread>
 #include "libraryqueryworker.h"
 #include "../Common/defines.h"
-#define MAX_LOCAL_RESULTS 100
+#define MAX_LOCAL_RESULTS 200
 
 namespace Suggestion {
     LocalLibraryQueryEngine::LocalLibraryQueryEngine(int engineID, LocalLibrary *localLibrary):
