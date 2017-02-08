@@ -125,14 +125,11 @@ Item {
         Rectangle {
             id: dialogWindow
             property bool isTooNarrow: parent.width <= 1100
-            width: Math.max(900, parent.width - 200)
-            anchors.top: parent.top
-            anchors.topMargin: 20
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 20
+            width: Math.max(900, Math.min(1100, parent.width - 200))
+            height: Math.min(parent.height - 40, 700)
             color: Colors.popupBackgroundColor
-            anchors.horizontalCenter: parent.horizontalCenter
-            Component.onCompleted: anchors.horizontalCenter = undefined
+            anchors.centerIn: parent
+            Component.onCompleted: anchors.centerIn = undefined
             z: 1000
 
             Item {
