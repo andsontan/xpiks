@@ -42,6 +42,7 @@ Rectangle {
     property var keywordsModel
     property bool wasLeftSideCollapsed
     property bool listViewEnabled: true
+    property bool canShowChangesSaved: false
 
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
@@ -54,6 +55,8 @@ Rectangle {
         if (itemIndex === artworkIndex) { return }
         if ((itemIndex < 0) || (itemIndex >= rosterListView.count)) { return }
 
+        canShowChangesSaved = false
+        changesText.visible = false
         closeAutoComplete()
 
         var originalIndex = filteredArtItemsModel.getOriginalIndex(itemIndex)
@@ -72,6 +75,8 @@ Rectangle {
 
         titleTextInput.forceActiveFocus()
         titleTextInput.cursorPosition = titleTextInput.text.length
+
+        savedTimer.start()
     }
 
     function closePopup() {
@@ -93,6 +98,22 @@ Rectangle {
     function closeAutoComplete() {
         if (typeof artworkEditComponent.autoCompleteBox !== "undefined") {
             artworkEditComponent.autoCompleteBox.closePopup()
+        }
+    }
+
+    Timer {
+        id: savedTimer
+        interval: 1000
+        running: true
+        repeat: false
+        onTriggered: {
+            canShowChangesSaved = true
+        }
+    }
+
+    function updateChangesText() {
+        if (canShowChangesSaved) {
+            changesText.visible = true
         }
     }
 
@@ -130,6 +151,7 @@ Rectangle {
                     onTriggered: {
                         var presetIndex = filteredPresetsModel.getOriginalIndex(index)
                         artworkProxy.expandPreset(wordRightClickMenu.keywordIndex, presetIndex);
+                        updateChangesText()
                     }
                 }
             }
@@ -154,6 +176,7 @@ Rectangle {
                     text: name
                     onTriggered: {
                         artworkProxy.addPreset(index);
+                        updateChangesText()
                     }
                 }
             }
@@ -188,7 +211,10 @@ Rectangle {
         title: i18.n + qsTr("Confirmation")
         text: i18.n + qsTr("Clear all keywords?")
         standardButtons: StandardButton.Yes | StandardButton.No
-        onYes: filteredArtItemsModel.clearKeywords(artworkEditComponent.artworkIndex)
+        onYes: {
+            filteredArtItemsModel.clearKeywords(artworkEditComponent.artworkIndex)
+            updateChangesText()
+        }
     }
 
     // Keys.onEscapePressed: closePopup()
@@ -299,6 +325,17 @@ Rectangle {
                             flv.onBeforeClose()
                             closePopup()
                         }
+                    }
+
+                    Item {
+                        width: 10
+                    }
+
+                    StyledText {
+                        id: changesText
+                        text: i18.n + qsTr("All changes are saved.")
+                        isActive: false
+                        visible: false
                     }
 
                     Item {
@@ -522,6 +559,7 @@ Rectangle {
 
                                         previousText = text
                                         artworkProxy.title = text
+                                        updateChangesText()
                                     }
 
                                     onActionRightClicked: {
@@ -641,6 +679,7 @@ Rectangle {
 
                                         previousText = text
                                         artworkProxy.description = text
+                                        updateChangesText()
                                     }
 
                                     onActionRightClicked: {
@@ -723,22 +762,27 @@ Rectangle {
 
                             function removeKeyword(index) {
                                 artworkProxy.removeKeywordAt(index)
+                                updateChangesText()
                             }
 
                             function removeLastKeyword() {
                                 artworkProxy.removeLastKeyword()
+                                updateChangesText()
                             }
 
                             function appendKeyword(keyword) {
                                 artworkProxy.appendKeyword(keyword)
+                                updateChangesText()
                             }
 
                             function pasteKeywords(keywords) {
                                 artworkProxy.pasteKeywords(keywords)
+                                updateChangesText()
                             }
 
                             function expandLastKeywordAsPreset() {
                                 artworkProxy.expandLastKeywordAsPreset();
+                                updateChangesText()
                             }
 
                             EditableTags {
@@ -761,6 +805,7 @@ Rectangle {
                                         var callbackObject = {
                                             onSuccess: function(replacement) {
                                                 artworkProxy.editKeyword(kw.delegateIndex, replacement)
+                                                updateChangesText()
                                             },
                                             onClose: function() {
                                                 flv.activateEdit()
@@ -850,6 +895,7 @@ Rectangle {
                                         Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
                                                             componentParent,
                                                             {})
+                                        updateChangesText()
                                     }
                                 }
                             }
@@ -871,6 +917,7 @@ Rectangle {
                                         var callbackObject = {
                                             promoteKeywords: function(keywords) {
                                                 artworkProxy.pasteKeywords(keywords)
+                                                updateChangesText()
                                             }
                                         }
 
