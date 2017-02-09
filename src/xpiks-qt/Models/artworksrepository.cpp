@@ -153,9 +153,14 @@ namespace Models {
                 LOG_INFO << "Adding new directory" << absolutePath << "with index" << m_DirectoriesList.length();
                 m_DirectoriesList.append(absolutePath);
                 m_DirectoriesSelectedHash.insert(absolutePath, 0);
-                m_CommandManager->addToRecentDirectories(absolutePath);
                 dirHashIterator = m_DirectoriesHash.insert(absolutePath, 0);
                 emit artworksSourcesCountChanged();
+#ifdef CORE_TESTS
+                if (m_CommandManager != nullptr)
+#endif
+                {
+                    m_CommandManager->addToRecentDirectories(absolutePath);
+                }
             } else {
                 occurances = dirHashIterator.value();
             }
@@ -216,7 +221,9 @@ namespace Models {
 
     void ArtworksRepository::watchFilePaths(const QStringList &filePaths) {
 #ifndef CORE_TESTS
-        m_FilesWatcher.addPaths(filePaths);
+        if (!filePaths.empty()) {
+            m_FilesWatcher.addPaths(filePaths);
+        }
 #else
         Q_UNUSED(filePaths);
 #endif
@@ -224,7 +231,9 @@ namespace Models {
 
     void ArtworksRepository::unwatchFilePaths(const QStringList &filePaths) {
 #ifndef CORE_TESTS
-        m_FilesWatcher.removePaths(filePaths);
+        if (!filePaths.empty()) {
+            m_FilesWatcher.removePaths(filePaths);
+        }
 #else
         Q_UNUSED(filePaths);
 #endif

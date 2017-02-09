@@ -89,7 +89,10 @@ namespace Commands {
             artworkRepository->cleanupEmptyDirectories();
             artworkRepository->updateCountsForExistingDirectories();
             artworkRepository->unwatchFilePaths(removedItemsFilepathes);
-            artworkRepository->unwatchFilePaths(removedAttachedVectors);
+
+            QStringList notEmptyVectors = removedAttachedVectors;
+            notEmptyVectors.removeAll("");
+            artworkRepository->unwatchFilePaths(notEmptyVectors);
 
             artItemsModel->updateModifiedCount();
 
