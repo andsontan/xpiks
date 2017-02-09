@@ -556,6 +556,13 @@ namespace MetadataIO {
     bool Exiv2ReadingWorker::readMetadata(Models::ArtworkMetadata *artwork, ImportDataResult &importResult) {
         const QString &filepath = artwork->getFilepath();
 
+        QImageReader imageReader(filepath);
+        QString format = QString::fromLatin1(imageReader.format().toLower());
+        if (format != QLatin1String("jpeg") &&
+            format != QLatin1String("tiff")) {
+            return false;
+        }
+
 #if defined(Q_OS_WIN)
         Exiv2::Image::AutoPtr image = Exiv2::ImageFactory::open(filepath.toStdWString());
 #else
@@ -586,9 +593,8 @@ namespace MetadataIO {
         importResult.FileSize = fi.size();
 
         Models::ImageArtwork *imageArtwork = dynamic_cast<Models::ImageArtwork*>(artwork);
-        if (imageArtwork != NULL) {
-            QImageReader reader(filepath);
-            importResult.ImageSize = reader.size();
+        if (imageArtwork != NULL) {            
+            importResult.ImageSize = imageReader.size();
         }
 
         return true;

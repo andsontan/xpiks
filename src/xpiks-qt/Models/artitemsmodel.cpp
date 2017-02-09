@@ -25,6 +25,7 @@
 #include <QImageReader>
 #include <QList>
 #include <QHash>
+#include <QSet>
 #include <memory>
 #include "artitemsmodel.h"
 #include "metadataelement.h"
@@ -43,6 +44,7 @@
 #include "../QMLExtensions/colorsmodel.h"
 #include "imageartwork.h"
 #include "../Commands/expandpresetcommand.h"
+#include "../Helpers/constants.h"
 
 namespace Models {
     ArtItemsModel::ArtItemsModel(QObject *parent):
@@ -947,24 +949,23 @@ namespace Models {
         filenames.reserve(rawFilenames.length());
         vectors.reserve(rawFilenames.length());
 
+        QSet<QString> knownImageSuffixes;
+        knownImageSuffixes << "jpg" << "jpeg" << "tiff";
+
         foreach(const QString &filepath, rawFilenames) {
-            QImageReader imageReader(filepath);
+            QFileInfo fi(filepath);
+            QString suffix = fi.completeSuffix().toLower();
 
-            QString format = QString::fromLatin1(imageReader.format().toLower());
-
-            if (format == QLatin1String("jpeg") ||
-                format == QLatin1String("tiff")) {
+            if (knownImageSuffixes.contains(suffix)) {
                 filenames.append(filepath);
-            } else if (format == QLatin1String("png")) {
+            } else if (suffix == QLatin1String("png")) {
                 LOG_WARNING << "PNG is unsupported file format";
             } else {
-                QFileInfo fi(filepath);
-                QString suffix = fi.completeSuffix().toLower();
                 if (suffix == QLatin1String("eps") ||
                     suffix == QLatin1String("ai")) {
                     vectors.append(filepath);
-                } else {
-                    LOG_WARNING << "Unsupported format:" << format << "of file" << filepath;
+                } else if (suffix != QLatin1String(Constants::METADATA_BACKUP_SUFFIX)) {
+                    LOG_WARNING << "Unsupported extension of file" << filepath;
                 }
             }
         }
