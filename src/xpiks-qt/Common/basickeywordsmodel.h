@@ -111,7 +111,6 @@ namespace Common {
         void unlockKeywords() { m_KeywordsLock.unlock(); }
 
     public:
-        // ISPELLCHECKABLE
         virtual QString retrieveKeyword(int wordIndex);
         virtual QStringList getKeywords();
         virtual void setKeywordsSpellCheckResults(const std::vector<std::shared_ptr<SpellCheck::SpellCheckQueryItem> > &items);

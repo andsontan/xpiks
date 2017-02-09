@@ -324,7 +324,8 @@ HEADERS += \
     Translation/translationquery.h \
     Models/uimanager.h \
     Plugins/sandboxeddependencies.h \
-    Commands/expandpresetcommand.h
+    Commands/expandpresetcommand.h \
+    QuickBuffer/icurrenteditable.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
