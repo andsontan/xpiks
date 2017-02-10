@@ -30,6 +30,7 @@
 #include "../../xpiks-qt/Models/artworksrepository.h"
 #include "../../xpiks-qt/QMLExtensions/colorsmodel.h"
 #include "../../xpiks-qt/Warnings/warningsservice.h"
+#include "../../xpiks-qt/Models/artworkproxymodel.h"
 #include "../../xpiks-qt/UndoRedo/undoredomanager.h"
 #include "../../xpiks-qt/Helpers/clipboardhelper.h"
 #include "../../xpiks-qt/Commands/commandmanager.h"
@@ -158,6 +159,7 @@ int main(int argc, char *argv[]) {
     Models::DeleteKeywordsViewModel deleteKeywordsModel;
     Translation::TranslationManager translationManager;
     Translation::TranslationService translationService(translationManager);
+    Models::ArtworkProxyModel artworkProxy;
 
     Conectivity::UpdateService updateService(&settingsModel);
 
@@ -198,6 +200,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&presetsModelConfig);
     commandManager.InjectDependency(&translationManager);
     commandManager.InjectDependency(&translationService);
+    commandManager.InjectDependency(&artworkProxy);
 
     commandManager.ensureDependenciesInjected();
 
