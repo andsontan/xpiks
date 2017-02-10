@@ -246,6 +246,7 @@ namespace MetadataIO {
     }
 
     void MetadataIOCoordinator::initializeImport(int itemsCount) {
+        LOG_INFO << itemsCount;
         m_CanProcessResults = false;
         m_IgnoreBackupsAtImport = false;
         m_IsImportInProgress = true;
@@ -283,8 +284,8 @@ namespace MetadataIO {
 
         afterImportHandler(itemsToRead, ignoreBackups);
 
-        LOG_DEBUG << "Metadata import finished";
         emit metadataReadingFinished();
+        LOG_DEBUG << "Metadata import finished";
     }
 
     void MetadataIOCoordinator::afterImportHandler(const QVector<Models::ArtworkMetadata*> &itemsToRead, bool ignoreBackups) {

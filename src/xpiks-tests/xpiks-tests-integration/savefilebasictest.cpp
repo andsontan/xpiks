@@ -24,14 +24,12 @@ int SaveFileBasicTest::doTest() {
     QList<QUrl> files;
     files << getFilePathForTest("images-for-tests/pixmap/seagull.jpg");
 
-    int addedCount = artItemsModel->addLocalArtworks(files);
-
-    VERIFY(addedCount == files.length(), "Failed to add file");
-
     MetadataIO::MetadataIOCoordinator *ioCoordinator = m_CommandManager->getMetadataIOCoordinator();
     SignalWaiter waiter;
-    QObject::connect(ioCoordinator, SIGNAL(metadataReadingFinished()), &waiter, SIGNAL(finished()));
+    QObject::connect(ioCoordinator, SIGNAL(metadataReadingFinished()), &waiter, SIGNAL(finished()));    
 
+    int addedCount = artItemsModel->addLocalArtworks(files);
+    VERIFY(addedCount == files.length(), "Failed to add file");
     ioCoordinator->continueReading(true);
 
     if (!waiter.wait(20)) {
@@ -66,7 +64,6 @@ int SaveFileBasicTest::doTest() {
     artItemsModel->removeSelectedArtworks(QVector<int>() << 0);
 
     addedCount = artItemsModel->addLocalArtworks(files);
-
     VERIFY(addedCount == 1, "Failed to add file");
 
     QObject::connect(ioCoordinator, SIGNAL(metadataReadingFinished()), &waiter, SIGNAL(finished()));

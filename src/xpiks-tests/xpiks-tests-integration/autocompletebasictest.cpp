@@ -27,14 +27,12 @@ int AutoCompleteBasicTest::doTest() {
     QList<QUrl> files;
     files << getFilePathForTest("images-for-tests/vector/026.jpg");
 
-    int addedCount = artItemsModel->addLocalArtworks(files);
-
-    VERIFY(addedCount == files.length(), "Failed to add file");
-
     MetadataIO::MetadataIOCoordinator *ioCoordinator = m_CommandManager->getMetadataIOCoordinator();
     SignalWaiter waiter;
     QObject::connect(ioCoordinator, SIGNAL(metadataReadingFinished()), &waiter, SIGNAL(finished()));
 
+    int addedCount = artItemsModel->addLocalArtworks(files);
+    VERIFY(addedCount == files.length(), "Failed to add file");
     ioCoordinator->continueReading(true);
 
     if (!waiter.wait(20)) {

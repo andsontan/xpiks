@@ -114,6 +114,8 @@ std::shared_ptr<Commands::ICommandResult> Commands::AddArtworksCommand::execute(
                 Models::ArtworkMetadata *metadata = artItemsModel->createMetadata(filename);
                 commandManager->connectArtworkSignals(metadata);
 
+                LOG_INTEGRATION_TESTS << "Added file:" << filename;
+
                 artItemsModel->appendMetadata(metadata);
                 artworksToImport.append(metadata);
                 filesToWatch.append(filename);
