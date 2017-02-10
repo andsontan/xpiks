@@ -87,7 +87,6 @@ namespace SpellCheck {
         SpellCheckWorker *m_SpellCheckWorker;
         volatile bool m_RestartRequired;
         QString m_DictionariesPath;
-        int m_UserDictWordsNumber;
     };
 }
 

@@ -44,6 +44,7 @@ namespace SpellCheck {
 
     public:
         QStringList retrieveCorrections(const QString &word);
+        int getUserDictionarySize() const { return m_UserDictionary.size(); }
 
     protected:
         virtual bool initWorker() override;

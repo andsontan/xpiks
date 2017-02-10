@@ -1167,6 +1167,8 @@ namespace Models {
     }
 
     void ArtItemsModel::userDictUpdateHandler(const QStringList &keywords) {
+        LOG_DEBUG << "#";
+        LOG_INTEGRATION_TESTS << keywords;
         size_t size = m_ArtworkList.size();
 
         Q_ASSERT(!keywords.isEmpty());

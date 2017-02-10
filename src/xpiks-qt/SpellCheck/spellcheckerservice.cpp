@@ -29,8 +29,7 @@
 namespace SpellCheck {
     SpellCheckerService::SpellCheckerService():
         m_SpellCheckWorker(NULL),
-        m_RestartRequired(false),
-        m_UserDictWordsNumber(0)
+        m_RestartRequired(false)
     {}
 
     SpellCheckerService::~SpellCheckerService() {
@@ -187,7 +186,11 @@ namespace SpellCheck {
     }
 
     int SpellCheckerService::getUserDictWordsNumber() {
-        return m_UserDictWordsNumber;
+        if (m_SpellCheckWorker != nullptr) {
+            return m_SpellCheckWorker->getUserDictionarySize();
+        } else {
+            return 0;
+        }
     }
 
     void SpellCheckerService::cancelCurrentBatch() {
@@ -211,7 +214,7 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::addWordToUserDictionary(const QString &word) {
-        LOG_DEBUG << "#";
+        LOG_INFO << word;
         m_SpellCheckWorker->submitItem(std::shared_ptr<ISpellCheckItem>(new AddWordToUserDictItem(word)));
     }
 
@@ -238,7 +241,6 @@ namespace SpellCheck {
 
     void SpellCheckerService::wordsNumberChangedHandler(int number) {
         LOG_INFO << "Size of dictionary:" << number << "word(s)";
-        m_UserDictWordsNumber = number;
         emit userDictWordsNumberChanged();
     }
 }

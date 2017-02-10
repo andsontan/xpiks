@@ -169,6 +169,8 @@ namespace SpellCheck {
     }
 
     void SpellCheckWorker::processChangeUserDict(std::shared_ptr<AddWordToUserDictItem> &item) {
+        LOG_INTEGRATION_TESTS << item->getKeywordsToAdd();
+
         if (m_UserDictionaryPath.isEmpty()) {
             LOG_WARNING << "User dictionary not set.";
         }
@@ -309,7 +311,6 @@ namespace SpellCheck {
 
         m_UserDictionary.clear();
         emit userDictCleared();
-        signalUserDictWordsCount();
 
         QFile userDictonaryFile(m_UserDictionaryPath);
         if (userDictonaryFile.open(QIODevice::ReadWrite)) {
@@ -329,6 +330,8 @@ namespace SpellCheck {
                 wordsToAdd.insert(word);
             }
         }
+
+        LOG_INTEGRATION_TESTS << "Real words to add:" << wordsToAdd;
 
         m_UserDictionary.unite(wordsToAdd);
         auto newWordsList = wordsToAdd.toList();
