@@ -67,7 +67,6 @@ int SaveWithEmptyTitleTest::doTest() {
 
     VERIFY(addedCount == 1, "Failed to add file");
 
-    QObject::connect(ioCoordinator, SIGNAL(metadataReadingFinished()), &waiter, SIGNAL(finished()));
     ioCoordinator->continueReading(true);
 
     if (!waiter.wait(20)) {
