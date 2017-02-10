@@ -61,8 +61,8 @@ namespace Models {
 #endif
 
     public:
-        Q_INVOKABLE int getOriginalIndex(int index);
-        Q_INVOKABLE int getDerivedIndex(int originalIndex);
+        Q_INVOKABLE int getOriginalIndex(int index) const;
+        Q_INVOKABLE int getDerivedIndex(int originalIndex) const;
 
         Q_INVOKABLE void invertSelectionArtworks() { invertFilteredItemsSelected(); }
         Q_INVOKABLE void selectFilteredArtworks() { setFilteredItemsSelected(true); }
@@ -99,6 +99,8 @@ namespace Models {
 
         Q_INVOKABLE bool hasTitleWordSpellError(int index, const QString &word);
         Q_INVOKABLE bool hasDescriptionWordSpellError(int index, const QString &word);
+
+        Q_INVOKABLE void registerCurrentItem(int index) const;
 
     public slots:
         void itemSelectedChanged(bool value);

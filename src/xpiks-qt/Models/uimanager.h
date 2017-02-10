@@ -22,13 +22,18 @@
 #ifndef UIMANAGER_H
 #define UIMANAGER_H
 
+#include <memory>
 #include <QSet>
 #include <QHash>
 #include <QObject>
 #include <QString>
 #include <QStringList>
+#include "../QuickBuffer/icurrenteditable.h"
 
 namespace Models {
+    class ArtworkMetadata;
+    class ArtworkProxyBase;
+
     class UIManager : public QObject
     {
         Q_OBJECT
@@ -41,8 +46,15 @@ namespace Models {
         int generateNextTabID() { int id = m_TabID++; return id; }
 
     public:
+        void registerCurrentItem(ArtworkMetadata *artwork);
+        void registerCurrentItem(ArtworkProxyBase *artworkProxy);
+
+    public:
         QStringList getTabsList() const { return m_TabsList; }
         QStringList getTabsIcons() const { return m_TabsIconsList; }
+
+    public:
+        Q_INVOKABLE void clearCurrentItem();
 
     public:
         void addSystemTab(const QString tabIconComponent, const QString &tabComponent);
@@ -55,6 +67,7 @@ namespace Models {
         void tabsIconsChanged();
 
     private:
+        std::shared_ptr<QuickBuffer::ICurrentEditable> m_CurrentEditable;
         QHash<int, QSet<int> > m_PluginIDToTabIDs;
         QHash<int, int> m_TabsIDsToIndex;
         volatile int m_TabID;

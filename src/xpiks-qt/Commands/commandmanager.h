@@ -69,6 +69,8 @@ namespace Models {
     class LanguagesModel;
     class FindAndReplaceModel;
     class DeleteKeywordsViewModel;
+    class UIManager;
+    class ArtworkProxyBase;
 }
 
 namespace Suggestion {
@@ -155,6 +157,7 @@ namespace Commands {
             m_PresetsModelConfig(NULL),
             m_TranslationService(NULL),
             m_TranslationManager(NULL),
+            m_UIManager(NULL),
             m_AfterInitCalled(false)
         { }
 
@@ -194,6 +197,7 @@ namespace Commands {
         void InjectDependency(KeywordsPresets::PresetKeywordsModelConfig *presetsModelConfig);
         void InjectDependency(Translation::TranslationService *translationService);
         void InjectDependency(Translation::TranslationManager *translationManager);
+        void InjectDependency(Models::UIManager *uiManager);
 
     public:
         virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<ICommandBase> &command)
@@ -270,6 +274,10 @@ namespace Commands {
 #endif
 
     public:
+        void registerCurrentItem(Models::ArtworkMetadata *artworkMetadata) const;
+        void registerCurrentItem(Models::ArtworkProxyBase *artworkProxy) const;
+
+    public:
         // methods for getters
         virtual Models::ArtworksRepository *getArtworksRepository() const { return m_ArtworksRepository; }
         virtual Models::ArtItemsModel *getArtItemsModel() const { return m_ArtItemsModel; }
@@ -334,6 +342,7 @@ namespace Commands {
         KeywordsPresets::PresetKeywordsModelConfig *m_PresetsModelConfig;
         Translation::TranslationService *m_TranslationService;
         Translation::TranslationManager *m_TranslationManager;
+        Models::UIManager *m_UIManager;
 
         QVector<Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;

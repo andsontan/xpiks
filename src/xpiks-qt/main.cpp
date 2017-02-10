@@ -390,6 +390,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&presetsModelConfig);
     commandManager.InjectDependency(&translationManager);
     commandManager.InjectDependency(&translationService);
+    commandManager.InjectDependency(&uiManager);
 
     artworkProxyModel.setCommandManager(&commandManager);
     autoCompleteModel.setCommandManager(&commandManager);

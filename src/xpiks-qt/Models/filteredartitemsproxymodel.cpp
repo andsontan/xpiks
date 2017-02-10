@@ -65,14 +65,14 @@ namespace Models {
         m_CommandManager->reportUserAction(Conectivity::UserAction::SpellCheck);
     }
 
-    int FilteredArtItemsProxyModel::getOriginalIndex(int index) {
+    int FilteredArtItemsProxyModel::getOriginalIndex(int index) const {
         QModelIndex originalIndex = mapToSource(this->index(index, 0));
         int row = originalIndex.row();
 
         return row;
     }
 
-    int FilteredArtItemsProxyModel::getDerivedIndex(int originalIndex) {
+    int FilteredArtItemsProxyModel::getDerivedIndex(int originalIndex) const {
         ArtItemsModel *artItemsModel = getArtItemsModel();
         QModelIndex index = mapFromSource(artItemsModel->index(originalIndex, 0));
         int row = index.row();
@@ -391,6 +391,20 @@ namespace Models {
         }
 
         return result;
+    }
+
+    void FilteredArtItemsProxyModel::registerCurrentItem(int index) const {
+        LOG_INFO << index;
+
+        if (0 <= index && index < rowCount()) {
+            int originalIndex = getOriginalIndex(index);
+            ArtItemsModel *artItemsModel = getArtItemsModel();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+
+            if (metadata != NULL) {
+                m_CommandManager->registerCurrentItem(metadata);
+            }
+        }
     }
 
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {

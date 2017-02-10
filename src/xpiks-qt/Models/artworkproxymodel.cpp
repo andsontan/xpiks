@@ -254,6 +254,11 @@ namespace Models {
         doInitSuggestion();
     }
 
+    void ArtworkProxyModel::registerAsCurrentItem() {
+        LOG_DEBUG << "#";
+        doRegisterAsCurrentItem();
+    }
+
     void ArtworkProxyModel::updateCurrentArtwork() {
         if (m_ArtworkOriginalIndex != -1) {
             m_CommandManager->updateArtworks(QVector<int>() << m_ArtworkOriginalIndex);

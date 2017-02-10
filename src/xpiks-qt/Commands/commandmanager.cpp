@@ -59,6 +59,7 @@
 #include "../Common/imetadataoperator.h"
 #include "../Translation/translationmanager.h"
 #include "../Translation/translationservice.h"
+#include "../Models/uimanager.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -218,6 +219,10 @@ void Commands::CommandManager::InjectDependency(Translation::TranslationManager 
     m_TranslationManager->setCommandManager(this);
 }
 
+void Commands::CommandManager::InjectDependency(Models::UIManager *uiManager) {
+    Q_ASSERT(uiManager != NULL); m_UIManager = uiManager;
+}
+
 std::shared_ptr<Commands::ICommandResult> Commands::CommandManager::processCommand(const std::shared_ptr<ICommandBase> &command)
 #ifndef CORE_TESTS
 const
@@ -341,6 +346,10 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_PresetsModelConfig != NULL);
     Q_ASSERT(m_TranslationService != NULL);
     Q_ASSERT(m_TranslationManager != NULL);
+
+#if !defined(INTEGRATION_TESTS) && !defined(CORE_TESTS)
+    Q_ASSERT(m_UIManager != NULL);
+#endif
 
 #ifndef INTEGRATION_TESTS
     Q_ASSERT(m_HelpersQmlWrapper != NULL);
@@ -824,5 +833,16 @@ void Commands::CommandManager::cleanup() {
     m_SettingsModel->resetToDefault();
     m_SpellCheckerService->clearUserDictionary();
 }
-
 #endif
+
+void Commands::CommandManager::registerCurrentItem(Models::ArtworkMetadata *artworkMetadata) const {
+    if (m_UIManager != nullptr) {
+        m_UIManager->registerCurrentItem(artworkMetadata);
+    }
+}
+
+void Commands::CommandManager::registerCurrentItem(Models::ArtworkProxyBase *artworkProxy) const {
+    if (m_UIManager != nullptr) {
+        m_UIManager->registerCurrentItem(artworkProxy);
+    }
+}

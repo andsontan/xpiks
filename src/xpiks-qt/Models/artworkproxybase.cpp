@@ -290,6 +290,11 @@ namespace Models {
 #endif
     }
 
+    void ArtworkProxyBase::doRegisterAsCurrentItem() {
+        LOG_DEBUG << "#";
+        m_CommandManager->registerCurrentItem(this);
+    }
+
     void ArtworkProxyBase::spellCheckKeywords() {
         auto *basicModel = getBasicMetadataModel();
         m_CommandManager->submitItemForSpellCheck(basicModel, Common::SpellCheckFlags::Keywords);

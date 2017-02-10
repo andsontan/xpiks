@@ -52,6 +52,7 @@ Rectangle {
         mainStackView.pop()
         combinedArtworks.resetModel()
         restoreLeftPane()
+        combinedArtworks.clearCurrentItem()
     }
 
     function restoreLeftPane() {
@@ -158,6 +159,8 @@ Rectangle {
 
     Component.onCompleted: {
         focus = true
+
+        combinedArtworks.registerAsCurrentItem()
 
         titleTextInput.forceActiveFocus()
         titleTextInput.cursorPosition = titleTextInput.text.length

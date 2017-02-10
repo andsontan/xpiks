@@ -180,6 +180,7 @@ namespace Models {
         Q_INVOKABLE void expandLastKeywordAsPreset();
         Q_INVOKABLE void addPreset(int presetIndex);
         Q_INVOKABLE void initSuggestion();
+        Q_INVOKABLE void registerAsCurrentItem();
 
     private:
         void processCombinedEditCommand();

@@ -64,6 +64,7 @@ Rectangle {
         var keywordsModel = filteredArtItemsModel.getBasicModel(itemIndex)
 
         artworkProxy.setSourceArtwork(metadata, originalIndex)
+        artworkProxy.registerAsCurrentItem()
 
         artworkEditComponent.artworkIndex = itemIndex
         artworkEditComponent.keywordsModel = keywordsModel
@@ -85,6 +86,7 @@ Rectangle {
         artworkProxy.resetModel()
         restoreLeftPane()
         settingsModel.saveArtworkEditUISettings()
+        uiManager.clearCurrentItem()
     }
 
     function restoreLeftPane() {
@@ -186,6 +188,7 @@ Rectangle {
     Component.onCompleted: {
         focus = true
 
+        artworkProxy.registerAsCurrentItem()
         titleTextInput.forceActiveFocus()
         titleTextInput.cursorPosition = titleTextInput.text.length
     }

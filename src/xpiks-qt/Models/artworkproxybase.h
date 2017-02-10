@@ -78,6 +78,7 @@ namespace Models {
         bool doExpandLastKeywordAsPreset();
         bool doAddPreset(int presetIndex);
         void doInitSuggestion();
+        void doRegisterAsCurrentItem();
 
     private:
         void spellCheckKeywords();

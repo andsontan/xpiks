@@ -294,6 +294,10 @@ namespace Models {
         doInitSuggestion();
     }
 
+    void CombinedArtworksModel::registerAsCurrentItem() {
+        doRegisterAsCurrentItem();
+    }
+
     void CombinedArtworksModel::processCombinedEditCommand() {
         auto &artworksList = getArtworksList();
 

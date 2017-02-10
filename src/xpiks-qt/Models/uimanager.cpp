@@ -21,6 +21,9 @@
 
 #include "uimanager.h"
 #include "../Common/defines.h"
+#include "../QuickBuffer/currenteditableartwork.h"
+#include "../QuickBuffer/currenteditableproxyartwork.h"
+#include "artworkmetadata.h"
 
 namespace Models {
     UIManager::UIManager(QObject *parent) :
@@ -29,10 +32,27 @@ namespace Models {
     {
     }
 
+    void UIManager::registerCurrentItem(ArtworkMetadata *artwork) {
+        Q_ASSERT(artwork != nullptr);
+        LOG_INFO << artwork->getFilepath();
+        m_CurrentEditable.reset(new QuickBuffer::CurrentEditableArtwork(artwork));
+    }
+
+    void UIManager::registerCurrentItem(ArtworkProxyBase *artworkProxy) {
+        Q_ASSERT(artworkProxy != nullptr);
+        m_CurrentEditable.reset(new QuickBuffer::CurrentEditableProxyArtwork(artworkProxy));
+    }
+
+    void UIManager::clearCurrentItem() {
+        LOG_DEBUG << "#";
+        m_CurrentEditable.reset();
+    }
+
     void UIManager::addSystemTab(const QString tabIconComponent, const QString &tabComponent) {
         LOG_INFO << "icon" << tabIconComponent << "contents" << tabComponent;
         m_TabsList.append(tabComponent);
         m_TabsIconsList.append(tabIconComponent);
+        generateNextTabID();
     }
 
     int UIManager::addPluginTab(int pluginID, const QString tabIconComponent, const QString &tabComponent) {
