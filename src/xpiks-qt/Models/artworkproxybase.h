@@ -37,13 +37,16 @@ namespace Models {
     public:
         QString getDescription();
         QString getTitle();
+        QStringList getKeywords();
         int getKeywordsCount();
         virtual void setDescription(const QString &description);
         virtual void setTitle(const QString &title);
+        virtual void setKeywords(const QStringList &keywords);
 
     protected:
         virtual bool doSetDescription(const QString &description);
         virtual bool doSetTitle(const QString &title);
+        virtual void doSetKeywords(const QStringList &keywords);
 
         // TODO: virtual inheritance from qobject is not supported
     //signals:

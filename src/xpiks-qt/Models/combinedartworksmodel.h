@@ -100,15 +100,16 @@ namespace Models {
         virtual void acceptSuggestedKeywords(const QStringList &keywords);
 
     public:
-        void setKeywords(const QStringList &keywords) { m_CommonKeywordsModel.setKeywords(keywords); }
         virtual void setDescription(const QString &value) override {
             if (doSetDescription(value)) {
+                signalDescriptionChanged();
                 setDescriptionModified(true);
             }
         }
 
         virtual void setTitle(const QString &value) override {
             if (doSetTitle(value)) {
+                signalTitleChanged();
                 setTitleModified(true);
             }
         }

@@ -58,6 +58,14 @@ namespace Models {
         }
     }
 
+    void ArtworkProxyModel::setKeywords(const QStringList &keywords) {
+        ArtworkProxyBase::setKeywords(keywords);
+
+        if (m_ArtworkMetadata->isInitialized()) {
+            m_ArtworkMetadata->requestBackup();
+        }
+    }
+
     void ArtworkProxyModel::spellCheckErrorsChangedHandler() {
         emit descriptionChanged();
         emit titleChanged();

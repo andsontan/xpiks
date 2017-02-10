@@ -34,6 +34,11 @@ namespace Models {
         return basicModel->getTitle();
     }
 
+    QStringList ArtworkProxyBase::getKeywords() {
+        auto *basicModel = getBasicMetadataModel();
+        return basicModel->getKeywords();
+    }
+
     int ArtworkProxyBase::getKeywordsCount() {
         auto *basicModel = getBasicMetadataModel();
         return basicModel->getKeywordsCount();
@@ -51,6 +56,11 @@ namespace Models {
         }
     }
 
+    void ArtworkProxyBase::setKeywords(const QStringList &keywords) {
+        doSetKeywords(keywords);
+        signalKeywordsCountChanged();
+    }
+
     bool ArtworkProxyBase::doSetDescription(const QString &description) {
         auto *metadataOperator = getMetadataOperator();
         return metadataOperator->setDescription(description);
@@ -59,6 +69,13 @@ namespace Models {
     bool ArtworkProxyBase::doSetTitle(const QString &title) {
         auto *metadataOperator = getMetadataOperator();
         return metadataOperator->setTitle(title);
+    }
+
+    void ArtworkProxyBase::doSetKeywords(const QStringList &keywords) {
+        auto *metadataOperator = getMetadataOperator();
+        metadataOperator->setKeywords(keywords);
+
+        spellCheckKeywords();
     }
 
     bool ArtworkProxyBase::doEditKeyword(int index, const QString &replacement) {

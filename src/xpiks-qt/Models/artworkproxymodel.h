@@ -66,6 +66,7 @@ namespace Models {
     public:
         virtual void setDescription(const QString &description) override;
         virtual void setTitle(const QString &title) override;
+        virtual void setKeywords(const QStringList &keywords) override;
 
     signals:
         void imagePathChanged();

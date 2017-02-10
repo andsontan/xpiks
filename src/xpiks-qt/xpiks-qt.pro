@@ -136,7 +136,9 @@ SOURCES += main.cpp \
     Translation/translationquery.cpp \
     Models/uimanager.cpp \
     Plugins/sandboxeddependencies.cpp \
-    Commands/expandpresetcommand.cpp
+    Commands/expandpresetcommand.cpp \
+    QuickBuffer/currenteditableartwork.cpp \
+    QuickBuffer/currenteditableproxyartwork.cpp
 
 RESOURCES += qml.qrc
 
@@ -325,7 +327,9 @@ HEADERS += \
     Models/uimanager.h \
     Plugins/sandboxeddependencies.h \
     Commands/expandpresetcommand.h \
-    QuickBuffer/icurrenteditable.h
+    QuickBuffer/icurrenteditable.h \
+    QuickBuffer/currenteditableartwork.h \
+    QuickBuffer/currenteditableproxyartwork.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
