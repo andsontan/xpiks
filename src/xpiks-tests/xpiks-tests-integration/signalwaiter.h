@@ -19,6 +19,7 @@ public:
     bool wait(int timeoutSeconds=5) {
         if (m_SignalSpy.count() > 0) {
             qDebug() << "Got the signal before waiting";
+            m_SignalSpy.clear();
             return true;
         }
 
@@ -32,6 +33,7 @@ public:
         timeoutTimer.start(timeoutSeconds*1000);
         loop.exec();
 
+        m_SignalSpy.clear();
         // true - no timeout
         // false - timeout
 
