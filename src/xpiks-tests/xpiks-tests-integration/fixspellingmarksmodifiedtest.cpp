@@ -20,7 +20,6 @@
 #include "../../xpiks-qt/SpellCheck/spellcheckerservice.h"
 #include "testshelpers.h"
 
-
 QString FixSpellingMarksModifiedTest::testName() {
     return QLatin1String("FixSpellingMarksModifiedTest");
 }

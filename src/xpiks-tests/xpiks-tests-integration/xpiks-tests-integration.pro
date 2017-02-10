@@ -3,7 +3,7 @@ TARGET = xpiks-tests-integration
 
 QMAKE_MAC_SDK = macosx10.11
 
-QT += qml quick widgets concurrent svg
+QT += qml quick widgets concurrent svg testlib
 QT -= gui
 
 CONFIG   += console
