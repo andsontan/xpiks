@@ -18,6 +18,7 @@ public:
 
     bool wait(int timeoutSeconds=5) {
         if (m_SignalSpy.count() > 0) {
+            qDebug() << "Got the signal before waiting";
             return true;
         }
 
