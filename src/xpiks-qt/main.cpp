@@ -391,11 +391,9 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&translationManager);
     commandManager.InjectDependency(&translationService);
     commandManager.InjectDependency(&uiManager);
+    commandManager.InjectDependency(&artworkProxyModel);
 
-    artworkProxyModel.setCommandManager(&commandManager);
     autoCompleteModel.setCommandManager(&commandManager);
-    QObject::connect(&artItemsModel, SIGNAL(fileWithIndexUnavailable(int)),
-                     &artworkProxyModel, SLOT(itemUnavailableHandler(int)));
 
     commandManager.ensureDependenciesInjected();
 

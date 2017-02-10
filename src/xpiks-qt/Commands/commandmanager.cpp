@@ -60,6 +60,7 @@
 #include "../Translation/translationmanager.h"
 #include "../Translation/translationservice.h"
 #include "../Models/uimanager.h"
+#include "../Models/artworkproxymodel.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -223,6 +224,11 @@ void Commands::CommandManager::InjectDependency(Models::UIManager *uiManager) {
     Q_ASSERT(uiManager != NULL); m_UIManager = uiManager;
 }
 
+void Commands::CommandManager::InjectDependency(Models::ArtworkProxyModel *artworkProxy) {
+    Q_ASSERT(artworkProxy != NULL); m_ArtworkProxyModel = artworkProxy;
+    m_ArtworkProxyModel->setCommandManager(this);
+}
+
 std::shared_ptr<Commands::ICommandResult> Commands::CommandManager::processCommand(const std::shared_ptr<ICommandBase> &command)
 #ifndef CORE_TESTS
 const
@@ -300,6 +306,18 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
                          m_CombinedArtworksModel, SLOT(userDictClearedHandler()));
     }
 
+    if (m_ArtItemsModel != NULL && m_ArtworkProxyModel != NULL) {
+        QObject::connect(m_ArtItemsModel, SIGNAL(fileWithIndexUnavailable(int)),
+                         m_ArtworkProxyModel, SLOT(itemUnavailableHandler(int)));
+    }
+
+    if (m_SpellCheckerService != NULL && m_ArtworkProxyModel != NULL) {
+        QObject::connect(m_SpellCheckerService, SIGNAL(userDictUpdate(QStringList)),
+                         m_ArtworkProxyModel, SLOT(userDictUpdateHandler(QStringList)));
+        QObject::connect(m_SpellCheckerService, SIGNAL(userDictCleared()),
+                         m_ArtworkProxyModel, SLOT(userDictClearedHandler()));
+    }
+
     if (m_HelpersQmlWrapper != NULL && m_UpdateService != NULL) {
         QObject::connect(m_UpdateService, SIGNAL(updateAvailable(QString)),
                          m_HelpersQmlWrapper, SIGNAL(updateAvailable(QString)));
@@ -346,6 +364,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_PresetsModelConfig != NULL);
     Q_ASSERT(m_TranslationService != NULL);
     Q_ASSERT(m_TranslationManager != NULL);
+    Q_ASSERT(m_ArtworkProxyModel != NULL);
 
 #if !defined(INTEGRATION_TESTS) && !defined(CORE_TESTS)
     Q_ASSERT(m_UIManager != NULL);
@@ -844,5 +863,11 @@ void Commands::CommandManager::registerCurrentItem(Models::ArtworkMetadata *artw
 void Commands::CommandManager::registerCurrentItem(Models::ArtworkProxyBase *artworkProxy) const {
     if (m_UIManager != nullptr) {
         m_UIManager->registerCurrentItem(artworkProxy);
+    }
+}
+
+void Commands::CommandManager::clearCurrentItem() const {
+    if (m_UIManager != nullptr) {
+        m_UIManager->clearCurrentItem();
     }
 }

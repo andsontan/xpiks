@@ -295,6 +295,24 @@ namespace Models {
         m_CommandManager->registerCurrentItem(this);
     }
 
+    void ArtworkProxyBase::doHandleUserDictChanged(const QStringList &keywords) {
+        LOG_DEBUG << "#";
+        Q_ASSERT(!keywords.isEmpty());
+
+        auto *metadataModel = getBasicMetadataModel();
+        SpellCheck::SpellCheckItemInfo *info = metadataModel->getSpellCheckInfo();
+        info->removeWordsFromErrors(keywords);
+
+        // special case after words added to dict
+        m_CommandManager->submitForSpellCheck(QVector<Common::BasicKeywordsModel *>() << metadataModel, keywords);
+    }
+
+    void ArtworkProxyBase::doHandleUserDictCleared() {
+        LOG_DEBUG << "#";
+        auto *metadataModel = getBasicMetadataModel();
+        m_CommandManager->submitItemForSpellCheck(metadataModel);
+    }
+
     void ArtworkProxyBase::spellCheckKeywords() {
         auto *basicModel = getBasicMetadataModel();
         m_CommandManager->submitItemForSpellCheck(basicModel, Common::SpellCheckFlags::Keywords);

@@ -19,62 +19,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef ARTWORKPROXYMODEL_H
-#define ARTWORKPROXYMODEL_H
+#ifndef QUICKBUFFER_H
+#define QUICKBUFFER_H
 
 #include <QObject>
-#include <QAbstractListModel>
 #include <QQmlEngine>
-#include <QStringList>
-#include <QString>
-#include <QList>
-#include <QSet>
-#include <QSize>
-#include <QQuickTextDocument>
-#include <memory>
-#include <vector>
-#include "artworkmetadata.h"
+#include "../Models/artworkproxybase.h"
 #include "../Common/basicmetadatamodel.h"
-#include "../Common/flags.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
-#include "../Common/hold.h"
-#include "../Models/metadataelement.h"
-#include "artworkproxybase.h"
 
-namespace Models {
-    class ArtworkProxyModel: public QObject, public ArtworkProxyBase
+namespace QuickBuffer {
+    class QuickBuffer : public QObject, public Models::ArtworkProxyBase
     {
         Q_OBJECT
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
         Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
         Q_PROPERTY(int keywordsCount READ getKeywordsCount NOTIFY keywordsCountChanged)
-        Q_PROPERTY(QString imagePath READ getImagePath NOTIFY imagePathChanged)
-        Q_PROPERTY(QString basename READ getBasename NOTIFY imagePathChanged)
-        Q_PROPERTY(QString attachedVectorPath READ getAttachedVectorPath NOTIFY imagePathChanged)
-        Q_PROPERTY(QSize imageSize READ retrieveImageSize NOTIFY imagePathChanged)
-        Q_PROPERTY(QString fileSize READ retrieveFileSize NOTIFY imagePathChanged)
-        Q_PROPERTY(QString dateTaken READ getDateTaken NOTIFY imagePathChanged)
 
     public:
-        explicit ArtworkProxyModel(QObject *parent = 0);
-        virtual ~ArtworkProxyModel();
-
-    public:
-        const QString &getImagePath() const { return m_ArtworkMetadata->getFilepath(); }
-        QString getBasename() const { return m_ArtworkMetadata->getBaseFilename(); }
-
-    public:
-        virtual void setDescription(const QString &description) override;
-        virtual void setTitle(const QString &title) override;
-        virtual void setKeywords(const QStringList &keywords) override;
+        explicit QuickBuffer(QObject *parent = 0);
+        virtual ~QuickBuffer();
 
     signals:
-        void imagePathChanged();
         void descriptionChanged();
         void titleChanged();
         void keywordsCountChanged();
-        void completionsAvailable();
-        void itemBecomeUnavailable();
 
     protected:
         virtual void signalDescriptionChanged() override { emit descriptionChanged(); }
@@ -84,19 +53,16 @@ namespace Models {
     public slots:
         void afterSpellingErrorsFixedHandler();
         void spellCheckErrorsChangedHandler();
-        void itemUnavailableHandler(int index);
         void userDictUpdateHandler(const QStringList &keywords);
         void userDictClearedHandler();
 
     public:
-        Q_INVOKABLE void editKeyword(int index, const QString &replacement);
         Q_INVOKABLE void removeKeywordAt(int keywordIndex);
         Q_INVOKABLE void removeLastKeyword();
         Q_INVOKABLE void appendKeyword(const QString &keyword);
         Q_INVOKABLE void pasteKeywords(const QStringList &keywords);
         Q_INVOKABLE void clearKeywords();
         Q_INVOKABLE QString getKeywordsString();
-        Q_INVOKABLE void suggestCorrections();
         Q_INVOKABLE void initDescriptionHighlighting(QQuickTextDocument *document);
         Q_INVOKABLE void initTitleHighlighting(QQuickTextDocument *document);
         Q_INVOKABLE void spellCheckDescription();
@@ -104,7 +70,6 @@ namespace Models {
         Q_INVOKABLE void plainTextEdit(const QString &rawKeywords);
         Q_INVOKABLE bool hasTitleWordSpellError(const QString &word);
         Q_INVOKABLE bool hasDescriptionWordSpellError(const QString &word);
-        Q_INVOKABLE void setSourceArtwork(QObject *artworkMetadata, int originalIndex=-1);
         Q_INVOKABLE void resetModel();
         Q_INVOKABLE QObject *getBasicModel() {
             QObject *item = getBasicMetadataModel();
@@ -112,36 +77,16 @@ namespace Models {
 
             return item;
         }
-        Q_INVOKABLE QSize retrieveImageSize() const;
-        Q_INVOKABLE QString retrieveFileSize() const;
-        Q_INVOKABLE QString getDateTaken() const;
-        Q_INVOKABLE QString getAttachedVectorPath() const;
-        Q_INVOKABLE void expandPreset(int keywordIndex, int presetIndex);
-        Q_INVOKABLE void expandLastKeywordAsPreset();
-        Q_INVOKABLE void addPreset(int presetIndex);
-        Q_INVOKABLE void initSuggestion();
-        Q_INVOKABLE void registerAsCurrentItem();
 
     protected:
-        virtual Common::BasicMetadataModel *getBasicMetadataModel() override {
-            Q_ASSERT(m_ArtworkMetadata != nullptr);
-            return m_ArtworkMetadata->getBasicModel();
-        }
-
-        virtual Common::IMetadataOperator *getMetadataOperator() override {
-            Q_ASSERT(m_ArtworkMetadata != nullptr);
-            return m_ArtworkMetadata;
-        }
+        virtual Common::BasicMetadataModel *getBasicMetadataModel() override { return &m_BasicModel; }
+        virtual Common::IMetadataOperator *getMetadataOperator() override { return &m_BasicModel; }
 
     private:
-        void updateCurrentArtwork();
-        void doResetModel();
-        void disconnectCurrentArtwork();
-
-    private:
-        Models::ArtworkMetadata *m_ArtworkMetadata;
-        int m_ArtworkOriginalIndex;
+        Common::Hold m_HoldPlaceholder;
+        Common::BasicMetadataModel m_BasicModel;
+        SpellCheck::SpellCheckItemInfo m_SpellCheckInfo;
     };
 }
 
-#endif // ARTWORKPROXYMODEL_H
+#endif // QUICKBUFFER_H

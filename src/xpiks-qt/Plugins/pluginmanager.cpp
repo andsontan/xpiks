@@ -114,7 +114,7 @@ namespace Plugins {
     bool PluginManager::hasExportedActions(int row) const {
         bool hasActions = false;
 
-        if ((0 <= row) && (row < m_PluginsList.size())) {
+        if ((0 <= row) && (row < rowCount())) {
             hasActions = m_PluginsList.at(row)->anyActionsProvided();
         }
 
@@ -125,7 +125,7 @@ namespace Plugins {
         LOG_DEBUG << index;
         PluginActionsModel *item = NULL;
 
-        if ((0 <= index) && (index < m_PluginsList.size())) {
+        if ((0 <= index) && (index < rowCount())) {
             item = m_PluginsList.at(index)->getActionsModel();
             QQmlEngine::setObjectOwnership(item, QQmlEngine::CppOwnership);
         }
@@ -173,7 +173,7 @@ namespace Plugins {
 
     QVariant PluginManager::data(const QModelIndex &index, int role) const {
         int row = index.row();
-        if (row < 0 || row >= m_PluginsList.size()) { return QVariant(); }
+        if (row < 0 || row >= rowCount()) { return QVariant(); }
 
         auto &plugin = m_PluginsList.at(row);
 

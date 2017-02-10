@@ -78,9 +78,17 @@ namespace Models {
         }
     }
 
+    void ArtworkProxyModel::userDictUpdateHandler(const QStringList &keywords) {
+        doHandleUserDictChanged(keywords);
+    }
+
+    void ArtworkProxyModel::userDictClearedHandler() {
+        doHandleUserDictCleared();
+    }
+
     void ArtworkProxyModel::afterSpellingErrorsFixedHandler() {
         // if squeezing took place after replace
-        emit keywordsCountChanged();
+        signalKeywordsCountChanged();
     }
 
     void ArtworkProxyModel::editKeyword(int index, const QString &replacement) {

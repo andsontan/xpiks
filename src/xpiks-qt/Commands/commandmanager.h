@@ -71,6 +71,7 @@ namespace Models {
     class DeleteKeywordsViewModel;
     class UIManager;
     class ArtworkProxyBase;
+    class ArtworkProxyModel;
 }
 
 namespace Suggestion {
@@ -158,6 +159,7 @@ namespace Commands {
             m_TranslationService(NULL),
             m_TranslationManager(NULL),
             m_UIManager(NULL),
+            m_ArtworkProxyModel(NULL),
             m_AfterInitCalled(false)
         { }
 
@@ -198,6 +200,7 @@ namespace Commands {
         void InjectDependency(Translation::TranslationService *translationService);
         void InjectDependency(Translation::TranslationManager *translationManager);
         void InjectDependency(Models::UIManager *uiManager);
+        void InjectDependency(Models::ArtworkProxyModel *artworkProxy);
 
     public:
         virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<ICommandBase> &command)
@@ -276,6 +279,7 @@ namespace Commands {
     public:
         void registerCurrentItem(Models::ArtworkMetadata *artworkMetadata) const;
         void registerCurrentItem(Models::ArtworkProxyBase *artworkProxy) const;
+        void clearCurrentItem() const;
 
     public:
         // methods for getters
@@ -343,6 +347,7 @@ namespace Commands {
         Translation::TranslationService *m_TranslationService;
         Translation::TranslationManager *m_TranslationManager;
         Models::UIManager *m_UIManager;
+        Models::ArtworkProxyModel *m_ArtworkProxyModel;
 
         QVector<Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;

@@ -51,8 +51,8 @@ Rectangle {
         closeAutoComplete()
         mainStackView.pop()
         combinedArtworks.resetModel()
+        uiManager.clearCurrentItem()
         restoreLeftPane()
-        combinedArtworks.clearCurrentItem()
     }
 
     function restoreLeftPane() {

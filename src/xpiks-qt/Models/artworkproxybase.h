@@ -79,6 +79,8 @@ namespace Models {
         bool doAddPreset(int presetIndex);
         void doInitSuggestion();
         void doRegisterAsCurrentItem();
+        void doHandleUserDictChanged(const QStringList &keywords);
+        void doHandleUserDictCleared();
 
     private:
         void spellCheckKeywords();

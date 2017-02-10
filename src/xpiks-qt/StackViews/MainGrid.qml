@@ -603,6 +603,12 @@ ColumnLayout {
                                 wrappersScope.updateCurrentIndex()
                             }
 
+                            onIsHighlightedChanged: {
+                                if (isHighlighted) {
+                                    filteredArtItemsModel.registerCurrentItem(rowWrapper.delegateIndex)
+                                }
+                            }
+
                             Connections {
                                 target: rowWrapper.artworkModel
 

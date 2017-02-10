@@ -436,6 +436,8 @@ namespace Models {
         initDescription("");
         initTitle("");
         initKeywords(QStringList());
+
+        m_CommandManager->clearCurrentItem();
     }
 
     bool CombinedArtworksModel::removeUnavailableItems() {
@@ -456,17 +458,10 @@ namespace Models {
     }
 
     void CombinedArtworksModel::userDictUpdateHandler(const QStringList &keywords) {
-        LOG_DEBUG << "#";
-        Q_ASSERT(!keywords.isEmpty());
-
-        SpellCheck::SpellCheckItemInfo *info = m_CommonKeywordsModel.getSpellCheckInfo();
-        info->removeWordsFromErrors(keywords);
-
-        m_CommandManager->submitForSpellCheck(QVector<Common::BasicKeywordsModel *>() << (&m_CommonKeywordsModel), keywords);
+        doHandleUserDictChanged(keywords);
     }
 
     void CombinedArtworksModel::userDictClearedHandler() {
-        LOG_DEBUG << "#";
-        m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel);
+        doHandleUserDictCleared();
     }
 }

@@ -138,7 +138,8 @@ SOURCES += main.cpp \
     Plugins/sandboxeddependencies.cpp \
     Commands/expandpresetcommand.cpp \
     QuickBuffer/currenteditableartwork.cpp \
-    QuickBuffer/currenteditableproxyartwork.cpp
+    QuickBuffer/currenteditableproxyartwork.cpp \
+    QuickBuffer/quickbuffer.cpp
 
 RESOURCES += qml.qrc
 
@@ -329,7 +330,8 @@ HEADERS += \
     Commands/expandpresetcommand.h \
     QuickBuffer/icurrenteditable.h \
     QuickBuffer/currenteditableartwork.h \
-    QuickBuffer/currenteditableproxyartwork.h
+    QuickBuffer/currenteditableproxyartwork.h \
+    QuickBuffer/quickbuffer.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
