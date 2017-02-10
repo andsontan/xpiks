@@ -49,7 +49,7 @@ namespace QuickBuffer {
         m_ArtworkProxy->setDescription(description);
     }
 
-    void CurrentEditableProxyArtwork::setKeywords(const QString &keywords) {
+    void CurrentEditableProxyArtwork::setKeywords(const QStringList &keywords) {
         m_ArtworkProxy->setKeywords(keywords);
     }
 }

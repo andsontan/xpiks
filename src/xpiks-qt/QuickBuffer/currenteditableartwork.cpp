@@ -58,7 +58,7 @@ namespace QuickBuffer {
         m_ArtworkMetadata->setDescription(value);
     }
 
-    void CurrentEditableArtwork::setKeywords(const QString &keywords) {
+    void CurrentEditableArtwork::setKeywords(const QStringList &keywords) {
         m_ArtworkMetadata->setKeywords(keywords);
     }
 }

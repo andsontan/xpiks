@@ -35,7 +35,7 @@ namespace QuickBuffer {
 
         virtual void setTitle(const QString &title) = 0;
         virtual void setDescription(const QString &description) = 0;
-        virtual void setKeywords(const QString &keywords) = 0;
+        virtual void setKeywords(const QStringList &keywords) = 0;
     };
 }
 
