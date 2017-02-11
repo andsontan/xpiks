@@ -109,7 +109,7 @@ namespace SpellCheck {
 
     public:
 #if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
-        virtual QString toDebugString() const { return QString("KeywordReplace: %1 -> (%2)").arg(getWord()).arg(getSuggestions().join(", ")); }
+        virtual QString toDebugString() const override { return QString("KeywordReplace: %1 -> (%2)").arg(getWord()).arg(getSuggestions().join(", ")); }
 #endif
         int getOriginalIndex() const { return m_OriginalIndex; }
         bool isPotentialDuplicate() const { return m_ReplaceResult == Common::KeywordReplaceResult::FailedDuplicate; }
@@ -132,7 +132,7 @@ namespace SpellCheck {
 
     public:
 #if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
-        virtual QString toDebugString() const { return "DescReplace: " + SpellSuggestionsItem::toDebugString(); }
+        virtual QString toDebugString() const override { return "DescReplace: " + SpellSuggestionsItem::toDebugString(); }
 #endif
         virtual void replaceToSuggested(Common::IMetadataOperator *item) override;
 
@@ -148,7 +148,7 @@ namespace SpellCheck {
 
     public:
 #if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
-        virtual QString toDebugString() const { return "TitleReplace: " + SpellSuggestionsItem::toDebugString(); }
+        virtual QString toDebugString() const override { return "TitleReplace: " + SpellSuggestionsItem::toDebugString(); }
 #endif
         virtual void replaceToSuggested(Common::IMetadataOperator *item) override;
 
@@ -164,7 +164,7 @@ namespace SpellCheck {
 
     public:
 #if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
-        virtual QString toDebugString() const { return "Multireplace: " + SpellSuggestionsItem::toDebugString(); }
+        virtual QString toDebugString() const override { return "Multireplace: " + SpellSuggestionsItem::toDebugString(); }
 #endif
         std::vector<std::shared_ptr<KeywordSpellSuggestions> > getKeywordsDuplicateSuggestions() const;
         virtual void replaceToSuggested(Common::IMetadataOperator *item) override;

@@ -156,7 +156,6 @@ SOURCES += main.cpp \
     ../../xpiks-qt/KeywordsPresets/presetkeywordsmodel.cpp \
     ../../xpiks-qt/Models/artworkproxybase.cpp \
     preset_tests.cpp \
-    ../../xpiks-qt/Models/uimanager.cpp \
     ../../xpiks-qt/Commands/expandpresetcommand.cpp
 
 HEADERS += \
@@ -270,6 +269,5 @@ HEADERS += \
     ../../xpiks-qt/Common/imetadataoperator.h \
     ../../xpiks-qt/Models/artworkproxybase.h \
     preset_tests.h \
-    ../../xpiks-qt/Models/uimanager.h \
     ../../xpiks-qt/Commands/expandpresetcommand.h
 
