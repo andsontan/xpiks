@@ -170,7 +170,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Commands/expandpresetcommand.cpp \
     ../../xpiks-qt/QuickBuffer/currenteditableartwork.cpp \
     ../../xpiks-qt/QuickBuffer/currenteditableproxyartwork.cpp \
-    ../../xpiks-qt/QuickBuffer/quickbuffer.cpp
+    ../../xpiks-qt/QuickBuffer/quickbuffer.cpp \
+    ../../xpiks-qt/Models/artworkproxymodel.cpp
 
 RESOURCES +=
 
@@ -371,7 +372,8 @@ HEADERS += \
     ../../xpiks-qt/QuickBuffer/currenteditableartwork.h \
     ../../xpiks-qt/QuickBuffer/currenteditableproxyartwork.h \
     ../../xpiks-qt/QuickBuffer/icurrenteditable.h \
-    ../../xpiks-qt/QuickBuffer/quickbuffer.h
+    ../../xpiks-qt/QuickBuffer/quickbuffer.h \
+    ../../xpiks-qt/Models/artworkproxymodel.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
