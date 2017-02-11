@@ -80,12 +80,20 @@ namespace Models {
 
     void ArtworkProxyModel::userDictUpdateHandler(const QStringList &keywords) {
         LOG_DEBUG << "#";
-        doHandleUserDictChanged(keywords);
+        if (m_ArtworkMetadata != NULL) {
+            doHandleUserDictChanged(keywords);
+        } else {
+            LOG_DEBUG << "Nothing to update";
+        }
     }
 
     void ArtworkProxyModel::userDictClearedHandler() {
         LOG_DEBUG << "#";
-        doHandleUserDictCleared();
+        if (m_ArtworkMetadata != NULL) {
+            doHandleUserDictCleared();
+        } else {
+            LOG_DEBUG << "Nothing to update";
+        }
     }
 
     void ArtworkProxyModel::afterSpellingErrorsFixedHandler() {

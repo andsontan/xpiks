@@ -842,6 +842,7 @@ void Commands::CommandManager::removeUnavailableFiles() {
 
 #ifdef INTEGRATION_TESTS
 void Commands::CommandManager::cleanup() {
+    LOG_INTEGRATION_TESTS << "#";
     m_CombinedArtworksModel->resetModel();
     m_ZipArchiver->resetArtworks();
     m_ZipArchiver->resetModel();

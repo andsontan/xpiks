@@ -300,6 +300,7 @@ namespace Models {
         Q_ASSERT(!keywords.isEmpty());
 
         auto *metadataModel = getBasicMetadataModel();
+
         SpellCheck::SpellCheckItemInfo *info = metadataModel->getSpellCheckInfo();
         info->removeWordsFromErrors(keywords);
 
