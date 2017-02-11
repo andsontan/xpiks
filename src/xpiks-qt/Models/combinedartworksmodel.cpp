@@ -458,10 +458,12 @@ namespace Models {
     }
 
     void CombinedArtworksModel::userDictUpdateHandler(const QStringList &keywords) {
+        LOG_DEBUG << "#";
         doHandleUserDictChanged(keywords);
     }
 
     void CombinedArtworksModel::userDictClearedHandler() {
+        LOG_DEBUG << "#";
         doHandleUserDictCleared();
     }
 }

@@ -79,10 +79,12 @@ namespace Models {
     }
 
     void ArtworkProxyModel::userDictUpdateHandler(const QStringList &keywords) {
+        LOG_DEBUG << "#";
         doHandleUserDictChanged(keywords);
     }
 
     void ArtworkProxyModel::userDictClearedHandler() {
+        LOG_DEBUG << "#";
         doHandleUserDictCleared();
     }
 

@@ -54,10 +54,12 @@ namespace QuickBuffer {
     }
 
     void QuickBuffer::userDictUpdateHandler(const QStringList &keywords) {
+        LOG_DEBUG << "#";
         doHandleUserDictChanged(keywords);
     }
 
     void QuickBuffer::userDictClearedHandler() {
+        LOG_DEBUG << "#";
         doHandleUserDictCleared();
     }
 
