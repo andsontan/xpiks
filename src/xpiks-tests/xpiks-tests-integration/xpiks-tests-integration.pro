@@ -167,7 +167,10 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Models/uimanager.cpp \
     ../../xpiks-qt/Plugins/sandboxeddependencies.cpp \
     translatorbasictest.cpp \
-    ../../xpiks-qt/Commands/expandpresetcommand.cpp
+    ../../xpiks-qt/Commands/expandpresetcommand.cpp \
+    ../../xpiks-qt/QuickBuffer/currenteditableartwork.cpp \
+    ../../xpiks-qt/QuickBuffer/currenteditableproxyartwork.cpp \
+    ../../xpiks-qt/QuickBuffer/quickbuffer.cpp
 
 RESOURCES +=
 
@@ -364,7 +367,11 @@ HEADERS += \
     ../../xpiks-qt/Models/uimanager.h \
     ../../xpiks-qt/Plugins/sandboxeddependencies.h \
     translatorbasictest.h \
-    ../../xpiks-qt/Commands/expandpresetcommand.h
+    ../../xpiks-qt/Commands/expandpresetcommand.h \
+    ../../xpiks-qt/QuickBuffer/currenteditableartwork.h \
+    ../../xpiks-qt/QuickBuffer/currenteditableproxyartwork.h \
+    ../../xpiks-qt/QuickBuffer/icurrenteditable.h \
+    ../../xpiks-qt/QuickBuffer/quickbuffer.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
