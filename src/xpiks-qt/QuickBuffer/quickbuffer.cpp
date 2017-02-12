@@ -40,7 +40,7 @@ namespace QuickBuffer {
 //                         this, SIGNAL(completionsAvailable()));
 
         QObject::connect(&m_BasicModel, SIGNAL(afterSpellingErrorsFixed()),
-                         this, SLOT(spellCheckErrorsFixedHandler()));
+                         this, SLOT(afterSpellingErrorsFixedHandler()));
     }
 
     QuickBuffer::~QuickBuffer() {
@@ -132,8 +132,9 @@ namespace QuickBuffer {
         emit isEmptyChanged();
     }
 
-    void QuickBuffer::copyToCurrentEditable() {
+    bool QuickBuffer::copyToCurrentEditable() {
         LOG_DEBUG << "#";
+        bool result = false;
         auto *uiManager = m_CommandManager->getUIManager();
         auto currentEditable = uiManager->getCurrentEditable();
 
@@ -146,9 +147,13 @@ namespace QuickBuffer {
             if (editableArtwork) {
                 m_CommandManager->updateArtworks(QVector<int>() << editableArtwork->getOriginalIndex());
             }
+
+            result = true;
         } else {
             LOG_WARNING << "Nothing registered as current item";
         }
+
+        return result;
     }
 
     bool QuickBuffer::getIsEmpty() {

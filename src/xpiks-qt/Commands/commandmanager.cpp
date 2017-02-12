@@ -863,29 +863,19 @@ void Commands::CommandManager::cleanup() {
 #endif
 
 void Commands::CommandManager::registerCurrentItem(const Models::MetadataElement &metadataElement) const {
-#ifndef CORE_TESTS
     if (m_UIManager != nullptr) {
         m_UIManager->registerCurrentItem(metadataElement);
     }
-#else
-    Q_UNUSED(metadataElement);
-#endif
 }
 
 void Commands::CommandManager::registerCurrentItem(Models::ArtworkProxyBase *artworkProxy) const {
-#ifndef CORE_TESTS
     if (m_UIManager != nullptr) {
         m_UIManager->registerCurrentItem(artworkProxy);
     }
-#else
-    Q_UNUSED(artworkProxy);
-#endif
 }
 
 void Commands::CommandManager::clearCurrentItem() const {
-#ifndef CORE_TESTS
     if (m_UIManager != nullptr) {
         m_UIManager->clearCurrentItem();
     }
-#endif
 }

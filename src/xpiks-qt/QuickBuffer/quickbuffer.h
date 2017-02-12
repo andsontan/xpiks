@@ -79,7 +79,7 @@ namespace QuickBuffer {
 
             return item;
         }
-        Q_INVOKABLE void copyToCurrentEditable();
+        Q_INVOKABLE bool copyToCurrentEditable();
 
     public:
         bool getIsEmpty();
