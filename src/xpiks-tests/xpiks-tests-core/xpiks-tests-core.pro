@@ -156,7 +156,13 @@ SOURCES += main.cpp \
     ../../xpiks-qt/KeywordsPresets/presetkeywordsmodel.cpp \
     ../../xpiks-qt/Models/artworkproxybase.cpp \
     preset_tests.cpp \
-    ../../xpiks-qt/Commands/expandpresetcommand.cpp
+    ../../xpiks-qt/Commands/expandpresetcommand.cpp \
+    quickbuffer_tests.cpp \
+    ../../xpiks-qt/QuickBuffer/currenteditableartwork.cpp \
+    ../../xpiks-qt/QuickBuffer/currenteditableproxyartwork.cpp \
+    ../../xpiks-qt/QuickBuffer/quickbuffer.cpp \
+    ../../xpiks-qt/Models/artworkproxymodel.cpp \
+    ../../xpiks-qt/Models/uimanager.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -269,5 +275,12 @@ HEADERS += \
     ../../xpiks-qt/Common/imetadataoperator.h \
     ../../xpiks-qt/Models/artworkproxybase.h \
     preset_tests.h \
-    ../../xpiks-qt/Commands/expandpresetcommand.h
+    ../../xpiks-qt/Commands/expandpresetcommand.h \
+    quickbuffer_tests.h \
+    ../../xpiks-qt/QuickBuffer/currenteditableartwork.h \
+    ../../xpiks-qt/QuickBuffer/currenteditableproxyartwork.h \
+    ../../xpiks-qt/QuickBuffer/icurrenteditable.h \
+    ../../xpiks-qt/QuickBuffer/quickbuffer.h \
+    ../../xpiks-qt/Models/artworkproxymodel.h \
+    ../../xpiks-qt/Models/uimanager.h
 

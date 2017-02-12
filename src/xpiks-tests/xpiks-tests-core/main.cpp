@@ -26,6 +26,7 @@
 #include "replacepreview_tests.h"
 #include "deletekeywords_tests.h"
 #include "preset_tests.h"
+#include "quickbuffer_tests.h"
 
 #define QTEST_CLASS(TestObject, vName, result) \
     TestObject vName; \
@@ -61,6 +62,7 @@ int main(int argc, char *argv[]) {
     QTEST_CLASS(ReplacePreviewTests, rplp, result);
     QTEST_CLASS(DeleteKeywordsTests, dkt, result);
     QTEST_CLASS(PresetTests, pst, result);
+    QTEST_CLASS(QuickBufferTests, qbt, result);
 
     QThread::sleep(1);
 
