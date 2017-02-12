@@ -86,7 +86,7 @@ namespace Common {
             if (m_SpellCheckInfo->hasDescriptionError(word)) {
                 LOG_DEBUG << word << "has wrong spelling";
 
-                spellCheckSuggestions.emplace_back(new SpellCheck::DescriptionSpellSuggestions(word));
+                spellCheckSuggestions.emplace_back(new SpellCheck::DescriptionSpellSuggestions(this, word));
             }
         }
 
@@ -106,7 +106,7 @@ namespace Common {
             if (m_SpellCheckInfo->hasTitleError(word)) {
                 LOG_DEBUG << word << "has wrong spelling";
 
-                spellCheckSuggestions.emplace_back(new SpellCheck::TitleSpellSuggestions(word));
+                spellCheckSuggestions.emplace_back(new SpellCheck::TitleSpellSuggestions(this, word));
             }
         }
 

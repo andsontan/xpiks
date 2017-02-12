@@ -65,11 +65,51 @@ namespace SpellCheck {
         return result;
     }
 
+    QHash<Common::BasicKeywordsModel *, KeywordsSuggestionsVector > combinedFailedReplacements(const SuggestionsVector &failedReplacements) {
+        QHash<Common::BasicKeywordsModel *, KeywordsSuggestionsVector > candidatesToRemove;
+        size_t size = failedReplacements.size();
+        candidatesToRemove.reserve(size);
+
+        for (size_t i = 0; i < size; ++i) {
+            auto &item = failedReplacements.at(i);
+            std::shared_ptr<KeywordSpellSuggestions> keywordsItem = std::dynamic_pointer_cast<KeywordSpellSuggestions>(item);
+
+            if (keywordsItem) {
+                auto *item = keywordsItem->getKeywordsModel();
+
+                if (keywordsItem->isPotentialDuplicate()) {
+                    if (!candidatesToRemove.contains(item)) {
+                        candidatesToRemove.insert(item, KeywordsSuggestionsVector());
+                    }
+
+                    candidatesToRemove[item].emplace_back(keywordsItem);
+                }
+            } else {
+                std::shared_ptr<CombinedSpellSuggestions> combinedItem = std::dynamic_pointer_cast<CombinedSpellSuggestions>(item);
+                if (combinedItem) {
+                    auto keywordsItems = combinedItem->getKeywordsDuplicateSuggestions();
+
+                    for (auto &keywordsCombinedItem: keywordsItems) {
+                        auto *item = keywordsCombinedItem->getKeywordsModel();
+
+                        if (!candidatesToRemove.contains(item)) {
+                            candidatesToRemove.insert(item, KeywordsSuggestionsVector());
+                        }
+
+                        candidatesToRemove[item].emplace_back(keywordsCombinedItem);
+                    }
+                } else {
+                    LOG_WARNING << "Unsupported failed suggestion type";
+                }
+            }
+        }
+
+        return candidatesToRemove;
+    }
+
     SpellCheckSuggestionModel::SpellCheckSuggestionModel():
         QAbstractListModel(),
-        Common::BaseEntity(),
-        m_CurrentItem(NULL),
-        m_ItemIndex(-1)
+        Common::BaseEntity()
     {
     }
 
@@ -90,8 +130,8 @@ namespace SpellCheck {
     void SpellCheckSuggestionModel::clearModel() {
         beginResetModel();
         m_SuggestionsList.clear();
+        m_ItemsPairs.clear();
         endResetModel();
-        m_ItemIndex = -1;
     }
 
     void SpellCheckSuggestionModel::submitCorrections() const {
@@ -102,7 +142,7 @@ namespace SpellCheck {
 
         for (auto &item: m_SuggestionsList) {
             if (item->anyReplacementSelected()) {
-                item->replaceToSuggested(m_CurrentItem);
+                item->replaceToSuggested();
 
                 if (!item->getReplacementSucceeded()) {
                     failedItems.push_back(item);
@@ -117,13 +157,14 @@ namespace SpellCheck {
         }
 
         if (anyChanged) {
-            m_CurrentItem->afterReplaceCallback();
-            m_CommandManager->submitItemForSpellCheck(m_CurrentItem->getBasicKeywordsModel());
+            for (auto &pair: m_ItemsPairs) {
+                auto *item = pair.first;
+                item->afterReplaceCallback();
+                m_CommandManager->submitItemForSpellCheck(item->getBasicKeywordsModel());
+            }
         }
 
-        if (m_ItemIndex != -1) {
-            m_CommandManager->updateArtworks(QVector<int>() << m_ItemIndex);
-        }
+        updateItems();
     }
 
     void SpellCheckSuggestionModel::resetAllSuggestions() {
@@ -135,8 +176,18 @@ namespace SpellCheck {
 
     void SpellCheckSuggestionModel::setupModel(Common::IMetadataOperator *item, int index, Common::SuggestionFlags flags) {
         Q_ASSERT(item != NULL);
+        LOG_DEBUG << "#";
+
+        std::vector<std::pair<Common::IMetadataOperator *, int> > items;
+        items.emplace_back(item, index);
+        this->setupModel(items, flags);
+    }
+
+    void SpellCheckSuggestionModel::setupModel(std::vector<std::pair<Common::IMetadataOperator *, int> > &items, Common::SuggestionFlags flags) {
         LOG_INFO << "flags =" << (int)flags;
-        auto requests = createSuggestionsRequests(item, flags);
+        m_ItemsPairs = std::move(items);
+
+        auto requests = createSuggestionsRequests(flags);
 
         auto combinedRequests = combineSuggestionRequests(requests);
         LOG_INFO << combinedRequests.size() << "combined request(s)";
@@ -151,35 +202,41 @@ namespace SpellCheck {
 #endif
 
         beginResetModel();
-        m_CurrentItem = item;
         m_SuggestionsList.clear();
         m_SuggestionsList = executedRequests;
         endResetModel();
-
-        m_ItemIndex = index;
     }
 
-    SuggestionsVector SpellCheckSuggestionModel::createSuggestionsRequests(Common::IMetadataOperator *item, Common::SuggestionFlags flags) {
+    SuggestionsVector SpellCheckSuggestionModel::createSuggestionsRequests(Common::SuggestionFlags flags) {
         SuggestionsVector requests;
 
         using namespace Common;
 
         if (Common::HasFlag(flags, SuggestionFlags::Keywords)) {
-            auto subrequests = item->createKeywordsSuggestionsList();
-            requests.insert(requests.end(), subrequests.begin(), subrequests.end());
-            LOG_DEBUG << subrequests.size() << "keywords requests";
+            for (auto &pair: m_ItemsPairs) {
+                auto *item = pair.first;
+                auto subrequests = item->createKeywordsSuggestionsList();
+                requests.insert(requests.end(), subrequests.begin(), subrequests.end());
+                LOG_DEBUG << subrequests.size() << "keywords requests";
+            }
         }
 
         if (Common::HasFlag(flags, SuggestionFlags::Title)) {
-            auto subrequests = item->createTitleSuggestionsList();
-            requests.insert(requests.end(), subrequests.begin(), subrequests.end());
-            LOG_DEBUG << subrequests.size() << "title requests";
+            for (auto &pair: m_ItemsPairs) {
+                auto *item = pair.first;
+                auto subrequests = item->createTitleSuggestionsList();
+                requests.insert(requests.end(), subrequests.begin(), subrequests.end());
+                LOG_DEBUG << subrequests.size() << "title requests";
+            }
         }
 
         if (Common::HasFlag(flags, SuggestionFlags::Description)) {
-            auto subrequests = item->createDescriptionSuggestionsList();
-            requests.insert(requests.end(), subrequests.begin(), subrequests.end());
-            LOG_DEBUG << subrequests.size() << "description requests";
+            for (auto &pair: m_ItemsPairs) {
+                auto *item = pair.first;
+                auto subrequests = item->createDescriptionSuggestionsList();
+                requests.insert(requests.end(), subrequests.begin(), subrequests.end());
+                LOG_DEBUG << subrequests.size() << "description requests";
+            }
         }
 
         return requests;
@@ -188,30 +245,20 @@ namespace SpellCheck {
     bool SpellCheckSuggestionModel::processFailedReplacements(const SuggestionsVector &failedReplacements) const {
         LOG_INFO << failedReplacements.size() << "failed items";
 
-        std::vector<std::shared_ptr<KeywordSpellSuggestions> > candidatesToRemove;
-        size_t size = failedReplacements.size();
-        candidatesToRemove.reserve(size);
+        auto candidatesToRemove = combinedFailedReplacements(failedReplacements);
 
-        for (size_t i = 0; i < size; ++i) {
-            auto &item = failedReplacements.at(i);
-            std::shared_ptr<KeywordSpellSuggestions> keywordsItem = std::dynamic_pointer_cast<KeywordSpellSuggestions>(item);
+        auto it = candidatesToRemove.begin();
+        auto itEnd = candidatesToRemove.end();
 
-            if (keywordsItem) {
-                if (keywordsItem->isPotentialDuplicate()) {
-                    candidatesToRemove.push_back(keywordsItem);
-                }
-            } else {
-                std::shared_ptr<CombinedSpellSuggestions> combinedItem = std::dynamic_pointer_cast<CombinedSpellSuggestions>(item);
-                if (combinedItem) {
-                    std::vector<std::shared_ptr<KeywordSpellSuggestions> > keywordsItems = combinedItem->getKeywordsDuplicateSuggestions();
-                    candidatesToRemove.insert(candidatesToRemove.end(), keywordsItems.begin(), keywordsItems.end());
-                } else {
-                    LOG_WARNING << "Unsupported failed suggestion type";
-                }
+        bool anyReplaced = false;
+        for (; it != itEnd; ++it) {
+            auto *item = it.key();
+
+            if (item->processFailedKeywordReplacements(it.value())) {
+                anyReplaced = true;
             }
         }
 
-        bool anyReplaced = m_CurrentItem->processFailedKeywordReplacements(candidatesToRemove);
         return anyReplaced;
     }
 
@@ -262,5 +309,19 @@ namespace SpellCheck {
         roles[ReplacementIndexRole] = "replacementindex";
         roles[ReplacementOriginRole] = "replacementorigin";
         return roles;
+    }
+
+    void SpellCheckSuggestionModel::updateItems() const {
+        QVector<int> indices;
+        indices.reserve(m_ItemsPairs.size());
+
+        for (auto &pair: m_ItemsPairs) {
+            int index = pair.second;
+            if (index != -1) {
+                indices.push_back(index);
+            }
+        }
+
+        m_CommandManager->updateArtworks(indices);
     }
 }

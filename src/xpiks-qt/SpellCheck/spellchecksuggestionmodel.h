@@ -26,6 +26,7 @@
 #include <QList>
 #include <vector>
 #include <memory>
+#include <utility>
 #include "../Common/baseentity.h"
 #include "../Common/flags.h"
 #include "../Common/imetadataoperator.h"
@@ -43,6 +44,7 @@ namespace SpellCheck {
     class SpellCheckerService;
 
     typedef std::vector<std::shared_ptr<SpellSuggestionsItem> > SuggestionsVector;
+    typedef std::vector<std::shared_ptr<KeywordSpellSuggestions> > KeywordsSuggestionsVector;
 
     class SpellCheckSuggestionModel : public QAbstractListModel, public Common::BaseEntity {
         Q_OBJECT
@@ -68,12 +70,13 @@ namespace SpellCheck {
 
     public:
         void setupModel(Common::IMetadataOperator *item, int index, Common::SuggestionFlags flags);
+        void setupModel(std::vector<std::pair<Common::IMetadataOperator *, int> > &items, Common::SuggestionFlags flags);
 #if defined(INTEGRATION_TESTS) || defined(CORE_TESTS)
         SpellSuggestionsItem *getItem(int i) const { return m_SuggestionsList.at(i).get(); }
 #endif
 
     private:
-        SuggestionsVector createSuggestionsRequests(Common::IMetadataOperator *item, Common::SuggestionFlags flags);
+        SuggestionsVector createSuggestionsRequests(Common::SuggestionFlags flags);
         bool processFailedReplacements(const SuggestionsVector &failedReplacements) const;
         SuggestionsVector setupSuggestions(const SuggestionsVector &items);
 
@@ -85,9 +88,11 @@ namespace SpellCheck {
         virtual QHash<int, QByteArray> roleNames() const override;
 
     private:
+        void updateItems() const;
+
+    private:
         std::vector<std::shared_ptr<SpellSuggestionsItem> > m_SuggestionsList;
-        Common::IMetadataOperator *m_CurrentItem;
-        int m_ItemIndex;
+        std::vector<std::pair<Common::IMetadataOperator *, int> > m_ItemsPairs;
     };
 }
 

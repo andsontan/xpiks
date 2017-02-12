@@ -32,6 +32,8 @@
 
 namespace Common {
     class IMetadataOperator;
+    class BasicKeywordsModel;
+    class BasicMetadataModel;
 }
 
 namespace SpellCheck {
@@ -70,13 +72,13 @@ namespace SpellCheck {
         bool getReplacementSucceeded() const { return m_ReplacementSucceeded; }
 
     public:
-        virtual void replaceToSuggested(Common::IMetadataOperator *item) = 0;
+        virtual void replaceToSuggested() = 0;
 
         // doesn't work like that because of f&cking c++ standard
         // about accessing base protected members in derived class
         // (you cannot access protected members of freestanding objects of base type)
         //protected:
-        virtual void replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) = 0;
+        virtual void replaceToSuggested(const QString &word, const QString &replacement) = 0;
 
     signals:
         void replacementIndexChanged();
@@ -104,56 +106,67 @@ namespace SpellCheck {
     {
         Q_OBJECT
     public:
-        KeywordSpellSuggestions(const QString &keyword, int originalIndex, const QString &origin);
-        KeywordSpellSuggestions(const QString &keyword, int originalIndex);
+        KeywordSpellSuggestions(Common::BasicKeywordsModel *basicModel, const QString &keyword, int originalIndex, const QString &origin);
+        KeywordSpellSuggestions(Common::BasicKeywordsModel *basicModel, const QString &keyword, int originalIndex);
+        virtual ~KeywordSpellSuggestions();
 
     public:
 #if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
         virtual QString toDebugString() const override { return QString("KeywordReplace: %1 -> (%2)").arg(getWord()).arg(getSuggestions().join(", ")); }
 #endif
+        Common::BasicKeywordsModel *getKeywordsModel() const { return m_BasicModel; }
         int getOriginalIndex() const { return m_OriginalIndex; }
         bool isPotentialDuplicate() const { return m_ReplaceResult == Common::KeywordReplaceResult::FailedDuplicate; }
-        virtual void replaceToSuggested(Common::IMetadataOperator *item) override;
+        virtual void replaceToSuggested() override;
 
         // TODO: fix this back in future when c++ will be normal language (see comments in base class)
     //protected:
-        virtual void replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) override;
+        virtual void replaceToSuggested(const QString &word, const QString &replacement) override;
 
     private:
         int m_OriginalIndex;
         Common::KeywordReplaceResult m_ReplaceResult;
+        Common::BasicKeywordsModel *m_BasicModel;
     };
 
     class DescriptionSpellSuggestions: public SpellSuggestionsItem
     {
         Q_OBJECT
     public:
-        DescriptionSpellSuggestions(const QString &word);
+        DescriptionSpellSuggestions(Common::BasicMetadataModel *metadataModel, const QString &word);
+        virtual ~DescriptionSpellSuggestions();
 
     public:
 #if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
         virtual QString toDebugString() const override { return "DescReplace: " + SpellSuggestionsItem::toDebugString(); }
 #endif
-        virtual void replaceToSuggested(Common::IMetadataOperator *item) override;
+        virtual void replaceToSuggested() override;
 
     //protected:
-        virtual void replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) override;
+        virtual void replaceToSuggested(const QString &word, const QString &replacement) override;
+
+    private:
+        Common::BasicMetadataModel *m_MetadataModel;
     };
 
     class TitleSpellSuggestions: public SpellSuggestionsItem
     {
         Q_OBJECT
     public:
-        TitleSpellSuggestions(const QString &word);
+        TitleSpellSuggestions(Common::BasicMetadataModel *metadataModel, const QString &word);
+        virtual ~TitleSpellSuggestions();
 
     public:
 #if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
         virtual QString toDebugString() const override { return "TitleReplace: " + SpellSuggestionsItem::toDebugString(); }
 #endif
-        virtual void replaceToSuggested(Common::IMetadataOperator *item) override;
+        virtual void replaceToSuggested() override;
 
     //protected:
-        virtual void replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) override;
+        virtual void replaceToSuggested(const QString &word, const QString &replacement) override;
+
+    private:
+        Common::BasicMetadataModel *m_MetadataModel;
     };
 
     class CombinedSpellSuggestions: public SpellSuggestionsItem {
@@ -167,10 +180,10 @@ namespace SpellCheck {
         virtual QString toDebugString() const override { return "Multireplace: " + SpellSuggestionsItem::toDebugString(); }
 #endif
         std::vector<std::shared_ptr<KeywordSpellSuggestions> > getKeywordsDuplicateSuggestions() const;
-        virtual void replaceToSuggested(Common::IMetadataOperator *item) override;
+        virtual void replaceToSuggested() override;
 
     //protected:
-        virtual void replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) override;
+        virtual void replaceToSuggested(const QString &word, const QString &replacement) override;
 
     private:
         std::vector<std::shared_ptr<SpellSuggestionsItem> > m_SpellSuggestions;

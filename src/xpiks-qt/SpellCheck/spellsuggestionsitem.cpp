@@ -22,6 +22,8 @@
 #include "spellsuggestionsitem.h"
 #include "../Common/defines.h"
 #include "../Common/imetadataoperator.h"
+#include "../Common/basickeywordsmodel.h"
+#include "../Common/basicmetadatamodel.h"
 
 namespace SpellCheck {
     SpellSuggestionsItem::SpellSuggestionsItem(const QString &word, const QString &origin) :
@@ -135,51 +137,72 @@ namespace SpellCheck {
         return roles;
     }
 
-    KeywordSpellSuggestions::KeywordSpellSuggestions(const QString &keyword, int originalIndex, const QString &origin) :
+    KeywordSpellSuggestions::KeywordSpellSuggestions(Common::BasicKeywordsModel *basicModel, const QString &keyword, int originalIndex, const QString &origin) :
         SpellSuggestionsItem(keyword, origin),
         m_OriginalIndex(originalIndex),
-        m_ReplaceResult(Common::KeywordReplaceResult::Unknown)
+        m_ReplaceResult(Common::KeywordReplaceResult::Unknown),
+        m_BasicModel(basicModel)
     {
+        Q_ASSERT(basicModel != nullptr);
+        m_BasicModel->acquire();
     }
 
-    KeywordSpellSuggestions::KeywordSpellSuggestions(const QString &keyword, int originalIndex):
+    KeywordSpellSuggestions::KeywordSpellSuggestions(Common::BasicKeywordsModel *basicModel, const QString &keyword, int originalIndex):
         SpellSuggestionsItem(keyword),
         m_OriginalIndex(originalIndex),
-        m_ReplaceResult(Common::KeywordReplaceResult::Unknown)
+        m_ReplaceResult(Common::KeywordReplaceResult::Unknown),
+        m_BasicModel(basicModel)
     {
+        Q_ASSERT(basicModel != nullptr);
+        m_BasicModel->acquire();
     }
 
-    void KeywordSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item) {
-        if (anyReplacementSelected()) {
-            const QString &word = getWord();
-            const QString &replacement = getReplacement();
-            this->replaceToSuggested(item, word, replacement);
+    KeywordSpellSuggestions::~KeywordSpellSuggestions() {
+        if (m_BasicModel->release()) {
+            LOG_WARNING << "Item could have been freed";
         }
     }
 
-    void KeywordSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) {
+    void KeywordSpellSuggestions::replaceToSuggested() {
+        if (anyReplacementSelected()) {
+            const QString &word = getWord();
+            const QString &replacement = getReplacement();
+            this->replaceToSuggested(word, replacement);
+        }
+    }
+
+    void KeywordSpellSuggestions::replaceToSuggested(const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
-        Common::KeywordReplaceResult result = item->fixKeywordSpelling(m_OriginalIndex, word, replacement);
+        Common::KeywordReplaceResult result = m_BasicModel->fixKeywordSpelling(m_OriginalIndex, word, replacement);
         setReplacementSucceeded(result == Common::KeywordReplaceResult::Succeeded);
         m_ReplaceResult = result;
     }
 
-    DescriptionSpellSuggestions::DescriptionSpellSuggestions(const QString &word):
-        SpellSuggestionsItem(word)
+    DescriptionSpellSuggestions::DescriptionSpellSuggestions(Common::BasicMetadataModel *metadataModel, const QString &word):
+        SpellSuggestionsItem(word),
+        m_MetadataModel(metadataModel)
     {
+        Q_ASSERT(metadataModel != nullptr);
+        m_MetadataModel->acquire();
     }
 
-    void DescriptionSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item) {
-        if (anyReplacementSelected()) {
-            const QString &word = getWord();
-            const QString &replacement = getReplacement();
-            this->replaceToSuggested(item, word, replacement);
+    DescriptionSpellSuggestions::~DescriptionSpellSuggestions() {
+        if (m_MetadataModel->release()) {
+            LOG_WARNING << "Item could have been freed";
         }
     }
 
-    void DescriptionSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) {
+    void DescriptionSpellSuggestions::replaceToSuggested() {
+        if (anyReplacementSelected()) {
+            const QString &word = getWord();
+            const QString &replacement = getReplacement();
+            this->replaceToSuggested(word, replacement);
+        }
+    }
+
+    void DescriptionSpellSuggestions::replaceToSuggested(const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
-        bool success = item->fixDescriptionSpelling(word, replacement);
+        bool success = m_MetadataModel->fixDescriptionSpelling(word, replacement);
         setReplacementSucceeded(success);
 
         if (!success) {
@@ -187,22 +210,31 @@ namespace SpellCheck {
         }
     }
 
-    TitleSpellSuggestions::TitleSpellSuggestions(const QString &word):
-        SpellSuggestionsItem(word)
+    TitleSpellSuggestions::TitleSpellSuggestions(Common::BasicMetadataModel *metadataModel, const QString &word):
+        SpellSuggestionsItem(word),
+        m_MetadataModel(metadataModel)
     {
+        Q_ASSERT(metadataModel != nullptr);
+        m_MetadataModel->acquire();
     }
 
-    void TitleSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item) {
-        if (anyReplacementSelected()) {
-            const QString &word = getWord();
-            const QString &replacement = getReplacement();
-            this->replaceToSuggested(item, word, replacement);
+    TitleSpellSuggestions::~TitleSpellSuggestions() {
+        if (m_MetadataModel->release()) {
+            LOG_WARNING << "Item could have been freed";
         }
     }
 
-    void TitleSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) {
+    void TitleSpellSuggestions::replaceToSuggested() {
+        if (anyReplacementSelected()) {
+            const QString &word = getWord();
+            const QString &replacement = getReplacement();
+            this->replaceToSuggested(word, replacement);
+        }
+    }
+
+    void TitleSpellSuggestions::replaceToSuggested(const QString &word, const QString &replacement) {
         LOG_INFO << word << "-->" << replacement;
-        bool success = item->fixTitleSpelling(word, replacement);
+        bool success = m_MetadataModel->fixTitleSpelling(word, replacement);
         setReplacementSucceeded(success);
 
         if (!success) {
@@ -233,22 +265,22 @@ namespace SpellCheck {
         return keywordsSuggestions;
     }
 
-    void CombinedSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item) {
+    void CombinedSpellSuggestions::replaceToSuggested() {
         if (anyReplacementSelected()) {
             const QString &word = getWord();
             const QString &replacement = getReplacement();
-            this->replaceToSuggested(item, word, replacement);
+            this->replaceToSuggested(word, replacement);
         }
     }
 
-    void CombinedSpellSuggestions::replaceToSuggested(Common::IMetadataOperator *item, const QString &word, const QString &replacement) {
+    void CombinedSpellSuggestions::replaceToSuggested(const QString &word, const QString &replacement) {
         size_t size = m_SpellSuggestions.size();
         LOG_INFO << size << "item(s)";
         bool anyFault = false;
 
         for (size_t i = 0; i < size; ++i) {
             auto &suggestionItem = m_SpellSuggestions.at(i);
-            suggestionItem->replaceToSuggested(item, word, replacement);
+            suggestionItem->replaceToSuggested(word, replacement);
 
             LOG_INTEGRATION_TESTS << i << "item's result is:" << suggestionItem->getReplacementSucceeded();
 
