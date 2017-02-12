@@ -138,6 +138,7 @@ namespace QuickBuffer {
         if (editableArtwork) {
             auto *artItemsModel = m_CommandManager->getArtItemsModel();
             artItemsModel->fillFromQuickBuffer(editableArtwork->getOriginalIndex());
+            result = true;
         } else if (currentEditable) {
             currentEditable->setTitle(getTitle());
             currentEditable->setDescription(getDescription());
