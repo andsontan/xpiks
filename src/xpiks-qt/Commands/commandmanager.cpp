@@ -868,7 +868,7 @@ void Commands::CommandManager::registerCurrentItem(const Models::MetadataElement
         m_UIManager->registerCurrentItem(metadataElement);
     }
 #else
-    Q_UNUSED(artworkMetadata);
+    Q_UNUSED(metadataElement);
 #endif
 }
 
