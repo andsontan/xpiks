@@ -1282,8 +1282,8 @@ ColumnLayout {
                                                         if (!containsMouse) { return; }
 
                                                         var callbackObject = {
-                                                            onSuccess: function(text) {
-                                                                artItemsModel.plainTextEdit(rowWrapper.getIndex(), text)
+                                                            onSuccess: function(text, spaceIsSeparator) {
+                                                                artItemsModel.plainTextEdit(rowWrapper.getIndex(), text, spaceIsSeparator)
                                                             },
                                                             onClose: function() {
                                                                 flv.activateEdit()

@@ -45,6 +45,7 @@
 #include "imageartwork.h"
 #include "../Commands/expandpresetcommand.h"
 #include "../Helpers/constants.h"
+#include "../Helpers/stringhelper.h"
 
 namespace Models {
     ArtItemsModel::ArtItemsModel(QObject *parent):
@@ -524,12 +525,17 @@ namespace Models {
         }
     }
 
-    void ArtItemsModel::plainTextEdit(int metadataIndex, const QString &rawKeywords) {
+    void ArtItemsModel::plainTextEdit(int metadataIndex, const QString &rawKeywords, bool spaceIsSeparator) {
         LOG_DEBUG << "Plain text edit for item" << metadataIndex;
         if (0 <= metadataIndex && metadataIndex < getArtworksCount()) {
             ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
 
-            QStringList keywords = rawKeywords.trimmed().split(QChar(','), QString::SkipEmptyParts);
+            QVector<QChar> separators;
+            separators << QChar(',');
+            if (spaceIsSeparator) { separators << QChar(' '); }
+            QStringList keywords;
+            Helpers::splitKeywords(rawKeywords.trimmed(), separators, keywords);
+
             std::vector<MetadataElement> items;
             items.emplace_back(metadata, metadataIndex);
 

@@ -23,6 +23,7 @@
 #include "../Commands/commandmanager.h"
 #include "../Suggestion/keywordssuggestor.h"
 #include "../QuickBuffer/quickbuffer.h"
+#include "../Helpers/stringhelper.h"
 
 namespace Models {
     QString ArtworkProxyBase::getDescription() {
@@ -211,9 +212,14 @@ namespace Models {
         }
     }
 
-    void ArtworkProxyBase::doPlainTextEdit(const QString &rawKeywords) {
+    void ArtworkProxyBase::doPlainTextEdit(const QString &rawKeywords, bool spaceIsSeparator) {
         LOG_DEBUG << "#";
-        QStringList keywords = rawKeywords.trimmed().split(QChar(','), QString::SkipEmptyParts);
+
+        QVector<QChar> separators;
+        separators << QChar(',');
+        if (spaceIsSeparator) { separators << QChar(' '); }
+        QStringList keywords;
+        Helpers::splitKeywords(rawKeywords.trimmed(), separators, keywords);
 
         auto *metadataOperator = getMetadataOperator();
         metadataOperator->setKeywords(keywords);

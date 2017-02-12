@@ -126,7 +126,7 @@ namespace Models {
         Q_INVOKABLE void initTitleHighlighting(int metadataIndex, QQuickTextDocument *document);
 
         Q_INVOKABLE void editKeyword(int metadataIndex, int keywordIndex, const QString &replacement);
-        Q_INVOKABLE void plainTextEdit(int metadataIndex, const QString &rawKeywords);
+        Q_INVOKABLE void plainTextEdit(int metadataIndex, const QString &rawKeywords, bool spaceIsSeparator=false);
 
         /*Q_INVOKABLE*/ void detachVectorsFromSelected(const QVector<int> &selectedIndices);
 

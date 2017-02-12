@@ -25,6 +25,7 @@
 #include <string>
 #include <vector>
 #include <QString>
+#include <QVector>
 #include <stdarg.h>
 #include <functional>
 
@@ -33,6 +34,10 @@ class QStringList;
 class QByteArray;
 
 namespace Helpers {
+    void foreachPart(const QString &text,
+                     const std::function<bool (const QChar &symbol)> &isSeparatorPred,
+                     const std::function<bool (const QString &word)> &pred,
+                     const std::function<void (int start, int length, const QString &word)> &action);
     void foreachWord(const QString &text,
                      const std::function<bool (const QString &word)> &pred,
                      const std::function<void (int start, int length, const QString &word)> &action);
@@ -41,6 +46,7 @@ namespace Helpers {
     bool containsWholeWords(const QString &haystack, const QString &needle, Qt::CaseSensitivity caseSensitivity=Qt::CaseInsensitive);
     QString getLastNLines(const QString &text, int N);
     void splitText(const QString &text, QStringList &parts);
+    void splitKeywords(const QString &text, const QVector<QChar> &separators, QStringList &parts);
     int levensteinDistance(const QString &s1, const QString &s2);
     bool isUtf8(const char* const buffer);
     QString detectEncodingAndDecode(const std::string &value);

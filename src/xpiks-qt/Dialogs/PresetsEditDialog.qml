@@ -486,8 +486,8 @@ Item {
                             if (!presetNamesListView.currentItem) { return; }
 
                             var callbackObject = {
-                                onSuccess: function(text) {
-                                    presetsModel.plainTextEdit(presetNamesListView.currentIndex, text)
+                                onSuccess: function(text, spaceIsSeparator) {
+                                    presetsModel.plainTextEdit(presetNamesListView.currentIndex, text, spaceIsSeparator)
                                 },
                                 onClose: function() {
                                     flv.activateEdit()

@@ -34,9 +34,10 @@
 #include "../Helpers/indiceshelper.h"
 
 namespace Helpers {
-    void foreachWord(const QString &text,
-            const std::function<bool (const QString &word)> &pred,
-            const std::function<void (int start, int length, const QString &word)> &action)
+    void foreachPart(const QString &text,
+                     const std::function<bool (const QChar &symbol)> &isSeparatorPred,
+                     const std::function<bool (const QString &word)> &pred,
+                     const std::function<void (int start, int length, const QString &word)> &action)
     {
         int i = 0;
         const int size = text.size();
@@ -44,7 +45,7 @@ namespace Helpers {
 
         while (i < size) {
             QChar c = text[i];
-            if (c.isSpace() || c.isPunct()) {
+            if (isSeparatorPred(c)) {
                 if (lastStart != -1) {
                     int wordLength = i - lastStart;
                     QString word = text.mid(lastStart, wordLength);
@@ -72,6 +73,15 @@ namespace Helpers {
                 action(lastStart, wordLength, word);
             }
         }
+    }
+
+    void foreachWord(const QString &text,
+            const std::function<bool (const QString &word)> &pred,
+            const std::function<void (int start, int length, const QString &word)> &action)
+    {
+        foreachPart(text,
+                    [](const QChar &c) { return c.isSpace() || c.isPunct(); },
+        pred, action);
     }
 
     bool isLeftWordBound(const QString &text, int index, bool skipWordBounds=false) {
@@ -224,6 +234,13 @@ namespace Helpers {
     void splitText(const QString &text, QStringList &parts) {
         foreachWord(text,
                     [](const QString&) { return true; },
+        [&parts](int, int, const QString &word) { parts.append(word); });
+    }
+
+    void splitKeywords(const QString &text, const QVector<QChar> &separators, QStringList &parts) {
+        foreachPart(text,
+                    [&separators](const QChar &c) { return separators.contains(c); },
+        [](const QString&) { return true; },
         [&parts](int, int, const QString &word) { parts.append(word); });
     }
 

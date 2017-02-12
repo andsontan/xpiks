@@ -70,7 +70,7 @@ namespace KeywordsPresets {
         Q_INVOKABLE void removeLastKeyword(int index);
         Q_INVOKABLE void appendKeyword(int index, const QString &keyword);
         Q_INVOKABLE void pasteKeywords(int index, const QStringList &keywords);
-        Q_INVOKABLE void plainTextEdit(int index, const QString &rawKeywords);
+        Q_INVOKABLE void plainTextEdit(int index, const QString &rawKeywords, bool spaceIsSeparator);
         Q_INVOKABLE QObject *getKeywordsModel(int index);
         Q_INVOKABLE void saveToConfig();
         /*Q_INVOKABLE*/ void loadModelFromConfig();

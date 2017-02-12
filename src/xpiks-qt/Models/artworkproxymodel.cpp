@@ -151,8 +151,8 @@ namespace Models {
         doSpellCheckTitle();
     }
 
-    void ArtworkProxyModel::plainTextEdit(const QString &rawKeywords) {
-        doPlainTextEdit(rawKeywords);
+    void ArtworkProxyModel::plainTextEdit(const QString &rawKeywords, bool spaceIsSeparator) {
+        doPlainTextEdit(rawKeywords, spaceIsSeparator);
     }
 
     bool ArtworkProxyModel::hasTitleWordSpellError(const QString &word) {

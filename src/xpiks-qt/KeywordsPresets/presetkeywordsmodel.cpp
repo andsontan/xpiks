@@ -1,5 +1,6 @@
 #include "presetkeywordsmodel.h"
 #include "../Commands/commandmanager.h"
+#include "../Helpers/stringhelper.h"
 
 namespace KeywordsPresets {
     PresetKeywordsModel::PresetKeywordsModel(QObject *parent):
@@ -134,13 +135,19 @@ namespace KeywordsPresets {
         }
     }
 
-    void PresetKeywordsModel::plainTextEdit(int index, const QString &rawKeywords) {
+    void PresetKeywordsModel::plainTextEdit(int index, const QString &rawKeywords, bool spaceIsSeparator) {
         LOG_INFO << "index" << index;
 
         if (0 <= index && index < getPresetsCount()) {
             auto *preset = m_PresetsList.at(index);
             Common::BasicKeywordsModel &keywordsModel = preset->m_KeywordsModel;
-            QStringList keywords = rawKeywords.trimmed().split(QChar(','), QString::SkipEmptyParts);
+
+            QVector<QChar> separators;
+            separators << QChar(',');
+            if (spaceIsSeparator) { separators << QChar(' '); }
+            QStringList keywords;
+            Helpers::splitKeywords(rawKeywords.trimmed(), separators, keywords);
+
             keywordsModel.setKeywords(keywords);
         }
     }

@@ -71,7 +71,7 @@ namespace Models {
         void doInitTitleHighlighting(QQuickTextDocument *document);
         void doSpellCheckDescription();
         void doSpellCheckTitle();
-        void doPlainTextEdit(const QString &rawKeywords);
+        void doPlainTextEdit(const QString &rawKeywords, bool spaceIsSeparator);
         bool getHasTitleWordSpellError(const QString &word);
         bool getHasDescriptionWordSpellError(const QString &word);
         bool doExpandPreset(int keywordIndex, int presetIndex);

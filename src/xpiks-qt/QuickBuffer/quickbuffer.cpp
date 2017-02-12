@@ -114,11 +114,6 @@ namespace QuickBuffer {
         doSpellCheckTitle();
     }
 
-    void QuickBuffer::plainTextEdit(const QString &rawKeywords) {
-        doPlainTextEdit(rawKeywords);
-        emit isEmptyChanged();
-    }
-
     bool QuickBuffer::hasTitleWordSpellError(const QString &word) {
         return getHasTitleWordSpellError(word);
     }
@@ -171,6 +166,7 @@ namespace QuickBuffer {
             this->setTitle(currentEditable->getTitle());
             this->setDescription(currentEditable->getDescription());
             this->setKeywords(currentEditable->getKeywords());
+
             emit isEmptyChanged();
         } else {
             LOG_WARNING << "Nothing registered as current item";
@@ -184,6 +180,7 @@ namespace QuickBuffer {
         this->setTitle(model->getTitle());
         this->setDescription(model->getDescription());
         this->setKeywords(model->getKeywords());
+
         emit isEmptyChanged();
     }
 }

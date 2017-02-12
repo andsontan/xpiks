@@ -846,8 +846,8 @@ Rectangle {
                                         if (!containsMouse) { return; }
 
                                         var callbackObject = {
-                                            onSuccess: function(text) {
-                                                combinedArtworks.plainTextEdit(text)
+                                            onSuccess: function(text, spaceIsSeparator) {
+                                                combinedArtworks.plainTextEdit(text, spaceIsSeparator)
                                             },
                                             onClose: function() {
                                                 flv.activateEdit()
