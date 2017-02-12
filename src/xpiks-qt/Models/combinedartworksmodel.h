@@ -188,6 +188,7 @@ namespace Models {
         void enableAllFields();
         void assignFromOneArtwork();
         void assignFromManyArtworks();
+        void recombineArtworks(std::function<bool (const MetadataElement &)> pred);
 
     public slots:
         void spellCheckErrorsChangedHandler();

@@ -61,6 +61,7 @@ namespace Models {
         Q_INVOKABLE void setArtworkSelected(int index, bool value);
         Q_INVOKABLE void removeSelectedArtworks() { doRemoveSelectedArtworks(); }
         Q_INVOKABLE void resetModel() { doResetModel(); }
+        Q_INVOKABLE void unselectAllItems();
 
     protected:
         bool isEmpty() const { return m_ArtworksList.empty(); }

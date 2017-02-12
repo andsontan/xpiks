@@ -237,28 +237,8 @@ namespace Models {
     }
 
     void CombinedArtworksModel::assignFromSelected() {
-        int selectedCount = 0;
-        int firstSelectedIndex = -1;
-
-        processArtworks([](const MetadataElement &item) { return item.isSelected(); },
-                        [&selectedCount, &firstSelectedIndex](int index, ArtworkMetadata *) {
-            selectedCount++;
-
-            if (firstSelectedIndex == -1) {
-                firstSelectedIndex = index;
-            }
-        });
-
-        if (selectedCount == 1) {
-            Q_ASSERT(firstSelectedIndex != -1);
-            LOG_DEBUG << "Assigning fields";
-            ArtworkMetadata *metadata = getArtworkMetadata(firstSelectedIndex);
-            setTitle(metadata->getTitle());
-            setDescription(metadata->getDescription());
-            setKeywords(metadata->getKeywords());
-        } else {
-            LOG_WARNING << "Method called with" << getArtworksCount() << "items selected";
-        }
+        LOG_DEBUG << "#";
+        recombineArtworks([](const MetadataElement &item) { return item.isSelected(); });
     }
 
     void CombinedArtworksModel::plainTextEdit(const QString &rawKeywords, bool spaceIsSeparator) {
@@ -342,6 +322,10 @@ namespace Models {
     }
 
     void CombinedArtworksModel::assignFromManyArtworks() {
+        recombineArtworks([](const MetadataElement &) { return true; });
+    }
+
+    void CombinedArtworksModel::recombineArtworks(std::function<bool (const MetadataElement &)> pred) {
         LOG_DEBUG << "#";
 
         bool anyItemsProcessed = false;
@@ -352,7 +336,7 @@ namespace Models {
         QStringList firstItemKeywords;
         int firstItemKeywordsCount = 0;
 
-        processArtworks([](const MetadataElement &) { return true; },
+        processArtworks(pred,
                         [&](int, ArtworkMetadata *metadata) {
             if (!anyItemsProcessed) {
                 description = metadata->getDescription();

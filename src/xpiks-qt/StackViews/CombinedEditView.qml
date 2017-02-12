@@ -1005,10 +1005,11 @@ Rectangle {
             StyledButton {
                 text: i18.n + qsTr("Assign from selected")
                 width: 160
-                enabled: combinedArtworks.selectedArtworksCount == 1
+                enabled: combinedArtworks.selectedArtworksCount > 0
                 tooltip: i18.n + qsTr("Set metadata from selected artwork to all fields")
                 onClicked: {
                     combinedArtworks.assignFromSelected()
+                    combinedArtworks.unselectAllItems()
                 }
             }
 

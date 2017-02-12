@@ -67,6 +67,14 @@ namespace Models {
         emit selectedArtworksCountChanged();
     }
 
+    void ArtworksViewModel::unselectAllItems() {
+        for (auto &item: m_ArtworksList) {
+            item.setSelected(false);
+        }
+
+        emit dataChanged(this->index(0), this->index(rowCount() - 1));
+    }
+
     ArtworkMetadata *ArtworksViewModel::getArtworkMetadata(size_t i) const {
         Q_ASSERT((i >= 0) && (i < m_ArtworksList.size()));
         return m_ArtworksList.at(i).getOrigin();
