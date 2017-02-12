@@ -22,11 +22,14 @@
 #include "currenteditableartwork.h"
 #include "../Models/artworkmetadata.h"
 #include "../Common/defines.h"
+#include "../Commands/commandmanager.h"
 
 namespace QuickBuffer {
-    CurrentEditableArtwork::CurrentEditableArtwork(Models::ArtworkMetadata *artworkMetadata, int originalIndex):
+    CurrentEditableArtwork::CurrentEditableArtwork(Models::ArtworkMetadata *artworkMetadata, int originalIndex, const Commands::CommandManager *commandManager):
+        m_CommandManager(commandManager),
         m_OriginalIndex(originalIndex)
     {
+        Q_ASSERT(commandManager != nullptr);
         Q_ASSERT(artworkMetadata != nullptr);
         m_ArtworkMetadata = artworkMetadata;
 
@@ -61,5 +64,13 @@ namespace QuickBuffer {
 
     void CurrentEditableArtwork::setKeywords(const QStringList &keywords) {
         m_ArtworkMetadata->setKeywords(keywords);
+    }
+
+    void CurrentEditableArtwork::spellCheck() {
+        m_CommandManager->submitItemForSpellCheck(m_ArtworkMetadata->getBasicModel());
+    }
+
+    void CurrentEditableArtwork::update() {
+        m_CommandManager->updateArtworks(QVector<int>() << m_OriginalIndex);
     }
 }

@@ -52,4 +52,8 @@ namespace QuickBuffer {
     void CurrentEditableProxyArtwork::setKeywords(const QStringList &keywords) {
         m_ArtworkProxy->setKeywords(keywords);
     }
+
+    void CurrentEditableProxyArtwork::spellCheck() {
+        m_ArtworkProxy->spellCheckEverything();
+    }
 }

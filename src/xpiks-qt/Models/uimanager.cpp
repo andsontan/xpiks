@@ -32,17 +32,8 @@ namespace Models {
     {
     }
 
-    void UIManager::registerCurrentItem(const Models::MetadataElement &metadataElement) {
-        auto *artwork = metadataElement.getOrigin();
-        Q_ASSERT(artwork != nullptr);
-        LOG_INFO << artwork->getFilepath();
-        m_CurrentEditable.reset(new QuickBuffer::CurrentEditableArtwork(artwork, metadataElement.getOriginalIndex()));
-        emit hasCurrentEditableChanged();
-    }
-
-    void UIManager::registerCurrentItem(ArtworkProxyBase *artworkProxy) {
-        Q_ASSERT(artworkProxy != nullptr);
-        m_CurrentEditable.reset(new QuickBuffer::CurrentEditableProxyArtwork(artworkProxy));
+    void UIManager::registerCurrentItem(std::shared_ptr<QuickBuffer::ICurrentEditable> &currentItem) {
+        m_CurrentEditable = std::move(currentItem);
         emit hasCurrentEditableChanged();
     }
 

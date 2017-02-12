@@ -62,6 +62,8 @@
 #include "../Models/uimanager.h"
 #include "../Models/artworkproxymodel.h"
 #include "../QuickBuffer/quickbuffer.h"
+#include "../QuickBuffer/currenteditableartwork.h"
+#include "../QuickBuffer/currenteditableproxyartwork.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -871,13 +873,18 @@ void Commands::CommandManager::cleanup() {
 
 void Commands::CommandManager::registerCurrentItem(const Models::MetadataElement &metadataElement) const {
     if (m_UIManager != nullptr) {
-        m_UIManager->registerCurrentItem(metadataElement);
+        std::shared_ptr<QuickBuffer::ICurrentEditable> currentItem(new QuickBuffer::CurrentEditableArtwork(
+                                                                       metadataElement.getOrigin(),
+                                                                       metadataElement.getOriginalIndex(),
+                                                                       this));
+        m_UIManager->registerCurrentItem(currentItem);
     }
 }
 
 void Commands::CommandManager::registerCurrentItem(Models::ArtworkProxyBase *artworkProxy) const {
     if (m_UIManager != nullptr) {
-        m_UIManager->registerCurrentItem(artworkProxy);
+        std::shared_ptr<QuickBuffer::ICurrentEditable> currentItem(new QuickBuffer::CurrentEditableProxyArtwork(artworkProxy));
+        m_UIManager->registerCurrentItem(currentItem);
     }
 }
 

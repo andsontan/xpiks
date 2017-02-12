@@ -28,11 +28,15 @@ namespace Models {
     class ArtworkMetadata;
 }
 
+namespace Commands {
+    class CommandManager;
+}
+
 namespace QuickBuffer {
     class CurrentEditableArtwork : public ICurrentEditable
     {
     public:
-        CurrentEditableArtwork(Models::ArtworkMetadata *artworkMetadata, int originalIndex);
+        CurrentEditableArtwork(Models::ArtworkMetadata *artworkMetadata, int originalIndex, const Commands::CommandManager *commandManager);
         virtual ~CurrentEditableArtwork();
 
     public:
@@ -43,11 +47,16 @@ namespace QuickBuffer {
         virtual QString getTitle() override;
         virtual QString getDescription() override;
         virtual QStringList getKeywords() override;
+
         virtual void setTitle(const QString &value) override;
         virtual void setDescription(const QString &value) override;
         virtual void setKeywords(const QStringList &keywords) override;
 
+        virtual void spellCheck() override;
+        virtual void update() override;
+
     private:
+        const Commands::CommandManager *m_CommandManager;
         Models::ArtworkMetadata *m_ArtworkMetadata;
         int m_OriginalIndex;
     };

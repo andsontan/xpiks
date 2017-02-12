@@ -39,9 +39,13 @@ namespace QuickBuffer {
         virtual QString getTitle() override;
         virtual QString getDescription() override;
         virtual QStringList getKeywords() override;
+
         virtual void setTitle(const QString &title) override;
         virtual void setDescription(const QString &description) override;
         virtual void setKeywords(const QStringList &keywords) override;
+
+        virtual void spellCheck() override;
+        virtual void update() override { /* BUMP */ }
 
     private:
         Models::ArtworkProxyBase *m_ArtworkProxy;

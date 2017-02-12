@@ -731,6 +731,11 @@ ApplicationWindow {
         }
 
         MenuItem {
+            text: qsTr("Fill from Quick Buffer")
+            onTriggered: filteredArtItemsModel.fillFromQuickBuffer(artworkContextMenu.index)
+        }
+
+        MenuItem {
             text: qsTr("Show in folder")
             onTriggered: helpersWrapper.revealArtworkFile(artworkContextMenu.filename);
         }

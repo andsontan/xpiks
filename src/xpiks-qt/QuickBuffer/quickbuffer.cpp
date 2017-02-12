@@ -24,6 +24,7 @@
 #include "icurrenteditable.h"
 #include "../Models/uimanager.h"
 #include "../QuickBuffer/currenteditableartwork.h"
+#include "../Models/artitemsmodel.h"
 
 namespace QuickBuffer {
     QuickBuffer::QuickBuffer(QObject *parent) :
@@ -133,15 +134,17 @@ namespace QuickBuffer {
         auto *uiManager = m_CommandManager->getUIManager();
         auto currentEditable = uiManager->getCurrentEditable();
 
-        if (currentEditable) {
+        auto editableArtwork = std::dynamic_pointer_cast<CurrentEditableArtwork>(currentEditable);
+        if (editableArtwork) {
+            auto *artItemsModel = m_CommandManager->getArtItemsModel();
+            artItemsModel->fillFromQuickBuffer(editableArtwork->getOriginalIndex());
+        } else if (currentEditable) {
             currentEditable->setTitle(getTitle());
             currentEditable->setDescription(getDescription());
             currentEditable->setKeywords(getKeywords());
 
-            auto editableArtwork = std::dynamic_pointer_cast<CurrentEditableArtwork>(currentEditable);
-            if (editableArtwork) {
-                m_CommandManager->updateArtworks(QVector<int>() << editableArtwork->getOriginalIndex());
-            }
+            currentEditable->spellCheck();
+            currentEditable->update();
 
             result = true;
         } else {

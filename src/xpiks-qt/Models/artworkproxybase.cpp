@@ -328,6 +328,11 @@ namespace Models {
         quickBuffer->setFromBasicModel(metadataModel);
     }
 
+    void ArtworkProxyBase::spellCheckEverything() {
+        auto *basicModel = getBasicMetadataModel();
+        m_CommandManager->submitItemForSpellCheck(basicModel);
+    }
+
     void ArtworkProxyBase::spellCheckKeywords() {
         auto *basicModel = getBasicMetadataModel();
         m_CommandManager->submitItemForSpellCheck(basicModel, Common::SpellCheckFlags::Keywords);

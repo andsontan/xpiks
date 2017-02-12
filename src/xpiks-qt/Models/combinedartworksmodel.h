@@ -114,6 +114,11 @@ namespace Models {
             }
         }
 
+        virtual void setKeywords(const QStringList &keywords) override {
+            ArtworkProxyBase::setKeywords(keywords);
+            setKeywordsModified(true);
+        }
+
         bool getChangeDescription() const { return Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::EditDesctiption); }
         void setChangeDescription(bool value);
 

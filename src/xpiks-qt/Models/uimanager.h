@@ -52,8 +52,7 @@ namespace Models {
         std::shared_ptr<QuickBuffer::ICurrentEditable> getCurrentEditable() const { return m_CurrentEditable; }
 
     public:
-        void registerCurrentItem(const Models::MetadataElement &metadataElement);
-        void registerCurrentItem(ArtworkProxyBase *artworkProxy);
+        void registerCurrentItem(std::shared_ptr<QuickBuffer::ICurrentEditable> &currentItem);
 
     public:
         QStringList getTabsList() const { return m_TabsList; }

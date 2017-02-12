@@ -136,6 +136,8 @@ namespace Models {
 
         Q_INVOKABLE void initSuggestion(int metadataIndex);
 
+        void fillFromQuickBuffer(int metadataIndex);
+
     public:
         virtual int rowCount(const QModelIndex &parent=QModelIndex()) const override;
         virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const override;

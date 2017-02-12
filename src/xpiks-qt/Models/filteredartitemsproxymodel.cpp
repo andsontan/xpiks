@@ -424,6 +424,16 @@ namespace Models {
         }
     }
 
+    void FilteredArtItemsProxyModel::fillFromQuickBuffer(int index) const {
+        LOG_INFO << index;
+
+        if (0 <= index && index < rowCount()) {
+            int originalIndex = getOriginalIndex(index);
+            ArtItemsModel *artItemsModel = getArtItemsModel();
+            artItemsModel->fillFromQuickBuffer(originalIndex);
+        }
+    }
+
     void FilteredArtItemsProxyModel::suggestCorrectionsForSelected() const {
         auto flags = 0;
         using namespace Common;

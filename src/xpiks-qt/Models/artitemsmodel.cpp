@@ -46,6 +46,7 @@
 #include "../Commands/expandpresetcommand.h"
 #include "../Helpers/constants.h"
 #include "../Helpers/stringhelper.h"
+#include "../QuickBuffer/quickbuffer.h"
 
 namespace Models {
     ArtItemsModel::ArtItemsModel(QObject *parent):
@@ -628,6 +629,30 @@ namespace Models {
             suggestor->setExistingKeywords(metadata->getKeywordsSet());
         }
 #endif
+    }
+
+    void ArtItemsModel::fillFromQuickBuffer(int metadataIndex) {
+        LOG_INFO << "item" << metadataIndex;
+
+        if (0 <= metadataIndex && metadataIndex < rowCount()) {
+            ArtworkMetadata *metadata = m_ArtworkList.at(metadataIndex);
+            auto *quickBuffer = m_CommandManager->getQuickBuffer();
+
+            std::vector<MetadataElement> items;
+            items.emplace_back(metadata, metadataIndex);
+
+            Common::CombinedEditFlags flags = Common::CombinedEditFlags::None;
+            Common::SetFlag(flags, Common::CombinedEditFlags::EditEverything);
+            std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
+                                                                                   flags,
+                                                                                   items,
+                                                                                   quickBuffer->getDescription(),
+                                                                                   quickBuffer->getTitle(),
+                                                                                   quickBuffer->getKeywords()));
+
+            m_CommandManager->processCommand(combinedEditCommand);
+            updateItemAtIndex(metadataIndex);
+        }
     }
 
     int ArtItemsModel::rowCount(const QModelIndex &parent) const {

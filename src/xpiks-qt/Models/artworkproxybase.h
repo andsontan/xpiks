@@ -83,6 +83,9 @@ namespace Models {
         void doHandleUserDictCleared();
         void doCopyToQuickBuffer();
 
+    public:
+        void spellCheckEverything();
+
     private:
         void spellCheckKeywords();
     };
