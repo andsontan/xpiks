@@ -93,11 +93,6 @@ Item {
                 var tmp = mapToItem(presetEditComponent, mouse.x, mouse.y);
                 old_x = tmp.x;
                 old_y = tmp.y;
-
-                var dialogPoint = mapToItem(dialogWindow, mouse.x, mouse.y);
-                if (!Common.isInComponent(dialogPoint, dialogWindow)) {
-                    closePopup()
-                }
             }
 
             onPositionChanged: {
@@ -463,17 +458,60 @@ Item {
                 }
             }
 
-            Item {
+            RowLayout {
                 id: bottomPanel
-                anchors.left: parent.left
+                anchors.leftMargin: 20
+                anchors.left: listPanel.right
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 height: childrenRect.height
                 anchors.bottomMargin: 20
                 anchors.rightMargin: 20
 
+                StyledText {
+                    id: plainTextText
+                    text: i18.n + qsTr("<u>edit in plain text</u>")
+                    color: plainTextMA.containsMouse ? Colors.linkClickedColor : Colors.labelActiveForeground
+                    enabled: presetNamesListView.currentItem ? true : false
+
+                    MouseArea {
+                        id: plainTextMA
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        preventStealing: true
+                        cursorShape: containsMouse ? Qt.PointingHandCursor : Qt.ArrowCursor
+                        onClicked: {
+                            // strange bug with clicking on the keywords field
+                            if (!containsMouse) { return; }
+                            if (!presetNamesListView.currentItem) { return; }
+
+                            var callbackObject = {
+                                onSuccess: function(text) {
+                                    presetsModel.plainTextEdit(presetNamesListView.currentIndex, text)
+                                },
+                                onClose: function() {
+                                    flv.activateEdit()
+                                }
+                            }
+
+                            var basicModel =  presetsModel.getKeywordsModel(presetNamesListView.currentIndex)
+
+                            Common.launchDialog("../Dialogs/PlainTextKeywordsDialog.qml",
+                                                applicationWindow,
+                                                {
+                                                    callbackObject: callbackObject,
+                                                    keywordsText: presetNamesListView.currentItem.myData.keywordsstring,
+                                                    keywordsModel: basicModel
+                                                });
+                        }
+                    }
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
                 StyledButton {
-                    anchors.right: parent.right
                     text: i18.n + qsTr("Close")
                     width: 100
                     onClicked: {

@@ -134,8 +134,19 @@ namespace KeywordsPresets {
         }
     }
 
+    void PresetKeywordsModel::plainTextEdit(int index, const QString &rawKeywords) {
+        LOG_INFO << "index" << index;
+
+        if (0 <= index && index < getPresetsCount()) {
+            auto *preset = m_PresetsList.at(index);
+            Common::BasicKeywordsModel &keywordsModel = preset->m_KeywordsModel;
+            QStringList keywords = rawKeywords.trimmed().split(QChar(','), QString::SkipEmptyParts);
+            keywordsModel.setKeywords(keywords);
+        }
+    }
+
     void PresetKeywordsModel::appendKeyword(int index, const QString &keyword) {
-        LOG_INFO << "item" << index << keyword << keyword;
+        LOG_INFO << "index" << index << "keyword" << keyword;
 
         if (0 <= index && index < getPresetsCount()) {            
             auto *preset = m_PresetsList.at(index);
@@ -219,6 +230,8 @@ namespace KeywordsPresets {
             return item->m_PresetName;
         case KeywordsCountRole:
             return item->m_KeywordsModel.getKeywordsCount();
+        case KeywordsStringRole:
+            return item->m_KeywordsModel.getKeywordsString();
         default:
             return QVariant();
         }
@@ -254,6 +267,7 @@ namespace KeywordsPresets {
         roles[NameRole] = "name";
         roles[EditNameRole] = "editname";
         roles[KeywordsCountRole] = "keywordscount";
+        roles[KeywordsStringRole] = "keywordsstring";
         return roles;
     }
 
