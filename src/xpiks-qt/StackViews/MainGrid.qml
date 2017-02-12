@@ -1364,7 +1364,8 @@ ColumnLayout {
 
                                             StyledText {
                                                 text: i18.n + qsTr("Copy")
-                                                color: copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
+                                                color: enabled ? (copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : (rowWrapper.isHighlighted ? Colors.labelActiveForeground : Colors.labelInactiveForeground)
+                                                enabled: keywordscount > 0
 
                                                 MouseArea {
                                                     id: copyKeywordsMA
@@ -1382,7 +1383,8 @@ ColumnLayout {
 
                                             StyledText {
                                                 text: i18.n + qsTr("Clear")
-                                                color: clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
+                                                enabled: keywordscount > 0
+                                                color: enabled ? (clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : (rowWrapper.isHighlighted ? Colors.labelActiveForeground : Colors.labelInactiveForeground)
 
                                                 MouseArea {
                                                     id: clearKeywordsMA
