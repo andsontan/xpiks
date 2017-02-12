@@ -221,7 +221,7 @@ ColumnLayout {
                 focus: true
                 isActive: false
                 property string previousText: text
-                property int maximumLength: 280
+                property int maximumLength: 380
                 onTextChanged: {
                     if (text.length > UIConfig.inputsMaxLength) {
                         var cursor = cursorPosition;
@@ -308,7 +308,7 @@ ColumnLayout {
         Layout.fillHeight: true
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.rightMargin: quickScrollBar.visible ? 5 : 0
+        anchors.rightMargin: quickScrollBar.visible ? 10 : 0
         color: Colors.inputInactiveBackground
         property var keywordsModel: quickBuffer.getBasicModel()
 

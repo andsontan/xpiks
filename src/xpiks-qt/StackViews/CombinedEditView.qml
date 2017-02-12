@@ -990,6 +990,14 @@ Rectangle {
             height: childrenRect.height
             anchors.verticalCenter: parent.verticalCenter
 
+            StyledButton {
+                text: i18.n + qsTr("Copy to Quick Buffer")
+                width: 160
+                onClicked: {
+                    combinedArtworks.copyToQuickBuffer()
+                }
+            }
+
             Item {
                 Layout.fillWidth: true
             }
@@ -1232,5 +1240,9 @@ Rectangle {
                 }
             }
         }
+    }
+
+    ClipboardHelper {
+        id: clipboard
     }
 }
