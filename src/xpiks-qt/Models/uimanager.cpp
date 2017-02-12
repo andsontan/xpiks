@@ -32,20 +32,24 @@ namespace Models {
     {
     }
 
-    void UIManager::registerCurrentItem(ArtworkMetadata *artwork) {
+    void UIManager::registerCurrentItem(const Models::MetadataElement &metadataElement) {
+        auto *artwork = metadataElement.getOrigin();
         Q_ASSERT(artwork != nullptr);
         LOG_INFO << artwork->getFilepath();
-        m_CurrentEditable.reset(new QuickBuffer::CurrentEditableArtwork(artwork));
+        m_CurrentEditable.reset(new QuickBuffer::CurrentEditableArtwork(artwork, metadataElement.getOriginalIndex()));
+        emit hasCurrentEditableChanged();
     }
 
     void UIManager::registerCurrentItem(ArtworkProxyBase *artworkProxy) {
         Q_ASSERT(artworkProxy != nullptr);
         m_CurrentEditable.reset(new QuickBuffer::CurrentEditableProxyArtwork(artworkProxy));
+        emit hasCurrentEditableChanged();
     }
 
     void UIManager::clearCurrentItem() {
         LOG_DEBUG << "#";
         m_CurrentEditable.reset();
+        emit hasCurrentEditableChanged();
     }
 
     void UIManager::addSystemTab(const QString tabIconComponent, const QString &tabComponent) {

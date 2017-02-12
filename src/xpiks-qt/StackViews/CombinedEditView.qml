@@ -924,6 +924,7 @@ Rectangle {
                             StyledText {
                                 text: i18.n + qsTr("Copy")
                                 color: enabled ? (copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
+                                enabled: combinedArtworks.keywordsCount > 0
 
                                 MouseArea {
                                     id: copyKeywordsMA
@@ -940,6 +941,7 @@ Rectangle {
 
                             StyledText {
                                 text: i18.n + qsTr("Clear")
+                                enabled: combinedArtworks.keywordsCount > 0
                                 color: enabled ? (clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
                                 MouseArea {

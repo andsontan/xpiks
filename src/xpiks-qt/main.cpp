@@ -394,8 +394,8 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&translationService);
     commandManager.InjectDependency(&uiManager);
     commandManager.InjectDependency(&artworkProxyModel);
+    commandManager.InjectDependency(&quickBuffer);
 
-    quickBuffer.setCommandManager(&commandManager);
     autoCompleteModel.setCommandManager(&commandManager);
 
     commandManager.ensureDependenciesInjected();

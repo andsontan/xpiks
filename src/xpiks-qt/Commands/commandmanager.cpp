@@ -61,6 +61,7 @@
 #include "../Translation/translationservice.h"
 #include "../Models/uimanager.h"
 #include "../Models/artworkproxymodel.h"
+#include "../QuickBuffer/quickbuffer.h"
 
 void Commands::CommandManager::InjectDependency(Models::ArtworksRepository *artworkRepository) {
     Q_ASSERT(artworkRepository != NULL); m_ArtworksRepository = artworkRepository;
@@ -229,6 +230,11 @@ void Commands::CommandManager::InjectDependency(Models::ArtworkProxyModel *artwo
     m_ArtworkProxyModel->setCommandManager(this);
 }
 
+void Commands::CommandManager::InjectDependency(QuickBuffer::QuickBuffer *quickBuffer) {
+    Q_ASSERT(quickBuffer != NULL); m_QuickBuffer = quickBuffer;
+    m_QuickBuffer->setCommandManager(this);
+}
+
 std::shared_ptr<Commands::ICommandResult> Commands::CommandManager::processCommand(const std::shared_ptr<ICommandBase> &command)
 #ifndef CORE_TESTS
 const
@@ -368,6 +374,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
 
 #if !defined(INTEGRATION_TESTS) && !defined(CORE_TESTS)
     Q_ASSERT(m_UIManager != NULL);
+    Q_ASSERT(m_QuickBuffer != NULL);
 #endif
 
 #ifndef INTEGRATION_TESTS
@@ -855,10 +862,10 @@ void Commands::CommandManager::cleanup() {
 }
 #endif
 
-void Commands::CommandManager::registerCurrentItem(Models::ArtworkMetadata *artworkMetadata) const {
+void Commands::CommandManager::registerCurrentItem(const Models::MetadataElement &metadataElement) const {
 #ifndef CORE_TESTS
     if (m_UIManager != nullptr) {
-        m_UIManager->registerCurrentItem(artworkMetadata);
+        m_UIManager->registerCurrentItem(metadataElement);
     }
 #else
     Q_UNUSED(artworkMetadata);

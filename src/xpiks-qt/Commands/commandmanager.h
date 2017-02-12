@@ -120,6 +120,10 @@ namespace Translation {
     class TranslationManager;
 }
 
+namespace QuickBuffer {
+    class QuickBuffer;
+}
+
 namespace Commands {
     class CommandManager : public ICommandManager
     {
@@ -160,6 +164,7 @@ namespace Commands {
             m_TranslationManager(NULL),
             m_UIManager(NULL),
             m_ArtworkProxyModel(NULL),
+            m_QuickBuffer(NULL),
             m_AfterInitCalled(false)
         { }
 
@@ -201,6 +206,7 @@ namespace Commands {
         void InjectDependency(Translation::TranslationManager *translationManager);
         void InjectDependency(Models::UIManager *uiManager);
         void InjectDependency(Models::ArtworkProxyModel *artworkProxy);
+        void InjectDependency(QuickBuffer::QuickBuffer *quickBuffer);
 
     public:
         virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<ICommandBase> &command)
@@ -277,7 +283,7 @@ namespace Commands {
 #endif
 
     public:
-        void registerCurrentItem(Models::ArtworkMetadata *artworkMetadata) const;
+        void registerCurrentItem(const Models::MetadataElement &metadataElement) const;
         void registerCurrentItem(Models::ArtworkProxyBase *artworkProxy) const;
         void clearCurrentItem() const;
 
@@ -302,6 +308,8 @@ namespace Commands {
         virtual KeywordsPresets::PresetKeywordsModel *getPresetsModel() const { return m_PresetsModel; }
         virtual KeywordsPresets::PresetKeywordsModelConfig *getPresetsModelConfig() const { return m_PresetsModelConfig; }
         virtual Translation::TranslationService *getTranslationService() const { return m_TranslationService; }
+        virtual Models::UIManager *getUIManager() const { return m_UIManager; }
+        virtual QuickBuffer::QuickBuffer *getQuickBuffer() const { return m_QuickBuffer; }
 
 #ifdef INTEGRATION_TESTS
         virtual Translation::TranslationManager *getTranslationManager() const { return m_TranslationManager; }
@@ -348,6 +356,7 @@ namespace Commands {
         Translation::TranslationManager *m_TranslationManager;
         Models::UIManager *m_UIManager;
         Models::ArtworkProxyModel *m_ArtworkProxyModel;
+        QuickBuffer::QuickBuffer *m_QuickBuffer;
 
         QVector<Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *> m_WarningsCheckers;
         QVector<Helpers::IFileNotAvailableModel*> m_AvailabilityListeners;

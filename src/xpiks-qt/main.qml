@@ -711,6 +711,12 @@ ApplicationWindow {
     Menu {
         id: artworkContextMenu
         property string filename
+        property int index
+
+        MenuItem {
+            text: qsTr("Copy to Quick Buffer")
+            onTriggered: filteredArtItemsModel.copyToQuickBuffer(artworkContextMenu.index)
+        }
 
         MenuItem {
             text: qsTr("Show in folder")

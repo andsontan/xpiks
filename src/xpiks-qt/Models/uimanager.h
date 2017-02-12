@@ -29,6 +29,7 @@
 #include <QString>
 #include <QStringList>
 #include "../QuickBuffer/icurrenteditable.h"
+#include "../Models/metadataelement.h"
 
 namespace Models {
     class ArtworkMetadata;
@@ -39,6 +40,7 @@ namespace Models {
         Q_OBJECT
         Q_PROPERTY(QStringList tabsList READ getTabsList NOTIFY tabsListChanged)
         Q_PROPERTY(QStringList tabsIcons READ getTabsIcons NOTIFY tabsIconsChanged)
+        Q_PROPERTY(bool hasCurrentEditable READ getHasCurrentEditable NOTIFY hasCurrentEditableChanged)
     public:
         explicit UIManager(QObject *parent = 0);
 
@@ -46,7 +48,11 @@ namespace Models {
         int generateNextTabID() { int id = m_TabID++; return id; }
 
     public:
-        void registerCurrentItem(ArtworkMetadata *artwork);
+        bool getHasCurrentEditable() const { return m_CurrentEditable.operator bool(); }
+        std::shared_ptr<QuickBuffer::ICurrentEditable> getCurrentEditable() const { return m_CurrentEditable; }
+
+    public:
+        void registerCurrentItem(const Models::MetadataElement &metadataElement);
         void registerCurrentItem(ArtworkProxyBase *artworkProxy);
 
     public:
@@ -65,6 +71,7 @@ namespace Models {
     signals:
         void tabsListChanged();
         void tabsIconsChanged();
+        void hasCurrentEditableChanged();
 
     private:
         std::shared_ptr<QuickBuffer::ICurrentEditable> m_CurrentEditable;

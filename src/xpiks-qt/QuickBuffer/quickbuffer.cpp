@@ -20,6 +20,10 @@
  */
 
 #include "quickbuffer.h"
+#include "../Commands/commandmanager.h"
+#include "icurrenteditable.h"
+#include "../Models/uimanager.h"
+#include "../QuickBuffer/currenteditableartwork.h"
 
 namespace QuickBuffer {
     QuickBuffer::QuickBuffer(QObject *parent) :
@@ -66,23 +70,28 @@ namespace QuickBuffer {
     void QuickBuffer::removeKeywordAt(int keywordIndex) {
         QString keyword;
         doRemoveKeywordAt(keywordIndex, keyword);
+        emit isEmptyChanged();
     }
 
     void QuickBuffer::removeLastKeyword() {
         QString keyword;
         doRemoveLastKeyword(keyword);
+        emit isEmptyChanged();
     }
 
     void QuickBuffer::appendKeyword(const QString &keyword) {
         doAppendKeyword(keyword);
+        emit isEmptyChanged();
     }
 
     void QuickBuffer::pasteKeywords(const QStringList &keywords) {
         doAppendKeywords(keywords);
+        emit isEmptyChanged();
     }
 
     void QuickBuffer::clearKeywords() {
         doClearKeywords();
+        emit isEmptyChanged();
     }
 
     QString QuickBuffer::getKeywordsString() {
@@ -107,6 +116,7 @@ namespace QuickBuffer {
 
     void QuickBuffer::plainTextEdit(const QString &rawKeywords) {
         doPlainTextEdit(rawKeywords);
+        emit isEmptyChanged();
     }
 
     bool QuickBuffer::hasTitleWordSpellError(const QString &word) {
@@ -119,5 +129,56 @@ namespace QuickBuffer {
 
     void QuickBuffer::resetModel() {
         m_BasicModel.clearModel();
+        emit isEmptyChanged();
+    }
+
+    void QuickBuffer::copyToCurrentEditable() {
+        LOG_DEBUG << "#";
+        auto *uiManager = m_CommandManager->getUIManager();
+        auto currentEditable = uiManager->getCurrentEditable();
+
+        if (currentEditable) {
+            currentEditable->setTitle(getTitle());
+            currentEditable->setDescription(getDescription());
+            currentEditable->setKeywords(getKeywords());
+
+            auto editableArtwork = std::dynamic_pointer_cast<CurrentEditableArtwork>(currentEditable);
+            if (editableArtwork) {
+                m_CommandManager->updateArtworks(QVector<int>() << editableArtwork->getOriginalIndex());
+            }
+        } else {
+            LOG_WARNING << "Nothing registered as current item";
+        }
+    }
+
+    bool QuickBuffer::getIsEmpty() {
+        auto *model = getBasicMetadataModel();
+        bool result = model->isTitleEmpty() || model->isDescriptionEmpty() || model->areKeywordsEmpty();
+        return result;
+    }
+
+    void QuickBuffer::setFromCurrentEditable() {
+        LOG_DEBUG << "#";
+        auto *uiManager = m_CommandManager->getUIManager();
+        auto currentEditable = uiManager->getCurrentEditable();
+
+        if (currentEditable) {
+            this->setTitle(currentEditable->getTitle());
+            this->setDescription(currentEditable->getDescription());
+            this->setKeywords(currentEditable->getKeywords());
+            emit isEmptyChanged();
+        } else {
+            LOG_WARNING << "Nothing registered as current item";
+        }
+    }
+
+    void QuickBuffer::setFromBasicModel(Common::BasicMetadataModel *model) {
+        LOG_DEBUG << "#";
+        Q_ASSERT(model != nullptr);
+
+        this->setTitle(model->getTitle());
+        this->setDescription(model->getDescription());
+        this->setKeywords(model->getKeywords());
+        emit isEmptyChanged();
     }
 }

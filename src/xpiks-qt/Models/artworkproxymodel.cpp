@@ -277,6 +277,11 @@ namespace Models {
         doRegisterAsCurrentItem();
     }
 
+    void ArtworkProxyModel::copyToQuickBuffer() {
+        LOG_DEBUG << "#";
+        doCopyToQuickBuffer();
+    }
+
     void ArtworkProxyModel::updateCurrentArtwork() {
         if (m_ArtworkOriginalIndex != -1) {
             m_CommandManager->updateArtworks(QVector<int>() << m_ArtworkOriginalIndex);

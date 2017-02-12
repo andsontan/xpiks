@@ -22,6 +22,7 @@
 #include "artworkproxybase.h"
 #include "../Commands/commandmanager.h"
 #include "../Suggestion/keywordssuggestor.h"
+#include "../QuickBuffer/quickbuffer.h"
 
 namespace Models {
     QString ArtworkProxyBase::getDescription() {
@@ -312,6 +313,13 @@ namespace Models {
         LOG_DEBUG << "#";
         auto *metadataModel = getBasicMetadataModel();
         m_CommandManager->submitItemForSpellCheck(metadataModel);
+    }
+
+    void ArtworkProxyBase::doCopyToQuickBuffer() {
+        LOG_DEBUG << "#";
+        auto *metadataModel = getBasicMetadataModel();
+        auto *quickBuffer = m_CommandManager->getQuickBuffer();
+        quickBuffer->setFromBasicModel(metadataModel);
     }
 
     void ArtworkProxyBase::spellCheckKeywords() {

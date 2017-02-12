@@ -35,6 +35,7 @@ namespace QuickBuffer {
         Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY descriptionChanged)
         Q_PROPERTY(QString title READ getTitle WRITE setTitle NOTIFY titleChanged)
         Q_PROPERTY(int keywordsCount READ getKeywordsCount NOTIFY keywordsCountChanged)
+        Q_PROPERTY(bool isEmpty READ getIsEmpty NOTIFY isEmptyChanged)
 
     public:
         explicit QuickBuffer(QObject *parent = 0);
@@ -44,6 +45,7 @@ namespace QuickBuffer {
         void descriptionChanged();
         void titleChanged();
         void keywordsCountChanged();
+        void isEmptyChanged();
 
     protected:
         virtual void signalDescriptionChanged() override { emit descriptionChanged(); }
@@ -77,6 +79,12 @@ namespace QuickBuffer {
 
             return item;
         }
+        Q_INVOKABLE void copyToCurrentEditable();
+
+    public:
+        bool getIsEmpty();
+        void setFromCurrentEditable();
+        void setFromBasicModel(Common::BasicMetadataModel *model);
 
     protected:
         virtual Common::BasicMetadataModel *getBasicMetadataModel() override { return &m_BasicModel; }

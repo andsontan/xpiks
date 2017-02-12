@@ -89,6 +89,7 @@ namespace Models {
         void itemUnavailableHandler(int index);
 
     public:
+        Q_INVOKABLE void updateKeywords() { signalKeywordsCountChanged(); }
         Q_INVOKABLE void editKeyword(int index, const QString &replacement);
         Q_INVOKABLE void removeKeywordAt(int keywordIndex);
         Q_INVOKABLE void removeLastKeyword();
@@ -121,6 +122,7 @@ namespace Models {
         Q_INVOKABLE void addPreset(int presetIndex);
         Q_INVOKABLE void initSuggestion();
         Q_INVOKABLE void registerAsCurrentItem();
+        Q_INVOKABLE void copyToQuickBuffer();
 
     protected:
         virtual Common::BasicMetadataModel *getBasicMetadataModel() override {

@@ -27,6 +27,7 @@ import "../StyledControls"
 import "../Dialogs"
 import "../Common.js" as Common
 import "../Constants/UIConfig.js" as UIConfig
+import xpiks 1.0
 
 ColumnLayout {
     anchors.fill: parent
@@ -40,11 +41,13 @@ ColumnLayout {
         anchors.left: parent.left
         anchors.right: parent.right
         text: i18.n + qsTr("Apply")
+        enabled: (!quickBuffer.isEmpty) && uiManager.hasCurrentEditable
         height: 30
+        onClicked: quickBuffer.copyToCurrentEditable()
     }
 
     Item {
-        height: 10
+        height: 20
     }
 
     Item {
@@ -61,6 +64,7 @@ ColumnLayout {
         StyledText {
             anchors.right: parent.right
             text: titleTextInput.length
+            isActive: false
         }
     }
 
@@ -73,7 +77,7 @@ ColumnLayout {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 25
-        color: Colors.inputBackgroundColor
+        color: Colors.inputInactiveBackground
         border.color: Colors.artworkActiveColor
         border.width: titleTextInput.activeFocus ? 1 : 0
         clip: true
@@ -102,7 +106,7 @@ ColumnLayout {
                 width: titleFlick.width
                 height: titleFlick.height
                 text: quickBuffer.title
-                userDictEnabled: true
+                isActive: false
                 property string previousText: text
                 onTextChanged: {
                     if (text.length > UIConfig.inputsMaxLength) {
@@ -139,7 +143,7 @@ ColumnLayout {
 
                 Keys.onPressed: {
                     if(event.matches(StandardKey.Paste)) {
-                        var clipboardText = clipboard.getText();
+                        var clipboardText = quickClipboard.getText();
                         if (Common.safeInsert(titleTextInput, clipboardText)) {
                             event.accepted = true
                         }
@@ -152,7 +156,7 @@ ColumnLayout {
     }
 
     Item {
-        height: 10
+        height: 15
     }
 
     Item {
@@ -162,12 +166,14 @@ ColumnLayout {
 
         StyledText {
             anchors.left: parent.left
+            isActive: false
             text: i18.n + qsTr("Description:")
         }
 
         StyledText {
             anchors.right: parent.right
             text: descriptionTextInput.length
+            isActive: false
         }
     }
 
@@ -180,7 +186,7 @@ ColumnLayout {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 70
-        color: Colors.inputBackgroundColor
+        color: Colors.inputInactiveBackground
         border.color: Colors.artworkActiveColor
         border.width: descriptionTextInput.activeFocus ? 1 : 0
         clip: true
@@ -212,7 +218,7 @@ ColumnLayout {
                 height: descriptionFlick.height
                 text: quickBuffer.description
                 focus: true
-                userDictEnabled: true
+                isActive: false
                 property string previousText: text
                 property int maximumLength: 280
                 onTextChanged: {
@@ -255,7 +261,7 @@ ColumnLayout {
 
                 Keys.onPressed: {
                     if(event.matches(StandardKey.Paste)) {
-                        var clipboardText = clipboard.getText();
+                        var clipboardText = quickClipboard.getText();
                         if (Common.safeInsert(descriptionTextInput, clipboardText)) {
                             event.accepted = true
                         }
@@ -268,7 +274,7 @@ ColumnLayout {
     }
 
     Item {
-        height: 10
+        height: 15
     }
 
     Item {
@@ -279,12 +285,14 @@ ColumnLayout {
         StyledText {
             anchors.left: parent.left
             id: keywordsLabel
+            isActive: false
             text: i18.n + qsTr("Keywords:")
         }
 
         StyledText {
             anchors.right: parent.right
             text: quickBuffer.keywordsCount
+            isActive: false
         }
     }
 
@@ -299,7 +307,8 @@ ColumnLayout {
         Layout.fillHeight: true
         anchors.left: parent.left
         anchors.right: parent.right
-        color: Colors.inputBackgroundColor
+        anchors.rightMargin: quickScrollBar.visible ? 5 : 0
+        color: Colors.inputInactiveBackground
         property var keywordsModel: quickBuffer.getBasicModel()
 
         function removeKeyword(index) {
@@ -332,7 +341,7 @@ ColumnLayout {
 
             delegate: KeywordWrapper {
                 id: kw
-                isHighlighted: true
+                isHighlighted: false
                 keywordText: keyword
                 hasSpellCheckError: !iscorrect
                 delegateIndex: index
@@ -367,10 +376,61 @@ ColumnLayout {
         }
 
         CustomScrollbar {
+            id: quickScrollBar
             anchors.topMargin: -5
             anchors.bottomMargin: -5
             anchors.rightMargin: -15
             flickable: flv
         }
+    }
+
+    Item {
+        height: 5
+    }
+
+    RowLayout {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        spacing: 5
+
+        Item {
+            Layout.fillWidth: true
+        }
+
+        StyledText {
+            text: i18.n + qsTr("Copy")
+            enabled: quickBuffer.keywordsCount > 0
+            color: enabled ? (qCopyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelInactiveForeground
+
+            MouseArea {
+                id: qCopyKeywordsMA
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                onClicked: quickClipboard.setText(quickBuffer.getKeywordsString())
+            }
+        }
+
+        StyledText {
+            text: "|"
+            verticalAlignment: Text.AlignVCenter
+            isActive: false
+        }
+
+        StyledText {
+            text: i18.n + qsTr("Clear")
+            enabled: quickBuffer.keywordsCount > 0
+            color: enabled ? (qClearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelInactiveForeground
+
+            MouseArea {
+                id: qClearKeywordsMA
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+                onClicked: quickBuffer.clearKeywords()
+            }
+        }
+    }
+
+    ClipboardHelper {
+        id: quickClipboard
     }
 }

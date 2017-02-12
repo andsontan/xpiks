@@ -85,6 +85,8 @@ namespace Commands {
             Helpers::indicesToRanges(removedItemsIndices, rangesToRemove);
             artItemsModel->removeItemsAtIndices(rangesToRemove);
 
+            commandManager->clearCurrentItem();
+
             Models::ArtworksRepository *artworkRepository = commandManager->getArtworksRepository();
             artworkRepository->cleanupEmptyDirectories();
             artworkRepository->updateCountsForExistingDirectories();

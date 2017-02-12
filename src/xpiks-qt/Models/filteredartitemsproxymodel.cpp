@@ -33,6 +33,7 @@
 #include "../Common/defines.h"
 #include "../Helpers/filterhelpers.h"
 #include "../Models/previewmetadataelement.h"
+#include "../QuickBuffer/quickbuffer.h"
 
 namespace Models {
     FilteredArtItemsProxyModel::FilteredArtItemsProxyModel(QObject *parent):
@@ -402,7 +403,23 @@ namespace Models {
             ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
 
             if (metadata != NULL) {
-                m_CommandManager->registerCurrentItem(metadata);
+                m_CommandManager->registerCurrentItem(MetadataElement(metadata, originalIndex));
+            }
+        }
+    }
+
+    void FilteredArtItemsProxyModel::copyToQuickBuffer(int index) const {
+        LOG_INFO << index;
+
+        if (0 <= index && index < rowCount()) {
+            int originalIndex = getOriginalIndex(index);
+            ArtItemsModel *artItemsModel = getArtItemsModel();
+            ArtworkMetadata *metadata = artItemsModel->getArtwork(originalIndex);
+
+            if (metadata != NULL) {
+                auto *basicModel = metadata->getBasicModel();
+                auto *quickBuffer = m_CommandManager->getQuickBuffer();
+                quickBuffer->setFromBasicModel(basicModel);
             }
         }
     }

@@ -295,7 +295,13 @@ namespace Models {
     }
 
     void CombinedArtworksModel::registerAsCurrentItem() {
+        LOG_DEBUG << "#";
         doRegisterAsCurrentItem();
+    }
+
+    void CombinedArtworksModel::copyToQuickBuffer() {
+        LOG_DEBUG << "#";
+        doCopyToQuickBuffer();
     }
 
     void CombinedArtworksModel::processCombinedEditCommand() {

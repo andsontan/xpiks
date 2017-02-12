@@ -101,6 +101,7 @@ namespace Models {
         Q_INVOKABLE bool hasDescriptionWordSpellError(int index, const QString &word);
 
         Q_INVOKABLE void registerCurrentItem(int index) const;
+        Q_INVOKABLE void copyToQuickBuffer(int index) const;
 
     public slots:
         void itemSelectedChanged(bool value);

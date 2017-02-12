@@ -185,6 +185,16 @@ Rectangle {
         }
     }
 
+    Menu {
+        id: itemPreviewMenu
+        property int index
+
+        MenuItem {
+            text: qsTr("Copy to Quick Buffer")
+            onTriggered: filteredArtItemsModel.copyToQuickBuffer(itemPreviewMenu.index)
+        }
+    }
+
     Component.onCompleted: {
         focus = true
 
@@ -216,6 +226,7 @@ Rectangle {
         standardButtons: StandardButton.Yes | StandardButton.No
         onYes: {
             filteredArtItemsModel.clearKeywords(artworkEditComponent.artworkIndex)
+            artworkProxy.updateKeywords()
             updateChangesText()
         }
     }
@@ -940,7 +951,8 @@ Rectangle {
 
                             StyledText {
                                 text: i18.n + qsTr("Copy")
-                                color: copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor
+                                enabled: artworkProxy.keywordsCount > 0
+                                color: enabled ? (copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
                                 MouseArea {
                                     id: copyKeywordsMA
@@ -957,6 +969,7 @@ Rectangle {
 
                             StyledText {
                                 text: i18.n + qsTr("Clear")
+                                enabled: artworkProxy.keywordsCount > 0
                                 color: enabled ? (clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
                                 MouseArea {
@@ -1193,8 +1206,14 @@ Rectangle {
                     id: imageMA
                     anchors.fill: parent
                     hoverEnabled: true
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
                     onClicked: {
-                        reloadItemEditing(cellItem.delegateIndex)
+                        if (mouse.button == Qt.RightButton) {
+                            itemPreviewMenu.index = cellItem.delegateIndex
+                            itemPreviewMenu.popup()
+                        } else {
+                            reloadItemEditing(cellItem.delegateIndex)
+                        }
                     }
                 }
             }

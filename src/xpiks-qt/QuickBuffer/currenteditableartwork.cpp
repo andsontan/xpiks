@@ -24,7 +24,8 @@
 #include "../Common/defines.h"
 
 namespace QuickBuffer {
-    CurrentEditableArtwork::CurrentEditableArtwork(Models::ArtworkMetadata *artworkMetadata)
+    CurrentEditableArtwork::CurrentEditableArtwork(Models::ArtworkMetadata *artworkMetadata, int originalIndex):
+        m_OriginalIndex(originalIndex)
     {
         Q_ASSERT(artworkMetadata != nullptr);
         m_ArtworkMetadata = artworkMetadata;

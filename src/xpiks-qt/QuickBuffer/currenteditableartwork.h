@@ -32,8 +32,11 @@ namespace QuickBuffer {
     class CurrentEditableArtwork : public ICurrentEditable
     {
     public:
-        CurrentEditableArtwork(Models::ArtworkMetadata *artworkMetadata);
+        CurrentEditableArtwork(Models::ArtworkMetadata *artworkMetadata, int originalIndex);
         virtual ~CurrentEditableArtwork();
+
+    public:
+        int getOriginalIndex() const { return m_OriginalIndex; }
 
         // ICurrentEditable interface
     public:
@@ -46,6 +49,7 @@ namespace QuickBuffer {
 
     private:
         Models::ArtworkMetadata *m_ArtworkMetadata;
+        int m_OriginalIndex;
     };
 }
 

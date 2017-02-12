@@ -81,6 +81,7 @@ namespace Models {
         void doRegisterAsCurrentItem();
         void doHandleUserDictChanged(const QStringList &keywords);
         void doHandleUserDictCleared();
+        void doCopyToQuickBuffer();
 
     private:
         void spellCheckKeywords();

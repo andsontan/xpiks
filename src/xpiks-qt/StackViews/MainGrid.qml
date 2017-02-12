@@ -825,6 +825,7 @@ ColumnLayout {
                                                     if (mouse.button == Qt.RightButton && openedDialogsCount == 0) {
                                                         console.log("Context menu for artwork")
                                                         artworkContextMenu.filename = filename;
+                                                        artworkContextMenu.index = rowWrapper.delegateIndex
                                                         artworkContextMenu.popup()
                                                     } else {
                                                         if (dblClickTimer.running) {
