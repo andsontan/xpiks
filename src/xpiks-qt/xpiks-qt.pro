@@ -409,7 +409,9 @@ DISTFILES += \
     CollapserTabs/FilesFoldersTab.qml \
     CollapserTabs/TranslatorTab.qml \
     CollapserTabs/FilesFoldersIcon.qml \
-    CollapserTabs/TranslatorIcon.qml
+    CollapserTabs/TranslatorIcon.qml \
+    CollapserTabs/QuickBufferIcon.qml \
+    CollapserTabs/QuickBufferTab.qml
 
 lupdate_only {
 SOURCES += *.qml \

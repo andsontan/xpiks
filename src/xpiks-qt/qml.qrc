@@ -76,5 +76,7 @@
         <file>CollapserTabs/TranslatorTab.qml</file>
         <file>CollapserTabs/FilesFoldersIcon.qml</file>
         <file>CollapserTabs/TranslatorIcon.qml</file>
+        <file>CollapserTabs/QuickBufferIcon.qml</file>
+        <file>CollapserTabs/QuickBufferTab.qml</file>
     </qresource>
 </RCC>

@@ -68,6 +68,7 @@
 #include "Models/artworkproxymodel.h"
 #include "Warnings/warningsservice.h"
 #include "UndoRedo/undoredomanager.h"
+#include "QuickBuffer/quickbuffer.h"
 #include "Helpers/clipboardhelper.h"
 #include "Commands/commandmanager.h"
 #include "Suggestion/locallibrary.h"
@@ -336,6 +337,7 @@ int main(int argc, char *argv[]) {
     Translation::TranslationManager translationManager;
     Translation::TranslationService translationService(translationManager);
     Models::UIManager uiManager;
+    QuickBuffer::QuickBuffer quickBuffer;
 
     Conectivity::UpdateService updateService(&settingsModel);
 
@@ -393,6 +395,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&uiManager);
     commandManager.InjectDependency(&artworkProxyModel);
 
+    quickBuffer.setCommandManager(&commandManager);
     autoCompleteModel.setCommandManager(&commandManager);
 
     commandManager.ensureDependenciesInjected();
@@ -447,6 +450,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("artworkProxy", &artworkProxyModel);
     rootContext->setContextProperty("translationManager", &translationManager);
     rootContext->setContextProperty("uiManager", &uiManager);
+    rootContext->setContextProperty("quickBuffer", &quickBuffer);
 
 #ifdef QT_DEBUG
     QVariant isDebug(true);
@@ -459,6 +463,7 @@ int main(int argc, char *argv[]) {
     engine.addImageProvider("cached", cachingProvider);
 
     uiManager.addSystemTab("qrc:/CollapserTabs/FilesFoldersIcon.qml", "qrc:/CollapserTabs/FilesFoldersTab.qml");
+    uiManager.addSystemTab("qrc:/CollapserTabs/QuickBufferIcon.qml", "qrc:/CollapserTabs/QuickBufferTab.qml");
     uiManager.addSystemTab("qrc:/CollapserTabs/TranslatorIcon.qml", "qrc:/CollapserTabs/TranslatorTab.qml");
 
     LOG_DEBUG << "About to load main view...";
