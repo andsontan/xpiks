@@ -262,7 +262,7 @@ namespace SpellCheck {
     void CombinedSpellSuggestions::replaceToSuggested(const QString &word, const QString &replacement) {
         size_t size = m_SpellSuggestions.size();
         LOG_INFO << size << "item(s)";
-        bool anyFault = false;
+        bool anySucceeded = false;
 
         for (size_t i = 0; i < size; ++i) {
             auto &suggestionItem = m_SpellSuggestions.at(i);
@@ -270,11 +270,11 @@ namespace SpellCheck {
 
             LOG_INTEGRATION_TESTS << i << "item's result is:" << suggestionItem->getReplacementSucceeded();
 
-            if (!suggestionItem->getReplacementSucceeded()) {
-                anyFault = true;
+            if (suggestionItem->getReplacementSucceeded()) {
+                anySucceeded = true;
             }
         }
 
-        setReplacementSucceeded(!anyFault);
+        setReplacementSucceeded(anySucceeded);
     }
 }

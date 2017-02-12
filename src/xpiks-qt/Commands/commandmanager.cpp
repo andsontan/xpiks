@@ -622,6 +622,13 @@ void Commands::CommandManager::setupSpellCheckSuggestions(Common::IMetadataOpera
     }
 }
 
+void Commands::CommandManager::setupSpellCheckSuggestions(std::vector<std::pair<Common::IMetadataOperator *, int> > &itemPairs, Common::SuggestionFlags flags) {
+    if (m_SpellCheckSuggestionModel) {
+        m_SpellCheckSuggestionModel->setupModel(itemPairs, flags);
+        reportUserAction(Conectivity::UserAction::SpellSuggestions);
+    }
+}
+
 void Commands::CommandManager::submitForSpellCheck(const QVector<Common::BasicKeywordsModel *> &items,
                                                    const QStringList &wordsToCheck) const {
     if ((m_SettingsModel != NULL) && m_SettingsModel->getUseSpellCheck() && m_SpellCheckerService != NULL) {

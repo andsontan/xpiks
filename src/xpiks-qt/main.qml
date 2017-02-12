@@ -457,6 +457,18 @@ ApplicationWindow {
             }
 
             MenuItem {
+                text: i18.n + qsTr("&Fix spelling in selected")
+                enabled: filteredArtItemsModel.selectedArtworksCount > 0
+                onTriggered: {
+                    console.info("Fix spelling in selected triggered")
+                    filteredArtItemsModel.suggestCorrectionsForSelected()
+                    Common.launchDialog("Dialogs/SpellCheckSuggestionsDialog.qml",
+                                        applicationWindow,
+                                        {})
+                }
+            }
+
+            MenuItem {
                 text: i18.n + qsTr("&Remove metadata from selected")
                 enabled: filteredArtItemsModel.selectedArtworksCount > 0
                 onTriggered: {

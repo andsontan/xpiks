@@ -424,6 +424,19 @@ namespace Models {
         }
     }
 
+    void FilteredArtItemsProxyModel::suggestCorrectionsForSelected() const {
+        auto flags = 0;
+        using namespace Common;
+        Common::SetFlag(flags, SuggestionFlags::Description);
+        Common::SetFlag(flags, SuggestionFlags::Title);
+        Common::SetFlag(flags, SuggestionFlags::Keywords);
+
+        auto itemsForSuggestions = getFilteredOriginalItems<std::pair<Common::IMetadataOperator *, int> >(
+                    [](ArtworkMetadata *artwork) { return artwork->isSelected(); },
+                    [] (ArtworkMetadata *metadata, int index, int) { return std::pair<Common::IMetadataOperator *, int>(metadata, index); });
+        m_CommandManager->setupSpellCheckSuggestions(itemsForSuggestions, (SuggestionFlags)flags);
+    }
+
     void FilteredArtItemsProxyModel::itemSelectedChanged(bool value) {
         int plus = value ? +1 : -1;
 
