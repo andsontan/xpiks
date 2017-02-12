@@ -706,11 +706,11 @@ namespace Common {
                 LOG_DEBUG << keyword << "has wrong spelling";
 
                 if (!keyword.contains(QChar::Space)) {
-                    spellCheckSuggestions.emplace_back(new SpellCheck::KeywordSpellSuggestions(this, keyword, i));
+                    spellCheckSuggestions.emplace_back(new SpellCheck::KeywordSpellSuggestions(keyword, i));
                 } else {
                     QStringList items = keyword.split(QChar::Space, QString::SkipEmptyParts);
                     foreach(const QString &item, items) {
-                        spellCheckSuggestions.emplace_back(new SpellCheck::KeywordSpellSuggestions(this, item, i, keyword));
+                        spellCheckSuggestions.emplace_back(new SpellCheck::KeywordSpellSuggestions(item, i, keyword));
                     }
                 }
             }

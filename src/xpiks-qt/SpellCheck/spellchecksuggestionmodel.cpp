@@ -65,8 +65,8 @@ namespace SpellCheck {
         return result;
     }
 
-    QHash<Common::BasicKeywordsModel *, KeywordsSuggestionsVector > combinedFailedReplacements(const SuggestionsVector &failedReplacements) {
-        QHash<Common::BasicKeywordsModel *, KeywordsSuggestionsVector > candidatesToRemove;
+    QHash<Common::IMetadataOperator *, KeywordsSuggestionsVector > combinedFailedReplacements(const SuggestionsVector &failedReplacements) {
+        QHash<Common::IMetadataOperator *, KeywordsSuggestionsVector > candidatesToRemove;
         size_t size = failedReplacements.size();
         candidatesToRemove.reserve(size);
 
@@ -75,7 +75,7 @@ namespace SpellCheck {
             std::shared_ptr<KeywordSpellSuggestions> keywordsItem = std::dynamic_pointer_cast<KeywordSpellSuggestions>(item);
 
             if (keywordsItem) {
-                auto *item = keywordsItem->getKeywordsModel();
+                auto *item = keywordsItem->getMetadataOperator();
 
                 if (keywordsItem->isPotentialDuplicate()) {
                     if (!candidatesToRemove.contains(item)) {
@@ -90,7 +90,7 @@ namespace SpellCheck {
                     auto keywordsItems = combinedItem->getKeywordsDuplicateSuggestions();
 
                     for (auto &keywordsCombinedItem: keywordsItems) {
-                        auto *item = keywordsCombinedItem->getKeywordsModel();
+                        auto *item = keywordsCombinedItem->getMetadataOperator();
 
                         if (!candidatesToRemove.contains(item)) {
                             candidatesToRemove.insert(item, KeywordsSuggestionsVector());
@@ -216,6 +216,7 @@ namespace SpellCheck {
             for (auto &pair: m_ItemsPairs) {
                 auto *item = pair.first;
                 auto subrequests = item->createKeywordsSuggestionsList();
+                for (auto &req: subrequests) { req->setMetadataOperator(item); }
                 requests.insert(requests.end(), subrequests.begin(), subrequests.end());
                 LOG_DEBUG << subrequests.size() << "keywords requests";
             }
@@ -225,6 +226,7 @@ namespace SpellCheck {
             for (auto &pair: m_ItemsPairs) {
                 auto *item = pair.first;
                 auto subrequests = item->createTitleSuggestionsList();
+                for (auto &req: subrequests) { req->setMetadataOperator(item); }
                 requests.insert(requests.end(), subrequests.begin(), subrequests.end());
                 LOG_DEBUG << subrequests.size() << "title requests";
             }
@@ -234,6 +236,7 @@ namespace SpellCheck {
             for (auto &pair: m_ItemsPairs) {
                 auto *item = pair.first;
                 auto subrequests = item->createDescriptionSuggestionsList();
+                for (auto &req: subrequests) { req->setMetadataOperator(item); }
                 requests.insert(requests.end(), subrequests.begin(), subrequests.end());
                 LOG_DEBUG << subrequests.size() << "description requests";
             }

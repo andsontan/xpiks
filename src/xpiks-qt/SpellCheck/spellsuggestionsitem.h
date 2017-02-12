@@ -33,7 +33,6 @@
 namespace Common {
     class IMetadataOperator;
     class BasicKeywordsModel;
-    class BasicMetadataModel;
 }
 
 namespace SpellCheck {
@@ -43,7 +42,7 @@ namespace SpellCheck {
     public:
         SpellSuggestionsItem(const QString &word, const QString &origin);
         SpellSuggestionsItem(const QString &word);
-        virtual ~SpellSuggestionsItem() {}
+        virtual ~SpellSuggestionsItem();
 
     public:
         enum KeywordSpellSuggestions_Roles {
@@ -71,6 +70,9 @@ namespace SpellCheck {
 
         bool getReplacementSucceeded() const { return m_ReplacementSucceeded; }
 
+        Common::IMetadataOperator *getMetadataOperator() const { Q_ASSERT(m_MetadataOperator != nullptr); return m_MetadataOperator; }
+        void setMetadataOperator(Common::IMetadataOperator *value) { Q_ASSERT(value != nullptr); m_MetadataOperator = value; }
+
     public:
         virtual void replaceToSuggested() = 0;
 
@@ -95,6 +97,7 @@ namespace SpellCheck {
         const QStringList &getSuggestions() const { return m_Suggestions; }
 
     private:
+        Common::IMetadataOperator *m_MetadataOperator;
         QStringList m_Suggestions;
         QString m_Word;
         QString m_ReplacementOrigin;
@@ -106,15 +109,14 @@ namespace SpellCheck {
     {
         Q_OBJECT
     public:
-        KeywordSpellSuggestions(Common::BasicKeywordsModel *basicModel, const QString &keyword, int originalIndex, const QString &origin);
-        KeywordSpellSuggestions(Common::BasicKeywordsModel *basicModel, const QString &keyword, int originalIndex);
+        KeywordSpellSuggestions(const QString &keyword, int originalIndex, const QString &origin);
+        KeywordSpellSuggestions(const QString &keyword, int originalIndex);
         virtual ~KeywordSpellSuggestions();
 
     public:
 #if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
         virtual QString toDebugString() const override { return QString("KeywordReplace: %1 -> (%2)").arg(getWord()).arg(getSuggestions().join(", ")); }
 #endif
-        Common::BasicKeywordsModel *getKeywordsModel() const { return m_BasicModel; }
         int getOriginalIndex() const { return m_OriginalIndex; }
         bool isPotentialDuplicate() const { return m_ReplaceResult == Common::KeywordReplaceResult::FailedDuplicate; }
         virtual void replaceToSuggested() override;
@@ -126,14 +128,13 @@ namespace SpellCheck {
     private:
         int m_OriginalIndex;
         Common::KeywordReplaceResult m_ReplaceResult;
-        Common::BasicKeywordsModel *m_BasicModel;
     };
 
     class DescriptionSpellSuggestions: public SpellSuggestionsItem
     {
         Q_OBJECT
     public:
-        DescriptionSpellSuggestions(Common::BasicMetadataModel *metadataModel, const QString &word);
+        DescriptionSpellSuggestions(const QString &word);
         virtual ~DescriptionSpellSuggestions();
 
     public:
@@ -144,16 +145,13 @@ namespace SpellCheck {
 
     //protected:
         virtual void replaceToSuggested(const QString &word, const QString &replacement) override;
-
-    private:
-        Common::BasicMetadataModel *m_MetadataModel;
     };
 
     class TitleSpellSuggestions: public SpellSuggestionsItem
     {
         Q_OBJECT
     public:
-        TitleSpellSuggestions(Common::BasicMetadataModel *metadataModel, const QString &word);
+        TitleSpellSuggestions(const QString &word);
         virtual ~TitleSpellSuggestions();
 
     public:
@@ -164,9 +162,6 @@ namespace SpellCheck {
 
     //protected:
         virtual void replaceToSuggested(const QString &word, const QString &replacement) override;
-
-    private:
-        Common::BasicMetadataModel *m_MetadataModel;
     };
 
     class CombinedSpellSuggestions: public SpellSuggestionsItem {
