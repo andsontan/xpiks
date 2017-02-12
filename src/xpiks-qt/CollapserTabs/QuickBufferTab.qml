@@ -42,6 +42,7 @@ ColumnLayout {
         anchors.right: parent.right
         text: i18.n + qsTr("Apply")
         enabled: (!quickBuffer.isEmpty) && uiManager.hasCurrentEditable
+        implicitHeight: 30
         height: 30
         onClicked: quickBuffer.copyToCurrentEditable()
     }
