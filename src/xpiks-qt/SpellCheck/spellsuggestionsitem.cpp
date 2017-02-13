@@ -28,6 +28,7 @@
 namespace SpellCheck {
     SpellSuggestionsItem::SpellSuggestionsItem(const QString &word, const QString &origin) :
         QAbstractListModel(),
+        m_MetadataOperator(nullptr),
         m_Word(word),
         m_ReplacementOrigin(origin),
         m_ReplacementIndex(-1),
@@ -37,6 +38,7 @@ namespace SpellCheck {
 
     SpellSuggestionsItem::SpellSuggestionsItem(const QString &word):
         QAbstractListModel(),
+        m_MetadataOperator(nullptr),
         m_Word(word),
         m_ReplacementOrigin(word),
         m_ReplacementIndex(-1),
