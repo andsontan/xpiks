@@ -25,6 +25,7 @@
 #include <vector>
 #include <memory>
 #include <QHash>
+#include <QDir>
 #include <QAbstractListModel>
 #include <QSortFilterProxyModel>
 #include "../Common/baseentity.h"
@@ -49,6 +50,9 @@ namespace Plugins {
             PluginIDRole,
             IsEnabledRole
         };
+
+    private:
+        bool getPluginsDir(QDir &pluginsDir);
 
     public:
         void loadPlugins();

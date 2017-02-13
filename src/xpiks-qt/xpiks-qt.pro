@@ -331,7 +331,8 @@ HEADERS += \
     QuickBuffer/icurrenteditable.h \
     QuickBuffer/currenteditableartwork.h \
     QuickBuffer/currenteditableproxyartwork.h \
-    QuickBuffer/quickbuffer.h
+    QuickBuffer/quickbuffer.h \
+    KeywordsPresets/ipresetsmanager.h
 
 DISTFILES += \
     Components/CloseIcon.qml \

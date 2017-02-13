@@ -42,9 +42,8 @@ namespace Plugins {
     PluginManager::~PluginManager() {
     }
 
-    void PluginManager::loadPlugins() {
+    bool PluginManager::getPluginsDir(QDir &pluginsDir) {
         LOG_DEBUG << "#";
-        QDir pluginsDir;
         QString appDataPath = XPIKS_USERDATA_PATH;
         bool pluginsFound = false;
 
@@ -71,8 +70,17 @@ namespace Plugins {
 
             if (!pluginsFound) {
                 LOG_WARNING << "Plugins directory not found";
-                return;
             }
+        }
+
+        return pluginsFound;
+    }
+
+    void PluginManager::loadPlugins() {
+        QDir pluginsDir;
+
+        if (!getPluginsDir(pluginsDir)) {
+            return;
         }
 
         LOG_INFO << "Plugins dir:" << pluginsDir.absolutePath();
@@ -152,6 +160,7 @@ namespace Plugins {
             plugin->injectUndoRedoManager(m_CommandManager->getUndoRedoManager());
             plugin->injectUIProvider(pluginWrapper->getUIProvider());
             plugin->injectArtworksSource(m_CommandManager->getArtItemsModel());
+            plugin->injectPresetsManager(m_CommandManager->getPresetsModel());
 
             plugin->initializePlugin();
         }

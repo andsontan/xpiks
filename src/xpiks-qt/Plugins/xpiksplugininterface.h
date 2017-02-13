@@ -30,6 +30,7 @@
 #include "ipluginaction.h"
 #include "iuiprovider.h"
 #include "../Common/iartworkssource.h"
+#include "../KeywordsPresets/ipresetsmanager.h"
 
 namespace Plugins {
     class XpiksPluginInterface {
@@ -56,6 +57,7 @@ namespace Plugins {
         virtual void injectUndoRedoManager(UndoRedo::IUndoRedoManager *undoRedoManager) = 0;
         virtual void injectArtworksSource(Common::IArtworksSource *artworksSource) = 0;
         virtual void injectUIProvider(IUIProvider *uiProvider) = 0;
+        virtual void injectPresetsManager(KeywordsPresets::IPresetsManager *presetsManager) = 0;
     };
 }
 

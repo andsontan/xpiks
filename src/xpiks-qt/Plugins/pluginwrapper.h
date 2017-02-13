@@ -57,7 +57,7 @@ namespace Plugins {
     private:
         XpiksPluginInterface *m_PluginInterface;
         PluginActionsModel m_ActionsModel;
-        UiProviderSafe m_UIProviderSafe;
+        UIProviderSafe m_UIProviderSafe;
         int m_PluginID;
         bool m_IsEnabled;
         const QString &m_PrettyName;
