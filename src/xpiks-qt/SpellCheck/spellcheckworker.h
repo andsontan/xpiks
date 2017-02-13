@@ -70,6 +70,11 @@ namespace SpellCheck {
         void userDictUpdate(const QStringList &keywords);
         void userDictCleared();
 
+#ifdef INTEGRATION_TESTS
+    public:
+        int getSuggestionsCount() const { return m_Suggestions.count(); }
+#endif
+
     private:
         void detectAffEncoding();
         QStringList suggestCorrections(const QString &word);

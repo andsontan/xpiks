@@ -64,6 +64,11 @@ namespace SpellCheck {
         void restartWorker();
         int getUserDictWordsNumber();
 
+#ifdef INTEGRATION_TESTS
+    public:
+        int getSuggestionsCount();
+#endif
+
     public:
         Q_INVOKABLE void cancelCurrentBatch();
         Q_INVOKABLE bool hasAnyPending();

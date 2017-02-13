@@ -174,6 +174,7 @@ namespace SpellCheck {
 
     QStringList SpellCheckerService::suggestCorrections(const QString &word) const {
         if (m_SpellCheckWorker == NULL) {
+            LOG_DEBUG << "Worker is null";
             return QStringList();
         }
 
@@ -192,6 +193,12 @@ namespace SpellCheck {
             return 0;
         }
     }
+
+#ifdef INTEGRATION_TESTS
+    int SpellCheckerService::getSuggestionsCount() {
+        return m_SpellCheckWorker->getSuggestionsCount();
+    }
+#endif
 
     void SpellCheckerService::cancelCurrentBatch() {
         LOG_DEBUG << "#";

@@ -14,6 +14,7 @@
 #include "../../xpiks-qt/SpellCheck/spellchecksuggestionmodel.h"
 #include "../../xpiks-qt/SpellCheck/spellsuggestionsitem.h"
 #include "../../xpiks-qt/SpellCheck/spellcheckerservice.h"
+#include "testshelpers.h"
 
 QString SpellCheckMultireplaceTest::testName() {
     return QLatin1String("SpellCheckMultireplaceTest");
@@ -73,6 +74,10 @@ int SpellCheckMultireplaceTest::doTest() {
     VERIFY(basicKeywordsModel->hasDescriptionSpellError(), "Description spell error not detected");
     VERIFY(basicKeywordsModel->hasTitleSpellError(), "Title spell error not detected");
     VERIFY(basicKeywordsModel->hasKeywordsSpellError(), "Keywords spell error not detected");
+
+    sleepWait(5, [=]() {
+        return spellCheckService->getSuggestionsCount() > 0;
+    });
 
     artItemsModel->suggestCorrections(0);
 

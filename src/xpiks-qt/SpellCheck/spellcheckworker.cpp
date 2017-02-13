@@ -103,7 +103,7 @@ namespace SpellCheck {
             try {
                 m_Hunspell = new Hunspell(affPath.toUtf8().constData(),
                                           dicPath.toUtf8().constData());
-                LOG_DEBUG << "Hunspell with AFF" << affPath << "and DIC" << dicPath;
+                LOG_DEBUG << "Hunspell initialized with AFF" << affPath << "and DIC" << dicPath;
                 initResult = true;
                 m_Encoding = QString::fromLatin1(m_Hunspell->get_dic_encoding());
                 m_Codec = QTextCodec::codecForName(m_Encoding.toLatin1().constData());
@@ -189,8 +189,9 @@ namespace SpellCheck {
         QReadLocker locker(&m_SuggestionsLock);
         QStringList result;
 
-        if (m_Suggestions.contains(word)) {
-            result = m_Suggestions.value(word);
+        auto it = m_Suggestions.find(word);
+        if (it != m_Suggestions.end()) {
+            result = it.value();
         }
 
         return result;
@@ -203,6 +204,7 @@ namespace SpellCheck {
         try {
             // Encode from Unicode to the encoding used by current dictionary
             int count = m_Hunspell->suggest(&suggestWordList, m_Codec->fromUnicode(word).constData());
+            LOG_INTEGRATION_TESTS << "Found" << count << "suggestions for" << word;
             QString lowerWord = word.toLower();
 
             for (int i = 0; i < count; ++i) {
@@ -269,6 +271,7 @@ namespace SpellCheck {
     }
 
     void SpellCheckWorker::findSuggestions(const QString &word) {
+        LOG_INTEGRATION_TESTS << word;
         bool needsCorrections = false;
 
         m_SuggestionsLock.lockForRead();
