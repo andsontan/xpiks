@@ -239,6 +239,12 @@ namespace Models {
     void CombinedArtworksModel::assignFromSelected() {
         LOG_DEBUG << "#";
         recombineArtworks([](const MetadataElement &item) { return item.isSelected(); });
+
+        LOG_DEBUG << "After recombine description:" << getDescription();
+        LOG_DEBUG << "After recombine title:" << getTitle();
+        LOG_DEBUG << "After recombine keywords:" << getKeywordsString();
+
+        m_CommandManager->submitItemForSpellCheck(&m_CommonKeywordsModel);
     }
 
     void CombinedArtworksModel::plainTextEdit(const QString &rawKeywords, bool spaceIsSeparator) {
