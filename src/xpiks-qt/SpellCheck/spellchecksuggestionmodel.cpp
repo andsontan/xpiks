@@ -132,6 +132,7 @@ namespace SpellCheck {
         m_SuggestionsList.clear();
         m_ItemsPairs.clear();
         endResetModel();
+        emit artworksCountChanged();
     }
 
     void SpellCheckSuggestionModel::submitCorrections() const {
@@ -205,6 +206,8 @@ namespace SpellCheck {
         m_SuggestionsList.clear();
         m_SuggestionsList = executedRequests;
         endResetModel();
+
+        emit artworksCountChanged();
     }
 
     SuggestionsVector SpellCheckSuggestionModel::createSuggestionsRequests(Common::SuggestionFlags flags) {

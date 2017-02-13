@@ -116,8 +116,25 @@ Item {
                 anchors.fill: parent
                 anchors.margins: 20
 
-                StyledText {
-                    text: i18.n + qsTr("Suggestions")
+                RowLayout {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+
+                    StyledText {
+                        text: i18.n + qsTr("Suggestions")
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledText {
+                        text: i18.n + getOriginalText()
+
+                        function getOriginalText() {
+                            return spellCheckSuggestionModel.artworksCount === 1 ? qsTr("1 artwork selected") : qsTr("%1 artworks selected").arg(spellCheckSuggestionModel.artworksCount)
+                        }
+                    }
                 }
 
                 Rectangle {
