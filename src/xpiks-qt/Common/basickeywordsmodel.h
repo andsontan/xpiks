@@ -91,7 +91,7 @@ namespace Common {
         virtual bool expandPreset(int keywordIndex, const QStringList &presetList);
         bool areKeywordsEmpty();
         virtual bool replace(const QString &replaceWhat, const QString &replaceTo, Common::SearchFlags flags);
-        bool removeKeywords(const QSet<QString> &keywords, bool caseSensitive);
+        virtual bool removeKeywords(const QSet<QString> &keywords, bool caseSensitive);
 
     private:
         bool appendKeywordUnsafe(const QString &keyword);

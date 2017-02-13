@@ -23,6 +23,7 @@
 #define IMETADATAOPERATOR_H
 
 #include <QString>
+#include <QSet>
 #include "../SpellCheck/spellsuggestionsitem.h"
 #include "../Common/flags.h"
 
@@ -38,6 +39,7 @@ namespace Common {
         virtual bool removeLastKeyword(QString &removedKeyword) = 0;
         virtual bool appendKeyword(const QString &keyword) = 0;
         virtual int appendKeywords(const QStringList &keywordsList) = 0;
+        virtual bool removeKeywords(const QSet<QString> &keywords, bool caseSensitive) = 0;
         virtual bool clearKeywords() = 0;
         virtual QString getKeywordsString() = 0;
         virtual void setKeywords(const QStringList &keywords) = 0;

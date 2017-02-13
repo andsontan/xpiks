@@ -149,6 +149,20 @@ namespace Models {
         return appendedCount;
     }
 
+    bool ArtworkProxyBase::doRemoveKeywords(const QSet<QString> &keywords, bool caseSensitive) {
+        LOG_INFO << "case sensitive:" << caseSensitive;
+        auto *metadataOperator = getMetadataOperator();
+        bool result = metadataOperator->removeKeywords(keywords, caseSensitive);
+        if (result) {
+            signalKeywordsCountChanged();
+
+            // to update fix spelling link
+            spellCheckKeywords();
+        }
+
+        return result;
+    }
+
     bool ArtworkProxyBase::doClearKeywords() {
         LOG_DEBUG << "#";
         auto *metadataOperator = getMetadataOperator();
@@ -284,6 +298,19 @@ namespace Models {
 
         if (presetsModel->tryGetPreset(presetIndex, keywords)) {
             success = doAppendKeywords(keywords) > 0;
+        }
+
+        return success;
+    }
+
+    bool ArtworkProxyBase::doRemovePreset(int presetIndex) {
+        LOG_INFO << presetIndex;
+        bool success = false;
+        auto *presetsModel = m_CommandManager->getPresetsModel();
+        QStringList keywords;
+
+        if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+            success = doRemoveKeywords(keywords.toSet(), false);
         }
 
         return success;

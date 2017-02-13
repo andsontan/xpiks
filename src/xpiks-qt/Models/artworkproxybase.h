@@ -26,6 +26,7 @@
 #include "../Common/baseentity.h"
 #include "../Common/basicmetadatamodel.h"
 #include "../Common/imetadataoperator.h"
+#include "../QuickBuffer/currenteditableproxyartwork.h"
 
 namespace Models {
     class ArtworkProxyBase:
@@ -64,6 +65,7 @@ namespace Models {
         bool doRemoveLastKeyword(QString &keyword);
         bool doAppendKeyword(const QString &keyword);
         int doAppendKeywords(const QStringList &keywords);
+        bool doRemoveKeywords(const QSet<QString> &keywords, bool caseSensitive);
         bool doClearKeywords();
         QString doGetKeywordsString();
         void doSuggestCorrections();
@@ -77,17 +79,18 @@ namespace Models {
         bool doExpandPreset(int keywordIndex, int presetIndex);
         bool doExpandLastKeywordAsPreset();
         bool doAddPreset(int presetIndex);
+        bool doRemovePreset(int presetIndex);
         void doInitSuggestion();
         void doRegisterAsCurrentItem();
         void doHandleUserDictChanged(const QStringList &keywords);
         void doHandleUserDictCleared();
         void doCopyToQuickBuffer();
 
-    public:
-        void spellCheckEverything();
-
     private:
+        void spellCheckEverything();
         void spellCheckKeywords();
+
+        friend class QuickBuffer::CurrentEditableProxyArtwork;
     };
 }
 

@@ -96,6 +96,7 @@ namespace Common {
         virtual bool clearKeywords() override { return BasicKeywordsModel::clearKeywords(); }
         virtual QString getKeywordsString() override { return BasicKeywordsModel::getKeywordsString(); }
         virtual void setKeywords(const QStringList &keywords) override { return BasicKeywordsModel::setKeywords(keywords); }
+        virtual bool removeKeywords(const QSet<QString> &keywords, bool caseSensitive) override { return BasicKeywordsModel::removeKeywords(keywords, caseSensitive); }
 
     public:
         virtual bool setDescription(const QString &value) override;

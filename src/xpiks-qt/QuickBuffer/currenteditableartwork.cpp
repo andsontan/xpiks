@@ -23,6 +23,7 @@
 #include "../Models/artworkmetadata.h"
 #include "../Common/defines.h"
 #include "../Commands/commandmanager.h"
+#include "../KeywordsPresets/presetkeywordsmodel.h"
 
 namespace QuickBuffer {
     CurrentEditableArtwork::CurrentEditableArtwork(Models::ArtworkMetadata *artworkMetadata, int originalIndex, const Commands::CommandManager *commandManager):
@@ -64,6 +65,32 @@ namespace QuickBuffer {
 
     void CurrentEditableArtwork::setKeywords(const QStringList &keywords) {
         m_ArtworkMetadata->setKeywords(keywords);
+    }
+
+    bool CurrentEditableArtwork::expandPreset(int keywordIndex, int presetIndex) {
+        bool success = false;
+        LOG_INFO << "keyword" << keywordIndex << "preset" << presetIndex;
+        auto *presetsModel = m_CommandManager->getPresetsModel();
+        QStringList keywords;
+
+        if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+            success = m_ArtworkMetadata->expandPreset(keywordIndex, keywords);
+        }
+
+        return success;
+    }
+
+    bool CurrentEditableArtwork::removePreset(int presetIndex) {
+        bool success = false;
+        LOG_INFO << "preset" << presetIndex;
+        auto *presetsModel = m_CommandManager->getPresetsModel();
+        QStringList keywords;
+
+        if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+            success = m_ArtworkMetadata->removeKeywords(keywords.toSet(), false);
+        }
+
+        return success;
     }
 
     void CurrentEditableArtwork::spellCheck() {

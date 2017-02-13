@@ -53,6 +53,14 @@ namespace QuickBuffer {
         m_ArtworkProxy->setKeywords(keywords);
     }
 
+    bool CurrentEditableProxyArtwork::expandPreset(int keywordIndex, int presetIndex) {
+        return m_ArtworkProxy->doExpandPreset(keywordIndex, presetIndex);
+    }
+
+    bool CurrentEditableProxyArtwork::removePreset(int presetIndex) {
+        return m_ArtworkProxy->doRemovePreset(presetIndex);
+    }
+
     void CurrentEditableProxyArtwork::spellCheck() {
         m_ArtworkProxy->spellCheckEverything();
     }
