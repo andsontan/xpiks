@@ -282,5 +282,6 @@ HEADERS += \
     ../../xpiks-qt/QuickBuffer/icurrenteditable.h \
     ../../xpiks-qt/QuickBuffer/quickbuffer.h \
     ../../xpiks-qt/Models/artworkproxymodel.h \
-    ../../xpiks-qt/Models/uimanager.h
+    ../../xpiks-qt/Models/uimanager.h \
+    ../../xpiks-qt/KeywordsPresets/ipresetsmanager.h
 
