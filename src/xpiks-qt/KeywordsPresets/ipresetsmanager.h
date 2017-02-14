@@ -18,26 +18,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef IUIPROVIDER_H
-#define IUIPROVIDER_H
 
-#include <QUrl>
-#include <QHash>
-#include <QObject>
+#ifndef IPRESETSMANAGER_H
+#define IPRESETSMANAGER_H
+
 #include <QString>
-#include <memory>
-#include "../QuickBuffer/icurrenteditable.h"
+#include <QVector>
+#include <QPair>
 
-namespace Plugins {
-    class IUIProvider {
+namespace KeywordsPresets {
+    class IPresetsManager {
     public:
-        virtual ~IUIProvider() {}
+        virtual ~IPresetsManager() {}
 
-        virtual void openWindow(const QUrl &rcPath, const QHash<QString, QObject*> &contextModels = QHash<QString, QObject*>()) const = 0;
-        virtual int addTab(const QString &tabIconUrl, const QString &tabComponentUrl) const = 0;
-        virtual bool removeTab(int tabID) const = 0;
-        virtual std::shared_ptr<QuickBuffer::ICurrentEditable> getCurrentEditable() const = 0;
+        virtual bool tryGetPreset(int presetIndex, QStringList &keywords) = 0;
+        virtual bool tryFindSinglePresetByName(const QString &name, int &index) = 0;
+        virtual void findPresetsByName(const QString &name, QVector<QPair<int, QString> > &results) = 0;
     };
 }
 
-#endif // IUIPROVIDER_H
+#endif // IPRESETSMANAGER_H

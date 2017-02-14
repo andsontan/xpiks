@@ -373,7 +373,8 @@ HEADERS += \
     ../../xpiks-qt/QuickBuffer/currenteditableproxyartwork.h \
     ../../xpiks-qt/QuickBuffer/icurrenteditable.h \
     ../../xpiks-qt/QuickBuffer/quickbuffer.h \
-    ../../xpiks-qt/Models/artworkproxymodel.h
+    ../../xpiks-qt/Models/artworkproxymodel.h \
+    ../../xpiks-qt/KeywordsPresets/ipresetsmanager.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

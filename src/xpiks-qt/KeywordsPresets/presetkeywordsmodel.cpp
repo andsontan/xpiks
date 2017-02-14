@@ -1,3 +1,24 @@
+/*
+ * This file is a part of Xpiks - cross platform application for
+ * keywording and uploading images for microstocks
+ * Copyright (C) 2014-2017 Taras Kushnir <kushnirTV@gmail.com>
+ *
+ * Xpiks is distributed under the GNU General Public License, version 3.0
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "presetkeywordsmodel.h"
 #include "../Commands/commandmanager.h"
 #include "../Helpers/stringhelper.h"
@@ -42,7 +63,7 @@ namespace KeywordsPresets {
         m_PresetsList[presetIndex]->m_PresetName = name;
     }
 
-    bool PresetKeywordsModel::tryFindSinglePresetByName(const QString &name, int &index) const {
+    bool PresetKeywordsModel::tryFindSinglePresetByName(const QString &name, int &index) {
         LOG_INFO << name;
         int foundIndex = -1;
         size_t size = m_PresetsList.size();
@@ -69,6 +90,19 @@ namespace KeywordsPresets {
         }
 
         return found;
+    }
+
+    void PresetKeywordsModel::findPresetsByName(const QString &name, QVector<QPair<int, QString> > &results) {
+        LOG_INFO << name;
+        size_t size = m_PresetsList.size();
+
+        for (size_t i = 0; i < size; ++i) {
+            PresetModel *preset = m_PresetsList[i];
+
+            if (preset->m_PresetName.contains(name, Qt::CaseInsensitive)) {
+                results.push_back(qMakePair((int)i, preset->m_PresetName));
+            }
+        }
     }
 
     void PresetKeywordsModel::removeItem(int row) {

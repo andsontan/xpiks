@@ -24,18 +24,18 @@
 #include "uiprovider.h"
 
 namespace Plugins {
-    UiProviderSafe::UiProviderSafe(int pluginID, UIProvider *realUIProvider):
+    UIProviderSafe::UIProviderSafe(int pluginID, UIProvider *realUIProvider):
         m_PluginID(pluginID),
         m_RealUIProvider(realUIProvider)
     {
         Q_ASSERT(realUIProvider != nullptr);
     }
 
-    void UiProviderSafe::openWindow(const QUrl &rcPath, const QHash<QString, QObject *> &contextModels) const {
+    void UIProviderSafe::openWindow(const QUrl &rcPath, const QHash<QString, QObject *> &contextModels) const {
         m_RealUIProvider->openWindow(rcPath, contextModels);
     }
 
-    int UiProviderSafe::addTab(const QString &tabIconUrl, const QString &tabComponentUrl) const {
+    int UIProviderSafe::addTab(const QString &tabIconUrl, const QString &tabComponentUrl) const {
         auto *uiManager = m_RealUIProvider->getUIManager();
         Q_ASSERT(uiManager != nullptr);
         int result = uiManager->addPluginTab(m_PluginID, tabIconUrl, tabComponentUrl);
@@ -43,7 +43,7 @@ namespace Plugins {
         return result;
     }
 
-    bool UiProviderSafe::removeTab(int tabID) const {
+    bool UIProviderSafe::removeTab(int tabID) const {
         auto *uiManager = m_RealUIProvider->getUIManager();
         Q_ASSERT(uiManager != nullptr);
         bool result = uiManager->removePluginTab(m_PluginID, tabID);
@@ -52,5 +52,12 @@ namespace Plugins {
         }
 
         return result;
+    }
+
+    std::shared_ptr<QuickBuffer::ICurrentEditable> UIProviderSafe::getCurrentEditable() const {
+        auto *uiManager = m_RealUIProvider->getUIManager();
+        Q_ASSERT(uiManager != nullptr);
+
+        return uiManager->getCurrentEditable();
     }
 }

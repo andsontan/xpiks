@@ -31,14 +31,15 @@ namespace Models {
 namespace Plugins {
     class UIProvider;
 
-    class UiProviderSafe : public IUIProvider {
+    class UIProviderSafe : public IUIProvider {
     public:
-        UiProviderSafe(int pluginID, UIProvider *realUIProvider);
+        UIProviderSafe(int pluginID, UIProvider *realUIProvider);
 
     public:
         virtual void openWindow(const QUrl &rcPath, const QHash<QString, QObject*> &contextModels = QHash<QString, QObject*>()) const override;
         virtual int addTab(const QString &tabIconUrl, const QString &tabComponentUrl) const override;
         virtual bool removeTab(int tabID) const override;
+        virtual std::shared_ptr<QuickBuffer::ICurrentEditable> getCurrentEditable() const override;
 
     private:
         int m_PluginID;
