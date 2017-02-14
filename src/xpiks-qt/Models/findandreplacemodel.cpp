@@ -370,6 +370,7 @@ namespace Models {
         Common::SetFlag(m_Flags, Common::SearchFlags::Title);
         Common::SetFlag(m_Flags, Common::SearchFlags::Description);
         Common::SetFlag(m_Flags, Common::SearchFlags::Keywords);
+        Common::SetFlag(m_Flags, Common::SearchFlags::IncludeSpaces);
         // Common::SetFlag(m_Flags, Common::SearchFlags::ExactMatch);
     }
 }

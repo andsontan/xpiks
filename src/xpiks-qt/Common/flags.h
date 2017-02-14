@@ -88,6 +88,7 @@ namespace Common {
         AllTerms = 1 << 5, // all of the search terms included in the result
         Filepath = 1 << 6,
         ExactMatch = 1 << 7,
+        IncludeSpaces = 1 << 8,
 
         Metadata = Description | Title | Keywords,
         ExactKeywords = ExactMatch | Keywords,

@@ -51,7 +51,13 @@ namespace Helpers {
 
     bool containsAnyPartsSearch(const QString &mainSearchTerm, Models::ArtworkMetadata *metadata, Common::SearchFlags searchFlags) {
         bool hasMatch = false;
-        QStringList searchTerms = mainSearchTerm.split(QChar::Space, QString::SkipEmptyParts);
+        QStringList searchTerms;
+
+        if (!Common::HasFlag(searchFlags, Common::SearchFlags::IncludeSpaces)) {
+            searchTerms = mainSearchTerm.split(QChar::Space, QString::SkipEmptyParts);
+        } else {
+            searchTerms << mainSearchTerm;
+        }
 
         const QString description = metadata->getDescription();
         const QString title = metadata->getTitle();
@@ -117,7 +123,13 @@ namespace Helpers {
 
     bool containsAllPartsSearch(const QString &mainSearchTerm, Models::ArtworkMetadata *metadata, Common::SearchFlags searchFlags) {
         bool hasMatch = false;
-        QStringList searchTerms = mainSearchTerm.split(QChar::Space, QString::SkipEmptyParts);
+        QStringList searchTerms;
+
+        if (!Common::HasFlag(searchFlags, Common::SearchFlags::IncludeSpaces)) {
+            searchTerms = mainSearchTerm.split(QChar::Space, QString::SkipEmptyParts);
+        } else {
+            searchTerms << mainSearchTerm;
+        }
 
         const QString description = metadata->getDescription();
         const QString title = metadata->getTitle();
