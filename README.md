@@ -3,7 +3,7 @@ Xpiks
 
 Cross-Platform Image Keywording Software
 
-![alt tag](https://raw.githubusercontent.com/Ribtoks/xpiks/gh-pages/images/screenshots/xpiks-qt-slategray.jpg)
+![alt tag](https://raw.githubusercontent.com/Ribtoks/xpiks/gh-pages/images/screenshots/xpiks-qt-dark.jpg)
 
 Official website: http://ribtoks.github.io/xpiks/
 
@@ -32,6 +32,7 @@ Xpiks is a free and open source keywording and uploading tool for microstock pho
 - checks for potential problems before upload (insufficient resolution, missing metadata etc.)
 - automatically checks spelling of description, title and keywords
 - autocompletion for keywords (English dictionary)
+- keywords presets to automate your work
 - unsaved work is backed up so you can continue work later without actual writing metadata to images
 - localized to other languages (Ukrainian, Portugese, Spanish, Catalan, Russian, French, German) 
 - works under Linux, OS X and Windows
