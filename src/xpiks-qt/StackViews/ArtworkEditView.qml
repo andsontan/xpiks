@@ -47,6 +47,8 @@ Rectangle {
     signal dialogDestruction();
     Component.onDestruction: dialogDestruction();
 
+    Keys.onEscapePressed: closePopup()
+
     function onAutoCompleteClose() {
         autoCompleteBox = undefined
     }
