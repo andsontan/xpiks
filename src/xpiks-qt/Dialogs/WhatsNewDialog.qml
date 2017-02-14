@@ -123,40 +123,40 @@ Item {
                     PresentationSlide {
                         parent: slidesHost
                         id: firstSlide
-                        title: i18.n + qsTr("Autocompletion for keywords")
-                        imageUrl: "qrc:/Graphics/autocomplete.png"
+                        title: i18.n + qsTr("Presets for keywords")
+                        imageUrl: "qrc:/Graphics/presets.png"
                         width: slidesHost.width
                         height: slidesHost.height
                     },
                     PresentationSlide {
                         parent: slidesHost
                         id: secondSlide
-                        title: i18.n + qsTr("Localization of interface to %1 languages").arg(5)
-                        imageUrl: "qrc:/Graphics/localization.png"
+                        title: i18.n + qsTr("Additional buffer for quick editing")
+                        imageUrl: "qrc:/Graphics/quickbuffer.png"
                         width: slidesHost.width
                         height: slidesHost.height
                     },
                     PresentationSlide {
                         parent: slidesHost
                         id: thirdSlide
-                        title: i18.n + qsTr("iStock and Fotolia suggestion providers")
-                        imageUrl: "qrc:/Graphics/suggestion.png"
+                        title: i18.n + qsTr("Find and Replace functionality")
+                        imageUrl: "qrc:/Graphics/findandreplace.png"
                         width: slidesHost.width
                         height: slidesHost.height
                     },
                     PresentationSlide {
                         parent: slidesHost
                         id: fourthSlide
-                        title: i18.n + qsTr("Brand new theme for Xpiks")
-                        imageUrl: "qrc:/Graphics/newtheme.png"
+                        title: i18.n + qsTr("StarDict dictionaries support")
+                        imageUrl: "qrc:/Graphics/translator.png"
                         width: slidesHost.width
                         height: slidesHost.height
                     },
                     PresentationSlide {
                         parent: slidesHost
                         id: fifthSlide
-                        title: i18.n + qsTr("Predefined FTP addresses")
-                        imageUrl: "qrc:/Graphics/predefinedftp.png"
+                        title: i18.n + qsTr("Clear list of failed uploads")
+                        imageUrl: "qrc:/Graphics/faileduploads.png"
                         width: slidesHost.width
                         height: slidesHost.height
                     },

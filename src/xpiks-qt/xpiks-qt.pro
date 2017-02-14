@@ -384,12 +384,12 @@ DISTFILES += \
     Components/EditIcon.qml \
     uncrustify.cfg \
     Components/PresentationSlide.qml \
-    Graphics/autocomplete.png \
+    Graphics/faileduploads.png \
     Graphics/gears.png \
-    Graphics/localization.png \
-    Graphics/newtheme.png \
-    Graphics/predefinedftp.png \
-    Graphics/suggestion.png \
+    Graphics/findandreplace.png \
+    Graphics/presets.png \
+    Graphics/quickbuffer.png \
+    Graphics/translator.png \
     Dialogs/ProxySetupDialog.qml \
     Dialogs/WhatsNewMinorDialog.qml \
     Dialogs/FindAndReplace.qml \

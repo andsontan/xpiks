@@ -50,12 +50,12 @@
         <file>Components/CompletionBox.qml</file>
         <file>Components/EditIcon.qml</file>
         <file>Components/PresentationSlide.qml</file>
-        <file>Graphics/autocomplete.png</file>
+        <file>Graphics/faileduploads.png</file>
         <file>Graphics/gears.png</file>
-        <file>Graphics/localization.png</file>
-        <file>Graphics/newtheme.png</file>
-        <file>Graphics/predefinedftp.png</file>
-        <file>Graphics/suggestion.png</file>
+        <file>Graphics/presets.png</file>
+        <file>Graphics/quickbuffer.png</file>
+        <file>Graphics/translator.png</file>
+        <file>Graphics/findandreplace.png</file>
         <file>Dialogs/ProxySetupDialog.qml</file>
         <file>Dialogs/WhatsNewMinorDialog.qml</file>
         <file>Dialogs/FindAndReplace.qml</file>
