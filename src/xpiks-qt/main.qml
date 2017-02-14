@@ -1043,11 +1043,13 @@ ApplicationWindow {
                 spacing: 0
 
                 Repeater {
+                    id: tabsRepeater
                     model: uiManager.tabsIcons
 
                     CustomTab {
                         id: customTab
                         tabIndex: index
+                        width: tabsHolder.width / tabsRepeater.count
                         isSelected: tabsHolder.currentIndex == tabIndex
                         hovered: (!isSelected) && tabMA.containsMouse
 
