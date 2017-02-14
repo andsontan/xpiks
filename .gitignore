@@ -9,7 +9,7 @@ build-*
 *.pro.user.*
 libs/
 zlib-1.2.*/
-hunspell-1.3.3
+hunspell-1.6.0
 *.lib
 *.o
 moc_*.cpp
