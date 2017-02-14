@@ -31,14 +31,14 @@
 namespace QMLExtensions {
     FolderElement::FolderElement(QQuickItem *parent):
         QQuickItem (parent),
-        m_Geometry(QSGGeometry::defaultAttributes_Point2D(), 6),
+        m_Geometry(QSGGeometry::defaultAttributes_Point2D(), 12),
         m_Thickness(2.0),
         m_Scale(1.0)
     {
         setFlag(ItemHasContents);
         m_Material.setColor(m_Color);
-        m_Geometry.setDrawingMode(GL_LINE_LOOP);
-        m_Geometry.setLineWidth(m_Thickness);
+        m_Geometry.setDrawingMode(GL_LINES);
+        m_Geometry.setLineWidth(m_Thickness * m_Scale);
 
         QObject::connect(this, SIGNAL(windowChanged(QQuickWindow*)), this, SLOT(windowChangedHandler(QQuickWindow*)));
     }
@@ -78,9 +78,10 @@ namespace QMLExtensions {
             node = static_cast<QSGGeometryNode *>(oldNode);
         }
 
-        m_Geometry.setLineWidth(m_Thickness * m_Scale);
-
+        float lineWidth = (float)(m_Thickness * m_Scale);
+        m_Geometry.setLineWidth(lineWidth);
         updateView(&m_Geometry);
+
         node->markDirty(QSGNode::DirtyGeometry);
         node->markDirty(QSGNode::DirtyMaterial);
 
@@ -99,14 +100,16 @@ namespace QMLExtensions {
     }
 
     void FolderElement::updateView(QSGGeometry *geometry) {
-        QSGGeometry::Point2D *v = geometry->vertexDataAsPoint2D();
+        QSGGeometry::Point2D *geometryPoints = geometry->vertexDataAsPoint2D();
         const QRectF rect = boundingRect();
+
+        QSGGeometry::Point2D v[7];
 
         v[0].x = rect.left();
         v[0].y = rect.top();
         v[1].x = rect.left() + rect.width()/2.5;
         v[1].y = rect.top();
-        v[2].x = rect.left() + rect.width()/2.5;
+        v[2].x = rect.left() + rect.width()/2.4;
         v[2].y = rect.top() + rect.height()/7.0;
         v[3].x = rect.right();
         v[3].y = v[2].y;
@@ -114,5 +117,13 @@ namespace QMLExtensions {
         v[4].y = rect.bottom();
         v[5].x = rect.left();
         v[5].y = rect.bottom();
+        // fictious first point (for the loop)
+        v[6].x = v[0].x;
+        v[6].y = v[0].y;
+
+        for (int i = 0; i < 6; ++i) {
+            geometryPoints[2*i] = v[i];
+            geometryPoints[2*i + 1] = v[i + 1];
+        }
     }
 }

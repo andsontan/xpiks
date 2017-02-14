@@ -1053,6 +1053,7 @@ ApplicationWindow {
 
                         Loader {
                             property bool isHighlighted: customTab.isSelected || customTab.hovered
+                            property color parentBackground: customTab.color
                             anchors.centerIn: parent
                             source: modelData
                         }

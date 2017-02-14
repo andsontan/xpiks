@@ -280,6 +280,7 @@ Item {
 
                     StyledText {
                         text: i18.n + qsTr("Title:")
+                        isActive: presetNamesListView.count > 0
                     }
 
                     Rectangle {
@@ -350,6 +351,7 @@ Item {
 
                         StyledText {
                             text: i18.n + qsTr("Keywords:")
+                            isActive: presetNamesListView.count > 0
                         }
 
                         Item {
@@ -473,6 +475,7 @@ Item {
                     text: i18.n + qsTr("<u>edit in plain text</u>")
                     color: plainTextMA.containsMouse ? Colors.linkClickedColor : Colors.labelActiveForeground
                     enabled: presetNamesListView.currentItem ? true : false
+                    visible: presetNamesListView.count > 0
 
                     MouseArea {
                         id: plainTextMA
