@@ -441,6 +441,8 @@ BUILDNO=$$system(git log -n 1 --pretty=format:"%h")
 
 CONFIG(debug, debug|release)  {
     message("Building debug")
+    DEFINES += WITH_LOGS \
+               WITH_PLUGINS
     #QMAKE_CXXFLAGS += -fsanitize=thread
 } else {
     message("Building release")
