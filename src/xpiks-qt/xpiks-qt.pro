@@ -419,7 +419,9 @@ SOURCES += *.qml \
           *.js \
           Components/*.qml \
           Dialogs/*.qml \
-          StyledControls/*.qml
+          StyledControls/*.qml \
+          CollapserTabs/*.qml \
+          StackViews/*.qml
 }
 
 INCLUDEPATH += ../tiny-aes
