@@ -109,7 +109,7 @@ namespace QMLExtensions {
         v[0].y = rect.top();
         v[1].x = rect.left() + rect.width()/2.5;
         v[1].y = rect.top();
-        v[2].x = rect.left() + rect.width()/2.4;
+        v[2].x = rect.left() + rect.width()/2.5;
         v[2].y = rect.top() + rect.height()/7.0;
         v[3].x = rect.right();
         v[3].y = v[2].y;
@@ -125,5 +125,16 @@ namespace QMLExtensions {
             geometryPoints[2*i] = v[i];
             geometryPoints[2*i + 1] = v[i + 1];
         }
+
+        const qreal delta = m_Thickness / 2.0;
+
+        geometryPoints[0].x -= delta;
+        geometryPoints[5].x += delta;
+        geometryPoints[6].y -= delta;
+        geometryPoints[7].y += delta;
+        geometryPoints[8].x += delta;
+        geometryPoints[9].x -= delta;
+        geometryPoints[10].y += delta;
+        geometryPoints[11].y -= delta;
     }
 }

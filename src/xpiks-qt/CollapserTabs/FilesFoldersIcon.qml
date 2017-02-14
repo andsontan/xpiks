@@ -32,41 +32,6 @@ import xpiks 1.0
 FolderElement {
     width: 20
     height: 17
+    thickness: 2
     color: isHighlighted ? Colors.labelActiveForeground : Colors.inactiveControlColor
 }
-
-/*Item {
-    id: host
-    width: 24
-    height: 20
-    property real thickness: 2
-
-    Rectangle {
-        anchors.top: parent.top
-        anchors.left: parent.left
-        width: 10
-        height: 5
-        color: "transparent"
-        border.color: isHighlighted ? Colors.labelActiveForeground : Colors.inactiveControlColor
-        border.width: host.thickness
-    }
-
-    Rectangle {
-        anchors.bottom: parent.bottom
-        width: 24
-        height: 17
-        color: "transparent"
-        border.color: isHighlighted ? Colors.labelActiveForeground : Colors.inactiveControlColor
-        border.width: host.thickness
-    }
-
-    Rectangle {
-        width: 6
-        anchors.top: parent.top
-        anchors.left: parent.left
-        anchors.topMargin: host.thickness
-        anchors.leftMargin: host.thickness
-        height: host.thickness*2
-        color: parentBackground
-    }
-}*/
