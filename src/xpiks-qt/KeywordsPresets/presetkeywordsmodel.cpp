@@ -180,6 +180,9 @@ namespace KeywordsPresets {
             auto &keywordsModel = m_PresetsList.at(index)->m_KeywordsModel;
             if (keywordsModel.removeKeywordAt(keywordIndex, keyword)) {
                 LOG_INFO << "Removed keyword:" << keyword;
+
+                QModelIndex indexToUpdate = this->index(index);
+                emit dataChanged(indexToUpdate, indexToUpdate, QVector<int>() << KeywordsCountRole);
             }
         }
     }
@@ -192,6 +195,9 @@ namespace KeywordsPresets {
             auto &keywordsModel = m_PresetsList.at(index)->m_KeywordsModel;
             if (keywordsModel.removeLastKeyword(keyword)) {
                 LOG_INFO << "Removed keyword:" << keyword;
+
+                QModelIndex indexToUpdate = this->index(index);
+                emit dataChanged(indexToUpdate, indexToUpdate, QVector<int>() << KeywordsCountRole);
             }
         }
     }
@@ -203,6 +209,9 @@ namespace KeywordsPresets {
             auto *preset = m_PresetsList.at(index);
             auto &keywordsModel = preset->m_KeywordsModel;
             keywordsModel.appendKeywords(keywords);
+
+            QModelIndex indexToUpdate = this->index(index);
+            emit dataChanged(indexToUpdate, indexToUpdate, QVector<int>() << KeywordsCountRole);
         }
     }
 
@@ -220,6 +229,9 @@ namespace KeywordsPresets {
             Helpers::splitKeywords(rawKeywords.trimmed(), separators, keywords);
 
             keywordsModel.setKeywords(keywords);
+
+            QModelIndex indexToUpdate = this->index(index);
+            emit dataChanged(indexToUpdate, indexToUpdate, QVector<int>() << KeywordsCountRole);
         }
     }
 
@@ -231,6 +243,9 @@ namespace KeywordsPresets {
             auto &keywordsModel = preset->m_KeywordsModel;
             keywordsModel.appendKeyword(keyword);
             m_CommandManager->submitKeywordForSpellCheck(&keywordsModel, keywordsModel.getKeywordsCount() - 1);
+
+            QModelIndex indexToUpdate = this->index(index);
+            emit dataChanged(indexToUpdate, indexToUpdate, QVector<int>() << KeywordsCountRole);
         }
     }
 
