@@ -63,21 +63,36 @@ namespace KeywordsPresets {
         m_PresetsList[presetIndex]->m_PresetName = name;
     }
 
-    bool PresetKeywordsModel::tryFindSinglePresetByName(const QString &name, int &index) {
+    bool PresetKeywordsModel::tryFindSinglePresetByName(const QString &name, bool strictMatch, int &index) {
         LOG_INFO << name;
         int foundIndex = -1;
         size_t size = m_PresetsList.size();
         bool anyError = false;
 
-        for (size_t i = 0; i < size; ++i) {
-            PresetModel *preset = m_PresetsList[i];
-            if (preset->m_PresetName.contains(name, Qt::CaseInsensitive)) {
-                if (foundIndex != -1) {
-                    anyError = true;
-                    foundIndex = -1;
-                    break;
-                } else {
-                    foundIndex = (int)i;
+        if (!strictMatch) {
+            for (size_t i = 0; i < size; ++i) {
+                PresetModel *preset = m_PresetsList[i];
+                if (preset->m_PresetName.contains(name, Qt::CaseInsensitive)) {
+                    if (foundIndex != -1) {
+                        anyError = true;
+                        foundIndex = -1;
+                        break;
+                    } else {
+                        foundIndex = (int)i;
+                    }
+                }
+            }
+        } else {
+            for (size_t i = 0; i < size; ++i) {
+                PresetModel *preset = m_PresetsList[i];
+                if (preset->m_PresetName == name) {
+                    if (foundIndex != -1) {
+                        anyError = true;
+                        foundIndex = -1;
+                        break;
+                    } else {
+                        foundIndex = (int)i;
+                    }
                 }
             }
         }
@@ -103,6 +118,28 @@ namespace KeywordsPresets {
                 results.push_back(qMakePair((int)i, preset->m_PresetName));
             }
         }
+    }
+
+    bool PresetKeywordsModel::findOrRegisterPreset(const QString &name, const QStringList &keywords, int &index) {
+        LOG_INFO << name;
+
+        bool found = false;
+
+        int existingIndex = -1;
+        if (!tryFindSinglePresetByName(name, true, existingIndex)) {
+            int lastIndex = getPresetsCount();
+
+            beginInsertRows(QModelIndex(), lastIndex, lastIndex);
+            m_PresetsList.push_back(new PresetModel(name, keywords));
+            endInsertRows();
+
+            index = lastIndex;
+        } else {
+            found = true;
+            index = existingIndex;
+        }
+
+        return found;
     }
 
     void PresetKeywordsModel::removeItem(int row) {

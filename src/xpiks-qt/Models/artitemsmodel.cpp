@@ -601,7 +601,7 @@ namespace Models {
 
             auto *presetsModel = m_CommandManager->getPresetsModel();
             int presetIndex = -1;
-            if (presetsModel->tryFindSinglePresetByName(lastKeyword, presetIndex)) {
+            if (presetsModel->tryFindSinglePresetByName(lastKeyword, false, presetIndex)) {
                 std::shared_ptr<Commands::ExpandPresetCommand> expandPresetCommand(new Commands::ExpandPresetCommand(MetadataElement(metadata, metadataIndex), presetIndex, keywordIndex));
                 std::shared_ptr<Commands::ICommandResult> result = m_CommandManager->processCommand(expandPresetCommand);
                 Q_UNUSED(result);

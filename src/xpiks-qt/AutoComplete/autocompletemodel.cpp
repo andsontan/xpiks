@@ -95,7 +95,7 @@ namespace AutoComplete {
             auto *presetsModel = m_CommandManager->getPresetsModel();
             QString completion = m_CompletionList.at(index.row());
             int dummy;
-            bool haveOnePreset = presetsModel->tryFindSinglePresetByName(completion, dummy);
+            bool haveOnePreset = presetsModel->tryFindSinglePresetByName(completion, false, dummy);
             return haveOnePreset;
         }
         return QVariant();

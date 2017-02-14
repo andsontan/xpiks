@@ -42,6 +42,13 @@ namespace KeywordsPresets {
             m_PresetName(name)
         {}
 
+        PresetModel(const QString &name, const QStringList &keywords):
+            m_KeywordsModel(m_Hold),
+            m_PresetName(name)
+        {
+            m_KeywordsModel.setKeywords(keywords);
+        }
+
         void acquire() { m_Hold.acquire(); }
         bool release() { return m_Hold.release(); }
 
@@ -66,8 +73,9 @@ namespace KeywordsPresets {
         bool tryGetNameFromIndex(int index, QString &name);
         virtual bool tryGetPreset(int presetIndex, QStringList &keywords) override;
         void setName(int presetIndex, const QString &name);
-        virtual bool tryFindSinglePresetByName(const QString &name, int &index) override;
+        virtual bool tryFindSinglePresetByName(const QString &name, bool strictMatch, int &index) override;
         virtual void findPresetsByName(const QString &name, QVector<QPair<int, QString> > &results) override;
+        virtual bool findOrRegisterPreset(const QString &name, const QStringList &keywords, int &index) override;
 
     private:
         enum PresetKeywords_Roles {

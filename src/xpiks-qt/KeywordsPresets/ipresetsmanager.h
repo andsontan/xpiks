@@ -32,8 +32,9 @@ namespace KeywordsPresets {
         virtual ~IPresetsManager() {}
 
         virtual bool tryGetPreset(int presetIndex, QStringList &keywords) = 0;
-        virtual bool tryFindSinglePresetByName(const QString &name, int &index) = 0;
+        virtual bool tryFindSinglePresetByName(const QString &name, bool strictMatch, int &index) = 0;
         virtual void findPresetsByName(const QString &name, QVector<QPair<int, QString> > &results) = 0;
+        virtual bool findOrRegisterPreset(const QString &name, const QStringList &keywords, int &index) = 0;
     };
 }
 

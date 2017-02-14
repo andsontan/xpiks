@@ -281,7 +281,7 @@ namespace Models {
         auto *presetsModel = m_CommandManager->getPresetsModel();
         int presetIndex = -1;
 
-        if (presetsModel->tryFindSinglePresetByName(lastKeyword, presetIndex)) {
+        if (presetsModel->tryFindSinglePresetByName(lastKeyword, false, presetIndex)) {
             success = doExpandPreset(keywordIndex, presetIndex);
         } else {
             LOG_DEBUG << "Preset not found";
