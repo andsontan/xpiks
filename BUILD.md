@@ -1,5 +1,9 @@
 **How to build:**
 
+***Important***
+The most detailed instructions can be found at this page: http://ribtoks.github.io/xpiks/blog/2014/building-xpiks-alone
+
+
 ***Prepare the source tree***
 
 - git clone Xpiks repo
@@ -9,18 +13,23 @@
 
 ***Mac OS X / Windows : build third-parties***
 
-- download **Hunspell 1.6.0** from http://hunspell.sourceforge.net/ and extract it in the `src/` directory
-- open project `src/hunspell/hunspell.pro` in Qt Creator, execute `Run qmake`, execute `Build`
-- copy built library (e.g. `libhunspell.a`) from the build directory to the `src/libs` directory
-- follow instructions in `src/cpp-libface/README.md` to build libface
-- copy built library to `src/libs` directory
-- follow instructions in `src/ssdll/README.md` to build ssdll
-- copy built library to `src/libs` directory
 - [windows] you will also need to download **zlib 1.2.11** and extract it in the `src/` directory
 - [windows] open project `src/zlib-project/zlib.pro` in Qt Creator, execute `Run qmake`, execute `Build`
 - [windows] copy built library (e.g. `z.lib`) from the build directory to the `src/libs` directory
+
+- download **Hunspell 1.6.0** from http://hunspell.sourceforge.net/ and extract it in the `src/` directory
+- open project `src/hunspell/hunspell.pro` in Qt Creator, execute `Run qmake`, execute `Build`
+- copy built library (e.g. `libhunspell.a`) from the build directory to the `src/libs` directory
+
+- follow instructions in `src/cpp-libface/README.md` to build libface
+- copy built library to `src/libs` directory
+
+- follow instructions in `src/ssdll/README.md` to build ssdll
+- copy built library to `src/libs` directory
+
 - open project `src/quazip/quazip/quazip.pro` in Qt Creator, execute `Run qmake`, execute `Build`
 - copy built library (e.g. `quazip.lib` and `quazip.dll`) from the build directory to the `src/libs` directory
+
 - [windows] do `git clone https://github.com/blackrosezy/build-libcurl-windows.git` and execute `build.bat`
 - [windows] copy contests of `lib/dll-debug-x64` contents to the `src/libs/` directory
 - [windows] build exiv2 library (see steps below)
@@ -77,7 +86,5 @@ In some cases you neet to install `libcurl-devel`, `hunspell-devel`, `quazip-dev
 - `rpmbuild -ba ~/rpmbuild/SPECS/xpiks.spec`
 
 ***More***
-
-More instructions can be found at this page http://ribtoks.github.io/xpiks/blog/2014/building-xpiks-alone
 
 Xpiks uses English dictionaries from http://cgit.freedesktop.org/libreoffice/dictionaries/tree/. In Windows they are stored in the `dict/` subdirectory, in OS X they are in the `Resources/` directory of a bundle.
