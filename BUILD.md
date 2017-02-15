@@ -1,8 +1,9 @@
-**How to build:**
+*Important*
 
-***Important***
-The most detailed instructions can be found at this page: http://ribtoks.github.io/xpiks/blog/2014/building-xpiks-alone
+**The most detailed instructions** can be found at this page: **http://ribtoks.github.io/xpiks/blog/2014/building-xpiks-alone**
 
+
+**Simplified instructions:**
 
 ***Prepare the source tree***
 
