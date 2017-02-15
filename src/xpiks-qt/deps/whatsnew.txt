@@ -1,3 +1,31 @@
+Xpiks 1.4 release
+
+It provides following features:
+
+- presets for keywords
+- additional quick buffer for convenient editing
+- support for user dictionary of misspelled words
+- ability to fix spelling in multiple files at once
+- detailed view of failed uploads
+- find and replace functionality
+- batch keywords removal functionality
+- support of StarDict dictionaries for translation
+- ability to show current file on disk
+- recombining selected artworks in multiple edit dialog
+- automatic updates
+
+And bugfixes:
+
+- unable to change case when editing a keyword
+- fixing spelling does not mark item as modified
+- order of keywords is changed in multiple edit dialog
+- dismiss timeout settings change didn't work as expected
+
+
+
+
+Previous releases:
+
 This is Xpiks 1.3.2 bugfix release.
 
 In this release:
@@ -7,10 +35,6 @@ In this release:
 - Fix for font size setting lost
 - Fix for scrolling in main window
 - Fix for empty title not filled from description
-
-
-
-Previous releases:
 
 Xpiks 1.3.1 bugfix release.
 
