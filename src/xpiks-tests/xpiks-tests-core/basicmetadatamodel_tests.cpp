@@ -218,6 +218,8 @@ void BasicKeywordsModelTests::containsKeywordStrictTest() {
     Common::SearchFlags flags = Common::SearchFlags::WholeWords;
     QVERIFY(basicModel.containsKeyword("keyword1", flags) == false);
     QVERIFY(basicModel.containsKeyword("keyword2", flags) == true);
+    QVERIFY(basicModel.containsKeyword("kEyworD3", flags) == true);
+    Common::ApplyFlag(flags, true, Common::SearchFlags::CaseSensitive);
     QVERIFY(basicModel.containsKeyword("kEyworD3", flags) == false);
 }
 
