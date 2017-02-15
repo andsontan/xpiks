@@ -105,7 +105,7 @@ namespace Helpers {
                 Common::SearchFlags keywordsFlags = Common::SearchFlags::Keywords;
 
                 if ((searchTerm.length() > 1) && searchTerm[0] == QLatin1Char('!')) {
-                    Common::SetFlag(keywordsFlags, Common::SearchFlags::ExactMatch);
+                    Common::SetFlag(keywordsFlags, Common::SearchFlags::WholeWords);
                     searchTerm.remove(0, 1);
                 }
 
@@ -173,7 +173,7 @@ namespace Helpers {
                 Common::SearchFlags keywordsFlags = Common::SearchFlags::Keywords;
 
                 if ((searchTerm.length() > 1) && searchTerm[0] == QLatin1Char('!')) {
-                    Common::SetFlag(keywordsFlags, Common::SearchFlags::ExactMatch);
+                    Common::SetFlag(keywordsFlags, Common::SearchFlags::WholeWords);
                     searchTerm.remove(0, 1);
                 }
 

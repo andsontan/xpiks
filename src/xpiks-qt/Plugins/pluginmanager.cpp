@@ -177,7 +177,7 @@ namespace Plugins {
 
     int PluginManager::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
-        return m_PluginsList.size();
+        return (int)m_PluginsList.size();
     }
 
     QVariant PluginManager::data(const QModelIndex &index, int role) const {

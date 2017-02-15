@@ -42,7 +42,7 @@ namespace Models {
         Q_PROPERTY(bool searchInDescription READ getSearchInDescription WRITE setSearchInDescription NOTIFY searchInDescriptionChanged)
         Q_PROPERTY(bool searchInKeywords READ getSearchInKeywords WRITE setSearchInKeywords NOTIFY searchInKeywordsChanged)
         Q_PROPERTY(bool caseSensitive READ getCaseSensitive WRITE setCaseSensitive NOTIFY caseSensitiveChanged)
-        Q_PROPERTY(bool searchExactMatch READ getSearchExactMatch WRITE setSearchExactMatch NOTIFY searchExactMatchChanged)
+        Q_PROPERTY(bool searchWholeWords READ getSearchWholeWords WRITE setSearchWholeWords NOTIFY searchWholeWordsChanged)
         Q_PROPERTY(int count READ getArtworksCount NOTIFY countChanged)
 
     public:
@@ -119,14 +119,14 @@ namespace Models {
             }
         }
 
-        bool getSearchExactMatch() const {
-            return Common::HasFlag(m_Flags, Common::SearchFlags::ExactMatch);
+        bool getSearchWholeWords() const {
+            return Common::HasFlag(m_Flags, Common::SearchFlags::WholeWords);
         }
 
-        void setSearchExactMatch(bool value) {
-            if (value != getSearchExactMatch()) {
-                Common::ApplyFlag(m_Flags, value, Common::SearchFlags::ExactMatch);
-                emit searchExactMatchChanged(value);
+        void setSearchWholeWords(bool value) {
+            if (value != getSearchWholeWords()) {
+                Common::ApplyFlag(m_Flags, value, Common::SearchFlags::WholeWords);
+                emit searchWholeWordsChanged(value);
             }
         }
 
@@ -179,7 +179,7 @@ namespace Models {
         void searchInDescriptionChanged(bool value);
         void searchInKeywordsChanged(bool value);
         void caseSensitiveChanged(bool value);
-        void searchExactMatchChanged(bool value);
+        void searchWholeWordsChanged(bool value);
         void countChanged(int value);
         void allSelectedChanged();
         void replaceSucceeded();

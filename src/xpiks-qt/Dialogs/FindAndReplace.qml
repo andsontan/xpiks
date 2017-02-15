@@ -262,11 +262,11 @@ Item {
                         }
 
                         StyledCheckbox {
-                            id: exactMatchCheckbox
-                            text: i18.n + qsTr("Exact match")
-                            Component.onCompleted: exactMatchCheckbox.checked = replaceModel.searchExactMatch
+                            id: wholeWordsCheckbox
+                            text: i18.n + qsTr("Whole words only")
+                            Component.onCompleted: wholeWordsCheckbox.checked = replaceModel.searchWholeWords
                             onClicked: {
-                                replaceModel.searchExactMatch = exactMatchCheckbox.checked
+                                replaceModel.searchWholeWords = wholeWordsCheckbox.checked
                             }
                         }
                     }

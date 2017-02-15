@@ -182,7 +182,7 @@ namespace Common {
     bool BasicMetadataModel::replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
                                                   Common::SearchFlags flags) {
         LOG_DEBUG << "#";
-        const bool wholeWords = Common::HasFlag(flags, Common::SearchFlags::ExactMatch);
+        const bool wholeWords = Common::HasFlag(flags, Common::SearchFlags::WholeWords);
         const bool caseSensitive = Common::HasFlag(flags, Common::SearchFlags::CaseSensitive);
         const Qt::CaseSensitivity caseSensivity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
@@ -200,7 +200,7 @@ namespace Common {
     bool BasicMetadataModel::replaceInTitle(const QString &replaceWhat, const QString &replaceTo,
                                             Common::SearchFlags flags) {
         LOG_DEBUG << "#";
-        const bool wholeWords = Common::HasFlag(flags, Common::SearchFlags::ExactMatch);
+        const bool wholeWords = Common::HasFlag(flags, Common::SearchFlags::WholeWords);
         const bool caseSensitive = Common::HasFlag(flags, Common::SearchFlags::CaseSensitive);
         const Qt::CaseSensitivity caseSensivity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
 

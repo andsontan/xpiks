@@ -43,12 +43,12 @@ namespace Helpers {
         int flags = m_FlagsProvider->getFlags();
         Qt::CaseSensitivity caseSensitivity = Common::HasFlag(flags, Common::SearchFlags::CaseSensitive) ?
                     Qt::CaseSensitive : Qt::CaseInsensitive;
-        const bool exactMatch = Common::HasFlag(flags, Common::SearchFlags::ExactMatch);
+        const bool wholeWords = Common::HasFlag(flags, Common::SearchFlags::WholeWords);
 
         QColor highlighColor = m_ColorsModel->artworkModifiedColor();
         m_Format.setBackground(highlighColor);
 
-        if (!exactMatch) {
+        if (!wholeWords) {
             while (pos != -1) {
                 pos = text.indexOf(m_ReplaceFrom, pos, caseSensitivity);
                 if (pos >= 0) {

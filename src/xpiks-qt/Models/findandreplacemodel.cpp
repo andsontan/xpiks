@@ -53,8 +53,8 @@ QString searchFlagsToString(Common::SearchFlags flags) {
         items.append("Keywords");
     }
 
-    if (Common::HasFlag(flags, Common::SearchFlags::ExactMatch)) {
-        items.append("ExactMatch");
+    if (Common::HasFlag(flags, Common::SearchFlags::WholeWords)) {
+        items.append("WholeWords");
     }
 
     if (Common::HasFlag(flags, Common::SearchFlags::AllTerms)) {
@@ -260,11 +260,11 @@ namespace Models {
 
         if (item.hasKeywordsMatch()) {
             Qt::CaseSensitivity caseSensitivity = getCaseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive;
-            const bool exactMatch = getSearchExactMatch();
+            const bool wholeWords = getSearchWholeWords();
 
             QStringList listNew;
             for (auto &el: list) {
-                if (!exactMatch) {
+                if (!wholeWords) {
                     if (el.contains(m_ReplaceFrom, caseSensitivity)) {
                         listNew.append(el);
                     }

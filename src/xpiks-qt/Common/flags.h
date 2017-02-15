@@ -87,11 +87,11 @@ namespace Common {
         ReservedTerms = 1 << 4, // include reserved terms like "x:empty"
         AllTerms = 1 << 5, // all of the search terms included in the result
         Filepath = 1 << 6,
-        ExactMatch = 1 << 7, // has also meaning of "whole words"
+        WholeWords = 1 << 7,
         IncludeSpaces = 1 << 8, // includes spaces inside
 
         Metadata = Description | Title | Keywords,
-        ExactKeywords = ExactMatch | Keywords,
+        ExactKeywords = WholeWords | Keywords,
         MetadataCaseSensitive = Metadata | CaseSensitive,
 
         Everything = Metadata | Filepath | ReservedTerms,

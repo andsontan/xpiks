@@ -438,21 +438,20 @@ namespace Common {
     bool BasicKeywordsModel::containsKeywordUnsafe(const QString &searchTerm, Common::SearchFlags searchFlags) {
         bool hasMatch = false;
         int length = m_KeywordsList.length();
-        const bool exactMatch = Common::HasFlag(searchFlags, Common::SearchFlags::ExactMatch);
+        const bool caseSensitive = Common::HasFlag(searchFlags, Common::SearchFlags::CaseSensitive);
+        Qt::CaseSensitivity caseSensivity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
+        const bool wholeWords = Common::HasFlag(searchFlags, Common::SearchFlags::WholeWords);
 
-        if (exactMatch) {
+        if (wholeWords) {
             for (int i = 0; i < length; ++i) {
-                if (m_KeywordsList.at(i) == searchTerm) {
+                if (QString::compare(m_KeywordsList.at(i), searchTerm, caseSensivity) == 0) {
                     hasMatch = true;
                     break;
                 }
             }
         } else {
-            const bool caseSensitive = Common::HasFlag(searchFlags, Common::SearchFlags::CaseSensitive);
-            Qt::CaseSensitivity caseSensitity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
-
             for (int i = 0; i < length; ++i) {
-                if (m_KeywordsList.at(i).contains(searchTerm, caseSensitity)) {
+                if (m_KeywordsList.at(i).contains(searchTerm, caseSensivity)) {
                     hasMatch = true;
                     break;
                 }
@@ -531,7 +530,7 @@ namespace Common {
         QVector<int> indicesToRemove;
 
         const bool caseSensitive = Common::HasFlag(flags, Common::SearchFlags::CaseSensitive);
-        const bool wholeWords = Common::HasFlag(flags, Common::SearchFlags::ExactMatch);
+        const bool wholeWords = Common::HasFlag(flags, Common::SearchFlags::WholeWords);
         const Qt::CaseSensitivity caseSensivity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
 
         const int size = m_KeywordsList.size();

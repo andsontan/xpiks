@@ -215,7 +215,7 @@ void BasicKeywordsModelTests::containsKeywordStrictTest() {
     keywords << "something_keyword1" << "keyword2" << "keyword3";
     basicModel.appendKeywords(keywords);
 
-    Common::SearchFlags flags = Common::SearchFlags::ExactMatch;
+    Common::SearchFlags flags = Common::SearchFlags::WholeWords;
     QVERIFY(basicModel.containsKeyword("keyword1", flags) == false);
     QVERIFY(basicModel.containsKeyword("keyword2", flags) == true);
     QVERIFY(basicModel.containsKeyword("kEyworD3", flags) == false);
@@ -503,7 +503,7 @@ void BasicKeywordsModelTests::replaceWholeWordsTest() {
     basicModel.setDescription(originalDescription);
     basicModel.appendKeywords(originalKeywords);
 
-    auto flags = Common::SearchFlags::Metadata | Common::SearchFlags::ExactMatch;
+    auto flags = Common::SearchFlags::Metadata | Common::SearchFlags::WholeWords;
 
     bool replaceSucceeded = basicModel.replace("test", "Replaced", flags);
     QVERIFY(replaceSucceeded);
