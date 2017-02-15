@@ -76,7 +76,7 @@ namespace AutoComplete {
 
             LOG_DEBUG << "Real index:" << index;
 
-            emit completionAccepted(m_StringsList.at(index));
+            emit completionAccepted(m_StringsList.at(index), false);
         }
 
         emit dismissPopupRequested();
@@ -94,5 +94,19 @@ namespace AutoComplete {
 
         int distance = Helpers::levensteinDistance(item.left(m_SearchTerm.length() + m_Threshold - 1), m_SearchTerm);
         return distance <= m_Threshold;
+    }
+
+    QHash<int, QByteArray> StringFilterProxyModel::roleNames() const {
+        auto names = QSortFilterProxyModel::roleNames();
+        names[Qt::UserRole + 1] = "ispreset";
+        return names;
+    }
+
+    QVariant StringFilterProxyModel::data(const QModelIndex &index, int role) const {
+        if (role == (Qt::UserRole + 1)) {
+            return false;
+        }
+
+        return QSortFilterProxyModel::data(index, role);
     }
 }

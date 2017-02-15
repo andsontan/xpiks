@@ -69,11 +69,14 @@ namespace AutoComplete {
         void selectedIndexChanged(int index);
         void isActiveChanged(bool value);
         void dismissPopupRequested();
-        void completionAccepted(const QString &completion);
+        void completionAccepted(const QString &completion, bool expandPreset);
 
         // QSortFilterProxyModel interface
     protected:
         virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+        // for hack with presets
+        virtual QHash<int,QByteArray> roleNames() const override;
+        virtual QVariant data(const QModelIndex &index, int role) const override;
 
     private:
         // ignore default regexp from proxymodel
