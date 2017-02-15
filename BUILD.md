@@ -14,6 +14,8 @@
 - copy built library (e.g. `libhunspell.a`) from the build directory to the `src/libs` directory
 - follow instructions in `src/cpp-libface/README.md` to build libface
 - copy built library to `src/libs` directory
+- follow instructions in `src/ssdll/README.md` to build ssdll
+- copy built library to `src/libs` directory
 - [windows] you will also need to download **zlib 1.2.11** and extract it in the `src/` directory
 - [windows] open project `src/zlib-project/zlib.pro` in Qt Creator, execute `Run qmake`, execute `Build`
 - [windows] copy built library (e.g. `z.lib`) from the build directory to the `src/libs` directory
