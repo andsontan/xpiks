@@ -16,14 +16,16 @@ date: 2014-12-28T09:54:01+02:00
 ### 2. Obtaining source code:
 
 - check out Xpiks repository with Git `git clone https://github.com/Ribtoks/xpiks.git`
-- check out submodules `git submodules init` and `git submodules update`
+- check out submodules `git submodules init` and `git submodules update --recursive`
 - rename `src/tiny-AES/aes.c` to `src/tiny-AES/aes.cpp`
 
 ### 3. Building the dependencies:
 
 - <span class="gray">[Windows]</span> if you're building for Windows, build Zlib first (<a href="#zlib">see instructions below</a>)
 - build <a href="#hunspell">Hunspell</a> and <a href="#quazip">Quazip</a> libraries (instructions below)
+- <span class="gray">[Windows]</span> if you're building for Windows, build mman32 library before ssdll and libface (<a href="#mman32">see instructions below</a>)     
 - build <a href="#libface">cpp-libface</a> library (instructions below)
+- build <a href="#ssdll">ssdll</a> library (instructions below)
 - <span class="gray">[Windows]</span> build <a href="#libcurl">libcurl</a> library (instructions below)
 - build <a href="#exiv2">Exiv2</a> library (instructions below)
 
@@ -43,13 +45,13 @@ date: 2014-12-28T09:54:01+02:00
 
 ***<span id="zlib">To build zlib under Windows for Xpiks, do the following:</span>***
 
-- download zlib (1.2.8) source code and extract to `scr/zlib-1.2.8`
+- download zlib (1.2.11) source code and extract to `scr/zlib-1.2.11`
 - open `src/zlib-project/zlib.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
 - copy built library `.lib` (and z.pdb if you builded for Debug) to `src/libs` directory
 
 ***<span id="hunspell">To build Hunspell do the following:</span>***
 
-- download **Hunspell 1.3.3** from http://hunspell.sourceforge.net/ and extract it in the `src/` directory
+- download **Hunspell 1.6.0** from http://hunspell.sourceforge.net/ and extract it in the `src/` directory
 - open project `src/hunspell/hunspell.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
 - copy built library (e.g. `libhunspell.a`, `hunspell.lib`) from the build directory to the `src/libs` directory
 
@@ -58,11 +60,23 @@ date: 2014-12-28T09:54:01+02:00
 - open project `src/quazip/quazip/quazip.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
 - copy built library (e.g. `libquazip.a`, `quazip.lib`) from the build directory to the `src/libs` directory
 
+***<span id="mman32">To build mman under Windows for Xpiks, do the following:</span>***
+
+- locate `mman-win32` directory in one of the subdirectories either of `ssdll` or `cpp-libface` submodules of Xpiks
+- open `src/mman-win32/mman-win32.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
+- copy built library `.lib` and `.dll` (and mman.pdb if you builded for Debug) to `src/libs` directory
+
 ***<span id="libface">To build libface do the following:</span>***
 
 - open file `src/cpp-libface/README.md` and follow instructions for your platform
-- copy built library (e.g. `libface.a`, `face.lib`) from the build directory to the `src/libs` directory
+- copy built library (e.g. `libface.a`, `face.dll`) from the build directory to the `src/libs` directory
 - for Windows you will also need mman32 library (`mman.lib`) to be in the `src/libs` directory
+
+***<span id="ssdll">To build ssdll do the following:</span>***
+
+- open file `src/ssdll/README.md` and follow instructions for your platform
+- copy built library (e.g. `ssdll.so`, `ssdll.dll`) from the build directory to the `src/libs` directory
+- for Windows you will also need mman32 library (`mman.dll`) to be in the `src/libs` directory
 
 ***<span id="libcurl">To build Libcurl do the following:</span>***
 
@@ -97,7 +111,7 @@ If you builded for Release and you wish to redistribute it for similar desktop p
 
 Sample macdeployqt command for OS X can be found below: (depends on your build-* directory path)
 
-`macdeployqt xpiks-qt.app -verbose=2 -dmg -executable=xpiks-qt.app/Contents/MacOS/xpiks-qt -qmldir=../ -qmldir=../Components/ -qmldir=../Constants/ -qmldir=../Dialogs/ -qmldir=../StyledControls/`
+`macdeployqt xpiks-qt.app -verbose=2 -dmg -executable=xpiks-qt.app/Contents/MacOS/xpiks-qt -qmldir=../ -qmldir=../Components/ -qmldir=../Constants/ -qmldir=../Dialogs/ -qmldir=../StyledControls/ -qmldir=../StackViews/ -qmldir=../CollapserTabs/`
 
 And for Windows as well:
 
