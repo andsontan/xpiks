@@ -1,7 +1,12 @@
-*Important*
+**Important**
 
 **The most detailed instructions** can be found at this page: **http://ribtoks.github.io/xpiks/blog/2014/building-xpiks-alone**
 
+*
+
+This space was intentionally left blank.
+
+*
 
 **Simplified instructions:**
 
