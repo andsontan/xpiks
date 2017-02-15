@@ -240,7 +240,7 @@ namespace Common {
     }
 
     bool BasicKeywordsModel::replace(const QString &replaceWhat, const QString &replaceTo, Common::SearchFlags flags) {
-        LOG_INFO << replaceWhat << "->" << replaceTo << "with flags:" << (int)flags;
+        LOG_INTEGR_TESTS_OR_DEBUG << replaceWhat << "->" << replaceTo << "with flags:" << (int)flags;
         Q_ASSERT(!replaceWhat.isEmpty());
         Q_ASSERT(!replaceTo.isEmpty());
         Q_ASSERT(((int)flags & (int)Common::SearchFlags::Metadata) != 0);

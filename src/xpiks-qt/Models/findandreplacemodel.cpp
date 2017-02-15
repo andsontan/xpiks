@@ -77,7 +77,7 @@ namespace Models {
 
     void FindAndReplaceModel::initArtworksList() {
         LOG_INFO << "Flags:" << searchFlagsToString(m_Flags);
-        LOG_INFO << "ReplaceFrom:" << m_ReplaceFrom;
+        LOG_INFO << "ReplaceFrom: [" << m_ReplaceFrom << "]";
 
         Models::FilteredArtItemsProxyModel *filteredItemsModel = m_CommandManager->getFilteredArtItemsModel();
         m_ArtworksList = std::move(filteredItemsModel->getSearchablePreviewOriginalItems(m_ReplaceFrom, m_Flags));
@@ -260,11 +260,11 @@ namespace Models {
 
         if (item.hasKeywordsMatch()) {
             Qt::CaseSensitivity caseSensitivity = getCaseSensitive() ? Qt::CaseSensitive : Qt::CaseInsensitive;
-            const bool wholeWords = getSearchWholeWords();
+            const bool exactMatch = getSearchExactMatch();
 
             QStringList listNew;
             for (auto &el: list) {
-                if (!wholeWords) {
+                if (!exactMatch) {
                     if (el.contains(m_ReplaceFrom, caseSensitivity)) {
                         listNew.append(el);
                     }

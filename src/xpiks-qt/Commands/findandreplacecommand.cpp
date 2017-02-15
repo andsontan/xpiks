@@ -34,7 +34,7 @@ namespace Commands {
     FindAndReplaceCommand::~FindAndReplaceCommand() { LOG_DEBUG << "#"; }
 
     std::shared_ptr<Commands::ICommandResult> FindAndReplaceCommand::execute(const ICommandManager *commandManagerInterface) const {
-        LOG_INFO << "Replacing" << m_ReplaceWhat << "to" << m_ReplaceTo << "in" << m_MetadataElements.size() << "item(s)";
+        LOG_INFO << "Replacing [" << m_ReplaceWhat << "] to [" << m_ReplaceTo << "] in" << m_MetadataElements.size() << "item(s)";
         CommandManager *commandManager = (CommandManager *)commandManagerInterface;
 
         std::vector<UndoRedo::ArtworkMetadataBackup> artworksBackups;
