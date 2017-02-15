@@ -43,47 +43,47 @@ date: 2014-12-28T09:54:01+02:00
 
 # Instructions to build dependencies:
 
-***<span id="zlib">To build _zlib_ under Windows for Xpiks, do the following:</span>***
+***<span id="zlib">To build <u>zlib</u> under Windows for Xpiks, do the following:</span>***
 
 - download zlib (1.2.11) source code and extract to `scr/zlib-1.2.11`
 - open `src/zlib-project/zlib.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
 - copy built library `.lib` (and z.pdb if you builded for Debug) to `src/libs` directory
 
-***<span id="hunspell">To build _Hunspell_ do the following:</span>***
+***<span id="hunspell">To build <u>Hunspell</u> do the following:</span>***
 
 - download **Hunspell 1.6.0** from http://hunspell.sourceforge.net/ and extract it in the `src/` directory
 - open project `src/hunspell/hunspell.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
 - copy built library (e.g. `libhunspell.a`, `hunspell.lib`) from the build directory to the `src/libs` directory
 
-***<span id="quazip">To build _Quazip_ do the following:</span>***
+***<span id="quazip">To build <u>Quazip</u> do the following:</span>***
 
 - open project `src/quazip/quazip/quazip.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
 - copy built library (e.g. `libquazip.a`, `quazip.lib`) from the build directory to the `src/libs` directory
 
-***<span id="mman32">To build _mman32_ under Windows for Xpiks, do the following:</span>***
+***<span id="mman32">To build <u>mman32</u> under Windows for Xpiks, do the following:</span>***
 
 - locate `mman-win32` directory in one of the subdirectories either of `ssdll` or `cpp-libface` submodules of Xpiks
 - open `src/mman-win32/mman-win32.pro` in Qt Creator, select `Release`, execute `Run qmake`, execute `Build`
 - copy built library `.lib` and `.dll` (and mman.pdb if you builded for Debug) to `src/libs` directory
 
-***<span id="libface">To build _libface_ do the following:</span>***
+***<span id="libface">To build <u>libface</u> do the following:</span>***
 
 - open file `src/cpp-libface/README.md` and follow instructions for your platform
 - copy built library (e.g. `libface.a`, `face.dll`) from the build directory to the `src/libs` directory
 - for Windows you will also need mman32 library (`mman.lib`) to be in the `src/libs` directory
 
-***<span id="ssdll">To build _ssdll_ do the following:</span>***
+***<span id="ssdll">To build <u>ssdll</u> do the following:</span>***
 
 - open file `src/ssdll/README.md` and follow instructions for your platform
 - copy built library (e.g. `ssdll.so`, `ssdll.dll`) from the build directory to the `src/libs` directory
 - for Windows you will also need mman32 library (`mman.dll`) to be in the `src/libs` directory
 
-***<span id="libcurl">To build _LibCurl_ do the following:</span>***
+***<span id="libcurl">To build <u>LibCurl</u> do the following:</span>***
 
 - open git bash and type `git clone https://github.com/blackrosezy/build-libcurl-windows.git`
 - execute `build.bat` and after if finishes, copy contents of `lib/dll-debug-x64` to the `src/libs/` directory
 
-***<span id="exiv2">To build _Exiv2_ in Visual Studio 2015 do the following:</span>***
+***<span id="exiv2">To build <u>Exiv2</u> in Visual Studio 2015 do the following:</span>***
 
 - download **exiv2 v0.25** library from <a href="http://www.exiv2.org/" target="_blanc">official website</a> and extract it somewhere
 - download **expat-2.1.1** library from <a href="https://sourceforge.net/projects/expat/">official website</a> and extract it on same level as exiv2
