@@ -788,30 +788,16 @@ ApplicationWindow {
                         }
                     }
 
-                    RowLayout {
-                        spacing: 100
-                        width: parent.width
-
-                        StyledText {
-                            Layout.maximumWidth: parent.width/2
-                            horizontalAlignment: Text.AlignLeft
-                            text: i18.n + getOriginText()
-
-                            function getOriginText() {
-                                var spellCheckerService = helpersWrapper.getSpellCheckerService()
-                                var result = qsTr("User dictionary size: %1").arg(spellCheckerService.userDictWordsNumber)
-                                return result
-                            }
-                        }
-
-                        Item {
-                            Layout.fillWidth: true
-                        }
-
-                        StyledButton {
-                            text: i18.n + qsTr("Clear dictionary")
-                            width: 100
-                            onClicked: clearDictionaryDialog.open()
+                    StyledButton {
+                        width: 200
+                        text: i18.n + qsTr("Manage user dictionary")
+                        onClicked: {
+                            userDictEditModel.initializeModel()
+                            Common.launchDialog("../Dialogs/UserDictEditDialog.qml",
+                                                settingsWindow,
+                                                {
+                                                    componentParent: settingsWindow
+                                                })
                         }
                     }
 

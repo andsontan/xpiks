@@ -78,5 +78,6 @@
         <file>CollapserTabs/TranslatorIcon.qml</file>
         <file>CollapserTabs/QuickBufferIcon.qml</file>
         <file>CollapserTabs/QuickBufferTab.qml</file>
+        <file>Dialogs/UserDictEditDialog.qml</file>
     </qresource>
 </RCC>

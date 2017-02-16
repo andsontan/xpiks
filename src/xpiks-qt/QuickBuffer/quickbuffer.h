@@ -55,7 +55,7 @@ namespace QuickBuffer {
     public slots:
         void afterSpellingErrorsFixedHandler();
         void spellCheckErrorsChangedHandler();
-        void userDictUpdateHandler(const QStringList &keywords);
+        void userDictUpdateHandler(const QStringList &keywords, bool overwritten);
         void userDictClearedHandler();
 
     public:

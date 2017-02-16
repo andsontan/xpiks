@@ -78,6 +78,7 @@
 #include "fixspellingmarksmodifiedtest.h"
 #include "presetstest.h"
 #include "translatorbasictest.h"
+#include "userdictedittest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS

@@ -139,7 +139,8 @@ SOURCES += main.cpp \
     Commands/expandpresetcommand.cpp \
     QuickBuffer/currenteditableartwork.cpp \
     QuickBuffer/currenteditableproxyartwork.cpp \
-    QuickBuffer/quickbuffer.cpp
+    QuickBuffer/quickbuffer.cpp \
+    SpellCheck/userdicteditmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -332,7 +333,8 @@ HEADERS += \
     QuickBuffer/currenteditableartwork.h \
     QuickBuffer/currenteditableproxyartwork.h \
     QuickBuffer/quickbuffer.h \
-    KeywordsPresets/ipresetsmanager.h
+    KeywordsPresets/ipresetsmanager.h \
+    SpellCheck/userdicteditmodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
@@ -412,7 +414,8 @@ DISTFILES += \
     CollapserTabs/FilesFoldersIcon.qml \
     CollapserTabs/TranslatorIcon.qml \
     CollapserTabs/QuickBufferIcon.qml \
-    CollapserTabs/QuickBufferTab.qml
+    CollapserTabs/QuickBufferTab.qml \
+    Dialogs/UserDictEditDialog.qml
 
 lupdate_only {
 SOURCES += *.qml \
@@ -526,7 +529,7 @@ win32 {
         copytranslations.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/translations/xpiks_*.qm)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/translations/)\"
     }
 
-    copyfreqtables.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/en_wordlist.tsv)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/ac_sources/en_wordlist.tsv)\"
+    copyfreqtables.commands = $(COPY_FILE) \"$$shell_path($$PWD/deps/en_wordlist.tsv)\" \"$$shell_path($$OUT_PWD/$$EXE_DIR/ac_sources)\"
 
     QMAKE_EXTRA_TARGETS += copywhatsnew copyterms copydicts copytranslations copyfreqtables
     POST_TARGETDEPS += copywhatsnew copyterms copydicts copytranslations copyfreqtables

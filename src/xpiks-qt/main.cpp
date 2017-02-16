@@ -38,6 +38,7 @@
 #include <QDesktopWidget>
 // -------------------------------------
 #include "SpellCheck/spellchecksuggestionmodel.h"
+#include "SpellCheck/userdicteditmodel.h"
 #include "QMLExtensions/cachingimageprovider.h"
 #include "Models/filteredartitemsproxymodel.h"
 #include "QMLExtensions/imagecachingservice.h"
@@ -323,6 +324,7 @@ int main(int argc, char *argv[]) {
     Models::ArtworkUploader artworkUploader(ftpCoordinator);
     SpellCheck::SpellCheckerService spellCheckerService;
     SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
+    SpellCheck::UserDictEditModel userDictEditModel;
     MetadataIO::BackupSaverService metadataSaverService;
     Warnings::WarningsModel warningsModel;
     warningsModel.setSourceModel(&artItemsModel);
@@ -396,6 +398,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&artworkProxyModel);
     commandManager.InjectDependency(&quickBuffer);
 
+    userDictEditModel.setCommandManager(&commandManager);
     autoCompleteModel.setCommandManager(&commandManager);
 
     commandManager.ensureDependenciesInjected();
@@ -451,6 +454,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("translationManager", &translationManager);
     rootContext->setContextProperty("uiManager", &uiManager);
     rootContext->setContextProperty("quickBuffer", &quickBuffer);
+    rootContext->setContextProperty("userDictEditModel", &userDictEditModel);
 
 #ifdef QT_DEBUG
     QVariant isDebug(true);

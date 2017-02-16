@@ -82,7 +82,7 @@ namespace Models {
         virtual void signalKeywordsCountChanged() override { emit keywordsCountChanged(); }
 
     public slots:
-        void userDictUpdateHandler(const QStringList &keywords);
+        void userDictUpdateHandler(const QStringList &keywords, bool overwritten);
         void userDictClearedHandler();
         void afterSpellingErrorsFixedHandler();
         void spellCheckErrorsChangedHandler();

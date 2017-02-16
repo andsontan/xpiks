@@ -1197,7 +1197,7 @@ namespace Models {
         }
     }
 
-    void ArtItemsModel::userDictUpdateHandler(const QStringList &keywords) {
+    void ArtItemsModel::userDictUpdateHandler(const QStringList &keywords, bool overwritten) {
         LOG_DEBUG << "#";
         LOG_INTEGRATION_TESTS << keywords;
         size_t size = m_ArtworkList.size();
@@ -1211,11 +1211,21 @@ namespace Models {
             ArtworkMetadata *metadata = m_ArtworkList.at(i);
             auto *metadataModel = metadata->getBasicModel();
             SpellCheck::SpellCheckItemInfo *info = metadataModel->getSpellCheckInfo();
-            info->removeWordsFromErrors(keywords);
+            if(!overwritten) {
+                info->removeWordsFromErrors(keywords);
+            } else {
+                info->clear();
+            }
+
             itemsToCheck.append(metadataModel);
         }
 
-        m_CommandManager->submitForSpellCheck(itemsToCheck, keywords);
+        if(!overwritten) {
+            m_CommandManager->submitForSpellCheck(itemsToCheck, keywords);
+        } 
+		else {
+            m_CommandManager->submitForSpellCheck(itemsToCheck);
+        }
     }
 
     void ArtItemsModel::userDictClearedHandler() {

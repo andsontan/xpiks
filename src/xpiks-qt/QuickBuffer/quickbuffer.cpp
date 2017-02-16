@@ -58,9 +58,9 @@ namespace QuickBuffer {
         emit titleChanged();
     }
 
-    void QuickBuffer::userDictUpdateHandler(const QStringList &keywords) {
+    void QuickBuffer::userDictUpdateHandler(const QStringList &keywords, bool overwritten) {
         LOG_DEBUG << "#";
-        doHandleUserDictChanged(keywords);
+        doHandleUserDictChanged(keywords, overwritten);
     }
 
     void QuickBuffer::userDictClearedHandler() {

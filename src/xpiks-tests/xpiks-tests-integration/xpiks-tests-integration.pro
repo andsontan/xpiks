@@ -171,7 +171,9 @@ SOURCES += main.cpp \
     ../../xpiks-qt/QuickBuffer/currenteditableartwork.cpp \
     ../../xpiks-qt/QuickBuffer/currenteditableproxyartwork.cpp \
     ../../xpiks-qt/QuickBuffer/quickbuffer.cpp \
-    ../../xpiks-qt/Models/artworkproxymodel.cpp
+    ../../xpiks-qt/Models/artworkproxymodel.cpp \
+    ../../xpiks-qt/SpellCheck/userdicteditmodel.cpp \
+    userdictedittest.cpp
 
 RESOURCES +=
 
@@ -374,7 +376,9 @@ HEADERS += \
     ../../xpiks-qt/QuickBuffer/icurrenteditable.h \
     ../../xpiks-qt/QuickBuffer/quickbuffer.h \
     ../../xpiks-qt/Models/artworkproxymodel.h \
-    ../../xpiks-qt/KeywordsPresets/ipresetsmanager.h
+    ../../xpiks-qt/KeywordsPresets/ipresetsmanager.h \
+    ../../xpiks-qt/SpellCheck/userdicteditmodel.h \
+    userdictedittest.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface

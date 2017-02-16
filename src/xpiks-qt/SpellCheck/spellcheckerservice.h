@@ -70,6 +70,10 @@ namespace SpellCheck {
 #endif
 
     public:
+        QSet<QString> getUserDictionary() const;
+        void updateUserDictionary(const QStringList &words);
+
+    public:
         Q_INVOKABLE void cancelCurrentBatch();
         Q_INVOKABLE bool hasAnyPending();
         Q_INVOKABLE void addWordToUserDictionary(const QString &word);
@@ -80,7 +84,7 @@ namespace SpellCheck {
         void spellCheckQueueIsEmpty();
         void serviceAvailable(bool afterRestart);
         void userDictWordsNumberChanged();
-        void userDictUpdate(const QStringList &keywords);
+        void userDictUpdate(const QStringList &keywords, bool overwritten);
         void userDictCleared();
 
     private slots:

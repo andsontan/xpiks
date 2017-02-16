@@ -66,10 +66,10 @@ namespace Models {
         }
     }
 
-    void ArtworkProxyModel::userDictUpdateHandler(const QStringList &keywords) {
+    void ArtworkProxyModel::userDictUpdateHandler(const QStringList &keywords, bool overwritten) {
         LOG_DEBUG << "#";
         if (m_ArtworkMetadata != NULL) {
-            doHandleUserDictChanged(keywords);
+            doHandleUserDictChanged(keywords, overwritten);
         } else {
             LOG_DEBUG << "Nothing to update";
         }

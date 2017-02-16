@@ -329,17 +329,23 @@ namespace Models {
         m_CommandManager->registerCurrentItem(this);
     }
 
-    void ArtworkProxyBase::doHandleUserDictChanged(const QStringList &keywords) {
+    void ArtworkProxyBase::doHandleUserDictChanged(const QStringList &keywords, bool overwritten) {
         LOG_DEBUG << "#";
         Q_ASSERT(!keywords.isEmpty());
 
         auto *metadataModel = getBasicMetadataModel();
 
         SpellCheck::SpellCheckItemInfo *info = metadataModel->getSpellCheckInfo();
-        info->removeWordsFromErrors(keywords);
 
-        // special case after words added to dict
-        m_CommandManager->submitForSpellCheck(QVector<Common::BasicKeywordsModel *>() << metadataModel, keywords);
+        if(!overwritten) {
+            info->removeWordsFromErrors(keywords);
+            // special case after words added to dict
+            m_CommandManager->submitForSpellCheck(QVector<Common::BasicKeywordsModel *>() << metadataModel, keywords);
+        }
+        else {
+            info->clear();
+            m_CommandManager->submitItemForSpellCheck(metadataModel);
+        }
     }
 
     void ArtworkProxyBase::doHandleUserDictCleared() {

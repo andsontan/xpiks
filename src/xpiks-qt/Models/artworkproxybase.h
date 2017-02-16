@@ -82,7 +82,7 @@ namespace Models {
         bool doRemovePreset(int presetIndex);
         void doInitSuggestion();
         void doRegisterAsCurrentItem();
-        void doHandleUserDictChanged(const QStringList &keywords);
+        void doHandleUserDictChanged(const QStringList &keywords, bool overwritten);
         void doHandleUserDictCleared();
         void doCopyToQuickBuffer();
 

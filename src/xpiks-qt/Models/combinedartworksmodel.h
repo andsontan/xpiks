@@ -200,7 +200,7 @@ namespace Models {
         void spellCheckErrorsFixedHandler();
 
     public slots:
-        void userDictUpdateHandler(const QStringList &keywords);
+        void userDictUpdateHandler(const QStringList &keywords, bool overwritten);
         void userDictClearedHandler();
 
 #ifdef INTEGRATION_TESTS

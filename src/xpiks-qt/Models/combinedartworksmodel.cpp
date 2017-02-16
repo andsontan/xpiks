@@ -453,9 +453,9 @@ namespace Models {
         m_CommonKeywordsModel.notifyAboutToBeRemoved();
     }
 
-    void CombinedArtworksModel::userDictUpdateHandler(const QStringList &keywords) {
+    void CombinedArtworksModel::userDictUpdateHandler(const QStringList &keywords, bool overwritten) {
         LOG_DEBUG << "#";
-        doHandleUserDictChanged(keywords);
+        doHandleUserDictChanged(keywords, overwritten);
     }
 
     void CombinedArtworksModel::userDictClearedHandler() {

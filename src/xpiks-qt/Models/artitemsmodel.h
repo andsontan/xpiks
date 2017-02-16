@@ -153,7 +153,7 @@ namespace Models {
         void onFilesUnavailableHandler();
         void artworkBackupRequested();
         void onUndoStackEmpty();
-        void userDictUpdateHandler(const QStringList &keywords);
+        void userDictUpdateHandler(const QStringList &keywords, bool overwritten);
         void userDictClearedHandler();
 
     public:

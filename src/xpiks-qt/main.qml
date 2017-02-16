@@ -607,6 +607,15 @@ ApplicationWindow {
                 }
 
                 MenuItem {
+                    text: i18.n + qsTr("Manage &user dictionary")
+                    onTriggered: {
+                        console.info("User dictionary triggered")
+                        userDictEditModel.initializeModel()
+                        Common.launchDialog("Dialogs/UserDictEditDialog.qml", applicationWindow, {})
+                    }
+                }
+
+                MenuItem {
                     text: i18.n + qsTr("Show logs")
                     onTriggered: {
                         var logsModel = helpersWrapper.getLogsModel()

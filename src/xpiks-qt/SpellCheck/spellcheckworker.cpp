@@ -123,7 +123,7 @@ namespace SpellCheck {
     void SpellCheckWorker::processOneItem(std::shared_ptr<ISpellCheckItem> &item) {
         auto separatorItem = std::dynamic_pointer_cast<SpellCheckSeparatorItem>(item);
         auto queryItem = std::dynamic_pointer_cast<SpellCheckItem>(item);
-        auto addWordItem = std::dynamic_pointer_cast<AddWordToUserDictItem>(item);
+        auto addWordItem = std::dynamic_pointer_cast<ModifyUserDictItem>(item);
 
         if (queryItem) {
             processQueryItem(queryItem);
@@ -168,18 +168,22 @@ namespace SpellCheck {
         }
     }
 
-    void SpellCheckWorker::processChangeUserDict(std::shared_ptr<AddWordToUserDictItem> &item) {
+    void SpellCheckWorker::processChangeUserDict(std::shared_ptr<ModifyUserDictItem> &item) {
         LOG_INTEGRATION_TESTS << item->getKeywordsToAdd();
 
         if (m_UserDictionaryPath.isEmpty()) {
             LOG_WARNING << "User dictionary not set.";
         }
 
-        if (item->getClearFlag()) {
+        auto clearflag = item->getClearFlag();
+        QStringList words = item->getKeywordsToAdd();
+
+        if (clearflag && words.empty()) { //clear dict
             cleanUserDict();
-        } else {
-            QStringList words = item->getKeywordsToAdd();
-            addWordToUserDict(words);
+        } else if (!clearflag && !words.empty()) {//append
+            changeUserDict(words, false);
+        } else if (clearflag && !words.empty()) { //overwrite
+            changeUserDict(words, true);
         }
 
         signalUserDictWordsCount();
@@ -301,6 +305,9 @@ namespace SpellCheck {
             }
 
             signalUserDictWordsCount();
+            if (!m_UserDictionary.empty()) {
+                emit userDictUpdate(m_UserDictionary.toList(), false);
+            }
         } else {
             LOG_WARNING << "Cannot open" << m_UserDictionaryPath;
         }
@@ -323,25 +330,31 @@ namespace SpellCheck {
         }
     }
 
-    void SpellCheckWorker::addWordToUserDict(const QStringList &words) {
+    void SpellCheckWorker::changeUserDict(const QStringList &words, bool overwrite) {
         LOG_INFO << "Words to add:" << words;
 
         QSet<QString> wordsToAdd;
+
         for (auto &word: words) {
             const bool isOk = checkWordSpelling(word);
-            if (!isOk) {
+            if ( overwrite || !isOk ) {
                 wordsToAdd.insert(word);
             }
         }
 
         LOG_INTEGRATION_TESTS << "Real words to add:" << wordsToAdd;
 
+        if (overwrite) {
+            m_UserDictionary.clear();
+        }
         m_UserDictionary.unite(wordsToAdd);
+
         auto newWordsList = wordsToAdd.toList();
-        emit userDictUpdate(newWordsList);
+        emit userDictUpdate(newWordsList, overwrite);
 
         QFile userDictonaryFile(m_UserDictionaryPath);
-        if (userDictonaryFile.open(QIODevice::Append)) {
+        auto mode = overwrite? QIODevice::WriteOnly : QIODevice::Append;
+        if (userDictonaryFile.open(mode)) {
             QTextStream stream(&userDictonaryFile);
 
             for (const QString &word: newWordsList) {
