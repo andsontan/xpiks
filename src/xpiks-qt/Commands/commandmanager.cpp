@@ -326,6 +326,13 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
                          m_ArtworkProxyModel, SLOT(userDictClearedHandler()));
     }
 
+    if (m_SpellCheckerService != NULL && m_QuickBuffer != NULL) {
+        QObject::connect(m_SpellCheckerService, SIGNAL(userDictUpdate(QStringList, bool)),
+                         m_QuickBuffer, SLOT(userDictUpdateHandler(QStringList, bool)));
+        QObject::connect(m_SpellCheckerService, SIGNAL(userDictCleared()),
+                         m_QuickBuffer, SLOT(userDictClearedHandler()));
+    }
+
     if (m_HelpersQmlWrapper != NULL && m_UpdateService != NULL) {
         QObject::connect(m_UpdateService, SIGNAL(updateAvailable(QString)),
                          m_HelpersQmlWrapper, SIGNAL(updateAvailable(QString)));
@@ -373,10 +380,10 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_TranslationService != NULL);
     Q_ASSERT(m_TranslationManager != NULL);
     Q_ASSERT(m_ArtworkProxyModel != NULL);
+    Q_ASSERT(m_QuickBuffer != NULL);
 
 #if !defined(INTEGRATION_TESTS) && !defined(CORE_TESTS)
     Q_ASSERT(m_UIManager != NULL);
-    Q_ASSERT(m_QuickBuffer != NULL);
 #endif
 
 #ifndef INTEGRATION_TESTS

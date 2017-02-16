@@ -13,30 +13,36 @@ namespace SpellCheck {
     }
 
     void UserDictEditModel::initializeModel() {
+        LOG_DEBUG << "#";
         auto *spellCheckService = m_CommandManager->getSpellCheckerService();
         auto keywordsSet = spellCheckService->getUserDictionary();
         m_BasicModel.setKeywords(keywordsSet.toList());
     }
 
     void UserDictEditModel::removeKeywordAt(int keywordIndex) {
+        LOG_INFO << keywordIndex;
         QString keyword;
         doRemoveKeywordAt(keywordIndex, keyword);
     }
 
     void UserDictEditModel::removeLastKeyword() {
+        LOG_DEBUG << "#";
         QString keyword;
         doRemoveLastKeyword(keyword);
     }
 
     void UserDictEditModel::appendKeyword(const QString &keyword) {
+        LOG_INFO << keyword;
         doAppendKeyword(keyword);
     }
 
     void UserDictEditModel::clearKeywords() {
+        LOG_DEBUG << "#";
         doClearKeywords();
     }
 
     void UserDictEditModel::resetModel() {
+        LOG_DEBUG << "#";
         m_BasicModel.clearModel();
         auto *service = m_CommandManager->getSpellCheckerService();
         service->clearUserDictionary();

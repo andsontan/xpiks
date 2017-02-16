@@ -80,6 +80,11 @@ namespace QuickBuffer {
         }
         Q_INVOKABLE bool copyToCurrentEditable();
 
+#ifdef INTEGRATION_TESTS
+    public:
+        bool hasSpellErrors() { return m_BasicModel.hasSpellErrors(); }
+#endif
+
     public:
         bool getIsEmpty();
         void setFromCurrentEditable();

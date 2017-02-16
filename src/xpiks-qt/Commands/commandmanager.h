@@ -219,6 +219,8 @@ namespace Commands {
     public:
         void recordHistoryItem(std::unique_ptr<UndoRedo::IHistoryItem> &historyItem) const;
         void connectEntitiesSignalsSlots() const;
+
+    public:
         void ensureDependenciesInjected();
         void removeUnavailableFiles();
 

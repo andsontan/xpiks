@@ -8,11 +8,10 @@
 #include "../../xpiks-qt/Models/combinedartworksmodel.h"
 #include "../../xpiks-qt/Common/basickeywordsmodel.h"
 #include "../../xpiks-qt/SpellCheck/userdicteditmodel.h"
+#include "../../xpiks-qt/QuickBuffer/quickbuffer.h"
 #include "signalwaiter.h"
 #include "testshelpers.h"
 #include <QObject>
-
-
 
 QString UserDictEditTest::testName() {
     return QLatin1String("UserDictEditTest");
@@ -48,6 +47,7 @@ int UserDictEditTest::doTest() {
     VERIFY(!ioCoordinator->getHasErrors(), "Errors in IO Coordinator while reading");
 
     Models::ArtworkMetadata *metadata = artItemsModel->getArtwork(0);
+    auto *quickBuffer = m_CommandManager->getQuickBuffer();
 
     // wait for after-add spellchecking
     QThread::sleep(1);
@@ -65,6 +65,7 @@ int UserDictEditTest::doTest() {
     QObject::connect(spellCheckService, SIGNAL(spellCheckQueueIsEmpty()), &waiter, SIGNAL(finished()));
 
     filteredModel->spellCheckSelected();
+    filteredModel->copyToQuickBuffer(0);
 
     if (!waiter.wait(5)) {
         VERIFY(false, "Timeout for waiting for spellcheck results");
@@ -76,29 +77,23 @@ int UserDictEditTest::doTest() {
     VERIFY(basicKeywordsModel->hasDescriptionSpellError(), "Description spell error not detected");
     VERIFY(basicKeywordsModel->hasTitleSpellError(), "Title spell error not detected");
     VERIFY(basicKeywordsModel->hasKeywordsSpellError(), "Keywords spell error not detected");
+    VERIFY(quickBuffer->hasSpellErrors(), "Quick Buffer does not contain spelling erros");
 
     userDictEditModel.appendKeyword(wrongWord);
     userDictEditModel.saveUserDict();
 
-    SignalWaiter spellingWaiter;
-    QObject::connect(spellCheckService, SIGNAL(spellCheckQueueIsEmpty()), &spellingWaiter, SIGNAL(finished()));
-
-    QCoreApplication::processEvents(QEventLoop::AllEvents);
-
-    // wait add user word to finish
-    if (!spellingWaiter.wait(5)) {
-        VERIFY(false, "Timeout for waiting for spellcheck results");
-    }
-
     sleepWait(5, [=]() {
         return !basicKeywordsModel->hasDescriptionSpellError() &&
                 !basicKeywordsModel->hasTitleSpellError() &&
-                !basicKeywordsModel->hasKeywordsSpellError();
+                !basicKeywordsModel->hasKeywordsSpellError() &&
+                !quickBuffer->hasSpellErrors();
     });
 
     VERIFY(!basicKeywordsModel->hasDescriptionSpellError(), "After adding word. Description spell error is still present");
     VERIFY(!basicKeywordsModel->hasTitleSpellError(), "After adding word. Title spell error is still present");
     VERIFY(!basicKeywordsModel->hasKeywordsSpellError(), "After adding word. Keywords spell error is still present");
+
+    VERIFY(!quickBuffer->hasSpellErrors(), "After adding word. Quick Buffer contains spelling errors");
 
     return 0;
 }

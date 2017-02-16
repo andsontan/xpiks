@@ -73,6 +73,7 @@ namespace Helpers {
             if (error.error == QJsonParseError::NoError) {
                 emit configArrived();
             } else {
+                LOG_INTEGRATION_TESTS << m_ConfigUrl;
                 LOG_WARNING << "Failed to parse remote json" << error.errorString();
             }
         }

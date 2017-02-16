@@ -512,11 +512,11 @@ namespace MetadataIO {
     }
 
     Exiv2ReadingWorker::~Exiv2ReadingWorker() {
-        LOG_DEBUG << "Reading worker" << m_WorkerIndex << "destroyed";
+        LOG_INFO << "Reading worker" << m_WorkerIndex << "destroyed";
     }
 
     void Exiv2ReadingWorker::process() {
-        LOG_DEBUG << "Worker #" << m_WorkerIndex << "started";
+        LOG_INFO << "Worker #" << m_WorkerIndex << "started";
 
         bool anyError = false;
 

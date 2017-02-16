@@ -35,6 +35,7 @@
 #include "../../xpiks-qt/Helpers/clipboardhelper.h"
 #include "../../xpiks-qt/Commands/commandmanager.h"
 #include "../../xpiks-qt/Suggestion/locallibrary.h"
+#include "../../xpiks-qt/QuickBuffer/quickbuffer.h"
 #include "../../xpiks-qt/Models/artworkuploader.h"
 #include "../../xpiks-qt/Warnings/warningsmodel.h"
 #include "../../xpiks-qt/Plugins/pluginmanager.h"
@@ -161,6 +162,7 @@ int main(int argc, char *argv[]) {
     Translation::TranslationManager translationManager;
     Translation::TranslationService translationService(translationManager);
     Models::ArtworkProxyModel artworkProxy;
+    QuickBuffer::QuickBuffer quickBuffer;
 
     Conectivity::UpdateService updateService(&settingsModel);
 
@@ -202,6 +204,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&translationManager);
     commandManager.InjectDependency(&translationService);
     commandManager.InjectDependency(&artworkProxy);
+    commandManager.InjectDependency(&quickBuffer);
 
     commandManager.ensureDependenciesInjected();
 
@@ -246,6 +249,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new FixSpellingMarksModifiedTest(&commandManager));
     integrationTests.append(new PresetsTest(&commandManager));
     integrationTests.append(new TranslatorBasicTest(&commandManager));
+    integrationTests.append(new UserDictEditTest(&commandManager));
 
     qDebug("\n");
     int succeededTestsCount = 0, failedTestsCount = 0;
