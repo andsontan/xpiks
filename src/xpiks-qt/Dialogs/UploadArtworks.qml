@@ -529,7 +529,7 @@ Item {
                                                 }
                                             }
 
-                                            function acceptCompletion(completion) {
+                                            function acceptCompletion(completion, expandPreset) {
                                                 if (uploadHostsListView.currentItem) {
                                                     uploadHostsListView.currentItem.myData.edittitle = completion
                                                     uploadHostsListView.currentItem.myData.edithost = artworkUploader.getFtpAddress(completion)
