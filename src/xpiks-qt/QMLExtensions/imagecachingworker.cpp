@@ -51,7 +51,8 @@ namespace QMLExtensions {
 
     ImageCachingWorker::ImageCachingWorker(QObject *parent):
         QObject(parent),
-        m_ProcessedItemsCount(0)
+        m_ProcessedItemsCount(0),
+        m_Scale(1.0)
     {
     }
 
@@ -93,8 +94,8 @@ namespace QMLExtensions {
 
         if (!requestedSize.isValid()) {
             LOG_WARNING << "Invalid requestedSize for" << originalPath;
-            requestedSize.setHeight(150);
-            requestedSize.setWidth(150);
+            requestedSize.setHeight(DEFAULT_THUMB_HEIGHT * m_Scale);
+            requestedSize.setWidth(DEFAULT_THUMB_WIDTH * m_Scale);
         }
 
         QImage img(originalPath);

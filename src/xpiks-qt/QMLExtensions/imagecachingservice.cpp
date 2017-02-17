@@ -21,18 +21,17 @@
 
 #include "imagecachingservice.h"
 #include <QThread>
+#include <QScreen>
 #include "imagecachingworker.h"
 #include "imagecacherequest.h"
 #include "../Models/artworkmetadata.h"
-
-#define DEFAULT_THUMB_HEIGHT 150
-#define DEFAULT_THUMB_WIDTH 150
 
 namespace QMLExtensions {
     ImageCachingService::ImageCachingService(QObject *parent) :
         QObject(parent),
         m_CachingWorker(NULL),
-        m_IsCancelled(false)
+        m_IsCancelled(false),
+        m_Scale(1.0)
     {
     }
 
@@ -63,6 +62,14 @@ namespace QMLExtensions {
         }
     }
 
+    void ImageCachingService::setScale(qreal scale) {
+        LOG_INFO << scale;
+        if ((0.99f < scale) && (scale < 5.0f)) {
+            m_Scale = scale;
+            LOG_INFO << "Scale is now" << m_Scale;
+        }
+    }
+
     void ImageCachingService::cacheImage(const QString &key, const QSize &requestedSize, bool recache) {
         if (m_IsCancelled) { return; }
 
@@ -86,7 +93,7 @@ namespace QMLExtensions {
             bool withDelay = i % 2;
             Models::ArtworkMetadata *artwork = items.at(i);
             requests.emplace_back(new ImageCacheRequest(artwork->getFilepath(),
-                                                        QSize(DEFAULT_THUMB_WIDTH, DEFAULT_THUMB_HEIGHT),
+                                                        QSize(DEFAULT_THUMB_WIDTH * m_Scale, DEFAULT_THUMB_HEIGHT * m_Scale),
                                                         recache,
                                                         withDelay));
         }
@@ -105,6 +112,22 @@ namespace QMLExtensions {
             return m_CachingWorker->tryGetCachedImage(key, requestedSize, cached, needsUpdate);
         } else {
             return false;
+        }
+    }
+
+    void ImageCachingService::screenChangedHandler(QScreen *screen) {
+        LOG_DEBUG << "#";
+        if (screen != nullptr) {
+            setScale(screen->devicePixelRatio());
+        }
+    }
+
+    void ImageCachingService::dpiChanged(qreal someDPI) {
+        LOG_DEBUG << "#";
+        Q_UNUSED(someDPI);
+        QScreen *screen = qobject_cast<QScreen*>(sender());
+        if (screen != nullptr) {
+            setScale(screen->devicePixelRatio());
         }
     }
 }

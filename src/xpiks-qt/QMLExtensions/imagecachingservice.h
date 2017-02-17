@@ -30,6 +30,8 @@ namespace Models {
     class ArtworkMetadata;
 }
 
+class QScreen;
+
 namespace QMLExtensions {
     class ImageCachingWorker;
 
@@ -44,13 +46,19 @@ namespace QMLExtensions {
         void stopService();
 
     public:
+        void setScale(qreal scale);
         void cacheImage(const QString &key, const QSize &requestedSize, bool recache=false);
         void generatePreviews(const QVector<Models::ArtworkMetadata *> &items);
         bool tryGetCachedImage(const QString &key, const QSize &requestedSize, QString &cached, bool &needsUpdate);
 
+    public slots:
+        void screenChangedHandler(QScreen *screen);
+        void dpiChanged(qreal someDPI);
+
     private:
         ImageCachingWorker *m_CachingWorker;
         volatile bool m_IsCancelled;
+        qreal m_Scale;
     };
 }
 

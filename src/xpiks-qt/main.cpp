@@ -26,6 +26,7 @@
 #include <QtQml>
 #include <QFile>
 #include <QUuid>
+#include <QScreen>
 #include <QtDebug>
 #include <QDateTime>
 #include <QSettings>
@@ -477,6 +478,12 @@ int main(int argc, char *argv[]) {
     auto *uiProvider = pluginManager.getUIProvider();
     uiProvider->setQmlEngine(&engine);
     QQuickWindow *window = qobject_cast<QQuickWindow *>(engine.rootObjects().at(0));
+    imageCachingService.setScale(window->effectiveDevicePixelRatio());
+
+    QScreen *screen = window->screen();
+    QObject::connect(window, SIGNAL(screenChanged(QScreen*)), &imageCachingService, SLOT(screenChangedHandler(QScreen*)));
+    QObject::connect(screen, SIGNAL(logicalDotsPerInchChanged(qreal)), &imageCachingService, SLOT(dpiChanged(qreal)));
+    QObject::connect(screen, SIGNAL(physicalDotsPerInchChanged(qreal)), &imageCachingService, SLOT(dpiChanged(qreal)));
 
     uiProvider->setRoot(window->contentItem());
     uiProvider->setUIManager(&uiManager);

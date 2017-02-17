@@ -25,7 +25,11 @@
 #include <QString>
 #include <QSize>
 
-namespace QMLExtensions {
+namespace QMLExtensions {    
+
+#define DEFAULT_THUMB_HEIGHT 150
+#define DEFAULT_THUMB_WIDTH 150
+
     class ImageCacheRequest {
     public:
         ImageCacheRequest(const QString &filepath, const QSize &requestedSize, bool recache, bool withDelay=false):

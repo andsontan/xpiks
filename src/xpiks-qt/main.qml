@@ -1208,12 +1208,12 @@ ApplicationWindow {
 
             StyledText {
                 text: i18.n + qsTr("Check warnings")
-                color: warningsMA.pressed ? Colors.linkClickedColor : warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.labelInactiveForeground
+                color: warningsMA.pressed ? Colors.linkClickedColor : (warningsModel.warningsCount > 0 ? Colors.artworkModifiedColor : Colors.labelInactiveForeground)
 
                 MouseArea {
                     id: warningsMA
                     anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
+                    cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
                     enabled: mainStackView.areActionsAllowed
                     onClicked: {
                         warningsModel.update()

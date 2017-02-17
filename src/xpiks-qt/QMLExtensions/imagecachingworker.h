@@ -66,6 +66,7 @@ namespace QMLExtensions {
         void queueIsEmpty();
 
     public:
+        void setScale(qreal scale) { m_Scale = scale; }
         bool tryGetCachedImage(const QString &key, const QSize &requestedSize,
                                QString &cached, bool &needsUpdate);
         void splitToCachedAndNot(const std::vector<std::shared_ptr<ImageCacheRequest> > allRequests,
@@ -79,6 +80,7 @@ namespace QMLExtensions {
 
     private:
         volatile int m_ProcessedItemsCount;
+        qreal m_Scale;
         QString m_ImagesCacheDir;
         QString m_IndexFilepath;
         QReadWriteLock m_CacheLock;

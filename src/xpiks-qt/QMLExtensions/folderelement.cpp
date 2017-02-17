@@ -62,7 +62,7 @@ namespace QMLExtensions {
 
     void FolderElement::windowChangedHandler(QQuickWindow *window) {
         if (window != nullptr) {
-            m_Scale = window->devicePixelRatio();
+            m_Scale = window->effectiveDevicePixelRatio();
             update();
         }
     }
