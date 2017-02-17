@@ -48,9 +48,9 @@ namespace QuickBuffer {
         void isEmptyChanged();
 
     protected:
-        virtual void signalDescriptionChanged() override { emit descriptionChanged(); }
-        virtual void signalTitleChanged() override { emit titleChanged(); }
-        virtual void signalKeywordsCountChanged() override { emit keywordsCountChanged(); }
+        virtual void signalDescriptionChanged() override { emit descriptionChanged(); emit isEmptyChanged(); }
+        virtual void signalTitleChanged() override { emit titleChanged(); emit isEmptyChanged(); }
+        virtual void signalKeywordsCountChanged() override { emit keywordsCountChanged(); emit isEmptyChanged(); }
 
     public slots:
         void afterSpellingErrorsFixedHandler();

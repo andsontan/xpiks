@@ -41,7 +41,7 @@ ColumnLayout {
         anchors.left: parent.left
         anchors.right: parent.right
         text: i18.n + qsTr("Apply")
-        enabled: (!quickBuffer.isEmpty) && uiManager.hasCurrentEditable
+        enabled: (!quickBuffer.isEmpty) && uiManager.hasCurrentEditable && (filteredArtItemsModel.selectedArtworksCount <= 1)
         implicitHeight: 30
         height: 30
         onClicked: quickBuffer.copyToCurrentEditable()
