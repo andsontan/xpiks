@@ -131,7 +131,8 @@ namespace Suggestion {
         SuggestionQueryEngineBase *senderEngine = qobject_cast<SuggestionQueryEngineBase *>(sender());
 
         if ((senderEngine == nullptr) || (senderEngine->getID() != currentEngine->getID())) {
-            qInfo() << "Received results from another engine:" << senderEngine->getID() << "current:" << currentEngine->getID();
+            qInfo() << "Received results from another engine:" <<
+                       ((senderEngine != nullptr) ? senderEngine->getID() : (-1)) << "current:" << currentEngine->getID();
         }
 
         unsetInProgress();

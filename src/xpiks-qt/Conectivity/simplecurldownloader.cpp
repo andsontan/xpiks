@@ -110,7 +110,8 @@ namespace Conectivity {
     SimpleCurlDownloader::SimpleCurlDownloader(const QString &resource, QObject *parent) :
         QObject(parent),
         m_RemoteResource(resource),
-        m_ProxySettings(nullptr)
+        m_ProxySettings(nullptr),
+        m_VerifySSL(false)
     {
 #ifdef QT_DEBUG
         LOG_DEBUG << resource;
