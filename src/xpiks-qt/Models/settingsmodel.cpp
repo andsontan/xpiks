@@ -153,7 +153,7 @@ namespace Models {
         appSettings.setValue(appSettings.getUseAutoCompleteKey(), m_UseAutoComplete);
         appSettings.setValue(appSettings.getUseExifToolKey(), m_UseExifTool);
         appSettings.setValue(appSettings.getUseProxyKey(), m_UseProxy);
-        appSettings.setValue(appSettings.getproxyHashKey(),QVariant::fromValue(m_ProxySettings));
+        appSettings.setValue(appSettings.getProxyHashKey(),QVariant::fromValue(m_ProxySettings));
         appSettings.setValue(appSettings.getCacheImagesKey(), m_AutoCacheImages);
         appSettings.setValue(appSettings.getArtworkEditRightPaneWidthKey(), m_ArtworkEditRightPaneWidth);
 

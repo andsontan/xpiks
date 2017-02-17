@@ -143,8 +143,8 @@ namespace Helpers {
         Q_PROPERTY(QString useProxyKey READ getUseProxyKey CONSTANT)
         QString getUseProxyKey() const { return QLatin1String(Constants::USE_PROXY); }
 
-        Q_PROPERTY(QString proxyHashKey READ getproxyHashKey CONSTANT)
-        QString getproxyHashKey() const { return QLatin1String(Constants::PROXY_HOST); }
+        Q_PROPERTY(QString proxyHashKey READ getProxyHashKey CONSTANT)
+        QString getProxyHashKey() const { return QLatin1String(Constants::PROXY_HOST); }
 
         Q_PROPERTY(QString cacheImagesKey READ getCacheImagesKey CONSTANT)
         QString getCacheImagesKey() const { return QLatin1String(Constants::CACHE_IMAGES_AUTOMATICALLY); }

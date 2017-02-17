@@ -149,7 +149,7 @@ ApplicationWindow {
     }
 
     function openUploadDialog(skipUploadItems) {
-        if (appSettings.boolValue(appSettings.mustUseMasterPasswordKey, skipUploadItems)) {
+        if (settingsModel.mustUseMasterPassword) {
             var callbackObject = {
                 onSuccess: function() { doOpenUploadDialog(true, skipUploadItems) },
                 onFail: function() { doOpenUploadDialog(false, skipUploadItems) }
