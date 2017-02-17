@@ -66,6 +66,9 @@ namespace QMLExtensions {
         LOG_INFO << scale;
         if ((0.99f < scale) && (scale < 5.0f)) {
             m_Scale = scale;
+            if (m_CachingWorker != nullptr) {
+                m_CachingWorker->setScale(scale);
+            }
             LOG_INFO << "Scale is now" << m_Scale;
         }
     }
