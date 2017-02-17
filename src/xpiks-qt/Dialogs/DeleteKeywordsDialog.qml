@@ -436,58 +436,21 @@ CloseRequested")
                             anchors.right: parent.right
                             height: childrenRect.height
 
-                            RowLayout {
+                            StyledText {
                                 anchors.top: parent.top
-                                anchors.right: parent.right
                                 anchors.rightMargin: 3
-                                spacing: 5
+                                anchors.right: parent.right
+                                text: i18.n + qsTr("Clear")
+                                enabled: deleteKeywordsModel.keywordsToDeleteCount > 0
+                                color: enabled ? (clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
 
-                                StyledText {
-                                    text: i18.n + qsTr("Fix spelling")
-                                    //enabled: keywordsWrapper.keywordsModel ? keywordsWrapper.keywordsModel.hasSpellErrors : false
-                                    enabled: false
-                                    color: enabled ? (fixSpellingMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
-                                }
-
-                                StyledText {
-                                    text: "|"
-                                    verticalAlignment: Text.AlignVCenter
-                                }
-
-                                StyledText {
-                                    enabled: false
-                                    text: i18.n + qsTr("Suggest")
-                                    color: enabled ? (suggestKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
-                                }
-
-                                StyledText {
-                                    text: "|"
-                                    verticalAlignment: Text.AlignVCenter
-                                }
-
-                                StyledText {
-                                    text: i18.n + qsTr("Copy")
-                                    enabled: false
-                                    color: enabled ? (copyKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
-                                }
-
-                                StyledText {
-                                    text: "|"
-                                    verticalAlignment: Text.AlignVCenter
-                                }
-
-                                StyledText {
-                                    text: i18.n + qsTr("Clear")
-                                    color: enabled ? (clearKeywordsMA.pressed ? Colors.linkClickedColor : Colors.artworkActiveColor) : Colors.labelActiveForeground
-
-                                    MouseArea {
-                                        id: clearKeywordsMA
-                                        anchors.fill: parent
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: {
-                                            if (deleteKeywordsModel.keywordsToDeleteCount > 0) {
-                                                clearKeywordsDialog.open()
-                                            }
+                                MouseArea {
+                                    id: clearKeywordsMA
+                                    anchors.fill: parent
+                                    cursorShape: Qt.PointingHandCursor
+                                    onClicked: {
+                                        if (deleteKeywordsModel.keywordsToDeleteCount > 0) {
+                                            clearKeywordsDialog.open()
                                         }
                                     }
                                 }
