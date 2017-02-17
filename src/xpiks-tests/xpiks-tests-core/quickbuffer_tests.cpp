@@ -84,6 +84,78 @@ void QuickBufferTests::copyCombinedModelToQuickBufferTest() {
     QCOMPARE(quickBuffer.getKeywords(), keywordsForQB);
 }
 
+void QuickBufferTests::copyHalfEmptyArtworkToQuickBufferTest() {
+    DECLARE_MODELS_AND_GENERATE(1);
+
+    const QString previousDescription = "Previous description int QB";
+    quickBuffer.setDescription(previousDescription);
+
+    const QString titleForQB = "title for quick buffer";
+    const QString descriptionForQB = "";
+    QStringList keywordsForQB;
+    keywordsForQB << "brand" << "new" << "keywords";
+
+    auto *artwork = artItemsModelMock.getMockArtwork(0);
+    artwork->initialize(titleForQB, descriptionForQB, keywordsForQB, true);
+    filteredItemsModel.copyToQuickBuffer(0);
+
+    QCOMPARE(quickBuffer.getTitle(), titleForQB);
+    QCOMPARE(quickBuffer.getDescription(), previousDescription);
+    QCOMPARE(quickBuffer.getKeywords(), keywordsForQB);
+}
+
+void QuickBufferTests::copyHalfEmptyProxyModelToQuickBufferTest() {
+    DECLARE_MODELS_AND_GENERATE(1);
+    Models::ArtworkProxyModel proxyModel;
+    commandManagerMock.InjectDependency(&proxyModel);
+
+    QStringList prevKeywordsForQB;
+    prevKeywordsForQB << "quite" << "old" << "keywords";
+    quickBuffer.setKeywords(prevKeywordsForQB);
+
+    const QString titleForQB = "title for quick buffer";
+    const QString descriptionForQB = "desc for quick buffer";
+    QStringList keywordsForQB;
+
+    proxyModel.setSourceArtwork(filteredItemsModel.getArtworkMetadata(0), filteredItemsModel.getOriginalIndex(0));
+    proxyModel.setTitle(titleForQB);
+    proxyModel.setDescription(descriptionForQB);
+    proxyModel.setKeywords(keywordsForQB);
+
+    proxyModel.copyToQuickBuffer();
+
+    QCOMPARE(quickBuffer.getTitle(), titleForQB);
+    QCOMPARE(quickBuffer.getDescription(), descriptionForQB);
+    QCOMPARE(quickBuffer.getKeywords(), prevKeywordsForQB);
+}
+
+void QuickBufferTests::copyHalfEmptyCombinedModelToQuickBufferTest() {
+    DECLARE_MODELS_AND_GENERATE(1);
+    Models::CombinedArtworksModel combinedModel;
+    commandManagerMock.InjectDependency(&combinedModel);
+
+    QStringList prevKeywordsForQB;
+    prevKeywordsForQB << "quite" << "old" << "keywords";
+    quickBuffer.setKeywords(prevKeywordsForQB);
+
+    const QString previousDescription = "Previous description int QB";
+    quickBuffer.setDescription(previousDescription);
+
+    const QString titleForQB = "title for quick buffer";
+    const QString descriptionForQB = "";
+    QStringList keywordsForQB;
+
+    combinedModel.setTitle(titleForQB);
+    combinedModel.setDescription(descriptionForQB);
+    combinedModel.setKeywords(keywordsForQB);
+
+    combinedModel.copyToQuickBuffer();
+
+    QCOMPARE(quickBuffer.getTitle(), titleForQB);
+    QCOMPARE(quickBuffer.getDescription(), previousDescription);
+    QCOMPARE(quickBuffer.getKeywords(), prevKeywordsForQB);
+}
+
 void QuickBufferTests::applyQuickBufferToArtworkTest() {
     DECLARE_MODELS_AND_GENERATE(2);
 
@@ -162,6 +234,92 @@ void QuickBufferTests::applyQuickBufferToCombinedModelTest() {
     QCOMPARE(combinedModel.getTitle(), titleForQB);
     QCOMPARE(combinedModel.getDescription(), descriptionForQB);
     QCOMPARE(combinedModel.getKeywords(), keywordsForQB);
+}
+
+void QuickBufferTests::applyHalfEmptyQuickBufferToArtworkTest() {
+    DECLARE_MODELS_AND_GENERATE(2);
+
+    const QString titleForQB = "title for quick buffer";
+    const QString descriptionForQB = "";
+    QStringList keywordsForArtwork;
+    keywordsForArtwork << "brand" << "new" << "keywords";
+
+    auto *artwork = artItemsModelMock.getMockArtwork(1);
+    const QString prevDescription = "some description";
+    artwork->setDescription(prevDescription);
+    artwork->setKeywords(keywordsForArtwork);
+
+    quickBuffer.setTitle(titleForQB);
+    quickBuffer.setDescription(descriptionForQB);
+    // quickBuffer.setKeywords(keywordsForQB);
+
+    filteredItemsModel.registerCurrentItem(1);
+
+    bool success = quickBuffer.copyToCurrentEditable();
+    QVERIFY(success);
+    QCOMPARE(artwork->getTitle(), titleForQB);
+    QCOMPARE(artwork->getDescription(), prevDescription);
+    QCOMPARE(artwork->getKeywords(), keywordsForArtwork);
+}
+
+void QuickBufferTests::applyHalfEmptyQuickBufferToProxyModelTest() {
+    DECLARE_MODELS_AND_GENERATE(2);
+    Models::ArtworkProxyModel proxyModel;
+    commandManagerMock.InjectDependency(&proxyModel);
+
+    const QString titleForModel = "title for quick buffer";
+    const QString descriptionForQB = "desc for quick buffer";
+    QStringList keywordsForQB;
+    keywordsForQB << "brand" << "new" << "keywords";
+
+    //quickBuffer.setTitle(titleForQB);
+    quickBuffer.setDescription(descriptionForQB);
+    quickBuffer.setKeywords(keywordsForQB);
+
+    proxyModel.setSourceArtwork(filteredItemsModel.getArtworkMetadata(1), filteredItemsModel.getOriginalIndex(1));
+    proxyModel.setTitle(titleForModel);
+    proxyModel.registerAsCurrentItem();
+
+    bool success = quickBuffer.copyToCurrentEditable();
+    QVERIFY(success);
+
+    QCOMPARE(proxyModel.getTitle(), titleForModel);
+    QCOMPARE(proxyModel.getDescription(), descriptionForQB);
+    QCOMPARE(proxyModel.getKeywords(), keywordsForQB);
+
+    auto *artwork = artItemsModelMock.getMockArtwork(1);
+    QCOMPARE(artwork->getTitle(), titleForModel);
+    QCOMPARE(artwork->getDescription(), descriptionForQB);
+    QCOMPARE(artwork->getKeywords(), keywordsForQB);
+}
+
+void QuickBufferTests::applyHalfEmptyQuickBufferToCombinedModelTest() {
+    DECLARE_MODELS_AND_GENERATE(2);
+    Models::CombinedArtworksModel combinedModel;
+    commandManagerMock.InjectDependency(&combinedModel);
+
+    const QString titleForQB = "title for quick buffer";
+    const QString descriptionForModel = "desc for quick buffer";
+    QStringList keywordsForModel;
+    keywordsForModel << "brand" << "new" << "keywords";
+
+    quickBuffer.setTitle(titleForQB);
+    //quickBuffer.setDescription(descriptionForModel);
+    //quickBuffer.setKeywords(keywordsForModel);
+
+    filteredItemsModel.selectFilteredArtworks();
+    filteredItemsModel.combineSelectedArtworks();
+
+    combinedModel.registerAsCurrentItem();
+    combinedModel.setDescription(descriptionForModel);
+    combinedModel.setKeywords(keywordsForModel);
+
+    bool success = quickBuffer.copyToCurrentEditable();
+    QVERIFY(success);
+
+    QCOMPARE(combinedModel.getTitle(), titleForQB);
+    QCOMPARE(combinedModel.getDescription(), descriptionForModel);
+    QCOMPARE(combinedModel.getKeywords(), keywordsForModel);
 }
 
 void QuickBufferTests::cannotApplyWhenNoCurrentItemTest() {

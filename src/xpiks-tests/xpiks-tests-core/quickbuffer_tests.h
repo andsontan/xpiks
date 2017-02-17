@@ -12,9 +12,17 @@ private slots:
     void copyProxyModelToQuickBufferTest();
     void copyCombinedModelToQuickBufferTest();
 
+    void copyHalfEmptyArtworkToQuickBufferTest();
+    void copyHalfEmptyProxyModelToQuickBufferTest();
+    void copyHalfEmptyCombinedModelToQuickBufferTest();
+
     void applyQuickBufferToArtworkTest();
     void applyQuickBufferToProxyModelTest();
     void applyQuickBufferToCombinedModelTest();
+
+    void applyHalfEmptyQuickBufferToArtworkTest();
+    void applyHalfEmptyQuickBufferToProxyModelTest();
+    void applyHalfEmptyQuickBufferToCombinedModelTest();
 
     void cannotApplyWhenNoCurrentItemTest();
 };

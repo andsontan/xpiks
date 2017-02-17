@@ -177,9 +177,13 @@ namespace QuickBuffer {
         auto currentEditable = uiManager->getCurrentEditable();
 
         if (currentEditable) {
-            this->setTitle(currentEditable->getTitle());
-            this->setDescription(currentEditable->getDescription());
-            this->setKeywords(currentEditable->getKeywords());
+            auto title = currentEditable->getTitle();
+            auto description = currentEditable->getDescription();
+            auto keywords = currentEditable->getKeywords();
+
+            if (!title.isEmpty()) { this->setTitle(title); }
+            if (!description.isEmpty()) { this->setDescription(description); }
+            if (!keywords.empty()) { this->setKeywords(keywords); }
 
             emit isEmptyChanged();
         } else {
@@ -191,9 +195,13 @@ namespace QuickBuffer {
         LOG_DEBUG << "#";
         Q_ASSERT(model != nullptr);
 
-        this->setTitle(model->getTitle());
-        this->setDescription(model->getDescription());
-        this->setKeywords(model->getKeywords());
+        auto title = model->getTitle();
+        auto description = model->getDescription();
+        auto keywords = model->getKeywords();
+
+        if (!title.isEmpty()) { this->setTitle(title); }
+        if (!description.isEmpty()) { this->setDescription(description); }
+        if (!keywords.empty()) { this->setKeywords(keywords); }
 
         emit isEmptyChanged();
     }
