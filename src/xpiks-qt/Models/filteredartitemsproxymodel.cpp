@@ -231,7 +231,7 @@ namespace Models {
         auto selectedArtworks = getSelectedOriginalItemsWithIndices();
         Common::CombinedEditFlags flags = Common::CombinedEditFlags::None;
         using namespace Common;
-        Common::SetFlag(flags, CombinedEditFlags::EditDesctiption);
+        Common::SetFlag(flags, CombinedEditFlags::EditDescription);
         Common::SetFlag(flags, CombinedEditFlags::EditKeywords);
         Common::SetFlag(flags, CombinedEditFlags::EditTitle);
         Common::SetFlag(flags, CombinedEditFlags::Clear);

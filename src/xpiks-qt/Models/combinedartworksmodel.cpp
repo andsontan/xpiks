@@ -93,7 +93,7 @@ namespace Models {
 
     void CombinedArtworksModel::setChangeDescription(bool value) {
         LOG_INFO << value;
-        auto flag = Common::CombinedEditFlags::EditDesctiption;
+        auto flag = Common::CombinedEditFlags::EditDescription;
         if (Common::HasFlag(m_EditFlags, flag) != value) {
             Common::ApplyFlag(m_EditFlags, value, flag);
             emit changeDescriptionChanged();

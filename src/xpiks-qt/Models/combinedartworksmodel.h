@@ -119,7 +119,7 @@ namespace Models {
             setKeywordsModified(true);
         }
 
-        bool getChangeDescription() const { return Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::EditDesctiption); }
+        bool getChangeDescription() const { return Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::EditDescription); }
         void setChangeDescription(bool value);
 
         bool getChangeTitle() const { return Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::EditTitle); }

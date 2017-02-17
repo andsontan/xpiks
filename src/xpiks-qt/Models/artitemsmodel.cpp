@@ -642,13 +642,17 @@ namespace Models {
             items.emplace_back(metadata, metadataIndex);
 
             Common::CombinedEditFlags flags = Common::CombinedEditFlags::None;
-            Common::SetFlag(flags, Common::CombinedEditFlags::EditEverything);
+
+            QString title = quickBuffer->getTitle();
+            QString description = quickBuffer->getDescription();
+            QStringList keywords = quickBuffer->getKeywords();
+
+            if (!title.isEmpty()) { Common::SetFlag(flags, Common::CombinedEditFlags::EditTitle); }
+            if (!description.isEmpty()) { Common::SetFlag(flags, Common::CombinedEditFlags::EditDescription); }
+            if (!keywords.empty()) { Common::SetFlag(flags, Common::CombinedEditFlags::EditKeywords); }
+
             std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
-                                                                                   flags,
-                                                                                   items,
-                                                                                   quickBuffer->getDescription(),
-                                                                                   quickBuffer->getTitle(),
-                                                                                   quickBuffer->getKeywords()));
+                                                                                   flags, items, description, title, keywords));
 
             m_CommandManager->processCommand(combinedEditCommand);
             updateItemAtIndex(metadataIndex);

@@ -47,6 +47,8 @@ Item {
 
     Component.onCompleted: focus = true
     Keys.onEscapePressed: closePopup()
+    Keys.onReturnPressed: replaceModel.replace()
+    Keys.onEnterPressed: replaceModel.replace()
 
     Connections {
         target: replaceModel

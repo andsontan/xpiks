@@ -49,11 +49,11 @@ namespace Common {
     enum struct CombinedEditFlags: int {
         None = 0,
         EditTitle = 1 << 0,
-        EditDesctiption = 1 << 1,
+        EditDescription = 1 << 1,
         EditKeywords = 1 << 2,
         AppendKeywords = 1 << 3,
         Clear = 1 << 4,
-        EditEverything = EditTitle | EditDesctiption | EditKeywords
+        EditEverything = EditTitle | EditDescription | EditKeywords
     };
 
     enum struct SuggestionFlags: int {

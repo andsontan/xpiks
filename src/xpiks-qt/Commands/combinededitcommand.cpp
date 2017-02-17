@@ -40,7 +40,7 @@ QString combinedFlagsToString(Common::CombinedEditFlags flags) {
     }
 
     QStringList flagsStr;
-    if (Common::HasFlag(flags, CombinedEditFlags::EditDesctiption)) {
+    if (Common::HasFlag(flags, CombinedEditFlags::EditDescription)) {
         flagsStr.append("EditDescription");
     }
 
@@ -123,7 +123,7 @@ void Commands::CombinedEditCommand::setKeywords(Models::ArtworkMetadata *metadat
 }
 
 void Commands::CombinedEditCommand::setDescription(Models::ArtworkMetadata *metadata) const {
-    if (Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::EditDesctiption)) {
+    if (Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::EditDescription)) {
         if (Common::HasFlag(m_EditFlags, Common::CombinedEditFlags::Clear)) {
             metadata->setDescription("");
         } else {

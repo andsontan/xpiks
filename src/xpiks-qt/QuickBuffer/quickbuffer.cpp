@@ -140,9 +140,19 @@ namespace QuickBuffer {
             artItemsModel->fillFromQuickBuffer(editableArtwork->getOriginalIndex());
             result = true;
         } else if (currentEditable) {
-            currentEditable->setTitle(getTitle());
-            currentEditable->setDescription(getDescription());
-            currentEditable->setKeywords(getKeywords());
+            auto *model = getBasicMetadataModel();
+
+            if (!model->isTitleEmpty()) {
+                currentEditable->setTitle(getTitle());
+            }
+
+            if (!model->isDescriptionEmpty()) {
+                currentEditable->setDescription(getDescription());
+            }
+
+            if (!model->areKeywordsEmpty()) {
+                currentEditable->setKeywords(getKeywords());
+            }
 
             currentEditable->spellCheck();
             currentEditable->update();
@@ -157,7 +167,7 @@ namespace QuickBuffer {
 
     bool QuickBuffer::getIsEmpty() {
         auto *model = getBasicMetadataModel();
-        bool result = model->isTitleEmpty() || model->isDescriptionEmpty() || model->areKeywordsEmpty();
+        bool result = model->isTitleEmpty() && model->isDescriptionEmpty() && model->areKeywordsEmpty();
         return result;
     }
 

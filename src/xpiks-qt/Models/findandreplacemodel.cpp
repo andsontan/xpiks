@@ -308,7 +308,8 @@ namespace Models {
     void FindAndReplaceModel::resetModel() {
         LOG_DEBUG << "#";
 
-        initDefaultFlags();
+        // let the model save last used flags
+        // initDefaultFlags();
         clearArtworks();
         m_ReplaceFrom.clear();
         m_ReplaceTo.clear();
