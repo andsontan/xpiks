@@ -222,7 +222,7 @@
     </message>
     <message>
         <location filename="../../StackViews/CombinedEditView.qml" line="1009"/>
-        <source>Set metadata from selected artwork to all fields</source>
+        <source>Combine metadata from selected artworks</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -290,42 +290,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/DeleteKeywordsDialog.qml" line="446"/>
-        <source>Fix spelling</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Dialogs/DeleteKeywordsDialog.qml" line="459"/>
-        <source>Suggest</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Dialogs/DeleteKeywordsDialog.qml" line="469"/>
-        <source>Copy</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../../Dialogs/DeleteKeywordsDialog.qml" line="480"/>
+        <location filename="../../Dialogs/DeleteKeywordsDialog.qml" line="443"/>
         <source>Clear</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/DeleteKeywordsDialog.qml" line="517"/>
+        <location filename="../../Dialogs/DeleteKeywordsDialog.qml" line="480"/>
         <source>Common keywords:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/DeleteKeywordsDialog.qml" line="613"/>
+        <location filename="../../Dialogs/DeleteKeywordsDialog.qml" line="576"/>
         <source>Case sensitive</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/DeleteKeywordsDialog.qml" line="625"/>
+        <location filename="../../Dialogs/DeleteKeywordsDialog.qml" line="588"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/DeleteKeywordsDialog.qml" line="635"/>
+        <location filename="../../Dialogs/DeleteKeywordsDialog.qml" line="598"/>
         <source>Cancel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1166,48 +1151,48 @@
 <context>
     <name>ReplacePreview</name>
     <message>
-        <location filename="../../Dialogs/ReplacePreview.qml" line="130"/>
-        <location filename="../../Dialogs/ReplacePreview.qml" line="425"/>
+        <location filename="../../Dialogs/ReplacePreview.qml" line="132"/>
+        <location filename="../../Dialogs/ReplacePreview.qml" line="427"/>
         <source>Replace</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/ReplacePreview.qml" line="138"/>
+        <location filename="../../Dialogs/ReplacePreview.qml" line="140"/>
         <source>to</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/ReplacePreview.qml" line="259"/>
+        <location filename="../../Dialogs/ReplacePreview.qml" line="261"/>
         <source>Title:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/ReplacePreview.qml" line="298"/>
+        <location filename="../../Dialogs/ReplacePreview.qml" line="300"/>
         <source>Description:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/ReplacePreview.qml" line="338"/>
+        <location filename="../../Dialogs/ReplacePreview.qml" line="340"/>
         <source>Keywords:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/ReplacePreview.qml" line="387"/>
+        <location filename="../../Dialogs/ReplacePreview.qml" line="389"/>
         <source>Nothing found</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/ReplacePreview.qml" line="403"/>
+        <location filename="../../Dialogs/ReplacePreview.qml" line="405"/>
         <source>Select all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/ReplacePreview.qml" line="412"/>
+        <location filename="../../Dialogs/ReplacePreview.qml" line="414"/>
         <source>Unselect all</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/ReplacePreview.qml" line="434"/>
+        <location filename="../../Dialogs/ReplacePreview.qml" line="436"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1532,7 +1517,7 @@ All upload hosts&apos; passwords will be purged.</source>
     <name>Suggestion::KeywordsSuggestor</name>
     <message>
         <location filename="../../Suggestion/keywordssuggestor.cpp" line="47"/>
-        <location filename="../../Suggestion/keywordssuggestor.cpp" line="156"/>
+        <location filename="../../Suggestion/keywordssuggestor.cpp" line="157"/>
         <source>No results found</source>
         <translation type="unfinished"></translation>
     </message>

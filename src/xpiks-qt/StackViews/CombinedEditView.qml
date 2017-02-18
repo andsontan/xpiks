@@ -1006,7 +1006,7 @@ Rectangle {
                 text: i18.n + qsTr("Assign from selected")
                 width: 160
                 enabled: combinedArtworks.selectedArtworksCount > 0
-                tooltip: i18.n + qsTr("Combine metadata from selected artworks to all fields")
+                tooltip: i18.n + qsTr("Combine metadata from selected artworks")
                 onClicked: {
                     combinedArtworks.assignFromSelected()
                     combinedArtworks.unselectAllItems()
