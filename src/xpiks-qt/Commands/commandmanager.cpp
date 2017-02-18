@@ -896,6 +896,7 @@ void Commands::CommandManager::registerCurrentItem(Models::ArtworkProxyBase *art
 }
 
 void Commands::CommandManager::clearCurrentItem() const {
+    LOG_DEBUG << "#";
     if (m_UIManager != nullptr) {
         m_UIManager->clearCurrentItem();
     }

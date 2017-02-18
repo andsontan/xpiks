@@ -509,6 +509,8 @@ namespace Models {
 
         artItemsModel->updateItems(indices, QVector<int>() << ArtItemsModel::IsSelectedRole);
         emit allItemsSelectedChanged();
+
+        m_CommandManager->clearCurrentItem();
     }
 
     void FilteredArtItemsProxyModel::invertFilteredItemsSelected() {
@@ -612,6 +614,7 @@ namespace Models {
         m_SelectedArtworksCount = 0;
         emit selectedArtworksCountChanged();
         emit forceUnselected();
+        m_CommandManager->clearCurrentItem();
     }
 
     ArtItemsModel *FilteredArtItemsProxyModel::getArtItemsModel() const {
