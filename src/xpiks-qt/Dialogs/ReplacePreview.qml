@@ -129,7 +129,7 @@ Item {
                     spacing: 5
 
                     StyledText {
-                        text: i18.n + qsTr("Replace")
+                        text: i18.n + qsTr("Replace", "caption")
                     }
 
                     StyledText {
@@ -137,7 +137,7 @@ Item {
                     }
 
                     StyledText {
-                        text: i18.n + qsTr("to")
+                        text: i18.n + qsTr("with")
                     }
 
                     StyledText {
@@ -424,7 +424,7 @@ Item {
                     }
 
                     StyledButton {
-                        text: i18.n + qsTr("Replace")
+                        text: i18.n + qsTr("Replace", "button")
                         enabled: replaceModel.count > 0
                         width: 100
                         onClicked: {

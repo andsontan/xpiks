@@ -1152,13 +1152,13 @@
     <name>ReplacePreview</name>
     <message>
         <location filename="../../Dialogs/ReplacePreview.qml" line="132"/>
-        <location filename="../../Dialogs/ReplacePreview.qml" line="427"/>
         <source>Replace</source>
+        <comment>caption</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../../Dialogs/ReplacePreview.qml" line="140"/>
-        <source>to</source>
+        <source>with</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -1189,6 +1189,12 @@
     <message>
         <location filename="../../Dialogs/ReplacePreview.qml" line="414"/>
         <source>Unselect all</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../Dialogs/ReplacePreview.qml" line="427"/>
+        <source>Replace</source>
+        <comment>button</comment>
         <translation type="unfinished"></translation>
     </message>
     <message>
