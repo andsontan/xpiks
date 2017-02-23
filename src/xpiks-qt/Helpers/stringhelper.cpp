@@ -244,6 +244,13 @@ namespace Helpers {
         [&parts](int, int, const QString &word) { parts.append(word); });
     }
 
+#ifdef KEYWORDS_TAGS
+    QStringList mergeTaggedLists(const QStringList &list1, const QStringList &list2)
+    {
+
+    }
+#endif
+
     std::string string_format(const std::string fmt, ...) {
         int size = ((int)fmt.size()) * 2 + 50;   // Use a rubric appropriate for your code
         std::string str;

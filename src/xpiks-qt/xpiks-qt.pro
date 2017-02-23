@@ -150,6 +150,9 @@ DEFINES += QT_NO_CAST_TO_ASCII \
 DEFINES += HUNSPELL_STATIC
 DEFINES += QT_MESSAGELOGCONTEXT
 
+# Experimental stuff
+DEFINES += KEYWORDS_TAGS
+
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 

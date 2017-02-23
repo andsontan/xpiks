@@ -47,6 +47,11 @@ namespace Helpers {
     QString getLastNLines(const QString &text, int N);
     void splitText(const QString &text, QStringList &parts);
     void splitKeywords(const QString &text, const QVector<QChar> &separators, QStringList &parts);
+
+#ifdef KEYWORDS_TAGS
+    QStringList mergeTaggedLists(const QStringList &list1, const QStringList &list2);
+#endif
+
     int levensteinDistance(const QString &s1, const QString &s2);
     bool isUtf8(const char* const buffer);
     QString detectEncodingAndDecode(const std::string &value);
