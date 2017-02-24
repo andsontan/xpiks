@@ -286,7 +286,7 @@ namespace Commands {
 #endif
 
     public:
-        void registerCurrentItem(const Models::MetadataElement &metadataElement) const;
+        void registerCurrentItem(const Models::MetadataElement &metadataElement);
         void registerCurrentItem(Models::ArtworkProxyBase *artworkProxy) const;
         void clearCurrentItem() const;
 

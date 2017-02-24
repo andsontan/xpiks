@@ -878,7 +878,7 @@ void Commands::CommandManager::cleanup() {
 }
 #endif
 
-void Commands::CommandManager::registerCurrentItem(const Models::MetadataElement &metadataElement) const {
+void Commands::CommandManager::registerCurrentItem(const Models::MetadataElement &metadataElement) {
     if (m_UIManager != nullptr) {
         std::shared_ptr<QuickBuffer::ICurrentEditable> currentItem(new QuickBuffer::CurrentEditableArtwork(
                                                                        metadataElement.getOrigin(),

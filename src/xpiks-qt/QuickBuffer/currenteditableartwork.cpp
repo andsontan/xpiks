@@ -28,7 +28,7 @@
 #include "../Models/metadataelement.h"
 
 namespace QuickBuffer {
-    CurrentEditableArtwork::CurrentEditableArtwork(Models::ArtworkMetadata *artworkMetadata, int originalIndex, const Commands::CommandManager *commandManager):
+    CurrentEditableArtwork::CurrentEditableArtwork(Models::ArtworkMetadata *artworkMetadata, int originalIndex, Commands::CommandManager * const commandManager):
         m_CommandManager(commandManager),
         m_OriginalIndex(originalIndex)
     {

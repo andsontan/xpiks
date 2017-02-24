@@ -68,7 +68,7 @@ namespace SpellCheck {
     QHash<Common::IMetadataOperator *, KeywordsSuggestionsVector > combinedFailedReplacements(const SuggestionsVector &failedReplacements) {
         QHash<Common::IMetadataOperator *, KeywordsSuggestionsVector > candidatesToRemove;
         size_t size = failedReplacements.size();
-        candidatesToRemove.reserve(size);
+        candidatesToRemove.reserve((int)size);
 
         for (size_t i = 0; i < size; ++i) {
             auto &item = failedReplacements.at(i);
@@ -319,7 +319,7 @@ namespace SpellCheck {
 
     void SpellCheckSuggestionModel::updateItems() const {
         QVector<int> indices;
-        indices.reserve(m_ItemsPairs.size());
+        indices.reserve((int)m_ItemsPairs.size());
 
         for (auto &pair: m_ItemsPairs) {
             int index = pair.second;
