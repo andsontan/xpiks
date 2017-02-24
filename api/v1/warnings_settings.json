@@ -1,0 +1,14 @@
+{
+    "overwrite": false,
+    "version": 1,
+
+    "settings": {
+        "additional_allowed_chars": "._-@#",
+        "max_description_length": 200,
+        "min_keywords_count": 7,
+        "max_keywords_count": 50,
+        "min_megapixels": 4.0,
+        "min_words_count": 3,
+        "max_filesize_mb": 25.0
+    }
+}
