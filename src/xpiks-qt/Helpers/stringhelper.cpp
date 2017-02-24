@@ -248,6 +248,19 @@ namespace Helpers {
     }
 
 #ifdef KEYWORDS_TAGS
+    bool hasTaggedKeywords(const QStringList &keywords) {
+        bool hasAnyTag = false;
+
+        foreach (const QString &keyword, keywords) {
+            if (keyword.startsWith('#')) {
+                hasAnyTag = true;
+                break;
+            }
+        }
+
+        return hasAnyTag;
+    }
+
     QHash<QString, QStringList> parseTaggedKeywords(const QStringList &list, QSet<QString> &tags, QStringList &nonTaggedKeywords) {
         QHash<QString, QStringList> tagToList;
 

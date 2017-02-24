@@ -49,6 +49,7 @@ namespace Helpers {
     void splitKeywords(const QString &text, const QVector<QChar> &separators, QStringList &parts);
 
 #ifdef KEYWORDS_TAGS
+    bool hasTaggedKeywords(const QStringList &keywords);
     QStringList mergeTaggedLists(const QStringList &list1, const QStringList &list2);
 #endif
 
