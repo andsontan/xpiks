@@ -24,6 +24,8 @@
 #include "../Common/defines.h"
 #include "../Commands/commandmanager.h"
 #include "../KeywordsPresets/presetkeywordsmodel.h"
+#include "../Commands/expandpresetcommand.h"
+#include "../Models/metadataelement.h"
 
 namespace QuickBuffer {
     CurrentEditableArtwork::CurrentEditableArtwork(Models::ArtworkMetadata *artworkMetadata, int originalIndex, const Commands::CommandManager *commandManager):
@@ -70,12 +72,10 @@ namespace QuickBuffer {
     bool CurrentEditableArtwork::expandPreset(int keywordIndex, int presetIndex) {
         bool success = false;
         LOG_INFO << "keyword" << keywordIndex << "preset" << presetIndex;
-        auto *presetsModel = m_CommandManager->getPresetsModel();
-        QStringList keywords;
 
-        if (presetsModel->tryGetPreset(presetIndex, keywords)) {
-            success = m_ArtworkMetadata->expandPreset(keywordIndex, keywords);
-        }
+        std::shared_ptr<Commands::ExpandPresetCommand> expandPresetCommand(new Commands::ExpandPresetCommand(Models::MetadataElement(m_ArtworkMetadata, m_OriginalIndex), presetIndex, keywordIndex));
+        std::shared_ptr<Commands::ICommandResult> result = m_CommandManager->processCommand(expandPresetCommand);
+        success = result->getStatus() == 0;
 
         return success;
     }
