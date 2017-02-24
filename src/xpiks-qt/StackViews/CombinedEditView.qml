@@ -108,7 +108,7 @@ Rectangle {
 
         MenuItem {
             visible: wordRightClickMenu.showAddToDict
-            text: qsTr("Add to dictionary")
+            text: i18.n + qsTr("Add to dictionary")
             onTriggered: spellCheckService.addWordToUserDictionary(wordRightClickMenu.word);
         }
 

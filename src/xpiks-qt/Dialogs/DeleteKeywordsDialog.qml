@@ -573,7 +573,7 @@ CloseRequested")
 
                         StyledCheckbox {
                             id: caseSensitiveCheckbox
-                            text: qsTr("Case sensitive")
+                            text: i18.n + qsTr("Case sensitive")
                             Component.onCompleted: caseSensitiveCheckbox.checked = deleteKeywordsModel.caseSensitive
                             onClicked: {
                                 deleteKeywordsModel.caseSensitive = caseSensitiveCheckbox.checked

@@ -69,7 +69,7 @@ Item {
     MessageDialog {
         id: noSearchDestinationMsgDialog
         title: i18.n + qsTr("Warning")
-        text: qsTr("Please select where to search for")
+        text: i18.n + qsTr("Please select where to search for")
         standardButtons: StandardButton.Ok
     }
 

@@ -93,7 +93,7 @@ Item {
                 anchors.topMargin: 20
                 anchors.leftMargin: 20
                 anchors.rightMargin: 20
-                text: qsTr("Translation for \"%1\"").arg(translationManager.query)
+                text: i18.n + qsTr("Translation for \"%1\"").arg(translationManager.query)
             }
 
             Rectangle {
@@ -140,7 +140,7 @@ Item {
                 }
 
                 StyledButton {
-                    text: qsTr("Close")
+                    text: i18.n + qsTr("Close")
                     width: 100
                     onClicked: {
                         closePopup()

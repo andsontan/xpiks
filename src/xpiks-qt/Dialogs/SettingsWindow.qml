@@ -524,7 +524,7 @@ ApplicationWindow {
                                     anchors.top: parent.top
                                     anchors.bottom: parent.bottom
                                     verticalAlignment: Text.AlignVCenter
-                                    text: qsTr("keyword", "standalone")
+                                    text: i18.n + qsTr("keyword", "standalone")
                                     color: Colors.defaultControlColor
                                     font.pixelSize: UIConfig.fontPixelSize * uxTab.sizeSliderValue
                                 }

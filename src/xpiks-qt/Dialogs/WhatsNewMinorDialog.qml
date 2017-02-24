@@ -94,7 +94,7 @@ Item {
                 anchors.topMargin: 20
                 anchors.leftMargin: 20
                 anchors.rightMargin: 20
-                text: qsTr("What's new")
+                text: i18.n + qsTr("What's new")
             }
 
             Rectangle {
@@ -138,7 +138,7 @@ Item {
                 }
 
                 StyledButton {
-                    text: qsTr("Ok")
+                    text: i18.n + qsTr("Ok")
                     width: 100
                     onClicked: {
                         appSettings.saveCurrentVersion()

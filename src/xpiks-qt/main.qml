@@ -735,17 +735,17 @@ ApplicationWindow {
         property int index
 
         MenuItem {
-            text: qsTr("Copy to Quick Buffer")
+            text: i18.n + qsTr("Copy to Quick Buffer")
             onTriggered: filteredArtItemsModel.copyToQuickBuffer(artworkContextMenu.index)
         }
 
         MenuItem {
-            text: qsTr("Fill from Quick Buffer")
+            text: i18.n + qsTr("Fill from Quick Buffer")
             onTriggered: filteredArtItemsModel.fillFromQuickBuffer(artworkContextMenu.index)
         }
 
         MenuItem {
-            text: qsTr("Show in folder")
+            text: i18.n + qsTr("Show in folder")
             onTriggered: helpersWrapper.revealArtworkFile(artworkContextMenu.filename);
         }
     }
@@ -762,7 +762,7 @@ ApplicationWindow {
     MessageDialog {
         id: unavailableArtworksDialog
         title: i18.n + qsTr("Warning")
-        text: qsTr("Some files are not available anymore.\nThey will be removed from the workflow.")
+        text: i18.n + qsTr("Some files are not available anymore.\nThey will be removed from the workflow.")
         standardButtons: StandardButton.Ok
         onAccepted: {
             helpersWrapper.removeUnavailableFiles()
@@ -772,7 +772,7 @@ ApplicationWindow {
     MessageDialog {
         id: unavailableVectorsDialog
         title: i18.n + qsTr("Warning")
-        text: qsTr("Some vectors are not available anymore.\nThey will be detached automatically.")
+        text: i18.n + qsTr("Some vectors are not available anymore.\nThey will be detached automatically.")
         standardButtons: StandardButton.Ok
     }
 

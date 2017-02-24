@@ -77,7 +77,7 @@ Item {
         property string externalUrl
 
         MenuItem {
-            text: qsTr("Open in browser")
+            text: i18.n + qsTr("Open in browser")
             onTriggered: {
                 Qt.openUrlExternally(contextMenu.externalUrl)
             }

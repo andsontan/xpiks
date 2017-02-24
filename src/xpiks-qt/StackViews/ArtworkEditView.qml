@@ -136,7 +136,7 @@ Rectangle {
 
         MenuItem {
             visible: wordRightClickMenu.showAddToDict
-            text: qsTr("Add to dictionary")
+            text: i18.n + qsTr("Add to dictionary")
             onTriggered: spellCheckService.addWordToUserDictionary(wordRightClickMenu.word);
         }
 
@@ -192,7 +192,7 @@ Rectangle {
         property int index
 
         MenuItem {
-            text: qsTr("Copy to Quick Buffer")
+            text: i18.n + qsTr("Copy to Quick Buffer")
             onTriggered: filteredArtItemsModel.copyToQuickBuffer(itemPreviewMenu.index)
         }
     }
