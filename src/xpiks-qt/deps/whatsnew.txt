@@ -1,4 +1,4 @@
-Xpiks 1.4 release
+Xpiks 1.4 release.
 
 It provides following features:
 
@@ -19,7 +19,7 @@ And bugfixes:
 - unable to change case when editing a keyword
 - fixing spelling does not mark item as modified
 - order of keywords is changed in multiple edit dialog
-- dismiss timeout settings change didn't work as expected
+- dismiss timeout setting change didn't work as expected
 
 
 
