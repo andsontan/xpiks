@@ -155,7 +155,7 @@ Item {
                     PresentationSlide {
                         parent: slidesHost
                         id: fifthSlide
-                        title: i18.n + qsTr("Clear list of failed uploads")
+                        title: i18.n + qsTr("List of failed uploads")
                         imageUrl: "qrc:/Graphics/faileduploads.png"
                         width: slidesHost.width
                         height: slidesHost.height
