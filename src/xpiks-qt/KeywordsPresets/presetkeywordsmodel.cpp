@@ -260,7 +260,8 @@ namespace KeywordsPresets {
         return result;
     }
 
-    void PresetKeywordsModel::saveToConfig() {        
+    void PresetKeywordsModel::saveToConfig() {
+        LOG_DEBUG << "#";
 #ifndef CORE_TESTS
         auto *presetConfig = m_CommandManager->getPresetsModelConfig();
         presetConfig->saveFromModel(m_PresetsList);
@@ -376,6 +377,7 @@ namespace KeywordsPresets {
     }
 
     int FilteredPresetKeywordsModel::getOriginalIndex(int index) {
+        LOG_INFO << index;
         QModelIndex originalIndex = mapToSource(this->index(index, 0));
         int row = originalIndex.row();
         return row;

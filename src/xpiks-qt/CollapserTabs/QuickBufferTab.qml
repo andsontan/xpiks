@@ -372,7 +372,7 @@ ColumnLayout {
             }
 
             onRightClickedInside: {
-                presetsMenu.popup()
+                filteredPresetsModel.searchTerm = ''
             }
         }
 

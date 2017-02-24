@@ -178,6 +178,7 @@ namespace KeywordsPresets {
     }
 
     void PresetKeywordsModelConfig::writeToConfig() {
+        LOG_DEBUG << "#";
         QJsonArray jsonArray;
 
         for (auto &item: m_PresetData) {

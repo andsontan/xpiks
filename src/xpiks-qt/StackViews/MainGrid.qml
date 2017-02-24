@@ -1243,6 +1243,7 @@ ColumnLayout {
                                                 }
 
                                                 onRightClickedInside: {
+                                                    filteredPresetsModel.searchTerm = ''
                                                     presetsMenu.artworkIndex = rowWrapper.delegateIndex
                                                     presetsMenu.popup()
                                                 }

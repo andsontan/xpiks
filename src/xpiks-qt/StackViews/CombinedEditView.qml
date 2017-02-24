@@ -805,6 +805,7 @@ Rectangle {
                             }
 
                             onRightClickedInside: {
+                                filteredPresetsModel.searchTerm = ''
                                 presetsMenu.popup()
                             }
                         }

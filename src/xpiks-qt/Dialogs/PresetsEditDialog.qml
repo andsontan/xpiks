@@ -445,8 +445,7 @@ Item {
                             }
 
                             onCompletionRequested: {
-                                helpersWrapper.autoCompleteKeyword(prefix,
-                                                                   flv.model)
+                                // no completion in presets for now
                             }
                         }
 
