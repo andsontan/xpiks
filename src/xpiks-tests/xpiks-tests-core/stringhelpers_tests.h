@@ -24,6 +24,22 @@ private slots:
     void replaceWholeWithCommaTest();
     void replaceWholeNoCaseHitTest();
     void replaceWholeNoHitTest();
+
+#ifdef KEYWORDS_TAGS
+    void mergeTaggedListsBasicTest();
+    void mergeHalfEmptyTaggedListTest();
+    void mergeWithDifferentCaseTest();
+    void mergeEmtpyWithEmptyTest();
+    void mergeEmptyStringWithNonEmptyTest();
+    void mergeEmptyStringsTest();
+    void mergeWithMissingTagsTest();
+    void mergeWithUnorderedTagsTest();
+    void mergeOneItemListsTest();
+    void mergeWithDifferentCaseTagsTest();
+    void mergeWithNonTaggedTest();
+    void mergeAllNonTaggedTest();
+    void mergeWithDuplicatedTagTest();
+#endif
 };
 
 #endif // STRINGHELPERSTESTS_H

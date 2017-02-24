@@ -27,6 +27,9 @@
 #include <QByteArray>
 #include <QString>
 #include <QtGlobal>
+#include <QHash>
+#include <QPair>
+#include <QSet>
 #include <vector>
 #include <utility>
 #include <algorithm>
@@ -245,9 +248,93 @@ namespace Helpers {
     }
 
 #ifdef KEYWORDS_TAGS
-    QStringList mergeTaggedLists(const QStringList &list1, const QStringList &list2)
-    {
+    QHash<QString, QStringList> parseTaggedKeywords(const QStringList &list, QSet<QString> &tags, QStringList &nonTaggedKeywords) {
+        QHash<QString, QStringList> tagToList;
 
+        bool anyTagFound = false;
+        QString lastTag;
+        QStringList *lastList = nullptr;
+
+        foreach (const QString &keyword, list) {
+            if (keyword.startsWith('#')) {
+                anyTagFound = true;
+                lastTag = keyword.toLower();
+                tags.insert(lastTag);
+
+                QHash<QString, QStringList>::iterator it = tagToList.find(lastTag);
+                if (it == tagToList.end()) {
+                    it = tagToList.insert(lastTag, QStringList());
+                }
+
+                lastList = &it.value();
+            } else {
+                if (!anyTagFound) {
+                    nonTaggedKeywords.append(keyword);
+                } else {
+                    Q_ASSERT(lastList != nullptr);
+                    lastList->append(keyword);
+                }
+            }
+        }
+
+        return tagToList;
+    }
+
+    QStringList mergeTaggedLists(const QStringList &list1, const QStringList &list2) {
+        QSet<QString> tags;
+        QStringList nonTaggedKeywords;
+
+        auto tagsHash1 = parseTaggedKeywords(list1, tags, nonTaggedKeywords);
+        auto tagsHash2 = parseTaggedKeywords(list2, tags, nonTaggedKeywords);
+
+        QSet<QString> keywordsSet;
+        QStringList result;
+
+        foreach (const QString &keyword, nonTaggedKeywords) {
+            auto sanitized = keyword.toLower();
+            if (!keywordsSet.contains(sanitized)) {
+                keywordsSet.insert(sanitized);
+                result.append(keyword);
+            }
+        }
+
+        auto sortedTags = tags.toList();
+        qSort(sortedTags);
+
+        auto firstEnd = tagsHash1.end();
+        auto secondEnd = tagsHash2.end();
+
+        foreach (const QString &tag, sortedTags) {
+            result.append(tag);
+
+            auto it1 = tagsHash1.find(tag);
+            if (it1 != firstEnd) {
+                auto &firstKeywords = it1.value();
+
+                foreach (const QString &keyword, firstKeywords) {
+                    auto sanitized = keyword.toLower();
+                    if (!keywordsSet.contains(sanitized)) {
+                        keywordsSet.insert(sanitized);
+                        result.append(keyword);
+                    }
+                }
+            }
+
+            auto it2 = tagsHash2.find(tag);
+            if (it2 != secondEnd) {
+                auto &secondKeywords = it2.value();
+
+                foreach (const QString &keyword, secondKeywords) {
+                    auto sanitized = keyword.toLower();
+                    if (!keywordsSet.contains(sanitized)) {
+                        keywordsSet.insert(sanitized);
+                        result.append(keyword);
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 #endif
 

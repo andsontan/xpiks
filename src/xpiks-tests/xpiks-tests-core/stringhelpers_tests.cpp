@@ -128,3 +128,137 @@ void StringHelpersTests::replaceWholeNoHitTest() {
     QString replaced = Helpers::replaceWholeWords(text, "whole", "Bob");
     QCOMPARE(replaced, text);
 }
+
+#ifdef KEYWORDS_TAGS
+
+void StringHelpersTests::mergeTaggedListsBasicTest() {
+    QStringList list1 = QString("#t1 some keywords here #t2 few more there #t3 yum this").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("#t1 in addition #t2 these as well #t3 that").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("#t1 some keywords here in addition #t2 few more there these as well #t3 yum this that").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::mergeTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::mergeHalfEmptyTaggedListTest() {
+    QStringList list1 = QString("#t1 some keywords here #t2").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("#t1 #t2 these as well").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("#t1 some keywords here #t2 these as well").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::mergeTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::mergeWithDifferentCaseTest() {
+    QStringList list1 = QString("#t1 some keywords here #t2 As Well").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("#t1 Some Here #t2 these as well").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("#t1 some keywords here #t2 As Well these").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::mergeTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::mergeEmtpyWithEmptyTest() {
+    QStringList list1 = QString("#t1 #t2").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("#t1 #t2").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("#t1 #t2").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::mergeTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::mergeEmptyStringWithNonEmptyTest() {
+    QStringList list1 = QString("").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("#t1 #t2 these as well").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("#t1 #t2 these as well").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::mergeTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::mergeEmptyStringsTest() {
+    QStringList list1 = QString("").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::mergeTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::mergeWithMissingTagsTest() {
+    QStringList list1 = QString("#t1 some keywords here #t3 few more there #t4").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("#t0 in addition #t2 these as well").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("#t0 in addition #t1 some keywords here #t2 these as well #t3 few more there #t4").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::mergeTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::mergeWithUnorderedTagsTest() {
+    QStringList list1 = QString("#t2 some keywords here #t1 few more there #t3 test").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("#t1 in addition #t3 keyword #t2 these as well").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("#t1 few more there in addition #t2 some keywords here these as well #t3 test keyword").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::mergeTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::mergeOneItemListsTest() {
+    QStringList list1 = QString("#t1 test").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("#t1 keyword").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("#t1 test keyword").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::mergeTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::mergeWithDifferentCaseTagsTest() {
+    QStringList list1 = QString("#T1 some keywords here #t2 few more there #t3 yum this").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("#t1 in addition #T2 these as well #T3 that").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("#t1 some keywords here in addition #t2 few more there these as well #t3 yum this that").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::mergeTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::mergeWithNonTaggedTest() {
+    QStringList list1 = QString("non tagged words #t1 some keywords here #t2 few more there #t3 yum this").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("absolutely #t1 in addition #t2 these as well #t3 that").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("non tagged words absolutely #t1 some keywords here in addition #t2 few more there these as well #t3 yum this that").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::mergeTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::mergeAllNonTaggedTest() {
+    QStringList list1 = QString("non tagged words").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("absolutely tagged non").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("non tagged words absolutely").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::mergeTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::mergeWithDuplicatedTagTest() {
+    QStringList list1 = QString("#t1 some keywords here #t1 few more there #t3 yum this").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("#t1 in addition #t2 these as well #t1 that").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("#t1 some keywords here few more there in addition that #t2 these as well #t3 yum this").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::mergeTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+#endif

@@ -27,6 +27,9 @@ DEFINES += QT_NO_CAST_TO_ASCII \
            QT_RESTRICTED_CAST_FROM_ASCII \
            QT_NO_CAST_FROM_BYTEARRAY
 
+# Experimental stuff
+DEFINES += KEYWORDS_TAGS
+
 LIBS += -L"$$PWD/../../libs/"
 LIBS += -lhunspell
 
