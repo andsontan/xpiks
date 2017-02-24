@@ -17,6 +17,7 @@ Today I announce release of Xpiks 1.4! This is a very big release with plenty of
 - find and replace functionality
 - batch keywords removal functionality
 - support of StarDict dictionaries for translation
+- ability to suggest keywords for Images and Vectors separately
 
 Bugfixes:
 
