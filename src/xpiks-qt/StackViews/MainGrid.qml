@@ -116,7 +116,7 @@ ColumnLayout {
                 delegate: MenuItem {
                     text: name
                     onTriggered: {
-                        artItemsModel.addPreset(subMenu.artworkIndex, filteredPresetsModel.getOriginalIndex(index));
+                        artItemsModel.addPreset(presetsMenu.artworkIndex, filteredPresetsModel.getOriginalIndex(index));
                     }
                 }
             }
