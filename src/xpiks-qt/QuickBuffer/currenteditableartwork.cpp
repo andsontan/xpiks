@@ -26,6 +26,7 @@
 #include "../KeywordsPresets/presetkeywordsmodel.h"
 #include "../Commands/expandpresetcommand.h"
 #include "../Models/metadataelement.h"
+#include "../Commands/deletekeywordscommand.h"
 
 namespace QuickBuffer {
     CurrentEditableArtwork::CurrentEditableArtwork(Models::ArtworkMetadata *artworkMetadata, int originalIndex, Commands::CommandManager * const commandManager):
@@ -87,7 +88,12 @@ namespace QuickBuffer {
         QStringList keywords;
 
         if (presetsModel->tryGetPreset(presetIndex, keywords)) {
-            success = m_ArtworkMetadata->removeKeywords(keywords.toSet(), false);
+            std::vector<Models::MetadataElement> artworksList;
+            artworksList.emplace_back(m_ArtworkMetadata, m_OriginalIndex);
+
+            std::shared_ptr<Commands::DeleteKeywordsCommand> deleteKeywordsCommand(
+                        new Commands::DeleteKeywordsCommand(artworksList, keywords.toSet(), false));
+            m_CommandManager->processCommand(deleteKeywordsCommand);
         }
 
         return success;
