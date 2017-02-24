@@ -287,15 +287,11 @@ namespace Helpers {
         auto tagsHash1 = parseTaggedKeywords(list1, tags, nonTaggedKeywords);
         auto tagsHash2 = parseTaggedKeywords(list2, tags, nonTaggedKeywords);
 
-        QSet<QString> keywordsSet;
         QStringList result;
+        result.reserve(list1.length() + list2.length());
 
         foreach (const QString &keyword, nonTaggedKeywords) {
-            auto sanitized = keyword.toLower();
-            if (!keywordsSet.contains(sanitized)) {
-                keywordsSet.insert(sanitized);
-                result.append(keyword);
-            }
+            result.append(keyword);
         }
 
         auto sortedTags = tags.toList();
@@ -312,11 +308,7 @@ namespace Helpers {
                 auto &firstKeywords = it1.value();
 
                 foreach (const QString &keyword, firstKeywords) {
-                    auto sanitized = keyword.toLower();
-                    if (!keywordsSet.contains(sanitized)) {
-                        keywordsSet.insert(sanitized);
-                        result.append(keyword);
-                    }
+                    result.append(keyword);
                 }
             }
 
@@ -325,11 +317,7 @@ namespace Helpers {
                 auto &secondKeywords = it2.value();
 
                 foreach (const QString &keyword, secondKeywords) {
-                    auto sanitized = keyword.toLower();
-                    if (!keywordsSet.contains(sanitized)) {
-                        keywordsSet.insert(sanitized);
-                        result.append(keyword);
-                    }
+                    result.append(keyword);
                 }
             }
         }

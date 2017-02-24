@@ -155,7 +155,7 @@ void StringHelpersTests::mergeWithDifferentCaseTest() {
     QStringList list1 = QString("#t1 some keywords here #t2 As Well").split(" ", QString::SkipEmptyParts);
     QStringList list2 = QString("#t1 Some Here #t2 these as well").split(" ", QString::SkipEmptyParts);
 
-    const QStringList expected = QString("#t1 some keywords here #t2 As Well these").split(" ", QString::SkipEmptyParts);
+    const QStringList expected = QString("#t1 some keywords here Some Here #t2 As Well these as well").split(" ", QString::SkipEmptyParts);
     QStringList actual = Helpers::mergeTaggedLists(list1, list2);
 
     QCOMPARE(actual, expected);
@@ -245,7 +245,7 @@ void StringHelpersTests::mergeAllNonTaggedTest() {
     QStringList list1 = QString("non tagged words").split(" ", QString::SkipEmptyParts);
     QStringList list2 = QString("absolutely tagged non").split(" ", QString::SkipEmptyParts);
 
-    const QStringList expected = QString("non tagged words absolutely").split(" ", QString::SkipEmptyParts);
+    const QStringList expected = QString("non tagged words absolutely tagged non").split(" ", QString::SkipEmptyParts);
     QStringList actual = Helpers::mergeTaggedLists(list1, list2);
 
     QCOMPARE(actual, expected);
