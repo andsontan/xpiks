@@ -83,7 +83,9 @@ date: 2014-12-28T09:54:01+02:00
 - open git bash and type `git clone https://github.com/blackrosezy/build-libcurl-windows.git`
 - execute `build.bat` and after if finishes, copy contents of `lib/dll-debug-x64` to the `src/libs/` directory
 
-***<span id="exiv2">To build <u>Exiv2</u> in Visual Studio 2015 do the following:</span>***
+***<span id="exiv2">To build <u>Exiv2</u> do the following:</span>***
+
+**Visual Studio 2015 Build:**
 
 - download **exiv2 v0.25** library from <a href="http://www.exiv2.org/" target="_blanc">official website</a> and extract it somewhere
 - download **expat-2.1.1** library from <a href="https://sourceforge.net/projects/expat/">official website</a> and extract it on same level as exiv2
@@ -94,6 +96,13 @@ date: 2014-12-28T09:54:01+02:00
 - in Visual Studio select `"Build" -> "Batch build"` and mark all _DebugDLL_ and _ReleaseDLL_ builds for your platform (x64 or x86)
 - press "Build"
 - copy build artifacts (`libexiv2.dll`, `libexiv2.lib`, `libexpat.dll`, `libexpat.lib`) to `src/libs` directory in _Xpiks_ repository
+
+**OS X Build:**
+
+- open Terminal in the directory of exiv2 sources and do the following
+- `mkdir build-Debug && cd build-Debug`
+- `/Applications/CMake.app/Contents/bin/cmake .. -DEXIV2_ENABLE_SHARED=off -DCMAKE_BUILD_TYPE=Debug -DCMAKE_OSX_DEPLOYMENT_TARGET=10.7 -DCMAKE_CXX_STANDARD=11`
+- `make`
 
 &nbsp;
 
