@@ -240,6 +240,13 @@ Item {
                                         }
                                     }
                                 }
+
+                                Component.onCompleted: {
+                                    if (count > 0) {
+                                        titleText.forceActiveFocus()
+                                        titleText.cursorPosition = titleText.text.length
+                                    }
+                                }
                             }
                         }
                     }
@@ -260,6 +267,9 @@ Item {
                             onClicked: {
                                 presetsModel.addItem()
                                 presetNamesListView.currentIndex = presetNamesListView.count - 1
+
+                                titleText.forceActiveFocus()
+                                titleText.cursorPosition = titleText.text.length
                             }
                         }
                     }
