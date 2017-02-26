@@ -33,7 +33,7 @@ namespace SpellCheck {
 
         Q_UNUSED(readLocker);
 
-        return m_WordsWithErrors.contains(word);
+        return m_WordsWithErrors.contains(word.toLower());
     }
 
     void SpellCheckErrorsInfo::setErrorWords(const QSet<QString> &errors) {
@@ -48,7 +48,7 @@ namespace SpellCheck {
         QWriteLocker writeLocker(&m_ErrorsLock);
 
         Q_UNUSED(writeLocker);
-        return m_WordsWithErrors.remove(word);
+        return m_WordsWithErrors.remove(word.toLower());
     }
 
     bool SpellCheckErrorsInfo::anyError() {

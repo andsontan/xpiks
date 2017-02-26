@@ -360,7 +360,7 @@ namespace Common {
         QStringList descriptionWords = getDescriptionWords();
         foreach(const QString &word, descriptionWords) {
             if (results.value(word, true) == false) {
-                descriptionErrors.insert(word);
+                descriptionErrors.insert(word.toLower());
             }
         }
 
@@ -372,7 +372,7 @@ namespace Common {
         QStringList titleWords = getTitleWords();
         foreach(const QString &word, titleWords) {
             if (results.value(word, true) == false) {
-                titleErrors.insert(word);
+                titleErrors.insert(word.toLower());
             }
         }
 
