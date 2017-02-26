@@ -38,6 +38,12 @@
 #define LOG_DEBUG qDebug()
 #define LOG_INFO qInfo()
 
+#ifdef QT_DEBUG
+#define LOG_FOR_DEBUG qDebug()
+#else
+#define LOG_FOR_DEBUG if (1) {} else qDebug()
+#endif
+
 #ifdef CORE_TESTS
 #define LOG_CORE_TESTS qDebug()
 #else

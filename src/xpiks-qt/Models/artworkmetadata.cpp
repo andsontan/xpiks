@@ -38,7 +38,8 @@ namespace Models {
         m_ArtworkFilepath(filepath),
         m_ID(ID),
         m_MetadataFlags(0),
-        m_WarningsFlags(Common::WarningFlags::None)
+        m_WarningsFlags(Common::WarningFlags::None),
+        m_IsLockedForEditing(false)
     {
         m_MetadataModel.setSpellCheckInfo(&m_SpellCheckInfo);
         m_BackupTimer.setSingleShot(true);

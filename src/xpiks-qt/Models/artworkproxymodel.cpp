@@ -24,6 +24,7 @@
 #include "../Commands/commandmanager.h"
 #include "../Warnings/warningsservice.h"
 #include "imageartwork.h"
+#include "../Models/artitemsmodel.h"
 
 namespace Models {
     ArtworkProxyModel::ArtworkProxyModel(QObject *parent) :
@@ -39,6 +40,8 @@ namespace Models {
     }
 
     void ArtworkProxyModel::setDescription(const QString &description)  {
+        LOG_INFO << description;
+
         if (doSetDescription(description)) {
             signalDescriptionChanged();
 
@@ -49,6 +52,8 @@ namespace Models {
     }
 
     void ArtworkProxyModel::setTitle(const QString &title) {
+        LOG_INFO << title;
+
         if (doSetTitle(title)) {
             signalTitleChanged();
 
@@ -85,16 +90,29 @@ namespace Models {
     }
 
     void ArtworkProxyModel::afterSpellingErrorsFixedHandler() {
+        LOG_DEBUG << "#";
+#ifdef QT_DEBUG
+        auto *basicModel = qobject_cast<Common::BasicMetadataModel*>(sender());
+        Q_ASSERT(basicModel == getBasicMetadataModel());
+#endif
         // if squeezing took place after replace
         signalKeywordsCountChanged();
     }
 
     void ArtworkProxyModel::spellCheckErrorsChangedHandler() {
+        LOG_DEBUG << "#";
+#ifdef QT_DEBUG
+        auto *basicModel = qobject_cast<Common::BasicMetadataModel*>(sender());
+        Q_ASSERT(basicModel == getBasicMetadataModel());
+#endif
+
         emit descriptionChanged();
         emit titleChanged();
     }
 
     void ArtworkProxyModel::itemUnavailableHandler(int index) {
+        LOG_DEBUG << "#";
+
         if ((index == m_ArtworkOriginalIndex) && (m_ArtworkOriginalIndex != -1)) {
             LOG_INFO << "Item is not available anymore" << index;
             emit itemBecomeUnavailable();
@@ -164,13 +182,22 @@ namespace Models {
     }
 
     void ArtworkProxyModel::setSourceArtwork(QObject *artworkMetadata, int originalIndex) {
+        LOG_INFO << originalIndex;
         ArtworkMetadata *metadata = qobject_cast<ArtworkMetadata*>(artworkMetadata);
         Q_ASSERT(metadata != nullptr);
+
+#ifdef QT_DEBUG
+        if (originalIndex != -1) {
+            auto *itemsModel = m_CommandManager->getArtItemsModel();
+            Q_ASSERT(itemsModel->getArtwork(originalIndex) == metadata);
+        }
+#endif
 
         updateCurrentArtwork();
         disconnectCurrentArtwork();
 
         metadata->acquire();
+        metadata->setIsLockedForEditing(true);
         m_ArtworkMetadata = metadata;
         m_ArtworkOriginalIndex = originalIndex;
 
@@ -191,6 +218,7 @@ namespace Models {
     }
 
     void ArtworkProxyModel::resetModel() {
+        LOG_DEBUG << "#";
         updateCurrentArtwork();
         doResetModel();
     }
@@ -283,6 +311,8 @@ namespace Models {
     }
 
     void ArtworkProxyModel::updateCurrentArtwork() {
+        LOG_DEBUG << "#";
+
         if (m_ArtworkOriginalIndex != -1) {
             m_CommandManager->updateArtworks(QVector<int>() << m_ArtworkOriginalIndex);
         }
@@ -293,15 +323,20 @@ namespace Models {
     }
 
     void ArtworkProxyModel::doResetModel() {
+        LOG_DEBUG << "#";
         disconnectCurrentArtwork();
         m_ArtworkOriginalIndex = -1;
     }
 
     void ArtworkProxyModel::disconnectCurrentArtwork() {
+        LOG_DEBUG << "#";
         if (m_ArtworkMetadata != nullptr) {
             auto *basicModel = m_ArtworkMetadata->getBasicModel();
+            basicModel->disconnect(this);
             this->disconnect(basicModel);
+            m_ArtworkMetadata->setIsLockedForEditing(false);
             m_ArtworkMetadata->release();
+            LOG_DEBUG << "Metadata released";
         }
 
         m_ArtworkMetadata = nullptr;

@@ -940,7 +940,6 @@ ColumnLayout {
                                                         wordRightClickMenu.popupIfNeeded()
                                                     }
 
-
                                                     Keys.onTabPressed: {
                                                         if (columnLayout.isWideEnough) {
                                                             titleTextInput.forceActiveFocus()

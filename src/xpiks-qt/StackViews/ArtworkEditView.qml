@@ -79,6 +79,9 @@ Rectangle {
         titleTextInput.forceActiveFocus()
         titleTextInput.cursorPosition = titleTextInput.text.length
 
+        artworkProxy.initTitleHighlighting(titleTextInput.textDocument)
+        artworkProxy.initDescriptionHighlighting(descriptionTextInput.textDocument)
+
         savedTimer.start()
     }
 

@@ -720,18 +720,23 @@ namespace Models {
         }
 
         ArtworkMetadata *metadata = m_ArtworkList.at(row);
+        if (metadata->isLockedForEditing()) { return false; }
+
         int roleToUpdate = 0;
         bool needToUpdate = false;
         switch (role) {
             case EditArtworkDescriptionRole:
+            LOG_FOR_DEBUG << "item" << row << "description" << value;
                 needToUpdate = metadata->setDescription(value.toString());
                 roleToUpdate = ArtworkDescriptionRole;
                 break;
             case EditArtworkTitleRole:
+            LOG_FOR_DEBUG << "item" << row << "title" << value;
                 needToUpdate = metadata->setTitle(value.toString());
                 roleToUpdate = ArtworkTitleRole;
                 break;
             case EditIsSelectedRole:
+            LOG_FOR_DEBUG << "item" << row << "isSelected" << value;
                 needToUpdate = metadata->setIsSelected(value.toBool());
                 roleToUpdate = IsSelectedRole;
                 break;

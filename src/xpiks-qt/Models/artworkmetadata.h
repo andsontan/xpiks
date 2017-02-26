@@ -100,6 +100,9 @@ namespace Models {
         Common::BasicMetadataModel *getBasicModel() { return &m_MetadataModel; }
         const Common::BasicMetadataModel *getBasicModel() const { return &m_MetadataModel; }
 
+        bool isLockedForEditing() const { return m_IsLockedForEditing; }
+        void setIsLockedForEditing(bool value) { m_IsLockedForEditing = value; }
+
         virtual void clearModel();
         virtual bool clearKeywords() override;
         virtual bool editKeyword(int index, const QString &replacement) override;
@@ -210,6 +213,7 @@ namespace Models {
         qint64 m_ID;
         volatile int m_MetadataFlags;
         volatile Common::WarningFlags m_WarningsFlags;
+        volatile bool m_IsLockedForEditing;
     };
 }
 
