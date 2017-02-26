@@ -973,6 +973,8 @@ ColumnLayout {
                                                         } else if ((event.key === Qt.Key_Right) &&
                                                                    (descriptionTextInput.cursorPosition == descriptionTextInput.length)) {
                                                             event.accepted = true
+                                                        } else if ((event.key === Qt.Key_Down) || (event.key === Qt.Key_Up)) {
+                                                            event.accepted = true
                                                         }
                                                     }
 
@@ -1078,6 +1080,8 @@ ColumnLayout {
                                                             event.accepted = true
                                                         } else if ((event.key === Qt.Key_Right) &&
                                                                    (titleTextInput.cursorPosition == titleTextInput.length)) {
+                                                            event.accepted = true
+                                                        } else if ((event.key === Qt.Key_Down) || (event.key === Qt.Key_Up)) {
                                                             event.accepted = true
                                                         }
                                                     }
