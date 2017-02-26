@@ -34,6 +34,40 @@ class Hunspell;
 class QTextCodec;
 
 namespace SpellCheck {
+    class UserDictionary {
+    public:
+        const QStringList &getWords() const { return m_WordsList; }
+
+        bool contains(const QString &word) const { return m_WordsSet.contains(word.toLower()); }
+
+        void addWord(const QString &word) {
+            QString wordToAdd = word.toLower();
+            if (!m_WordsSet.contains(wordToAdd)) {
+                m_WordsSet.insert(wordToAdd);
+                m_WordsList.append(word);
+            }
+        }
+
+        void addWords(const QStringList &words) {
+            foreach (const QString &word, words) {
+                addWord(word);
+            }
+        }
+
+        void reset(const QStringList &words) {
+            clear();
+            addWords(words);
+        }
+
+        void clear() { m_WordsList.clear(); m_WordsSet.clear(); }
+        bool empty() const { return m_WordsSet.isEmpty(); }
+        int size() const { return m_WordsList.size(); }
+
+    private:
+        QSet<QString> m_WordsSet;
+        QStringList m_WordsList;
+    };
+
     class SpellCheckWorker : public QObject, public Common::ItemProcessingWorker<ISpellCheckItem>
     {
         Q_OBJECT
@@ -43,7 +77,7 @@ namespace SpellCheck {
         virtual ~SpellCheckWorker();
 
     public:
-        const QSet<QString> &getUserDictionary() const { return m_UserDictionary; }
+        const QStringList &getUserDictionary() const { return m_UserDictionary.getWords(); }
         QStringList retrieveCorrections(const QString &word);
         int getUserDictionarySize() const { return m_UserDictionary.size(); }
 
@@ -91,7 +125,7 @@ namespace SpellCheck {
     private:
         QHash<QString, QStringList> m_Suggestions;
         QSet<QString> m_WrongWords;
-        QSet<QString> m_UserDictionary;
+        UserDictionary m_UserDictionary;
         QReadWriteLock m_SuggestionsLock;
         QString m_Encoding;
         Hunspell *m_Hunspell;

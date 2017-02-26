@@ -194,12 +194,12 @@ namespace SpellCheck {
         }
     }
 
-    QSet<QString> SpellCheckerService::getUserDictionary() const {
+    QStringList SpellCheckerService::getUserDictionary() const {
         Q_ASSERT(m_SpellCheckWorker != NULL);
         if (m_SpellCheckWorker != NULL) {
             return m_SpellCheckWorker->getUserDictionary();
         } else {
-            return QSet<QString>();
+            return QStringList();
         }
     }
 

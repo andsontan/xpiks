@@ -70,7 +70,7 @@ namespace SpellCheck {
 #endif
 
     public:
-        QSet<QString> getUserDictionary() const;
+        QStringList getUserDictionary() const;
         void updateUserDictionary(const QStringList &words);
 
     public:

@@ -15,8 +15,8 @@ namespace SpellCheck {
     void UserDictEditModel::initializeModel() {
         LOG_DEBUG << "#";
         auto *spellCheckService = m_CommandManager->getSpellCheckerService();
-        auto keywordsSet = spellCheckService->getUserDictionary();
-        m_BasicModel.setKeywords(keywordsSet.toList());
+        auto keywordsList = spellCheckService->getUserDictionary();
+        m_BasicModel.setKeywords(keywordsList);
     }
 
     void UserDictEditModel::removeKeywordAt(int keywordIndex) {

@@ -301,12 +301,12 @@ namespace SpellCheck {
         if (userDictonaryFile.open(QIODevice::ReadOnly)) {
             QTextStream stream(&userDictonaryFile);
             for (QString word = stream.readLine(); !word.isEmpty(); word = stream.readLine()) {
-                m_UserDictionary.insert(word);
+                m_UserDictionary.addWord(word);
             }
 
             signalUserDictWordsCount();
             if (!m_UserDictionary.empty()) {
-                emit userDictUpdate(m_UserDictionary.toList(), false);
+                emit userDictUpdate(m_UserDictionary.getWords(), false);
             }
         } else {
             LOG_WARNING << "Cannot open" << m_UserDictionaryPath;
@@ -333,12 +333,12 @@ namespace SpellCheck {
     void SpellCheckWorker::changeUserDict(const QStringList &words, bool overwrite) {
         LOG_INFO << "Words to add:" << words;
 
-        QSet<QString> wordsToAdd;
+        QStringList wordsToAdd;
 
         for (auto &word: words) {
             const bool isOk = checkWordSpelling(word);
-            if ( overwrite || !isOk ) {
-                wordsToAdd.insert(word);
+            if (overwrite || !isOk) {
+                wordsToAdd.append(word);
             }
         }
 
@@ -347,17 +347,17 @@ namespace SpellCheck {
         if (overwrite) {
             m_UserDictionary.clear();
         }
-        m_UserDictionary.unite(wordsToAdd);
 
-        auto newWordsList = wordsToAdd.toList();
-        emit userDictUpdate(newWordsList, overwrite);
+        m_UserDictionary.addWords(wordsToAdd);
+
+        emit userDictUpdate(wordsToAdd, overwrite);
 
         QFile userDictonaryFile(m_UserDictionaryPath);
         auto mode = overwrite? QIODevice::WriteOnly : QIODevice::Append;
         if (userDictonaryFile.open(mode)) {
             QTextStream stream(&userDictonaryFile);
 
-            for (const QString &word: newWordsList) {
+            for (const QString &word: wordsToAdd) {
                 stream << word << endl;
             }
         } else {
