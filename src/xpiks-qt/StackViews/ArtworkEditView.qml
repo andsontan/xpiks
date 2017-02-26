@@ -376,9 +376,9 @@ Rectangle {
                 anchors.bottom: parent.bottom
                 property int imageMargin: 10
 
-                StyledBusyIndicator {
-                    width: parent.width/3
-                    height: parent.width/3
+                BusyIndicator {
+                    width: 40
+                    height: 40
                     anchors.centerIn: parent
                     running: previewImage.status == Image.Loading
                 }

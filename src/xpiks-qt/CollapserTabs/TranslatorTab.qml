@@ -201,13 +201,6 @@ ColumnLayout {
             opacity: 0.2
             visible: translationManager.isBusy
         }
-
-        StyledBusyIndicator {
-            width: parent.width/2
-            height: parent.width/2
-            anchors.centerIn: parent
-            running: translationManager.isBusy
-        }
     }
 
     Item {
