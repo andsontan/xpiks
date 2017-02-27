@@ -111,12 +111,10 @@ Item {
                 old_y = tmp.y;
             }
 
-            /*
-              TODO: fix when user moves window through flickable
             onPositionChanged: {
                 var old_xy = Common.movePopupInsideComponent(plainTextKeywordsComponent, dialogWindow, mouse, old_x, old_y);
                 old_x = old_xy[0]; old_y = old_xy[1];
-            }*/
+            }
         }
 
         RectangularGlow {
