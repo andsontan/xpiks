@@ -27,92 +27,92 @@
   <context>
     <name>ArtworkEditView</name>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="139"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="142"/>
       <source>Add to dictionary</source>
       <translation>Adicionar ao dicionário</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="146"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="149"/>
       <source>Expand as preset</source>
       <translation>Expandir como predefinição</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="171"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="174"/>
       <source>Insert preset</source>
       <translation>Inserir predefinição</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="195"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="198"/>
       <source>Copy to Quick Buffer</source>
       <translation>Copiar para o Quick Buffer</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="226"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="229"/>
       <source>Confirmation</source>
       <translation>Confirmação</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="227"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="230"/>
       <source>Clear all keywords?</source>
       <translation>Limpar todas as palavras-chave?</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="339"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="342"/>
       <source>Back</source>
       <translation>Voltar</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="352"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="355"/>
       <source>All changes are saved.</source>
       <translation>Todas as alterações guardadas.</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="449"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="452"/>
       <source>Edit</source>
       <translation>Editar</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="449"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="452"/>
       <source>Info</source>
       <translation>Info</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="515"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="518"/>
       <source>Title:</source>
       <translation>Título:</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="631"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="634"/>
       <source>Description:</source>
       <translation>Descrição:</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="757"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="760"/>
       <source>Keywords:</source>
       <translation>Palavras-chave:</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="901"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="905"/>
       <source>Fix spelling</source>
       <translation>Corrigir a ortografia</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="925"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="929"/>
       <source>Suggest</source>
       <translation>Sugerir</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="955"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="959"/>
       <source>Copy</source>
       <translation>Copiar</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="973"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="977"/>
       <source>Clear</source>
       <translation>Limpar</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="992"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="996"/>
       <source>&lt;u&gt;edit in plain text&lt;/u&gt;</source>
       <translation>&lt;u&gt;Editar em texto&lt;/u&gt;</translation>
     </message>
@@ -181,57 +181,57 @@
       <translation>(separadas por vírgula)</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="837"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="838"/>
       <source>&lt;u&gt;edit in plain text&lt;/u&gt;</source>
       <translation>&lt;u&gt;Editar em texto&lt;/u&gt;</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="873"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="874"/>
       <source>Fix spelling</source>
       <translation>Corrigir a ortografia</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="896"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="897"/>
       <source>Suggest</source>
       <translation>Sugerir</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="925"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="926"/>
       <source>Copy</source>
       <translation>Copiar</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="943"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="944"/>
       <source>Clear</source>
       <translation>Limpar</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="967"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="968"/>
       <source>Only append new keywords</source>
       <translation>Apenas acrescentar novas palavras-chave</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="994"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="995"/>
       <source>Copy to Quick Buffer</source>
       <translation>Copiar para o Quick Buffer</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="1006"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="1007"/>
       <source>Assign from selected</source>
       <translation>Atribuir segundo selecionado</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="1009"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="1010"/>
       <source>Combine metadata from selected artworks</source>
       <translation>Combinar metadata das imagens selecionadas</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="1017"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="1018"/>
       <source>Remove selected</source>
       <translation>Remover selecionadas</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="1019"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="1020"/>
       <source>Remove selected artworks from this dialog</source>
       <translation>Remover as imagens selecionadas</translation>
     </message>
@@ -490,7 +490,7 @@
       <translation>Localizar e substituir</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/FindAndReplace.qml" line="301"/>
+      <location filename="../../Dialogs/FindAndReplace.qml" line="300"/>
       <source>Cancel</source>
       <translation>Cancelar</translation>
     </message>
@@ -740,53 +740,53 @@
       <translation>Título:</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1110"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1113"/>
       <source>Keywords:</source>
       <translation>Palavras-chave:</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1269"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1273"/>
       <source>&lt;u&gt;edit in plain text&lt;/u&gt;</source>
       <translation>&lt;u&gt;Editar em texto&lt;/u&gt;</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1311"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1315"/>
       <source>Fix spelling</source>
       <translation>Corrigir a ortografia</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1336"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1340"/>
       <source>Suggest</source>
       <translation>Sugerir</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1366"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1370"/>
       <source>Copy</source>
       <translation>Copiar</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1385"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1389"/>
       <source>Clear</source>
       <translation>Limpar</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1435"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1439"/>
       <source>No items available.</source>
       <translation>Sem artigos disponíveis.</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1440"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1444"/>
       <source>Add files</source>
       <comment>link</comment>
       <translation>Adicionar ficheiros</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1452"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1456"/>
       <source>or</source>
       <translation>ou</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1457"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1461"/>
       <source>clear the filter</source>
       <translation>limpar o filtro</translation>
     </message>
@@ -889,32 +889,32 @@
       <translation>Tem certeza que deseja remover este artigo?</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PresetsEditDialog.qml" line="259"/>
+      <location filename="../../Dialogs/PresetsEditDialog.qml" line="266"/>
       <source>Add new Preset</source>
       <translation>Adicionar nova predefinição</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PresetsEditDialog.qml" line="282"/>
+      <location filename="../../Dialogs/PresetsEditDialog.qml" line="292"/>
       <source>Title:</source>
       <translation>Título:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PresetsEditDialog.qml" line="316"/>
+      <location filename="../../Dialogs/PresetsEditDialog.qml" line="326"/>
       <source>Untitled</source>
       <translation>Sem título</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PresetsEditDialog.qml" line="353"/>
+      <location filename="../../Dialogs/PresetsEditDialog.qml" line="363"/>
       <source>Keywords:</source>
       <translation>Palavras-chave:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PresetsEditDialog.qml" line="475"/>
+      <location filename="../../Dialogs/PresetsEditDialog.qml" line="484"/>
       <source>&lt;u&gt;edit in plain text&lt;/u&gt;</source>
       <translation>&lt;u&gt;Editar em texto&lt;/u&gt;</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PresetsEditDialog.qml" line="518"/>
+      <location filename="../../Dialogs/PresetsEditDialog.qml" line="527"/>
       <source>Close</source>
       <translation>Fechar</translation>
     </message>
@@ -970,7 +970,7 @@
   <context>
     <name>QObject</name>
     <message>
-      <location filename="../../KeywordsPresets/presetkeywordsmodel.cpp" line="390"/>
+      <location filename="../../KeywordsPresets/presetkeywordsmodel.cpp" line="392"/>
       <location filename="../../KeywordsPresets/presetkeywordsmodel.h" line="36"/>
       <location filename="../../Models/uploadinfo.h" line="60"/>
       <location filename="../../Models/uploadinfo.h" line="68"/>
@@ -1600,7 +1600,7 @@ As senhas dos hospedeiros de upload serão expurgadas.</translation>
       <translation>Adicionar dicionário...</translation>
     </message>
     <message>
-      <location filename="../../CollapserTabs/TranslatorTab.qml" line="224"/>
+      <location filename="../../CollapserTabs/TranslatorTab.qml" line="217"/>
       <source>Show more</source>
       <translation>Ver mais</translation>
     </message>

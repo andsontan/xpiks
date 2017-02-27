@@ -27,92 +27,92 @@
   <context>
     <name>ArtworkEditView</name>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="139"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="142"/>
       <source>Add to dictionary</source>
       <translation>Додати до словника</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="146"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="149"/>
       <source>Expand as preset</source>
       <translation>Розгорнути як шаблон</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="171"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="174"/>
       <source>Insert preset</source>
       <translation>Вставити шаблон</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="195"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="198"/>
       <source>Copy to Quick Buffer</source>
       <translation>Скопіювати у Швидкий Буфер</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="226"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="229"/>
       <source>Confirmation</source>
       <translation>Підтвердження</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="227"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="230"/>
       <source>Clear all keywords?</source>
       <translation>Стерти всі слова?</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="339"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="342"/>
       <source>Back</source>
       <translation>Назад</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="352"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="355"/>
       <source>All changes are saved.</source>
       <translation>Всі зміни збережено.</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="449"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="452"/>
       <source>Edit</source>
       <translation>Редагування</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="449"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="452"/>
       <source>Info</source>
       <translation>Інформація</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="515"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="518"/>
       <source>Title:</source>
       <translation>Назва:</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="631"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="634"/>
       <source>Description:</source>
       <translation>Опис:</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="757"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="760"/>
       <source>Keywords:</source>
       <translation>Ключові слова:</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="901"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="905"/>
       <source>Fix spelling</source>
       <translation>Орфографія</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="925"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="929"/>
       <source>Suggest</source>
       <translation>Автопідбір</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="955"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="959"/>
       <source>Copy</source>
       <translation>Копіювати</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="973"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="977"/>
       <source>Clear</source>
       <translation>Очистити</translation>
     </message>
     <message>
-      <location filename="../../StackViews/ArtworkEditView.qml" line="992"/>
+      <location filename="../../StackViews/ArtworkEditView.qml" line="996"/>
       <source>&lt;u&gt;edit in plain text&lt;/u&gt;</source>
       <translation>&lt;u&gt;редагувати як текст&lt;/u&gt;</translation>
     </message>
@@ -181,57 +181,57 @@
       <translation>(розділені комами)</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="837"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="838"/>
       <source>&lt;u&gt;edit in plain text&lt;/u&gt;</source>
       <translation>&lt;u&gt;редагувати як текст&lt;/u&gt;</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="873"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="874"/>
       <source>Fix spelling</source>
       <translation>Орфографія</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="896"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="897"/>
       <source>Suggest</source>
       <translation>Автопідбір</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="925"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="926"/>
       <source>Copy</source>
       <translation>Копіювати</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="943"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="944"/>
       <source>Clear</source>
       <translation>Очистити</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="967"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="968"/>
       <source>Only append new keywords</source>
       <translation>Лише додати нові ключові слова</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="994"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="995"/>
       <source>Copy to Quick Buffer</source>
       <translation>Скопіювати у Швидкий Буфер</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="1006"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="1007"/>
       <source>Assign from selected</source>
       <translation>Взяти із вибраного</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="1009"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="1010"/>
       <source>Combine metadata from selected artworks</source>
       <translation>Комбінувати метадані із вибраних файлів</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="1017"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="1018"/>
       <source>Remove selected</source>
       <translation>Вилучити вибрані</translation>
     </message>
     <message>
-      <location filename="../../StackViews/CombinedEditView.qml" line="1019"/>
+      <location filename="../../StackViews/CombinedEditView.qml" line="1020"/>
       <source>Remove selected artworks from this dialog</source>
       <translation>Вилучити вибрані файли з цього діалогу</translation>
     </message>
@@ -490,7 +490,7 @@
       <translation>Знайти та замінити</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/FindAndReplace.qml" line="301"/>
+      <location filename="../../Dialogs/FindAndReplace.qml" line="300"/>
       <source>Cancel</source>
       <translation>Скасувати</translation>
     </message>
@@ -740,53 +740,53 @@
       <translation>Назва:</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1110"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1113"/>
       <source>Keywords:</source>
       <translation>Ключові слова:</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1269"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1273"/>
       <source>&lt;u&gt;edit in plain text&lt;/u&gt;</source>
       <translation>&lt;u&gt;редагувати як текст&lt;/u&gt;</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1311"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1315"/>
       <source>Fix spelling</source>
       <translation>Орфографія</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1336"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1340"/>
       <source>Suggest</source>
       <translation>Автопідбір</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1366"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1370"/>
       <source>Copy</source>
       <translation>Копіювати</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1385"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1389"/>
       <source>Clear</source>
       <translation>Очистити</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1435"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1439"/>
       <source>No items available.</source>
       <translation>Немає жодних файлів.</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1440"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1444"/>
       <source>Add files</source>
       <comment>link</comment>
       <translation>Додайте файли</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1452"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1456"/>
       <source>or</source>
       <translation>або</translation>
     </message>
     <message>
-      <location filename="../../StackViews/MainGrid.qml" line="1457"/>
+      <location filename="../../StackViews/MainGrid.qml" line="1461"/>
       <source>clear the filter</source>
       <translation>очистіть фільтр</translation>
     </message>
@@ -889,32 +889,32 @@
       <translation>Видалити цей елемент?</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PresetsEditDialog.qml" line="259"/>
+      <location filename="../../Dialogs/PresetsEditDialog.qml" line="266"/>
       <source>Add new Preset</source>
       <translation>Додати шаблон</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PresetsEditDialog.qml" line="282"/>
+      <location filename="../../Dialogs/PresetsEditDialog.qml" line="292"/>
       <source>Title:</source>
       <translation>Назва:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PresetsEditDialog.qml" line="316"/>
+      <location filename="../../Dialogs/PresetsEditDialog.qml" line="326"/>
       <source>Untitled</source>
       <translation>Без назви</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PresetsEditDialog.qml" line="353"/>
+      <location filename="../../Dialogs/PresetsEditDialog.qml" line="363"/>
       <source>Keywords:</source>
       <translation>Ключові слова:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PresetsEditDialog.qml" line="475"/>
+      <location filename="../../Dialogs/PresetsEditDialog.qml" line="484"/>
       <source>&lt;u&gt;edit in plain text&lt;/u&gt;</source>
       <translation>&lt;u&gt;редагувати як текст&lt;/u&gt;</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PresetsEditDialog.qml" line="518"/>
+      <location filename="../../Dialogs/PresetsEditDialog.qml" line="527"/>
       <source>Close</source>
       <translation>Закрити</translation>
     </message>
@@ -970,7 +970,7 @@
   <context>
     <name>QObject</name>
     <message>
-      <location filename="../../KeywordsPresets/presetkeywordsmodel.cpp" line="390"/>
+      <location filename="../../KeywordsPresets/presetkeywordsmodel.cpp" line="392"/>
       <location filename="../../KeywordsPresets/presetkeywordsmodel.h" line="36"/>
       <location filename="../../Models/uploadinfo.h" line="60"/>
       <location filename="../../Models/uploadinfo.h" line="68"/>
@@ -1600,7 +1600,7 @@ All upload hosts' passwords will be purged.</source>
       <translation>Додати словник...</translation>
     </message>
     <message>
-      <location filename="../../CollapserTabs/TranslatorTab.qml" line="224"/>
+      <location filename="../../CollapserTabs/TranslatorTab.qml" line="217"/>
       <source>Show more</source>
       <translation>Більше</translation>
     </message>
