@@ -548,11 +548,11 @@ namespace Common {
                 QString replacement = Helpers::doSanitizeKeyword(replaced);
 
                 if (!this->editKeywordUnsafe(i, replacement)) {
-                    if (m_KeywordsSet.contains(replacement.toLower())) {
-                        LOG_INFO << "Replacing" << internal << "to" << replacement << "creates a duplicate";
-                        indicesToRemove.append(i);
-                    } else if (replacement.isEmpty()) {
+                    if (replacement.isEmpty()) {
                         LOG_INFO << "Replaced" << internal << "to empty";
+                        indicesToRemove.append(i);
+                    } else if (m_KeywordsSet.contains(replacement.toLower())) {
+                        LOG_INFO << "Replacing" << internal << "to" << replacement << "creates a duplicate";
                         indicesToRemove.append(i);
                     }
                 } else {
