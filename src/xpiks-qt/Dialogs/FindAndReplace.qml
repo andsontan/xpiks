@@ -290,6 +290,7 @@ Item {
                     StyledButton {
                         id: replaceButton
                         text: i18.n + qsTr("Find and replace")
+                        enabled: (replaceFromTextInput.length > 0)
                         width: 150
                         onClicked: {
                             launchReplacePreview()

@@ -243,10 +243,6 @@ namespace Common {
         LOG_INTEGR_TESTS_OR_DEBUG << replaceWhat << "->" << replaceTo << "with flags:" << (int)flags;
         Q_ASSERT(!replaceWhat.isEmpty());
         Q_ASSERT(((int)flags & (int)Common::SearchFlags::Metadata) != 0);
-        if (replaceTo.trimmed().isEmpty() || replaceWhat.trimmed().isEmpty()) {
-            LOG_WARNING << "Replacing to/from empty in keywords is not yet supported";
-            return false;
-        }
 
         bool anyChanged = false;
 
@@ -551,10 +547,14 @@ namespace Common {
 
                 QString replacement = Helpers::doSanitizeKeyword(replaced);
 
-                if (!this->editKeywordUnsafe(i, replacement) &&
-                    m_KeywordsSet.contains(replacement.toLower())) {
-                    LOG_INFO << "Replacing" << internal << "to" << replacement << "creates a duplicate";
-                    indicesToRemove.append(i);
+                if (!this->editKeywordUnsafe(i, replacement)) {
+                    if (m_KeywordsSet.contains(replacement.toLower())) {
+                        LOG_INFO << "Replacing" << internal << "to" << replacement << "creates a duplicate";
+                        indicesToRemove.append(i);
+                    } else if (replacement.isEmpty()) {
+                        LOG_INFO << "Replaced" << internal << "to empty";
+                        indicesToRemove.append(i);
+                    }
                 } else {
                     QModelIndex j = this->index(i);
                     emit dataChanged(j, j, QVector<int>() << KeywordRole);

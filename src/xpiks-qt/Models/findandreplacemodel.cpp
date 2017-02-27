@@ -79,6 +79,12 @@ namespace Models {
         LOG_INFO << "Flags:" << searchFlagsToString(m_Flags);
         LOG_INFO << "ReplaceFrom: [" << m_ReplaceFrom << "]";
 
+        Q_ASSERT(!m_ReplaceFrom.isEmpty());
+        if (m_ReplaceFrom.isEmpty()) {
+            LOG_WARNING << "Replace from is empty";
+            return;
+        }
+
         normalizeSearchCriteria();
 
         Models::FilteredArtItemsProxyModel *filteredItemsModel = m_CommandManager->getFilteredArtItemsModel();
@@ -378,11 +384,6 @@ namespace Models {
     }
 
     void FindAndReplaceModel::normalizeSearchCriteria() {
-        if (m_ReplaceTo.trimmed().isEmpty()) {
-            LOG_DEBUG << "Setting keywords search to false";
-            setSearchInKeywords(false);
-        }
-
         if (m_ReplaceFrom.trimmed().isEmpty()) {
             LOG_DEBUG << "Setting whole words search to false";
             setSearchWholeWords(false);

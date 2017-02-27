@@ -156,7 +156,6 @@ namespace Models {
         void setItemSelected(int index, bool selected) {
             m_ArtworksList[index].setSelected(selected);
         }
-
 #endif
 
     public:

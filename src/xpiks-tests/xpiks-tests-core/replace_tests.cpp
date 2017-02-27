@@ -414,3 +414,41 @@ void ReplaceTests::replaceSpacesToSpacesTest() {
     }
 }
 
+void ReplaceTests::replaceKeywordsToEmptyTest() {
+    const int itemsToGenerate = 5;
+    DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
+
+    QString replaceFrom = " vector ";
+    QString replaceTo = " ";
+
+    auto flags = Common::SearchFlags::CaseSensitive |
+            Common::SearchFlags::Description |
+            Common::SearchFlags::Title |
+            Common::SearchFlags::Keywords |
+            Common::SearchFlags::IncludeSpaces;
+
+    for (int i = 0; i < itemsToGenerate; i++) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+        metadata->initialize(QString("A Vector can be found here"), QString("And vector here"),
+                             QStringList() << "a vector here" << " vector ");
+    }
+
+    auto artWorksInfo = filteredItemsModel.getSearchablePreviewOriginalItems(replaceFrom, flags);
+    std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(
+                new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
+    auto result = commandManagerMock.processCommand(replaceCommand);
+
+    for (int i = 0; i < itemsToGenerate; i++) {
+        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
+        QCOMPARE(metadata->getDescription(), QString("And here"));
+        QCOMPARE(metadata->getTitle(), QString("A Vector can be found here"));
+
+        QStringList test = metadata->getKeywords();
+        QStringList gold;
+        gold << "ahere";
+
+        QCOMPARE(gold, test);
+        QVERIFY(metadata->isModified());
+    }
+}
+

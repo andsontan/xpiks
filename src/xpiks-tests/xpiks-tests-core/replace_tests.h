@@ -20,6 +20,7 @@ private slots:
     void replaceToEmptyDoesnotWorkForKeywordsTest();
     void replaceSpacesToWordsTest();
     void replaceSpacesToSpacesTest();
+    void replaceKeywordsToEmptyTest();
 };
 
 #endif // REPLACETEST_H
