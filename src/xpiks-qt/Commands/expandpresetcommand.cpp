@@ -24,6 +24,7 @@
 #include "../KeywordsPresets/presetkeywordsmodel.h"
 #include "../UndoRedo/modifyartworkshistoryitem.h"
 #include "../Models/artitemsmodel.h"
+#include "../Helpers/stringhelper.h"
 
 namespace Commands {
     ExpandPresetCommand::~ExpandPresetCommand() {
@@ -46,14 +47,27 @@ namespace Commands {
             indexToUpdate = m_MetadataElement.getOriginalIndex();
             artworksBackups.emplace_back(metadata);
 
-            if (m_KeywordIndex != -1) {
-                if (metadata->expandPreset(m_KeywordIndex, keywords)) {
-                    affectedArtworks.append(metadata);
+            bool useMerging = false;
+            QStringList artworkKeywords;
+
+#ifdef KEYWORDS_TAGS
+            artworkKeywords = metadata->getKeywords();
+            useMerging = Helpers::hasTaggedKeywords(keywords) || Helpers::hasTaggedKeywords(artworkKeywords);
+#endif
+
+            if (!useMerging) {
+                if (m_KeywordIndex != -1) {
+                    if (metadata->expandPreset(m_KeywordIndex, keywords)) {
+                        affectedArtworks.append(metadata);
+                    }
+                } else {
+                    if (metadata->appendKeywords(keywords)) {
+                        affectedArtworks.append(metadata);
+                    }
                 }
             } else {
-                if (metadata->appendKeywords(keywords)) {
-                    affectedArtworks.append(metadata);
-                }
+                QStringList merged = Helpers::mergeTaggedLists(artworkKeywords, keywords);
+                metadata->setKeywords(merged);
             }
         }
 
