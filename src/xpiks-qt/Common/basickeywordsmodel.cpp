@@ -539,6 +539,7 @@ namespace Common {
             const bool hasMatch = wholeWords ?
                                   Helpers::containsWholeWords(internal, replaceWhat, caseSensivity) :
                                   internal.contains(replaceWhat, caseSensivity);
+            LOG_FOR_TESTS << "[" << internal << "] has match [" << replaceWhat << "] =" << hasMatch;
 
             if (hasMatch) {
                 QString replaced = wholeWords ?

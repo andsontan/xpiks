@@ -17,7 +17,6 @@ private slots:
     void replaceToNothingTest();
     void spacesReplaceCaseSensitiveTest();
     void spaceReplaceCaseSensitiveNoReplaceTest();
-    void replaceToEmptyDoesnotWorkForKeywordsTest();
     void replaceSpacesToWordsTest();
     void replaceSpacesToSpacesTest();
     void replaceKeywordsToEmptyTest();

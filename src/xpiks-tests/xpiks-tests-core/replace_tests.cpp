@@ -316,44 +316,6 @@ void ReplaceTests::spaceReplaceCaseSensitiveNoReplaceTest() {
     }
 }
 
-void ReplaceTests::replaceToEmptyDoesnotWorkForKeywordsTest() {
-    const int itemsToGenerate = 5;
-    DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
-
-    QString replaceFrom = " vector ";
-    QString replaceTo = " ";
-    const QString keyword = "a vector found here";
-
-    auto flags = Common::SearchFlags::Description |
-            Common::SearchFlags::Title |
-            Common::SearchFlags::Keywords |
-            Common::SearchFlags::IncludeSpaces;
-
-    for (int i = 0; i < itemsToGenerate; i++) {
-        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
-        metadata->initialize(QString("A can be found here"), QString("And here"),
-                             QStringList() << keyword);
-    }
-
-    auto artWorksInfo = filteredItemsModel.getSearchablePreviewOriginalItems(replaceFrom, flags);
-    std::shared_ptr<Commands::FindAndReplaceCommand> replaceCommand(
-                new Commands::FindAndReplaceCommand(artWorksInfo, replaceFrom, replaceTo, flags));
-    auto result = commandManagerMock.processCommand(replaceCommand);
-
-    for (int i = 0; i < itemsToGenerate; i++) {
-        Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
-        QCOMPARE(metadata->getDescription(), QString("And here"));
-        QCOMPARE(metadata->getTitle(), QString("A can be found here"));
-
-        QStringList test = metadata->getKeywords();
-        QStringList gold;
-        gold << keyword;
-
-        QCOMPARE(gold, test);
-        QVERIFY(!metadata->isModified());
-    }
-}
-
 void ReplaceTests::replaceSpacesToWordsTest() {
     const int itemsToGenerate = 5;
     DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
@@ -418,7 +380,7 @@ void ReplaceTests::replaceKeywordsToEmptyTest() {
     const int itemsToGenerate = 5;
     DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
 
-    QString replaceFrom = " vector ";
+    QString replaceFrom = "vector";
     QString replaceTo = " ";
 
     auto flags = Common::SearchFlags::CaseSensitive |
@@ -440,12 +402,12 @@ void ReplaceTests::replaceKeywordsToEmptyTest() {
 
     for (int i = 0; i < itemsToGenerate; i++) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
-        QCOMPARE(metadata->getDescription(), QString("And here"));
+        QCOMPARE(metadata->getDescription(), QString("And   here"));
         QCOMPARE(metadata->getTitle(), QString("A Vector can be found here"));
 
         QStringList test = metadata->getKeywords();
         QStringList gold;
-        gold << "ahere";
+        gold << "a here";
 
         QCOMPARE(gold, test);
         QVERIFY(metadata->isModified());
