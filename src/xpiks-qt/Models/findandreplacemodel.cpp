@@ -79,6 +79,8 @@ namespace Models {
         LOG_INFO << "Flags:" << searchFlagsToString(m_Flags);
         LOG_INFO << "ReplaceFrom: [" << m_ReplaceFrom << "]";
 
+        normalizeSearchCriteria();
+
         Models::FilteredArtItemsProxyModel *filteredItemsModel = m_CommandManager->getFilteredArtItemsModel();
         m_ArtworksList = std::move(filteredItemsModel->getSearchablePreviewOriginalItems(m_ReplaceFrom, m_Flags));
 
@@ -373,5 +375,17 @@ namespace Models {
         Common::SetFlag(m_Flags, Common::SearchFlags::Keywords);
         Common::SetFlag(m_Flags, Common::SearchFlags::IncludeSpaces);
         // Common::SetFlag(m_Flags, Common::SearchFlags::ExactMatch);
+    }
+
+    void FindAndReplaceModel::normalizeSearchCriteria() {
+        if (m_ReplaceTo.trimmed().isEmpty()) {
+            LOG_DEBUG << "Setting keywords search to false";
+            setSearchInKeywords(false);
+        }
+
+        if (m_ReplaceFrom.trimmed().isEmpty()) {
+            LOG_DEBUG << "Setting whole words search to false";
+            setSearchWholeWords(false);
+        }
     }
 }

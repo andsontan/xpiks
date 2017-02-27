@@ -13,6 +13,13 @@ private slots:
     void caseSensitiveTest();
     void replaceTitleTest();
     void replaceKeywordsTest();
+    void replaceToSpaceTest();
+    void replaceToNothingTest();
+    void spacesReplaceCaseSensitiveTest();
+    void spaceReplaceCaseSensitiveNoReplaceTest();
+    void replaceToEmptyDoesnotWorkForKeywordsTest();
+    void replaceSpacesToWordsTest();
+    void replaceSpacesToSpacesTest();
 };
 
 #endif // REPLACETEST_H

@@ -68,6 +68,12 @@
 #define LOG_WARNING qWarning()
 #endif
 
+#if defined(INTEGRATION_TESTS) || defined(CORE_TESTS)
+#define LOG_FOR_TESTS qDebug()
+#else
+#define LOG_FOR_TESTS if (1) {} else qDebug()
+#endif
+
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
 #define XPIKS_DATA_LOCATION_TYPE QStandardPaths::AppDataLocation
 #define XPIKS_USERDATA_PATH QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);

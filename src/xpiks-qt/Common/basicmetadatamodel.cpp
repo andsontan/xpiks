@@ -218,7 +218,9 @@ namespace Common {
     bool BasicMetadataModel::replace(const QString &replaceWhat, const QString &replaceTo, SearchFlags flags) {
         LOG_INFO << "[" << replaceWhat << "] -> [" << replaceTo << "] with flags:" << (int)flags;
         Q_ASSERT(!replaceWhat.isEmpty());
+#ifndef CORE_TESTS
         Q_ASSERT(!replaceTo.isEmpty());
+#endif
         Q_ASSERT(((int)flags & (int)Common::SearchFlags::Metadata) != 0);
         bool anyChanged = false;
 

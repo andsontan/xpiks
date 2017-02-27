@@ -59,6 +59,7 @@ namespace Commands {
 
             bool succeeded = metadata->replace(m_ReplaceWhat, m_ReplaceTo, m_Flags);
             if (succeeded) {
+                LOG_FOR_TESTS << "Succeeded";
                 itemsToSave.append(metadata);
                 indicesToUpdate.append(index);
             } else {

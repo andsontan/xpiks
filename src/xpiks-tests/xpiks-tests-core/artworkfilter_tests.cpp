@@ -62,6 +62,19 @@ void ArtworkFilterTests::strictSearchTest() {
     QVERIFY(Helpers::containsPartsSearch("!", &metadata, false));
 }
 
+void ArtworkFilterTests::searchWithSpaceTest() {
+    Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
+
+    metadata.setTitle("A vector here");
+    metadata.setDescription("Vector there");
+    auto flags = Common::SearchFlags::IncludeSpaces | Common::SearchFlags::Metadata;
+
+    QVERIFY(Helpers::hasSearchMatch(" vector ", &metadata, flags));
+
+    metadata.setTitle("");
+    QVERIFY(!Helpers::hasSearchMatch(" vector ", &metadata, flags));
+}
+
 void ArtworkFilterTests::caseSensitiveKeywordSearchTest() {
     Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
     metadata.setKeywords(QStringList() << "keYwOrd" << "keYword");

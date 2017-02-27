@@ -44,11 +44,12 @@ namespace Helpers {
         Qt::CaseSensitivity caseSensitivity = Common::HasFlag(flags, Common::SearchFlags::CaseSensitive) ?
                     Qt::CaseSensitive : Qt::CaseInsensitive;
         const bool wholeWords = Common::HasFlag(flags, Common::SearchFlags::WholeWords);
+        const bool searchOnlySpaces = m_ReplaceFrom.trimmed().isEmpty();
 
         QColor highlighColor = m_ColorsModel->artworkModifiedColor();
         m_Format.setBackground(highlighColor);
 
-        if (!wholeWords) {
+        if (!wholeWords || searchOnlySpaces) {
             while (pos != -1) {
                 pos = text.indexOf(m_ReplaceFrom, pos, caseSensitivity);
                 if (pos >= 0) {

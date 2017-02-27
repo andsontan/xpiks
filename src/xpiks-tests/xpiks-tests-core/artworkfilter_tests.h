@@ -13,6 +13,7 @@ private slots:
     void searchByTitleTest();
     void searchByDescriptionTest();
     void strictSearchTest();
+    void searchWithSpaceTest();
     void caseSensitiveKeywordSearchTest();
     void cantFindWithFilterDescriptionTest();
     void cantFindWithFilterTitleTest();

@@ -57,20 +57,16 @@ namespace Models {
         int getArtworksCount() const { return (int)m_ArtworksList.size(); }
 
         void setReplaceFrom(const QString &value) {
-            QString valueTrimmed = value.trimmed();
-
-            if (valueTrimmed != m_ReplaceFrom) {
-                m_ReplaceFrom = valueTrimmed;
-                emit replaceFromChanged(valueTrimmed);
+            if (value != m_ReplaceFrom) {
+                m_ReplaceFrom = value;
+                emit replaceFromChanged(value);
             }
         }
 
         void setReplaceTo(const QString &value) {
-            QString valueTrimmed = value.trimmed();
-
-            if (valueTrimmed != m_ReplaceTo) {
-                m_ReplaceTo = valueTrimmed;
-                emit replaceToChanged(valueTrimmed);
+            if (value != m_ReplaceTo) {
+                m_ReplaceTo = value;
+                emit replaceToChanged(value);
             }
         }
 
@@ -188,6 +184,7 @@ namespace Models {
         QString filterText(const QString &text);
         void setAllSelected(bool isSelected);
         void initDefaultFlags();
+        void normalizeSearchCriteria();
 
     private:
         std::vector<Models::PreviewMetadataElement> m_ArtworksList;
