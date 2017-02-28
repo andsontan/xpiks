@@ -614,6 +614,8 @@ Rectangle {
                                             }
                                         } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
                                             event.accepted = true
+                                        } else if ((event.key === Qt.Key_Down) || (event.key === Qt.Key_Up)) {
+                                            event.accepted = true
                                         }
                                     }
                                 }
@@ -738,6 +740,8 @@ Rectangle {
                                                 event.accepted = true
                                             }
                                         } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                                            event.accepted = true
+                                        } else if ((event.key === Qt.Key_Down) || (event.key === Qt.Key_Up)) {
                                             event.accepted = true
                                         }
                                     }
