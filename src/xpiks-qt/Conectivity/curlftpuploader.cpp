@@ -212,7 +212,7 @@ namespace Conectivity {
 
     QString generateRemoteAddress(const QString &host, const QString &filepath, UploadContext *context) {
         QFileInfo fi(filepath);
-        QString extension = fi.completeSuffix().toLower();
+        QString extension = fi.suffix().toLower();
         QString filename = fi.fileName();
         QString result;
 

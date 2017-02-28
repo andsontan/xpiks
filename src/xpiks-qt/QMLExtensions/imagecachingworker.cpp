@@ -102,7 +102,7 @@ namespace QMLExtensions {
         QImage resizedImage = img.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
         QFileInfo fi(originalPath);
-        QString pathHash = getPathHash(originalPath) + "." + fi.completeSuffix();
+        QString pathHash = getPathHash(originalPath) + "." + fi.suffix();
         QString cachedFilepath = QDir::cleanPath(m_ImagesCacheDir + QDir::separator() + pathHash);
 
         if (resizedImage.save(cachedFilepath)) {
