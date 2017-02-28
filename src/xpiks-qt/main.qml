@@ -1037,7 +1037,7 @@ ApplicationWindow {
 
             Behavior on anchors.leftMargin {
                 NumberAnimation {
-                    duration: 200
+                    duration: 100
                     easing.type: Easing.InQuad
                 }
             }
