@@ -72,7 +72,13 @@ namespace KeywordsPresets {
         if (!strictMatch) {
             for (size_t i = 0; i < size; ++i) {
                 PresetModel *preset = m_PresetsList[i];
-                if (preset->m_PresetName.contains(name, Qt::CaseInsensitive)) {
+
+                if (QString::compare(name, preset->m_PresetName, Qt::CaseInsensitive) == 0) {
+                    // full match always overrides
+                    foundIndex = (int)i;
+                    anyError = false;
+                    break;
+                } else if (preset->m_PresetName.contains(name, Qt::CaseInsensitive)) {
                     if (foundIndex != -1) {
                         anyError = true;
                         foundIndex = -1;
@@ -159,7 +165,18 @@ namespace KeywordsPresets {
         beginInsertRows(QModelIndex(), lastIndex, lastIndex);
         m_PresetsList.push_back(new PresetModel());
         endInsertRows();
+    }    
+
+#if defined(CORE_TESTS) || defined(INTEGARTION_TESTS)
+    void PresetKeywordsModel::addItem(const QString &presetName, const QStringList &keywords) {
+        LOG_DEBUG << "#";
+        int lastIndex = getPresetsCount();
+
+        beginInsertRows(QModelIndex(), lastIndex, lastIndex);
+        m_PresetsList.push_back(new PresetModel(presetName, keywords));
+        endInsertRows();
     }
+#endif
 
     void PresetKeywordsModel::editKeyword(int index, int keywordIndex, const QString &replacement) {
         LOG_INFO << "item" << index << "keyword" << keywordIndex << "replacement" << replacement;

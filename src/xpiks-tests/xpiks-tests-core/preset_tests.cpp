@@ -119,3 +119,53 @@ void PresetTests::appendFromPresetWithDublicates()
     QCOMPARE(metadata->getKeywords(), finalString);
     QVERIFY(metadata->isModified());
 }
+
+void PresetTests::findPresetByNameTest() {
+    const int itemsToGenerate = 5;
+    DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
+    presetKeywordsModel.addItem("man", QStringList() << "some" << "keywords");
+    presetKeywordsModel.addItem("woman", QStringList() << "other" << "keywords");
+
+    int index;
+
+    QVERIFY(presetKeywordsModel.tryFindSinglePresetByName("man", false, index)); QCOMPARE(index, 0);
+    QVERIFY(presetKeywordsModel.tryFindSinglePresetByName("woman", false, index)); QCOMPARE(index, 1);
+
+    QVERIFY(presetKeywordsModel.tryFindSinglePresetByName("mAn", false, index)); QCOMPARE(index, 0);
+    QVERIFY(presetKeywordsModel.tryFindSinglePresetByName("WomaN", false, index)); QCOMPARE(index, 1);
+
+    QVERIFY(!presetKeywordsModel.tryFindSinglePresetByName("an", false, index));
+}
+
+void PresetTests::strictFindPresetByNameTest() {
+    const int itemsToGenerate = 5;
+    DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
+    presetKeywordsModel.addItem("Man", QStringList() << "some" << "keywords");
+    presetKeywordsModel.addItem("Woman", QStringList() << "other" << "keywords");
+
+    int index;
+
+    QVERIFY(!presetKeywordsModel.tryFindSinglePresetByName("man", true, index));
+    QVERIFY(!presetKeywordsModel.tryFindSinglePresetByName("woman", true, index));
+
+    QVERIFY(presetKeywordsModel.tryFindSinglePresetByName("Man", true, index)); QCOMPARE(index, 0);
+    QVERIFY(presetKeywordsModel.tryFindSinglePresetByName("Woman", true, index)); QCOMPARE(index, 1);
+}
+
+void PresetTests::findPresetWithLongNamesByNameTest() {
+    const int itemsToGenerate = 5;
+    DECLARE_MODELS_AND_GENERATE(itemsToGenerate);
+    presetKeywordsModel.addItem("young woman", QStringList() << "some" << "keywords");
+    presetKeywordsModel.addItem("old woman", QStringList() << "other" << "keywords");
+
+    int index;
+
+    QVERIFY(!presetKeywordsModel.tryFindSinglePresetByName("woman", false, index));
+    QVERIFY(!presetKeywordsModel.tryFindSinglePresetByName("woman", true, index));
+
+    QVERIFY(presetKeywordsModel.tryFindSinglePresetByName("young", false, index)); QCOMPARE(index, 0);
+    QVERIFY(presetKeywordsModel.tryFindSinglePresetByName("old", false, index)); QCOMPARE(index, 1);
+
+    QVERIFY(presetKeywordsModel.tryFindSinglePresetByName("Young woman", false, index)); QCOMPARE(index, 0);
+    QVERIFY(presetKeywordsModel.tryFindSinglePresetByName("old Woman", false, index)); QCOMPARE(index, 1);
+}

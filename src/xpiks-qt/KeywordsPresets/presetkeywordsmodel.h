@@ -96,7 +96,12 @@ namespace KeywordsPresets {
 
     public:
         Q_INVOKABLE void removeItem(int row);
+
         Q_INVOKABLE void addItem();
+#if defined(CORE_TESTS) || defined(INTEGARTION_TESTS)
+        void addItem(const QString &presetName, const QStringList &keywords);
+#endif
+
         Q_INVOKABLE void editKeyword(int index, int keywordIndex, const QString &replacement);
         Q_INVOKABLE void removeKeywordAt(int index, int keywordIndex);
         Q_INVOKABLE void removeLastKeyword(int index);
