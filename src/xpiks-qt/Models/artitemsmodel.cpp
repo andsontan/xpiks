@@ -994,7 +994,7 @@ namespace Models {
 
         foreach(const QString &filepath, rawFilenames) {
             QFileInfo fi(filepath);
-            QString suffix = fi.completeSuffix().toLower();
+            QString suffix = fi.suffix().toLower();
 
             if (knownImageSuffixes.contains(suffix)) {
                 filenames.append(filepath);
