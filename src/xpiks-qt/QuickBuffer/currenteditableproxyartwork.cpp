@@ -53,6 +53,10 @@ namespace QuickBuffer {
         m_ArtworkProxy->setKeywords(keywords);
     }
 
+    bool CurrentEditableProxyArtwork::appendPreset(int presetIndex) {
+        return m_ArtworkProxy->doAppendPreset(presetIndex);
+    }
+
     bool CurrentEditableProxyArtwork::expandPreset(int keywordIndex, int presetIndex) {
         return m_ArtworkProxy->doExpandPreset(keywordIndex, presetIndex);
     }

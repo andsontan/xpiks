@@ -44,6 +44,7 @@ namespace QuickBuffer {
         virtual void setDescription(const QString &description) override;
         virtual void setKeywords(const QStringList &keywords) override;
 
+        virtual bool appendPreset(int presetIndex) override;
         virtual bool expandPreset(int keywordIndex, int presetIndex) override;
         virtual bool removePreset(int presetIndex) override;
 

@@ -70,6 +70,17 @@ namespace QuickBuffer {
         m_ArtworkMetadata->setKeywords(keywords);
     }
 
+    bool CurrentEditableArtwork::appendPreset(int presetIndex) {
+        bool success = false;
+        LOG_INFO << "preset" << presetIndex;
+
+        std::shared_ptr<Commands::ExpandPresetCommand> expandPresetCommand(new Commands::ExpandPresetCommand(Models::MetadataElement(m_ArtworkMetadata, m_OriginalIndex), presetIndex));
+        std::shared_ptr<Commands::ICommandResult> result = m_CommandManager->processCommand(expandPresetCommand);
+        success = result->getStatus() == 0;
+
+        return success;
+    }
+
     bool CurrentEditableArtwork::expandPreset(int keywordIndex, int presetIndex) {
         bool success = false;
         LOG_INFO << "keyword" << keywordIndex << "preset" << presetIndex;
