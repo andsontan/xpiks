@@ -490,7 +490,7 @@
       <translation>Найти и заменить</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/FindAndReplace.qml" line="300"/>
+      <location filename="../../Dialogs/FindAndReplace.qml" line="301"/>
       <source>Cancel</source>
       <translation>Отмена</translation>
     </message>
@@ -571,52 +571,62 @@
   <context>
     <name>KeywordsSuggestion</name>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="80"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="81"/>
       <source>Open in browser</source>
       <translation>Открыть в браузере</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="178"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="92"/>
+      <source>Clear</source>
+      <translation>Очистить</translation>
+    </message>
+    <message>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="99"/>
+      <source>Copy</source>
+      <translation>Копировать</translation>
+    </message>
+    <message>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="197"/>
       <source>All Images</source>
       <translation>Все изображения</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="179"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="198"/>
       <source>Photos</source>
       <translation>Фотографии</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="180"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="199"/>
       <source>Vectors</source>
       <translation>Векторы</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="181"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="200"/>
       <source>Illustrations</source>
       <translation>Иллюстрации</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="192"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="211"/>
       <source>Search</source>
       <translation>Поиск</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="385"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="404"/>
       <source>Suggested keywords:</source>
       <translation>Предложенные слова:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="473"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="506"/>
       <source>Other keywords:</source>
       <translation>Другие ключевые слова:</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="569"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="602"/>
       <source>Cancel</source>
       <translation>Отмена</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="580"/>
+      <location filename="../../Dialogs/KeywordsSuggestion.qml" line="613"/>
       <source>Add suggested</source>
       <translation>Добавить предложенные</translation>
     </message>
@@ -838,22 +848,22 @@
   <context>
     <name>PlainTextKeywordsDialog</name>
     <message>
-      <location filename="../../Dialogs/PlainTextKeywordsDialog.qml" line="147"/>
+      <location filename="../../Dialogs/PlainTextKeywordsDialog.qml" line="145"/>
       <source>Keywords</source>
       <translation>Ключевые слова</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PlainTextKeywordsDialog.qml" line="247"/>
+      <location filename="../../Dialogs/PlainTextKeywordsDialog.qml" line="245"/>
       <source>Treat space as separator</source>
       <translation>Пробел как разделитель</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PlainTextKeywordsDialog.qml" line="257"/>
+      <location filename="../../Dialogs/PlainTextKeywordsDialog.qml" line="255"/>
       <source>Save</source>
       <translation>Сохранить</translation>
     </message>
     <message>
-      <location filename="../../Dialogs/PlainTextKeywordsDialog.qml" line="263"/>
+      <location filename="../../Dialogs/PlainTextKeywordsDialog.qml" line="261"/>
       <source>Cancel</source>
       <translation>Отмена</translation>
     </message>
@@ -970,7 +980,7 @@
   <context>
     <name>QObject</name>
     <message>
-      <location filename="../../KeywordsPresets/presetkeywordsmodel.cpp" line="392"/>
+      <location filename="../../KeywordsPresets/presetkeywordsmodel.cpp" line="409"/>
       <location filename="../../KeywordsPresets/presetkeywordsmodel.h" line="36"/>
       <location filename="../../Models/uploadinfo.h" line="60"/>
       <location filename="../../Models/uploadinfo.h" line="68"/>
