@@ -293,9 +293,11 @@ namespace Models {
     void CombinedArtworksModel::processCombinedEditCommand() {
         auto &artworksList = getArtworksList();
 
+        std::vector<Models::MetadataElement> artworksToProcess(artworksList);
+
         std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
                 m_EditFlags,
-                artworksList,
+                artworksToProcess,
                 m_CommonKeywordsModel.getDescription(),
                 m_CommonKeywordsModel.getTitle(),
                 m_CommonKeywordsModel.getKeywords()));

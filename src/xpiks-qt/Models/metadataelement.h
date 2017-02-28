@@ -27,7 +27,7 @@
 #include "artworkmetadata.h"
 
 namespace Models {
-    // kind of smart pointer over ArtworkMetadata
+    // sort of smart pointer over ArtworkMetadata
     class MetadataElement
     {
     public:
@@ -35,6 +35,16 @@ namespace Models {
             m_ArtworkMetadata(metadata),
             m_OriginalIndex(index),
             m_IsSelected(false)
+        {
+            if (m_ArtworkMetadata != nullptr) {
+                m_ArtworkMetadata->acquire();
+            }
+        }
+
+        MetadataElement(const MetadataElement &other):
+            m_ArtworkMetadata(other.m_ArtworkMetadata),
+            m_OriginalIndex(other.m_OriginalIndex),
+            m_IsSelected(other.m_IsSelected)
         {
             if (m_ArtworkMetadata != nullptr) {
                 m_ArtworkMetadata->acquire();
@@ -93,7 +103,6 @@ namespace Models {
         }
 
         MetadataElement &operator=(const MetadataElement &);
-        MetadataElement(const MetadataElement &);
 
     private:
         ArtworkMetadata *m_ArtworkMetadata;

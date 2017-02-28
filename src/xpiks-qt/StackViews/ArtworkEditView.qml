@@ -87,11 +87,11 @@ Rectangle {
 
     function closePopup() {
         closeAutoComplete()
-        mainStackView.pop()
         artworkProxy.resetModel()
-        restoreLeftPane()
         settingsModel.saveArtworkEditUISettings()
         uiManager.clearCurrentItem()
+        mainStackView.pop(/*{immediate: true}*/)
+        restoreLeftPane()
     }
 
     function restoreLeftPane() {
