@@ -58,6 +58,7 @@ namespace QMLExtensions {
         void addSystemTab(const QString &iconPath, const QString &componentPath);
         void addPluginTab(const QString &iconPath, const QString &componentPath);
         void touchTab(int index);
+        bool isActiveTab(int index);
 
     private:
         void addTab(const QString &iconPath, const QString &componentPath);

@@ -80,10 +80,28 @@ namespace QMLExtensions {
             m_LRUcache.emplace_back(tab.m_CacheTag, index);
             std::push_heap(m_LRUcache.begin(), m_LRUcache.end(), compareCachePairs);
 
-            if (m_LRUcache.size() > 10*m_TabsList.size()) {
+            if (m_LRUcache.size() > 10*(size_t)m_TabsList.size()) {
                 rebuildCache();
             }
         }
+    }
+
+    bool TabsModel::isActiveTab(int index) {
+        bool found = false;
+
+        size_t i = 0;
+        const size_t size = m_LRUcache.size();
+
+        while ((i < 3) && (i < size)) {
+            if (m_LRUcache[i].second == index) {
+                found = true;
+                break;
+            }
+
+            i++;
+        }
+
+        return found;
     }
 
     void TabsModel::addTab(const QString &iconPath, const QString &componentPath) {
