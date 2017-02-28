@@ -223,6 +223,15 @@ namespace Suggestion {
         engine->cancelQueries();
     }
 
+    void KeywordsSuggestor::clearSuggested() {
+        LOG_DEBUG << "#";
+
+        while (!m_SuggestedKeywords.isEmpty()) {
+            QString keyword = removeSuggestedKeywordAt(0);
+            appendKeywordToOther(keyword);
+        }
+    }
+
     int KeywordsSuggestor::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return (int)m_Suggestions.size();

@@ -30,6 +30,7 @@ import "../Common.js" as Common;
 import "../Components"
 import "../StyledControls"
 import "../Constants/UIConfig.js" as UIConfig
+import xpiks 1.0
 
 Item {
     id: keywordsSuggestionComponent
@@ -80,6 +81,24 @@ Item {
             text: i18.n + qsTr("Open in browser")
             onTriggered: {
                 Qt.openUrlExternally(contextMenu.externalUrl)
+            }
+        }
+    }
+
+    Menu {
+        id: suggestedKeywordsMenu
+
+        MenuItem {
+            text: i18.n + qsTr("Clear")
+            onTriggered: {
+                keywordsSuggestor.clearSuggested()
+            }
+        }
+
+        MenuItem {
+            text: i18.n + qsTr("Copy")
+            onTriggered: {
+                clipboard.setText(keywordsSuggestor.getSuggestedKeywordsString())
             }
         }
     }
@@ -451,6 +470,20 @@ Item {
                             anchors.rightMargin: -15
                             flickable: suggestedFlv
                         }
+
+                        MouseArea {
+                            anchors.fill: parent
+                            acceptedButtons: Qt.RightButton
+                            propagateComposedEvents: true
+                            preventStealing: true
+                            onClicked: {
+                                if (mouse.button == Qt.RightButton) {
+                                    if (keywordsSuggestor.suggestedKeywordsCount > 0) {
+                                        suggestedKeywordsMenu.popup()
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
@@ -597,5 +630,9 @@ Item {
             queryText.forceActiveFocus()
             initialized = true
         }
+    }
+
+    ClipboardHelper {
+        id: clipboard
     }
 }
