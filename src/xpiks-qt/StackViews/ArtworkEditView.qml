@@ -90,7 +90,7 @@ Rectangle {
         artworkProxy.resetModel()
         settingsModel.saveArtworkEditUISettings()
         uiManager.clearCurrentItem()
-        mainStackView.pop(/*{immediate: true}*/)
+        mainStackView.pop({immediate: true})
         restoreLeftPane()
     }
 
