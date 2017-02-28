@@ -293,7 +293,7 @@ namespace Models {
     }
 
     void ArtworkProxyModel::addPreset(int presetIndex) {
-        doAddPreset(presetIndex);
+        doAppendPreset(presetIndex);
     }
 
     void ArtworkProxyModel::initSuggestion() {

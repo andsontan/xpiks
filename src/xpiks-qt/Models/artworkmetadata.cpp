@@ -237,4 +237,13 @@ namespace Models {
 
         return result;
     }
+
+    bool ArtworkMetadata::appendPreset(const QStringList &presetList) {
+        bool result = m_MetadataModel.appendPreset(presetList);
+        if (result) {
+            markModified();
+        }
+
+        return result;
+    }
 }

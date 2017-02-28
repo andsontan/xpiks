@@ -224,9 +224,45 @@ namespace Common {
 
         Q_UNUSED(writeLocker);
         if ((0 <= keywordIndex) && (keywordIndex < m_KeywordsList.length())) {
+#ifndef KEYWORDS_TAGS
             expandPresetUnsafe(keywordIndex, presetList);
+#else
+            bool useMerging = Helpers::hasTaggedKeywords(m_KeywordsList) || Helpers::hasTaggedKeywords(presetList);
+            if (useMerging) {
+                LOG_DEBUG << "Merging keywords lists";
+                QStringList myKeywords = m_KeywordsList;
+                myKeywords.removeAt(keywordIndex);
+
+                QStringList mergedKeywords = Helpers::mergeTaggedLists(myKeywords, presetList);
+                setKeywordsUnsafe(mergedKeywords);
+            } else {
+                expandPresetUnsafe(keywordIndex, presetList);
+            }
+#endif
+
             result = true;
         }
+
+        return result;
+    }
+
+    bool BasicKeywordsModel::appendPreset(const QStringList &presetList) {
+        LOG_DEBUG << "#";
+        bool result = false;
+
+#ifndef KEYWORDS_TAGS
+        result = appendKeywords(presetList) > 0;
+#else
+        bool useMerging = Helpers::hasTaggedKeywords(m_KeywordsList) || Helpers::hasTaggedKeywords(presetList);
+        if (useMerging) {
+            LOG_DEBUG << "Merging keywords lists";
+            QStringList mergedKeywords = Helpers::mergeTaggedLists(m_KeywordsList, presetList);
+            setKeywords(mergedKeywords);
+            result = true;
+        } else {
+            result = appendKeywords(presetList) > 0;
+        }
+#endif
 
         return result;
     }

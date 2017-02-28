@@ -47,27 +47,14 @@ namespace Commands {
             indexToUpdate = m_MetadataElement.getOriginalIndex();
             artworksBackups.emplace_back(metadata);
 
-            bool useMerging = false;
-            QStringList artworkKeywords;
-
-#ifdef KEYWORDS_TAGS
-            artworkKeywords = metadata->getKeywords();
-            useMerging = Helpers::hasTaggedKeywords(keywords) || Helpers::hasTaggedKeywords(artworkKeywords);
-#endif
-
-            if (!useMerging) {
-                if (m_KeywordIndex != -1) {
-                    if (metadata->expandPreset(m_KeywordIndex, keywords)) {
-                        affectedArtworks.append(metadata);
-                    }
-                } else {
-                    if (metadata->appendKeywords(keywords)) {
-                        affectedArtworks.append(metadata);
-                    }
+            if (m_KeywordIndex != -1) {
+                if (metadata->expandPreset(m_KeywordIndex, keywords)) {
+                    affectedArtworks.append(metadata);
                 }
             } else {
-                QStringList merged = Helpers::mergeTaggedLists(artworkKeywords, keywords);
-                metadata->setKeywords(merged);
+                if (metadata->appendPreset(keywords)) {
+                    affectedArtworks.append(metadata);
+                }
             }
         }
 

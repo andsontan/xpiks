@@ -271,6 +271,24 @@ namespace Models {
         return success;
     }
 
+    bool ArtworkProxyBase::doAppendPreset(int presetIndex) {
+        bool success = false;
+        LOG_INFO << "preset" << presetIndex;
+        auto *presetsModel = m_CommandManager->getPresetsModel();
+        QStringList keywords;
+
+        if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+            auto *metadataOperator = getMetadataOperator();
+            if (metadataOperator->appendPreset(keywords)) {
+                signalKeywordsCountChanged();
+                spellCheckKeywords();
+                success = true;
+            }
+        }
+
+        return success;
+    }
+
     bool ArtworkProxyBase::doExpandLastKeywordAsPreset() {
         LOG_DEBUG << "#";
         bool success = false;
@@ -285,19 +303,6 @@ namespace Models {
             success = doExpandPreset(keywordIndex, presetIndex);
         } else {
             LOG_DEBUG << "Preset not found";
-        }
-
-        return success;
-    }
-
-    bool ArtworkProxyBase::doAddPreset(int presetIndex) {
-        LOG_INFO << presetIndex;
-        bool success = false;
-        auto *presetsModel = m_CommandManager->getPresetsModel();
-        QStringList keywords;
-
-        if (presetsModel->tryGetPreset(presetIndex, keywords)) {
-            success = doAppendKeywords(keywords) > 0;
         }
 
         return success;

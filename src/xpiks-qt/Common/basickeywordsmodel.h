@@ -89,6 +89,7 @@ namespace Common {
         virtual bool editKeyword(int index, const QString &replacement);
         virtual bool clearKeywords();
         virtual bool expandPreset(int keywordIndex, const QStringList &presetList);
+        virtual bool appendPreset(const QStringList &presetList);
         bool areKeywordsEmpty();
         virtual bool replace(const QString &replaceWhat, const QString &replaceTo, Common::SearchFlags flags);
         virtual bool removeKeywords(const QSet<QString> &keywords, bool caseSensitive);

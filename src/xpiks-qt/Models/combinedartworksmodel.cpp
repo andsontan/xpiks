@@ -271,7 +271,7 @@ namespace Models {
     }
 
     void CombinedArtworksModel::addPreset(int presetIndex) {
-        if (doAddPreset(presetIndex)) {
+        if (doAppendPreset(presetIndex)) {
             setKeywordsModified(true);
         }
     }
