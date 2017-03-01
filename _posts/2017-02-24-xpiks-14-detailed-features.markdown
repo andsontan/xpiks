@@ -112,3 +112,5 @@ Find and Replace can definitely be used to remove keywords from artwords (when r
 <br />
 
 Enjoy!
+
+<div class="download-link"><a href="{{ site.url }}/downloads">Download</a></div>
