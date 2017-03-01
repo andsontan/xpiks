@@ -388,6 +388,19 @@ namespace Helpers {
 
         return result;
     }
+
+    QStringList clearTagsFromList(const QStringList &list) {
+        QStringList result;
+        result.reserve(list.length());
+
+        foreach (const QString &keyword, list) {
+            if (!keyword.startsWith('#')) {
+                result.append(keyword);
+            }
+        }
+
+        return result;
+    }
 #endif
 
     std::string string_format(const std::string fmt, ...) {

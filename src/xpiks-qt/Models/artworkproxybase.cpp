@@ -315,6 +315,9 @@ namespace Models {
         QStringList keywords;
 
         if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+#ifdef KEYWORDS_TAGS
+            keywords = Helpers::clearTagsFromList(keywords);
+#endif
             success = doRemoveKeywords(keywords.toSet(), false);
         }
 
