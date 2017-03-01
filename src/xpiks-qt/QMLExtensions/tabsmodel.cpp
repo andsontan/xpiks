@@ -132,4 +132,33 @@ namespace QMLExtensions {
 
         std::make_heap(m_LRUcache.begin(), m_LRUcache.end(), compareCachePairs);
     }
+
+    bool ActiveTabsModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
+        Q_UNUSED(source_parent);
+        auto *tabsModel = getTabsModel();
+        bool isActiveTab = tabsModel->isActiveTab(source_row);
+        return isActiveTab;
+    }
+
+    TabsModel *ActiveTabsModel::getTabsModel() const {
+        QAbstractItemModel *sourceItemModel = sourceModel();
+        TabsModel *tabsModel = dynamic_cast<TabsModel *>(sourceItemModel);
+        Q_ASSERT(tabsModel != nullptr);
+        return tabsModel;
+    }
+
+    bool InactiveTabsModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
+        Q_UNUSED(source_parent);
+        auto *tabsModel = getTabsModel();
+        bool isActiveTab = tabsModel->isActiveTab(source_row);
+        return !isActiveTab;
+    }
+
+    TabsModel *InactiveTabsModel::getTabsModel() const {
+        QAbstractItemModel *sourceItemModel = sourceModel();
+        TabsModel *tabsModel = dynamic_cast<TabsModel *>(sourceItemModel);
+        Q_ASSERT(tabsModel != nullptr);
+        return tabsModel;
+    }
+
 }

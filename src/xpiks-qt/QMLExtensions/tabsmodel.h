@@ -23,6 +23,7 @@
 #define TABSMODEL_H
 
 #include <QAbstractListModel>
+#include <QSortFilterProxyModel>
 #include <QString>
 #include <QVector>
 #include <vector>
@@ -67,6 +68,34 @@ namespace QMLExtensions {
     private:
         QVector<TabModel> m_TabsList;
         std::vector<std::pair<int, int> > m_LRUcache;
+    };
+
+    class ActiveTabsModel: public QSortFilterProxyModel
+    {
+        Q_OBJECT
+    public:
+        explicit ActiveTabsModel(QObject *parent = 0);
+
+        // QSortFilterProxyModel interface
+    protected:
+        virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+
+    private:
+        TabsModel *getTabsModel() const;
+    };
+
+    class InactiveTabsModel: public QSortFilterProxyModel
+    {
+        Q_OBJECT
+    public:
+        explicit InactiveTabsModel(QObject *parent = 0);
+
+        // QSortFilterProxyModel interface
+    protected:
+        virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+
+    private:
+        TabsModel *getTabsModel() const;
     };
 }
 
