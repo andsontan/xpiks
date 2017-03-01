@@ -46,7 +46,7 @@ namespace QMLExtensions {
         struct TabModel {
             QString m_TabIconPath;
             QString m_TabComponentPath;
-            int m_CacheTag;
+            unsigned int m_CacheTag;
         };
 
         // QAbstractItemModel interface
@@ -58,44 +58,67 @@ namespace QMLExtensions {
     public:
         void addSystemTab(const QString &iconPath, const QString &componentPath);
         void addPluginTab(const QString &iconPath, const QString &componentPath);
-        void touchTab(int index);
         bool isActiveTab(int index);
+        void escalateTab(int index);
+        bool touchTab(int index);
 
     private:
+        void recacheTab(int index);
         void addTab(const QString &iconPath, const QString &componentPath);
         void rebuildCache();
 
     private:
         QVector<TabModel> m_TabsList;
-        std::vector<std::pair<int, int> > m_LRUcache;
+        // <cache tag, tab index>
+        std::vector<std::pair<unsigned int, int> > m_LRUcache;
     };
 
-    class ActiveTabsModel: public QSortFilterProxyModel
+    class DependentTabsModel: public QSortFilterProxyModel
+    {
+        Q_OBJECT
+    public:
+        Q_INVOKABLE void openTab(int index);
+
+    protected:
+        virtual void doOpenTab(int index) = 0;
+        TabsModel *getTabsModel() const;
+        int getOriginalIndex(int index) const;
+    };
+
+    class ActiveTabsModel: public DependentTabsModel
     {
         Q_OBJECT
     public:
         explicit ActiveTabsModel(QObject *parent = 0);
 
+    public slots:
+        void onInactiveTabOpened(int index);
+
         // QSortFilterProxyModel interface
     protected:
-        virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+        virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;\
 
-    private:
-        TabsModel *getTabsModel() const;
+        // DependentTabsModel interface
+    protected:
+        virtual void doOpenTab(int index) override;
     };
 
-    class InactiveTabsModel: public QSortFilterProxyModel
+    class InactiveTabsModel: public DependentTabsModel
     {
         Q_OBJECT
     public:
         explicit InactiveTabsModel(QObject *parent = 0);
 
+    signals:
+        void tabOpened(int index);
+
         // QSortFilterProxyModel interface
     protected:
         virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
-    private:
-        TabsModel *getTabsModel() const;
+        // DependentTabsModel interface
+    protected:
+        virtual void doOpenTab(int index) override;
     };
 }
 
