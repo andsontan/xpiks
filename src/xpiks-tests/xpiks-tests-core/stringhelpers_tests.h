@@ -39,6 +39,15 @@ private slots:
     void mergeWithNonTaggedTest();
     void mergeAllNonTaggedTest();
     void mergeWithDuplicatedTagTest();
+
+    void intersectTaggedListsBasicTest();
+    void intersectWithEmptyTest();
+    void intersectEmptyWithTest();
+    void intersectWithMissingTagsTest();
+    void intersectWithJustTagsTest();
+    void intersectWithCommonTest();
+    void intersectOnlyCommonTest();
+    void intersectMixedTest();
 #endif
 };
 

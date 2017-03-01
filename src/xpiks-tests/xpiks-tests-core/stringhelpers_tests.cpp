@@ -1,6 +1,7 @@
 #include "stringhelpers_tests.h"
 #include "../../xpiks-qt/Helpers/stringhelper.h"
 #include <QStringList>
+#include "../../xpiks-qt/Common/defines.h"
 
 void StringHelpersTests::splitEmptyStringTest() {
     QString text = "";
@@ -257,6 +258,88 @@ void StringHelpersTests::mergeWithDuplicatedTagTest() {
 
     const QStringList expected = QString("#t1 some keywords here few more there in addition that #t2 these as well #t3 yum this").split(" ", QString::SkipEmptyParts);
     QStringList actual = Helpers::mergeTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::intersectTaggedListsBasicTest() {
+    QStringList list1 = QString("#t1 some keywords here #t2 few more there #t3 yum this").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("#t1 and here #t2 there as well #t3 that").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("#t1 here #t2 there #t3").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::intersectTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::intersectWithEmptyTest() {
+    QStringList list1 = QString("#t1 some keywords here #t2 few more there #t3 yum this").split(" ", QString::SkipEmptyParts);
+    QStringList list2;
+
+    const QStringList expected;
+    QStringList actual = Helpers::intersectTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::intersectEmptyWithTest() {
+    QStringList list1;
+    QStringList list2 = QString("#t1 some keywords here #t2 few more there #t3 yum this").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected;
+    QStringList actual = Helpers::intersectTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::intersectWithMissingTagsTest() {
+    QStringList list1 = QString("#t1 some keywords here #t2 completely new #t3 few more there").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("#t1 and here #t3 there as well").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("#t1 here #t3 there").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::intersectTaggedLists(list1, list2);
+    LOG_FOR_TESTS << actual;
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::intersectWithJustTagsTest() {
+    QStringList list1 = QString("#t1 some keywords here #t2 completely new #t3 few more there").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("#t1 #t3").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("#t1 #t3").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::intersectTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::intersectWithCommonTest() {
+    QStringList list1 = QString("completely irrelevant #t1 some keywords here #t2 few more there #t3 yum this").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("irrelevant keywords #t1 and here #t2 there as well #t3 that").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("irrelevant #t1 here #t2 there #t3").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::intersectTaggedLists(list1, list2);
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::intersectOnlyCommonTest() {
+    QStringList list1 = QString("completely irrelevant some keywords here few more there yum this").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("irrelevant keywords and here there as well that").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("irrelevant keywords here there").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::intersectTaggedLists(list1, list2);
+    LOG_FOR_TESTS << actual;
+
+    QCOMPARE(actual, expected);
+}
+
+void StringHelpersTests::intersectMixedTest() {
+    QStringList list1 = QString("completely irrelevant #t1 some keywords here #t2 few more there #t3 yum this").split(" ", QString::SkipEmptyParts);
+    QStringList list2 = QString("irrelevant keywords").split(" ", QString::SkipEmptyParts);
+
+    const QStringList expected = QString("irrelevant").split(" ", QString::SkipEmptyParts);
+    QStringList actual = Helpers::intersectTaggedLists(list1, list2);
 
     QCOMPARE(actual, expected);
 }
