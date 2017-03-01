@@ -337,6 +337,57 @@ namespace Helpers {
 
         return result;
     }
+
+    QStringList intersectTaggedLists(const QStringList &list1, const QStringList &list2) {
+        QSet<QString> tags1, tags2;
+        QStringList nonTaggedKeywords1, nonTaggedKeywords2;
+
+        auto tagsHash1 = parseTaggedKeywords(list1, tags1, nonTaggedKeywords1);
+        auto tagsHash2 = parseTaggedKeywords(list2, tags2, nonTaggedKeywords2);
+
+        QStringList result;
+        result.reserve(qMax(list1.length(), list2.length()));
+
+        if (!nonTaggedKeywords1.isEmpty() && !nonTaggedKeywords2.isEmpty()) {
+            QSet<QString> nonTaggedSet2 = nonTaggedKeywords2.toSet();
+            foreach (const QString &keyword, nonTaggedKeywords1) {
+                if (nonTaggedSet2.contains(keyword)) {
+                    result.append(keyword);
+                }
+            }
+        }
+
+        QSet<QString> allTags = tags1 + tags2;
+        auto sortedTags = allTags.toList();
+        qSort(sortedTags);
+
+        auto firstEnd = tagsHash1.end();
+        auto secondEnd = tagsHash2.end();
+
+        foreach (const QString &tag, sortedTags) {
+            if (!tags1.contains(tag) || !tags2.contains(tag)) { continue; }
+
+            result.append(tag);
+
+            auto it1 = tagsHash1.find(tag);
+            if (it1 == firstEnd) { continue; }
+
+            auto it2 = tagsHash2.find(tag);
+            if (it2 == secondEnd) { continue; }
+
+            auto &firstKeywords = it1.value();
+            auto &secondKeywords = it2.value();
+            QSet<QString> tempTags2 = secondKeywords.toSet();
+
+            foreach (const QString &keyword, firstKeywords) {
+                if (tempTags2.contains(keyword)) {
+                    result.append(keyword);
+                }
+            }
+        }
+
+        return result;
+    }
 #endif
 
     std::string string_format(const std::string fmt, ...) {

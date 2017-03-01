@@ -51,6 +51,7 @@ namespace Helpers {
 #ifdef KEYWORDS_TAGS
     bool hasTaggedKeywords(const QStringList &keywords);
     QStringList mergeTaggedLists(const QStringList &list1, const QStringList &list2);
+    QStringList intersectTaggedLists(const QStringList &list1, const QStringList &list2);
 #endif
 
     int levensteinDistance(const QString &s1, const QString &s2);

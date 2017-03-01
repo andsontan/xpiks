@@ -30,6 +30,7 @@
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Common/defines.h"
 #include "../QMLExtensions/colorsmodel.h"
+#include "../Helpers/stringhelper.h"
 
 namespace Models {
     CombinedArtworksModel::CombinedArtworksModel(QObject *parent):
@@ -344,6 +345,10 @@ namespace Models {
         QStringList firstItemKeywords;
         int firstItemKeywordsCount = 0;
 
+#ifdef KEYWORDS_TAGS
+        QStringList intersectedKeywords;
+#endif
+
         processArtworks(pred,
                         [&](int, ArtworkMetadata *metadata) {
             if (!anyItemsProcessed) {
@@ -354,6 +359,9 @@ namespace Models {
                 auto firstSet = firstItemKeywords.toSet();
                 commonKeywords.unite(firstSet);
                 firstItemKeywordsCount = firstSet.count();
+#ifdef KEYWORDS_TAGS
+                intersectedKeywords = firstItemKeywords;
+#endif
                 anyItemsProcessed = true;
                 return;
             }
@@ -362,6 +370,7 @@ namespace Models {
             QString currTitle = metadata->getTitle();
             descriptionsDiffer = descriptionsDiffer || description != currDescription;
             titleDiffer = titleDiffer || title != currTitle;
+#ifndef KEYWORDS_TAGS
             // preserve case with List to Set convertion
             auto currentSet = metadata->getKeywords().toSet();
             commonKeywords.intersect(currentSet);
@@ -371,6 +380,10 @@ namespace Models {
                 (unitedKeywords.count() <= firstItemKeywordsCount)) {
                 unitedKeywords.unite(currentSet);
             }
+#else
+            QStringList itemKeywords = metadata->getKeywords();
+            intersectedKeywords = Helpers::intersectTaggedLists(intersectedKeywords, itemKeywords);
+#endif
         });
 
         if (!isEmpty()) {
@@ -386,12 +399,16 @@ namespace Models {
             initTitle(title);
 
             if (!areKeywordsModified()) {
+#ifndef KEYWORDS_TAGS
                 if (unitedKeywords.subtract(commonKeywords).isEmpty()) {
                     // all keywords are the same
                     initKeywords(firstItemKeywords);
                 } else {
                     initKeywords(commonKeywords.toList());
                 }
+#else
+                initKeywords(intersectedKeywords);
+#endif
             }
         }
     }
