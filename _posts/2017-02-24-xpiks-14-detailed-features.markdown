@@ -69,7 +69,7 @@ Also if you have created, let's say, presets with the names "old woman" and "you
 
 <img alt="Expand Preset" src="{{site.url}}/images/posts/xpiks-14-demo/xpiks-qt-expand-preset.jpg" class="small-8 large-6" />
 
-And the last but not the least way to do it is to use autocompletion feature and while typing a keyword to insert a preset with Ctrl+Enter if you see a small "p" letter right next to the keyword:
+And the last but not the least way to do it is to use autocompletion feature and while typing a keyword to insert a preset with [Ctrl+Enter] (or [Cmd+Enter] on Mac) if you see a small **"p"** letter right next to the keyword:
 
 <img alt="Autocomplete Preset" src="{{site.url}}/images/posts/xpiks-14-demo/xpiks-qt-autocomplete-preset.jpg" class="small-8 large-6" />
 
@@ -85,7 +85,7 @@ Another big feature provided in this release is the keywords suggestion enchance
 
 # **Find and Replace**
 
-Starting with Xpiks 1.4 a new powerfull feature is being presented: Find and Replace tool. You can not only do sophisticated search, but also to remove keywords with it (though a separate tool for convenient removing keywords exists). To launch Find and Replace tool just hit "Ctrl+Shift+F" (or "Cmd+Shift+F") or go to [Edit -> Find and Replace].
+Starting with Xpiks 1.4 a new powerfull feature is being presented: Find and Replace tool. You can not only do sophisticated search, but also to remove keywords with it (though a separate tool for convenient removing keywords exists). To launch Find and Replace tool just hit [Ctrl+Shift+F] (or [Cmd+Shift+F] on Mac) or go to [Edit -> Find and Replace].
 
 <img alt="Find and Replace" src="{{site.url}}/images/posts/xpiks-14-demo/FindAndReplace-Search.jpg" class="small-8 large-6" />
 
