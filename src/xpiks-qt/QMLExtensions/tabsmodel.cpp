@@ -70,22 +70,6 @@ namespace QMLExtensions {
         addTab(iconPath, componentPath);
     }
 
-    void TabsModel::touchTab(int index) {
-        LOG_INFO << index;
-
-        if ((0 <= index) && (index < m_TabsList.size())) {
-            auto &tab = m_TabsList[index];
-            tab.m_CacheTag++;
-
-            m_LRUcache.emplace_back(tab.m_CacheTag, index);
-            std::push_heap(m_LRUcache.begin(), m_LRUcache.end(), compareCachePairs);
-
-            if (m_LRUcache.size() > 10*(size_t)m_TabsList.size()) {
-                rebuildCache();
-            }
-        }
-    }
-
     bool TabsModel::isActiveTab(int index) {
         bool found = false;
 
@@ -102,6 +86,51 @@ namespace QMLExtensions {
         }
 
         return found;
+    }
+
+    void TabsModel::escalateTab(int index) {
+        LOG_INFO << index;
+        if ((index < 0) || (index >= m_TabsList.size())) { return; }
+
+        touchTab(m_LRUcache[0].second);
+
+        int indexToStay, indexToGo;
+        int diff = m_LRUcache[1].first - m_LRUcache[2].first;
+        if (diff < 0) { indexToGo = 1; indexToStay = 2; }
+        else if (diff > 0) { indexToGo = 2; indexToStay = 1; }
+        else { indexToGo = qrand()%2 + 1; indexToStay = 3 - indexToGo; }
+
+        int tabIndexToStay = m_LRUcache[indexToStay].second;
+        touchTab(tabIndexToStay);
+
+        int tabIndexToGo = m_LRUcache[indexToGo].second;
+        m_TabsList[index].m_CacheTag = m_TabsList[tabIndexToGo].m_CacheTag;
+        touchTab(index);
+    }
+
+    bool TabsModel::touchTab(int index) {
+        bool success = false;
+        LOG_INFO << index;
+
+        if ((0 <= index) && (index < m_TabsList.size())) {
+            auto &tab = m_TabsList[index];
+            tab.m_CacheTag++;
+            recacheTab(index);
+            success = true;
+        }
+
+        return success;
+    }
+
+    void TabsModel::recacheTab(int index) {
+        Q_ASSERT((0 <= index) && (index < m_TabsList.size()));
+        auto &tab = m_TabsList[index];
+        m_LRUcache.emplace_back(tab.m_CacheTag, index);
+        std::push_heap(m_LRUcache.begin(), m_LRUcache.end(), compareCachePairs);
+
+        if (m_LRUcache.size() > 10*(size_t)m_TabsList.size()) {
+            rebuildCache();
+        }
     }
 
     void TabsModel::addTab(const QString &iconPath, const QString &componentPath) {
@@ -133,6 +162,29 @@ namespace QMLExtensions {
         std::make_heap(m_LRUcache.begin(), m_LRUcache.end(), compareCachePairs);
     }
 
+    void DependentTabsModel::openTab(int index) {
+        doOpenTab(index);
+    }
+
+    TabsModel *DependentTabsModel::getTabsModel() const {
+        QAbstractItemModel *sourceItemModel = sourceModel();
+        TabsModel *tabsModel = dynamic_cast<TabsModel *>(sourceItemModel);
+        Q_ASSERT(tabsModel != nullptr);
+        return tabsModel;
+    }
+
+    int DependentTabsModel::getOriginalIndex(int index) const {
+        LOG_INFO << index;
+        QModelIndex originalIndex = mapToSource(this->index(index, 0));
+        int row = originalIndex.row();
+        return row;
+    }
+
+    void ActiveTabsModel::onInactiveTabOpened(int index) {
+        LOG_INFO << index;
+        invalidateFilter();
+    }
+
     bool ActiveTabsModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
         Q_UNUSED(source_parent);
         auto *tabsModel = getTabsModel();
@@ -140,11 +192,12 @@ namespace QMLExtensions {
         return isActiveTab;
     }
 
-    TabsModel *ActiveTabsModel::getTabsModel() const {
-        QAbstractItemModel *sourceItemModel = sourceModel();
-        TabsModel *tabsModel = dynamic_cast<TabsModel *>(sourceItemModel);
-        Q_ASSERT(tabsModel != nullptr);
-        return tabsModel;
+    void ActiveTabsModel::doOpenTab(int index) {
+        LOG_INFO << index;
+        int originalIndex = getOriginalIndex(index);
+        auto *tabsModel = getTabsModel();
+
+        tabsModel->touchTab(originalIndex);
     }
 
     bool InactiveTabsModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
@@ -154,11 +207,13 @@ namespace QMLExtensions {
         return !isActiveTab;
     }
 
-    TabsModel *InactiveTabsModel::getTabsModel() const {
-        QAbstractItemModel *sourceItemModel = sourceModel();
-        TabsModel *tabsModel = dynamic_cast<TabsModel *>(sourceItemModel);
-        Q_ASSERT(tabsModel != nullptr);
-        return tabsModel;
-    }
+    void InactiveTabsModel::doOpenTab(int index) {
+        LOG_INFO << index;
+        int originalIndex = getOriginalIndex(index);
+        auto *tabsModel = getTabsModel();
 
+        tabsModel->escalateTab(originalIndex);
+        invalidateFilter();
+        emit tabOpened(originalIndex);
+    }
 }
