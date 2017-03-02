@@ -232,7 +232,10 @@ namespace SpellCheck {
         const QString &word = queryItem->m_Word;
 
 #ifdef KEYWORDS_TAGS
-        if (word.startsWith(KEYWORD_TAG_SYMBOL)) { return true; }
+        if (word.startsWith(KEYWORD_TAG_SYMBOL)) {
+            queryItem->m_IsCorrect = true;
+            return true;
+        }
 #endif
 
         const bool isInUserDict = m_UserDictionary.contains(word);
