@@ -23,9 +23,8 @@
 #include "../Common/defines.h"
 
 namespace QMLExtensions {
-    bool compareCachePairs(const std::pair<int, int> &left, const std::pair<int, int> &right) {
-        // first item is cache tag
-        return left.first < right.first;
+    bool compareCachePairs(const TabsModel::CachedTab &left, const TabsModel::CachedTab &right) {
+        return left.m_CacheTag < right.m_CacheTag;
     }
 
     TabsModel::TabsModel(QObject *parent) :
@@ -63,6 +62,7 @@ namespace QMLExtensions {
     void TabsModel::addSystemTab(const QString &iconPath, const QString &componentPath) {
         LOG_INFO << iconPath << componentPath;
         addTab(iconPath, componentPath);
+        m_TabsList.last().m_IsSystemTab = true;
     }
 
     void TabsModel::addPluginTab(const QString &iconPath, const QString &componentPath) {
@@ -70,14 +70,39 @@ namespace QMLExtensions {
         addTab(iconPath, componentPath);
     }
 
-    bool TabsModel::isActiveTab(int index) {
+    bool TabsModel::removePluginTab(int index) {
+        LOG_INFO << index;
+
+        bool success = false;
+
+        if ((0 <= index) && (index < m_TabsList.size())) {
+            Q_ASSERT(!m_TabsList[index].m_IsSystemTab);
+            if (!m_TabsList[index].m_IsSystemTab) {
+                beginRemoveRows(QModelIndex(), index, index);
+                {
+                    m_TabsList.removeAt(index);
+                }
+                endRemoveRows();
+
+                rebuildCache();
+                emit tabRemoved();
+                success = true;
+            } else {
+                LOG_WARNING << "Attempt to remove system tab";
+            }
+        }
+
+        return success;
+    }
+
+    bool TabsModel::isTabActive(int index) {
         bool found = false;
 
         size_t i = 0;
         const size_t size = m_LRUcache.size();
 
         while ((i < 3) && (i < size)) {
-            if (m_LRUcache[i].second == index) {
+            if (m_LRUcache[i].m_TabIndex == index) {
                 found = true;
                 break;
             }
@@ -92,18 +117,18 @@ namespace QMLExtensions {
         LOG_INFO << index;
         if ((index < 0) || (index >= m_TabsList.size())) { return; }
 
-        touchTab(m_LRUcache[0].second);
+        touchTab(m_LRUcache[0].m_CacheTag);
 
         int indexToStay, indexToGo;
-        int diff = m_LRUcache[1].first - m_LRUcache[2].first;
+        int diff = m_LRUcache[1].m_CacheTag - m_LRUcache[2].m_CacheTag;
         if (diff < 0) { indexToGo = 1; indexToStay = 2; }
         else if (diff > 0) { indexToGo = 2; indexToStay = 1; }
         else { indexToGo = qrand()%2 + 1; indexToStay = 3 - indexToGo; }
 
-        int tabIndexToStay = m_LRUcache[indexToStay].second;
+        int tabIndexToStay = m_LRUcache[indexToStay].m_TabIndex;
         touchTab(tabIndexToStay);
 
-        int tabIndexToGo = m_LRUcache[indexToGo].second;
+        int tabIndexToGo = m_LRUcache[indexToGo].m_TabIndex;
         m_TabsList[index].m_CacheTag = m_TabsList[tabIndexToGo].m_CacheTag;
         touchTab(index);
     }
@@ -142,6 +167,7 @@ namespace QMLExtensions {
             item.m_TabIconPath = iconPath;
             item.m_TabComponentPath = componentPath;
             item.m_CacheTag = 0;
+            item.m_IsSystemTab = false;
         }
         endInsertRows();
     }
@@ -160,10 +186,15 @@ namespace QMLExtensions {
         }
 
         std::make_heap(m_LRUcache.begin(), m_LRUcache.end(), compareCachePairs);
+        emit cacheRebuilt();
     }
 
     void DependentTabsModel::openTab(int index) {
         doOpenTab(index);
+    }
+
+    void DependentTabsModel::onInvalidateRequired() {
+        invalidateFilter();
     }
 
     TabsModel *DependentTabsModel::getTabsModel() const {
@@ -188,7 +219,7 @@ namespace QMLExtensions {
     bool ActiveTabsModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
         Q_UNUSED(source_parent);
         auto *tabsModel = getTabsModel();
-        bool isActiveTab = tabsModel->isActiveTab(source_row);
+        bool isActiveTab = tabsModel->isTabActive(source_row);
         return isActiveTab;
     }
 
@@ -203,7 +234,7 @@ namespace QMLExtensions {
     bool InactiveTabsModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
         Q_UNUSED(source_parent);
         auto *tabsModel = getTabsModel();
-        bool isActiveTab = tabsModel->isActiveTab(source_row);
+        bool isActiveTab = tabsModel->isTabActive(source_row);
         return !isActiveTab;
     }
 
