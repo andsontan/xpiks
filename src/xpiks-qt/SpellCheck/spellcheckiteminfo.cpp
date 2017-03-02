@@ -29,6 +29,10 @@
 
 namespace SpellCheck {
     bool SpellCheckErrorsInfo::hasWrongSpelling(const QString &word) {
+#ifdef KEYWORDS_TAGS
+        if (word.startsWith('#')) { return false; }
+#endif
+
         QReadLocker readLocker(&m_ErrorsLock);
 
         Q_UNUSED(readLocker);
