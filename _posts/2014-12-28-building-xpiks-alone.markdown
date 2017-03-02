@@ -33,6 +33,7 @@ date: 2014-12-28T09:54:01+02:00
 
 - open `src/xpiks-qt/xpiks-qt.pro` file with Qt Creator installed with Qt
 - select build target [Debug/Release], press "Run qmake" and then "Build"
+- [Windows] you might need to create `translations\` and `ac_sources\` directories in the build directory
 - now you can use xpiks-qt on your computer
 
 &nbsp;
