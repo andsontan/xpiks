@@ -252,7 +252,7 @@ namespace Helpers {
         bool hasAnyTag = false;
 
         foreach (const QString &keyword, keywords) {
-            if (keyword.startsWith('#')) {
+            if (keyword.startsWith(KEYWORD_TAG_SYMBOL)) {
                 hasAnyTag = true;
                 break;
             }
@@ -269,7 +269,7 @@ namespace Helpers {
         QStringList *lastList = nullptr;
 
         foreach (const QString &keyword, list) {
-            if (keyword.startsWith('#')) {
+            if (keyword.startsWith(KEYWORD_TAG_SYMBOL)) {
                 anyTagFound = true;
                 lastTag = keyword.toLower();
                 tags.insert(lastTag);
@@ -394,7 +394,7 @@ namespace Helpers {
         result.reserve(list.length());
 
         foreach (const QString &keyword, list) {
-            if (!keyword.startsWith('#')) {
+            if (!keyword.startsWith(KEYWORD_TAG_SYMBOL)) {
                 result.append(keyword);
             }
         }

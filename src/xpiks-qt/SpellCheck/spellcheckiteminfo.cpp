@@ -30,7 +30,7 @@
 namespace SpellCheck {
     bool SpellCheckErrorsInfo::hasWrongSpelling(const QString &word) {
 #ifdef KEYWORDS_TAGS
-        if (word.startsWith('#')) { return false; }
+        if (word.startsWith(KEYWORD_TAG_SYMBOL)) { return false; }
 #endif
 
         QReadLocker readLocker(&m_ErrorsLock);

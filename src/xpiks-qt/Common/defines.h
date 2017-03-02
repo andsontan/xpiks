@@ -28,6 +28,10 @@
 #include <QDateTime>
 #include <QStandardPaths>
 
+#ifdef KEYWORDS_TAGS
+#define KEYWORD_TAG_SYMBOL '#'
+#endif
+
 // 4*(avg word size 10 * avg keywords size 50)
 #define MAX_PASTE_SIZE 2000
 
