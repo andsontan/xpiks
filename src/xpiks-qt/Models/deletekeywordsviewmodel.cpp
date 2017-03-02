@@ -195,6 +195,10 @@ namespace Models {
             const auto &keywords = metadata->getKeywords();
 
             for (auto &keyword: keywords) {
+#ifdef KEYWORDS_TAGS
+                if (keyword.startsWith(KEYWORD_TAG_SYMBOL)) { continue; }
+#endif
+
                 if (keywordsHash.contains(keyword)) {
                     keywordsHash[keyword]++;
                 } else {
