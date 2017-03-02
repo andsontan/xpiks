@@ -147,6 +147,11 @@ namespace QMLExtensions {
         return success;
     }
 
+    TabsModel::TabModel &TabsModel::getTab(int index) {
+        Q_ASSERT((0 <= index) && (index < m_TabsList.size()));
+        return m_TabsList[index];
+    }
+
     void TabsModel::recacheTab(int index) {
         Q_ASSERT((0 <= index) && (index < m_TabsList.size()));
         auto &tab = m_TabsList[index];
@@ -236,6 +241,19 @@ namespace QMLExtensions {
         auto *tabsModel = getTabsModel();
         bool isActiveTab = tabsModel->isTabActive(source_row);
         return !isActiveTab;
+    }
+
+    bool InactiveTabsModel::lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const {
+        auto *tabsModel = getTabsModel();
+
+        if (tabsModel->rowCount(QModelIndex()) <= 6) {
+            return DependentTabsModel::lessThan(source_left, source_right);
+        }
+
+        auto &leftTab = tabsModel->getTab(source_left.row());
+        auto &rightTab = tabsModel->getTab(source_right.row());
+        bool less = leftTab.m_CacheTag < rightTab.m_CacheTag;
+        return less;
     }
 
     void InactiveTabsModel::doOpenTab(int index) {

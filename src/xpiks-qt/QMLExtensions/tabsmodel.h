@@ -78,6 +78,7 @@ namespace QMLExtensions {
         bool isTabActive(int index);
         void escalateTab(int index);
         bool touchTab(int index);
+        TabModel &getTab(int index);
 
     private:
         void recacheTab(int index);
@@ -135,6 +136,7 @@ namespace QMLExtensions {
         // QSortFilterProxyModel interface
     protected:
         virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+        virtual bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const override;
 
         // DependentTabsModel interface
     protected:
