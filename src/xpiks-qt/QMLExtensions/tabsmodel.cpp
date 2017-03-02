@@ -156,10 +156,11 @@ namespace QMLExtensions {
         Q_ASSERT((0 <= index) && (index < m_TabsList.size()));
         auto &tab = m_TabsList[index];
         m_LRUcache.emplace_back(tab.m_CacheTag, index);
-        std::push_heap(m_LRUcache.begin(), m_LRUcache.end(), compareCachePairs);
 
         if (m_LRUcache.size() > 10*(size_t)m_TabsList.size()) {
             rebuildCache();
+        } else {
+            std::push_heap(m_LRUcache.begin(), m_LRUcache.end(), compareCachePairs);
         }
     }
 
