@@ -42,11 +42,23 @@ namespace QMLExtensions {
             TabComponentPathRole
         };
 
+    public:
+        struct CachedTab {
+            CachedTab(unsigned int cacheTag, int tabIndex):
+                m_CacheTag(cacheTag),
+                m_TabIndex(tabIndex)
+            { }
+
+            unsigned int m_CacheTag;
+            int m_TabIndex;
+        };
+
     private:
         struct TabModel {
             QString m_TabIconPath;
             QString m_TabComponentPath;
             unsigned int m_CacheTag;
+            bool m_IsSystemTab;
         };
 
         // QAbstractItemModel interface
@@ -55,10 +67,15 @@ namespace QMLExtensions {
         virtual QVariant data(const QModelIndex &index, int role) const override;
         virtual QHash<int, QByteArray> roleNames() const override;
 
+    signals:
+        void tabRemoved();
+        void cacheRebuilt();
+
     public:
         void addSystemTab(const QString &iconPath, const QString &componentPath);
         void addPluginTab(const QString &iconPath, const QString &componentPath);
-        bool isActiveTab(int index);
+        bool removePluginTab(int index);
+        bool isTabActive(int index);
         void escalateTab(int index);
         bool touchTab(int index);
 
@@ -70,7 +87,7 @@ namespace QMLExtensions {
     private:
         QVector<TabModel> m_TabsList;
         // <cache tag, tab index>
-        std::vector<std::pair<unsigned int, int> > m_LRUcache;
+        std::vector<CachedTab> m_LRUcache;
     };
 
     class DependentTabsModel: public QSortFilterProxyModel
@@ -78,6 +95,9 @@ namespace QMLExtensions {
         Q_OBJECT
     public:
         Q_INVOKABLE void openTab(int index);
+
+    public slots:
+        void onInvalidateRequired();
 
     protected:
         virtual void doOpenTab(int index) = 0;
