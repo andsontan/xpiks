@@ -230,6 +230,11 @@ namespace SpellCheck {
         bool isOk = false;
 
         const QString &word = queryItem->m_Word;
+
+#ifdef KEYWORDS_TAGS
+        if (word.startsWith('#')) { return true; }
+#endif
+
         const bool isInUserDict = m_UserDictionary.contains(word);
 
         isOk = isInUserDict || checkWordSpelling(word);
