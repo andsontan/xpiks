@@ -15,7 +15,7 @@ date: 2014-12-28T09:54:01+02:00
 
 ### 2. Obtaining source code:
 
-- check out Xpiks repository with Git `git clone https://github.com/Ribtoks/xpiks.git`
+- check out Xpiks repository with Git `git clone https://github.com/Ribtoks/xpiks.git` (or use git path of your Fork)
 - check out submodules `git submodules init` and `git submodules update --recursive`
 - rename `src/tiny-AES/aes.c` to `src/tiny-AES/aes.cpp`
 
