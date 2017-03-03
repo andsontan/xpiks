@@ -51,6 +51,7 @@ namespace Helpers {
     bool isUtf8(const char* const buffer);
     QString detectEncodingAndDecode(const std::string &value);
     bool is7BitAscii(const QByteArray &s);
+    bool isPunctuation(const QChar &);
     std::string string_format(const std::string fmt, ...);
     QString getUnitedHitsString(const QString &text, const std::vector<int> &hits, int radius);
 }

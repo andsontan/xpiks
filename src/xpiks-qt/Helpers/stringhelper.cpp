@@ -80,7 +80,7 @@ namespace Helpers {
             const std::function<void (int start, int length, const QString &word)> &action)
     {
         foreachPart(text,
-                    [](const QChar &c) { return c.isSpace() || c.isPunct(); },
+                    [](const QChar &c) { return c.isSpace() || isPunctuation(c); },
         pred, action);
     }
 
@@ -90,8 +90,8 @@ namespace Helpers {
         QChar curr = text[index];
         QChar prev = text[index - 1];
 
-        const bool currIsSeparator = curr.isPunct() || curr.isSpace();
-        const bool prevIsSeparator = prev.isPunct() || prev.isSpace();
+        const bool currIsSeparator = isPunctuation(curr) || curr.isSpace();
+        const bool prevIsSeparator = isPunctuation(prev) || prev.isSpace();
 
         return (skipWordBounds || !currIsSeparator) && (prevIsSeparator);
     }
@@ -102,8 +102,8 @@ namespace Helpers {
         QChar curr = text[index];
         QChar next = text[index + 1];
 
-        const bool currIsSeparator = curr.isPunct() || curr.isSpace();
-        const bool nextIsSeparator = next.isPunct() || next.isSpace();
+        const bool currIsSeparator = isPunctuation(curr) || curr.isSpace();
+        const bool nextIsSeparator = isPunctuation(next) || next.isSpace();
 
         return (skipWordBounds || !currIsSeparator) && (nextIsSeparator);
     }
@@ -430,6 +430,10 @@ done:
         }
 
         return !anyFault;
+    }
+
+    bool isPunctuation(const QChar &c) {
+        return c.isPunct() && c != QChar('/');
     }
 
     void extendSegmentToWordBoundaries(const QString &text, std::pair<int, int> &segment) {
