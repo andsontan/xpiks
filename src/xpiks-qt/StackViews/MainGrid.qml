@@ -74,7 +74,7 @@ ColumnLayout {
 
         MenuItem {
             visible: wordRightClickMenu.showAddToDict
-            text: i18.n + qsTr("Add to dictionary")
+            text: i18.n + qsTr("Add \"%1\" to dictionary").arg(wordRightClickMenu.word)
             onTriggered: spellCheckService.addWordToUserDictionary(wordRightClickMenu.word);
         }
 
