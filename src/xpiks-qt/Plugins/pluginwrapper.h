@@ -32,9 +32,8 @@
 namespace Plugins {
     class UIProvider;
 
-    class PluginWrapper: public QObject
+    class PluginWrapper
     {
-        Q_OBJECT
     public:
         PluginWrapper(XpiksPluginInterface *pluginInterface, int pluginID, UIProvider *realUIProvider);
 
@@ -55,10 +54,6 @@ namespace Plugins {
         void triggerActionSafe(int actionID) const;
         void finalizePlugin();
 
-    public slots:
-        void onCurrentEditableChanged();
-
-    private:
         void notifyPlugin(PluginNotificationFlags flag, const QVariant &data, void *pointer);
 
     private:
