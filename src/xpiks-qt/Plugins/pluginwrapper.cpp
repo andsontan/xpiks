@@ -93,8 +93,10 @@ namespace Plugins {
     }
 
     void PluginWrapper::notifyPlugin(PluginNotificationFlags flag, const QVariant &data, void *pointer) {
-        if ((int)flag & (int)m_NotificationFlags) {
-            m_PluginInterface->onPropertyChanged(flag, data, pointer);
+        if (m_IsEnabled) {
+            if ((int)flag & (int)m_NotificationFlags) {
+                m_PluginInterface->onPropertyChanged(flag, data, pointer);
+            }
         }
     }
 }
