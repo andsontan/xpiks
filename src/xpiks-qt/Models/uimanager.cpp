@@ -32,6 +32,14 @@ namespace Models {
     {
         m_ActiveTabs.setSourceModel(&m_TabsModel);
         m_InactiveTabs.setSourceModel(&m_TabsModel);
+
+        QObject::connect(&m_TabsModel, SIGNAL(tabRemoved()), &m_ActiveTabs, SLOT(onInvalidateRequired()));
+        QObject::connect(&m_TabsModel, SIGNAL(cacheRebuilt()), &m_ActiveTabs, SLOT(onInvalidateRequired()));
+
+        QObject::connect(&m_TabsModel, SIGNAL(tabRemoved()), &m_InactiveTabs, SLOT(onInvalidateRequired()));
+        QObject::connect(&m_TabsModel, SIGNAL(cacheRebuilt()), &m_InactiveTabs, SLOT(onInvalidateRequired()));
+
+        QObject::connect(&m_InactiveTabs, SIGNAL(tabOpened(int)), &m_ActiveTabs, SLOT(onInactiveTabOpened(int)));
     }
 
     void UIManager::registerCurrentItem(std::shared_ptr<QuickBuffer::ICurrentEditable> &currentItem) {
@@ -103,5 +111,10 @@ namespace Models {
         } while(false);
 
         return success;
+    }
+
+    void UIManager::initializeSystemTabs() {
+        m_TabsModel.updateCache();
+        m_TabsModel.touchTab(0);
     }
 }

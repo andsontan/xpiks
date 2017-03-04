@@ -458,6 +458,9 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("quickBuffer", &quickBuffer);
     rootContext->setContextProperty("userDictEditModel", &userDictEditModel);
 
+    rootContext->setContextProperty("activeTabs", uiManager.getActiveTabs());
+    rootContext->setContextProperty("inactiveTabs", uiManager.getInactiveTabs());
+
 #ifdef QT_DEBUG
     QVariant isDebug(true);
 #else
@@ -471,6 +474,7 @@ int main(int argc, char *argv[]) {
     uiManager.addSystemTab("qrc:/CollapserTabs/FilesFoldersIcon.qml", "qrc:/CollapserTabs/FilesFoldersTab.qml");
     uiManager.addSystemTab("qrc:/CollapserTabs/QuickBufferIcon.qml", "qrc:/CollapserTabs/QuickBufferTab.qml");
     uiManager.addSystemTab("qrc:/CollapserTabs/TranslatorIcon.qml", "qrc:/CollapserTabs/TranslatorTab.qml");
+    uiManager.initializeSystemTabs();
 
     LOG_DEBUG << "About to load main view...";
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

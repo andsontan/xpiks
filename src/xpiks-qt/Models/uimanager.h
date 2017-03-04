@@ -47,11 +47,15 @@ namespace Models {
         int generateNextTabID() { int id = m_TabID++; return id; }
 
     public:
+        void initTabs();
         bool getHasCurrentEditable() const { return m_CurrentEditable.operator bool(); }
         std::shared_ptr<QuickBuffer::ICurrentEditable> getCurrentEditable() const { return m_CurrentEditable; }
 
     public:
         void registerCurrentItem(std::shared_ptr<QuickBuffer::ICurrentEditable> &currentItem);
+        QMLExtensions::TabsModel *getTabsModel() { return &m_TabsModel; }
+        QMLExtensions::ActiveTabsModel *getActiveTabs() { return &m_ActiveTabs; }
+        QMLExtensions::InactiveTabsModel *getInactiveTabs() { return &m_InactiveTabs; }
 
     public:
         Q_INVOKABLE void clearCurrentItem();
@@ -60,6 +64,7 @@ namespace Models {
         void addSystemTab(const QString tabIconComponent, const QString &tabComponent);
         int addPluginTab(int pluginID, const QString tabIconComponent, const QString &tabComponent);
         bool removePluginTab(int pluginID, int tabID);
+        void initializeSystemTabs();
 
     signals:
         void tabsListChanged();

@@ -204,6 +204,7 @@ namespace QMLExtensions {
     }
 
     void DependentTabsModel::onInvalidateRequired() {
+        LOG_DEBUG << "#";
         invalidateFilter();
     }
 

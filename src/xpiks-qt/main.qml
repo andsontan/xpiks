@@ -1053,12 +1053,12 @@ ApplicationWindow {
 
                 Repeater {
                     id: tabsRepeater
-                    model: uiManager.tabsIcons
+                    model: activeTabs
 
-                    CustomTab {
+                    delegate: CustomTab {
                         id: customTab
                         tabIndex: index
-                        width: tabsHolder.width / tabsRepeater.count
+                        width: (tabsHolder.width - plusTab.width) / tabsRepeater.count
                         isSelected: tabsHolder.currentIndex == tabIndex
                         hovered: (!isSelected) && tabMA.containsMouse
 
@@ -1066,20 +1066,46 @@ ApplicationWindow {
                             property bool isHighlighted: customTab.isSelected || customTab.hovered
                             property color parentBackground: customTab.color
                             anchors.centerIn: parent
-                            source: modelData
+                            source: tabicon
                         }
 
                         MouseArea {
                             id: tabMA
                             anchors.fill: parent
                             hoverEnabled: true
-                            onClicked: tabsHolder.currentIndex = parent.tabIndex
+                            onClicked: {
+                                var tabIndex = parent.tabIndex;
+                                tabsHolder.currentIndex = tabIndex
+                                activeTabs.openTab(tabIndex)
+                            }
                         }
                     }
                 }
 
-                Item {
-                    Layout.fillWidth: true
+                CustomTab {
+                    id: plusTab
+                    tabIndex: tabsRepeater.count
+                    isSelected: tabsHolder.currentIndex == tabIndex
+                    hovered: (!isSelected) && plusMA.containsMouse
+                    width: 20
+                    property bool isHighlighted: isSelected || hovered
+
+                    StyledText {
+                        text: "+"
+                        font.pixelSize: 20
+                        anchors.centerIn: parent
+                        color: plusTab.isHighlighted ? Colors.labelActiveForeground : Colors.inactiveControlColor
+                    }
+
+                    MouseArea {
+                        id: plusMA
+                        anchors.fill: parent
+                        hoverEnabled: true
+                        onClicked: {
+                            var tabIndex = tabsRepeater.count;
+                            tabsHolder.currentIndex = tabIndex
+                        }
+                    }
                 }
             }
 
@@ -1096,11 +1122,11 @@ ApplicationWindow {
                     currentIndex: tabsHolder.currentIndex
 
                     Repeater {
-                        model: uiManager.tabsList
+                        model: activeTabs
 
-                        Loader {
+                        delegate: Loader {
                             id: tabLoader
-                            source: modelData
+                            source: tabcomponent
                             property int myIndex: index
 
                             Connections {
@@ -1117,9 +1143,47 @@ ApplicationWindow {
                             }
                         }
                     }
+
+                    Flow {
+                        anchors.fill: parent
+                        anchors.leftMargin: 5
+                        anchors.topMargin: 5
+                        spacing: 5
+
+                        Repeater {
+                            id: inactiveTabsRepeater
+                            model: inactiveTabs
+
+                            delegate: CustomTab {
+                                anchors.top: undefined
+                                anchors.bottom: undefined
+                                id: customInactiveTab
+                                tabIndex: index
+                                width: (tabsHolder.width - plusTab.width) / tabsRepeater.count
+                                height: 45
+                                isSelected: false
+                                hovered: (!isSelected) && inactiveTabMA.containsMouse
+
+                                Loader {
+                                    property bool isHighlighted: customInactiveTab.isSelected || customInactiveTab.hovered
+                                    property color parentBackground: customInactiveTab.color
+                                    anchors.centerIn: parent
+                                    source: tabicon
+                                }
+
+                                MouseArea {
+                                    id: inactiveTabMA
+                                    anchors.fill: parent
+                                    hoverEnabled: true
+                                    onClicked: {
+                                        inactiveTabs.openTab(tabIndex)
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
-
         }
 
         // hack for visual order of components (slider will be created after left panel)
