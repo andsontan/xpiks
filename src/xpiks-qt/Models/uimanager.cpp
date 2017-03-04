@@ -34,13 +34,13 @@ namespace Models {
 
     void UIManager::registerCurrentItem(std::shared_ptr<QuickBuffer::ICurrentEditable> &currentItem) {
         m_CurrentEditable = std::move(currentItem);
-        emit hasCurrentEditableChanged();
+        emit currentEditableChanged();
     }
 
     void UIManager::clearCurrentItem() {
         LOG_DEBUG << "#";
         m_CurrentEditable.reset();
-        emit hasCurrentEditableChanged();
+        emit currentEditableChanged();
     }
 
     void UIManager::addSystemTab(const QString tabIconComponent, const QString &tabComponent) {

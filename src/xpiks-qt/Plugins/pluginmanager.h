@@ -60,6 +60,9 @@ namespace Plugins {
         bool hasExportedActions(int row) const;
         UIProvider *getUIProvider() { return &m_UIProvider; }
 
+    public slots:
+        void onCurrentEditableChanged();
+
     public:
         Q_INVOKABLE QObject *getPluginActions(int index) const;
         Q_INVOKABLE void triggerPluginAction(int pluginID, int actionID) const;

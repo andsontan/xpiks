@@ -80,6 +80,10 @@ namespace Models {
         spellCheckKeywords();
     }
 
+    qint64 ArtworkProxyBase::getSpecialItemID() {
+        return SPECIAL_ID_INVALID;
+    }
+
     bool ArtworkProxyBase::doEditKeyword(int index, const QString &replacement) {
         LOG_INFO << "index:" << index << "replacement:" << replacement;
         auto *metadataOperator = getMetadataOperator();

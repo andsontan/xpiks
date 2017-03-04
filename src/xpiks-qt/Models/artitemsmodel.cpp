@@ -52,7 +52,8 @@ namespace Models {
     ArtItemsModel::ArtItemsModel(QObject *parent):
         AbstractListModel(parent),
         Common::BaseEntity(),
-        m_LastID(0)
+        // all items before 1024 are reserved for internal models
+        m_LastID(1024)
     {}
 
     ArtItemsModel::~ArtItemsModel() {

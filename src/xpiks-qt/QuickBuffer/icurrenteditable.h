@@ -29,6 +29,8 @@ namespace QuickBuffer {
     public:
         virtual ~ICurrentEditable() {}
 
+        virtual qint64 getItemID() = 0;
+
         virtual QString getTitle() = 0;
         virtual QString getDescription() = 0;
         virtual QStringList getKeywords() = 0;

@@ -36,6 +36,8 @@ namespace QuickBuffer {
 
         // ICurrentEditable interface
     public:
+        virtual qint64 getItemID() override;
+
         virtual QString getTitle() override;
         virtual QString getDescription() override;
         virtual QStringList getKeywords() override;

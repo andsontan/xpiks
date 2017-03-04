@@ -30,6 +30,7 @@ namespace Plugins {
     PluginWrapper::PluginWrapper(XpiksPluginInterface *pluginInterface, int pluginID, UIProvider *realUIProvider):
         m_PluginInterface(pluginInterface),
         m_ActionsModel(pluginInterface->getExportedActions(), pluginID),
+        m_NotificationFlags(pluginInterface->getDesiredNotificationFlags()),
         m_UIProviderSafe(pluginID, realUIProvider),
         m_PluginID(pluginID),
         m_IsEnabled(true),
@@ -88,6 +89,12 @@ namespace Plugins {
         }
         catch (...) {
             LOG_WARNING << "Exception on finalization";
+        }
+    }
+
+    void PluginWrapper::notifyPlugin(PluginNotificationFlags flag, const QVariant &data, void *pointer) {
+        if ((int)flag & (int)m_NotificationFlags) {
+            m_PluginInterface->onPropertyChanged(flag, data, pointer);
         }
     }
 }
