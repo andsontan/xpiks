@@ -63,7 +63,7 @@ namespace QMLExtensions {
 
         // QAbstractItemModel interface
     public:
-        virtual int rowCount(const QModelIndex &parent) const override;
+        virtual int rowCount(const QModelIndex &parent = QModelIndex()) const override;
         virtual QVariant data(const QModelIndex &index, int role) const override;
         virtual QHash<int, QByteArray> roleNames() const override;
 
@@ -94,6 +94,8 @@ namespace QMLExtensions {
     class DependentTabsModel: public QSortFilterProxyModel
     {
         Q_OBJECT
+    public:
+        explicit DependentTabsModel(QObject *parent = 0);
     public:
         Q_INVOKABLE void openTab(int index);
 

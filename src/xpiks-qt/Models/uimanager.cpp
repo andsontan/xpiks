@@ -30,6 +30,8 @@ namespace Models {
         QObject(parent),
         m_TabID(0)
     {
+        m_ActiveTabs.setSourceModel(&m_TabsModel);
+        m_InactiveTabs.setSourceModel(&m_TabsModel);
     }
 
     void UIManager::registerCurrentItem(std::shared_ptr<QuickBuffer::ICurrentEditable> &currentItem) {
@@ -45,17 +47,15 @@ namespace Models {
 
     void UIManager::addSystemTab(const QString tabIconComponent, const QString &tabComponent) {
         LOG_INFO << "icon" << tabIconComponent << "contents" << tabComponent;
-        m_TabsList.append(tabComponent);
-        m_TabsIconsList.append(tabIconComponent);
+        m_TabsModel.addSystemTab(tabIconComponent, tabComponent);
         generateNextTabID();
     }
 
     int UIManager::addPluginTab(int pluginID, const QString tabIconComponent, const QString &tabComponent) {
         LOG_INFO << "plugin" << pluginID << "icon" << tabIconComponent << "contents" << tabComponent;
 
-        int index = m_TabsList.length();
-        m_TabsList.append(tabComponent);
-        m_TabsIconsList.append(tabIconComponent);
+        int index = m_TabsModel.rowCount();
+        m_TabsModel.addPluginTab(tabIconComponent, tabComponent);
 
         int id = generateNextTabID();
         Q_ASSERT(!m_TabsIDsToIndex.contains(id));
@@ -67,7 +67,7 @@ namespace Models {
 
         m_PluginIDToTabIDs[pluginID].insert(id);
 
-        LOG_INFO << "Added tab with ID" << id;
+        LOG_INFO << "Added plugin tab with ID" << id;
 
         return id;
     }
@@ -91,23 +91,17 @@ namespace Models {
             }
 
             int index = m_TabsIDsToIndex.value(tabID);
-            if ((index < 0) || (index >= m_TabsList.length())) {
+            if ((index < 0) || (index >= m_TabsModel.rowCount())) {
                 break;
             }
 
             tabsSet.remove(tabID);
-            m_TabsList.removeAt(index);
-            m_TabsIconsList.removeAt(index);
+            m_TabsModel.removePluginTab(index);
 
             LOG_INFO << "Plugin's tab" << tabID << "removed";
             success = true;
         } while(false);
 
         return success;
-    }
-
-    void UIManager::updateTabs() {
-        emit tabsIconsChanged();
-        emit tabsListChanged();
     }
 }

@@ -97,6 +97,8 @@ namespace Plugins {
             if ((int)flag & (int)m_NotificationFlags) {
                 m_PluginInterface->onPropertyChanged(flag, data, pointer);
             }
+        } else {
+            LOG_DEBUG << "Plugin" << m_PrettyName << "is disabled";
         }
     }
 }

@@ -39,7 +39,6 @@ namespace Plugins {
         auto *uiManager = m_RealUIProvider->getUIManager();
         Q_ASSERT(uiManager != nullptr);
         int result = uiManager->addPluginTab(m_PluginID, tabIconUrl, tabComponentUrl);
-        uiManager->updateTabs();
         return result;
     }
 
@@ -47,10 +46,6 @@ namespace Plugins {
         auto *uiManager = m_RealUIProvider->getUIManager();
         Q_ASSERT(uiManager != nullptr);
         bool result = uiManager->removePluginTab(m_PluginID, tabID);
-        if (result) {
-            uiManager->updateTabs();
-        }
-
         return result;
     }
 
