@@ -74,6 +74,7 @@
 #include "Helpers/clipboardhelper.h"
 #include "Commands/commandmanager.h"
 #include "Suggestion/locallibrary.h"
+#include "QMLExtensions/tabsmodel.h"
 #include "Models/artworkuploader.h"
 #include "Warnings/warningsmodel.h"
 #include "Plugins/pluginmanager.h"

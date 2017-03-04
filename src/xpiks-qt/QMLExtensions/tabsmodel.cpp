@@ -195,6 +195,10 @@ namespace QMLExtensions {
         emit cacheRebuilt();
     }
 
+    DependentTabsModel::DependentTabsModel(QObject *parent):
+        QSortFilterProxyModel(parent)
+    { }
+
     void DependentTabsModel::openTab(int index) {
         doOpenTab(index);
     }
@@ -217,6 +221,10 @@ namespace QMLExtensions {
         return row;
     }
 
+    ActiveTabsModel::ActiveTabsModel(QObject *parent):
+        DependentTabsModel(parent)
+    { }
+
     void ActiveTabsModel::onInactiveTabOpened(int index) {
         LOG_INFO << index;
         invalidateFilter();
@@ -236,6 +244,10 @@ namespace QMLExtensions {
 
         tabsModel->touchTab(originalIndex);
     }
+
+    InactiveTabsModel::InactiveTabsModel(QObject *parent):
+        DependentTabsModel(parent)
+    { }
 
     bool InactiveTabsModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
         Q_UNUSED(source_parent);

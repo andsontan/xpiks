@@ -30,16 +30,15 @@
 #include <QStringList>
 #include "../QuickBuffer/icurrenteditable.h"
 #include "../Models/metadataelement.h"
+#include "../QMLExtensions/tabsmodel.h"
 
 namespace Models {
     class ArtworkMetadata;
     class ArtworkProxyBase;
 
-    class UIManager : public QObject
+    class UIManager: public QObject
     {
         Q_OBJECT
-        Q_PROPERTY(QStringList tabsList READ getTabsList NOTIFY tabsListChanged)
-        Q_PROPERTY(QStringList tabsIcons READ getTabsIcons NOTIFY tabsIconsChanged)
         Q_PROPERTY(bool hasCurrentEditable READ getHasCurrentEditable NOTIFY currentEditableChanged)
     public:
         explicit UIManager(QObject *parent = 0);
@@ -55,17 +54,12 @@ namespace Models {
         void registerCurrentItem(std::shared_ptr<QuickBuffer::ICurrentEditable> &currentItem);
 
     public:
-        QStringList getTabsList() const { return m_TabsList; }
-        QStringList getTabsIcons() const { return m_TabsIconsList; }
-
-    public:
         Q_INVOKABLE void clearCurrentItem();
 
     public:
         void addSystemTab(const QString tabIconComponent, const QString &tabComponent);
         int addPluginTab(int pluginID, const QString tabIconComponent, const QString &tabComponent);
         bool removePluginTab(int pluginID, int tabID);
-        void updateTabs();
 
     signals:
         void tabsListChanged();
@@ -73,12 +67,13 @@ namespace Models {
         void currentEditableChanged();
 
     private:
+        QMLExtensions::TabsModel m_TabsModel;
+        QMLExtensions::ActiveTabsModel m_ActiveTabs;
+        QMLExtensions::InactiveTabsModel m_InactiveTabs;
         std::shared_ptr<QuickBuffer::ICurrentEditable> m_CurrentEditable;
         QHash<int, QSet<int> > m_PluginIDToTabIDs;
         QHash<int, int> m_TabsIDsToIndex;
         volatile int m_TabID;
-        QStringList m_TabsList;
-        QStringList m_TabsIconsList;
     };
 }
 
