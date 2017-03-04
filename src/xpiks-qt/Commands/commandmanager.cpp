@@ -347,7 +347,7 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
 
 #ifdef WITH_PLUGINS
     if (m_PluginManager != NULL && m_UIManager != NULL) {
-        QObject::connect(m_UIManager, SIGNAL(currentEditableChanged()), m_PluginManager, SLOT(onCurrentEditableChanged()));
+        QObject::connect(m_UIManager, SIGNAL(currentEditableChanged()), m_PluginManager, SIGNAL(currentEditableChanged()));
     }
 #endif
 }

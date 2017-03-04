@@ -129,16 +129,6 @@ namespace Plugins {
         return hasActions;
     }
 
-    void PluginManager::onCurrentEditableChanged() {
-        LOG_DEBUG << "#";
-        size_t size = m_PluginsList.size();
-
-        for (size_t i = 0; i < size; ++i) {
-            std::shared_ptr<PluginWrapper> &wrapper = m_PluginsList.at(i);
-            wrapper->notifyPlugin(PluginNotificationFlags::CurrentEditbleChanged, QVariant(), nullptr);
-        }
-    }
-
     QObject *PluginManager::getPluginActions(int index) const {
         LOG_DEBUG << index;
         PluginActionsModel *item = NULL;
@@ -182,6 +172,9 @@ namespace Plugins {
         if (pluginWrapper) {
             m_PluginsList.push_back(pluginWrapper);
             m_PluginsDict.insert(pluginID, pluginWrapper);
+
+            QObject::connect(this, SIGNAL(currentEditableChanged()),
+                             pluginWrapper.get(), SLOT(onCurrentEditableChanged()));
         }
     }
 

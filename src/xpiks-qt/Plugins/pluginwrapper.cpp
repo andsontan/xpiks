@@ -92,6 +92,11 @@ namespace Plugins {
         }
     }
 
+    void PluginWrapper::onCurrentEditableChanged() {
+        LOG_DEBUG << "#";
+        notifyPlugin(PluginNotificationFlags::CurrentEditbleChanged, QVariant(), nullptr);
+    }
+
     void PluginWrapper::notifyPlugin(PluginNotificationFlags flag, const QVariant &data, void *pointer) {
         if ((int)flag & (int)m_NotificationFlags) {
             m_PluginInterface->onPropertyChanged(flag, data, pointer);
