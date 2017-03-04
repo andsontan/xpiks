@@ -79,6 +79,7 @@ namespace QMLExtensions {
         void escalateTab(int index);
         bool touchTab(int index);
         TabModel &getTab(int index);
+        void updateCache() { rebuildCache(); }
 
     private:
         void recacheTab(int index);
@@ -87,7 +88,6 @@ namespace QMLExtensions {
 
     private:
         QVector<TabModel> m_TabsList;
-        // <cache tag, tab index>
         std::vector<CachedTab> m_LRUcache;
     };
 
@@ -96,6 +96,7 @@ namespace QMLExtensions {
         Q_OBJECT
     public:
         explicit DependentTabsModel(QObject *parent = 0);
+
     public:
         Q_INVOKABLE void openTab(int index);
 
@@ -119,7 +120,7 @@ namespace QMLExtensions {
 
         // QSortFilterProxyModel interface
     protected:
-        virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;\
+        virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
 
         // DependentTabsModel interface
     protected:
