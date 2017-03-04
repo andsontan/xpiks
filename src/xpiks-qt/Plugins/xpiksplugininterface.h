@@ -33,6 +33,11 @@
 #include "../KeywordsPresets/ipresetsmanager.h"
 
 namespace Plugins {
+    enum struct PluginNotificationFlags: int {
+        None = 0,
+        CurrentEditbleChanged = 1 << 0
+    };
+
     class XpiksPluginInterface {
     public:
         virtual ~XpiksPluginInterface() {}
@@ -42,15 +47,23 @@ namespace Plugins {
         virtual const QString &getVersionString() const = 0;
         virtual const QString &getAuthor() const = 0;
 
+        // actions routines
     public:
         virtual const QVector<IPluginAction*> &getExportedActions() const = 0;
         virtual bool executeAction(int actionID) = 0;
 
+        // general routines
     public:
         virtual void initializePlugin() = 0;
         virtual void finalizePlugin() = 0;
         virtual void enablePlugin() = 0;
         virtual void disablePlugin() = 0;
+
+        // notification handlers
+    public:
+        // properties of which plugin wants to be notified
+        virtual PluginNotificationFlags getDesiredNotificationFlags() const = 0;
+        virtual void onPropertyChanged(PluginNotificationFlags flag, const QVariant &data, void *pointer) = 0;
 
     public:
         virtual void injectCommandManager(Commands::ICommandManager *commandManager) = 0;

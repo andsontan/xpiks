@@ -27,9 +27,9 @@
 #include "pluginactionsmodel.h"
 #include "sandboxeddependencies.h"
 #include "iuiprovider.h"
+#include "xpiksplugininterface.h"
 
 namespace Plugins {
-    class XpiksPluginInterface;
     class UIProvider;
 
     class PluginWrapper
@@ -54,9 +54,12 @@ namespace Plugins {
         void triggerActionSafe(int actionID) const;
         void finalizePlugin();
 
+        void notifyPlugin(PluginNotificationFlags flag, const QVariant &data, void *pointer);
+
     private:
         XpiksPluginInterface *m_PluginInterface;
         PluginActionsModel m_ActionsModel;
+        PluginNotificationFlags m_NotificationFlags;
         UIProviderSafe m_UIProviderSafe;
         int m_PluginID;
         bool m_IsEnabled;

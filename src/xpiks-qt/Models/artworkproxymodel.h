@@ -135,6 +135,8 @@ namespace Models {
             return m_ArtworkMetadata;
         }
 
+        virtual qint64 getSpecialItemID() override;
+
     private:
         void updateCurrentArtwork();
         void doResetModel();

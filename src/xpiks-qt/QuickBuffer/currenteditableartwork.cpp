@@ -47,6 +47,10 @@ namespace QuickBuffer {
         }
     }
 
+    qint64 CurrentEditableArtwork::getItemID() {
+        return m_ArtworkMetadata->getItemID();
+    }
+
     QString CurrentEditableArtwork::getTitle() {
         return m_ArtworkMetadata->getTitle();
     }

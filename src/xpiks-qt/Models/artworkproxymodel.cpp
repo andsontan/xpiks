@@ -310,6 +310,18 @@ namespace Models {
         doCopyToQuickBuffer();
     }
 
+    qint64 ArtworkProxyModel::getSpecialItemID() {
+        qint64 result = 0;
+
+        if (m_ArtworkMetadata != nullptr) {
+            result = m_ArtworkMetadata->getItemID();
+        } else {
+            result = SPECIAL_ID_ARTWORK_PROXY_MODEL;
+        }
+
+        return result;
+    }
+
     void ArtworkProxyModel::updateCurrentArtwork() {
         LOG_DEBUG << "#";
 

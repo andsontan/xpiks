@@ -344,6 +344,12 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
     if (m_PresetsModel != NULL && m_PresetsModelConfig != NULL) {
         QObject::connect(m_PresetsModelConfig, SIGNAL(presetsUpdated()), m_PresetsModel, SLOT (onPresetsUpdated()));
     }
+
+#ifdef WITH_PLUGINS
+    if (m_PluginManager != NULL && m_UIManager != NULL) {
+        QObject::connect(m_UIManager, SIGNAL(currentEditableChanged()), m_PluginManager, SLOT(onCurrentEditableChanged()));
+    }
+#endif
 }
 
 void Commands::CommandManager::ensureDependenciesInjected() {

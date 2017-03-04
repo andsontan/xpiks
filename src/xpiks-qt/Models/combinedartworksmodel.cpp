@@ -424,6 +424,10 @@ namespace Models {
         emit keywordsCountChanged();
     }
 
+    qint64 CombinedArtworksModel::getSpecialItemID() {
+        return SPECIAL_ID_COMBINED_MODEL;
+    }
+
     bool CombinedArtworksModel::doRemoveSelectedArtworks() {
         LOG_DEBUG << "#";
         bool anyRemoved = ArtworksViewModel::doRemoveSelectedArtworks();

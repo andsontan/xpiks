@@ -40,7 +40,7 @@ namespace Models {
         Q_OBJECT
         Q_PROPERTY(QStringList tabsList READ getTabsList NOTIFY tabsListChanged)
         Q_PROPERTY(QStringList tabsIcons READ getTabsIcons NOTIFY tabsIconsChanged)
-        Q_PROPERTY(bool hasCurrentEditable READ getHasCurrentEditable NOTIFY hasCurrentEditableChanged)
+        Q_PROPERTY(bool hasCurrentEditable READ getHasCurrentEditable NOTIFY currentEditableChanged)
     public:
         explicit UIManager(QObject *parent = 0);
 
@@ -70,7 +70,7 @@ namespace Models {
     signals:
         void tabsListChanged();
         void tabsIconsChanged();
-        void hasCurrentEditableChanged();
+        void currentEditableChanged();
 
     private:
         std::shared_ptr<QuickBuffer::ICurrentEditable> m_CurrentEditable;

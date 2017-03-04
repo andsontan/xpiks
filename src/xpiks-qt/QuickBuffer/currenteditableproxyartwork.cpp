@@ -29,6 +29,10 @@ namespace QuickBuffer {
         Q_ASSERT(artworkProxy != nullptr);
     }
 
+    qint64 CurrentEditableProxyArtwork::getItemID() {
+        return m_ArtworkProxy->getSpecialItemID();
+    }
+
     QString CurrentEditableProxyArtwork::getTitle() {
         return m_ArtworkProxy->getTitle();
     }

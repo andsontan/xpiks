@@ -60,6 +60,9 @@ namespace Models {
         virtual Common::IMetadataOperator *getMetadataOperator() = 0;
 
     protected:
+        virtual qint64 getSpecialItemID();
+
+    protected:
         bool doEditKeyword(int index, const QString &replacement);
         bool doRemoveKeywordAt(int keywordIndex, QString &keyword);
         bool doRemoveLastKeyword(QString &keyword);
