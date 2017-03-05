@@ -50,6 +50,8 @@ namespace QuickBuffer {
         virtual bool expandPreset(int keywordIndex, int presetIndex) override;
         virtual bool removePreset(int presetIndex) override;
 
+        virtual bool hasKeywords(const QStringList &keywordsList) override;
+
         virtual void spellCheck() override;
         virtual void update() override { /* BUMP */ }
 

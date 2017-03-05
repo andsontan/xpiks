@@ -373,6 +373,12 @@ namespace Models {
         quickBuffer->setFromBasicModel(metadataModel);
     }
 
+    bool ArtworkProxyBase::hasKeywords(const QStringList &keywordsList) {
+        auto *metadataOperator = getMetadataOperator();
+        bool result = metadataOperator->hasKeywords(keywordsList);
+        return result;
+    }
+
     void ArtworkProxyBase::spellCheckEverything() {
         auto *basicModel = getBasicMetadataModel();
         m_CommandManager->submitItemForSpellCheck(basicModel);

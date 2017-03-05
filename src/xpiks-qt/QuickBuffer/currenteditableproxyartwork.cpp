@@ -69,6 +69,10 @@ namespace QuickBuffer {
         return m_ArtworkProxy->doRemovePreset(presetIndex);
     }
 
+    bool CurrentEditableProxyArtwork::hasKeywords(const QStringList &keywordsList) {
+        return m_ArtworkProxy->hasKeywords(keywordsList);
+    }
+
     void CurrentEditableProxyArtwork::spellCheck() {
         m_ArtworkProxy->spellCheckEverything();
     }

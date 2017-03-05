@@ -183,6 +183,7 @@ namespace Models {
         void requestBackup() { m_BackupTimer.start(1000); }
         virtual bool expandPreset(int keywordIndex, const QStringList &presetList) override;
         virtual bool appendPreset(const QStringList &presetList) override;
+        virtual bool hasKeywords(const QStringList &keywordsList) override;
 
 #ifndef CORE_TESTS
     private:

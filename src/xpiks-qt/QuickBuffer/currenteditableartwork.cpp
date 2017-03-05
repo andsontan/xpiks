@@ -118,6 +118,10 @@ namespace QuickBuffer {
         return success;
     }
 
+    bool CurrentEditableArtwork::hasKeywords(const QStringList &keywordsList) {
+        return m_ArtworkMetadata->hasKeywords(keywordsList);
+    }
+
     void CurrentEditableArtwork::spellCheck() {
         m_CommandManager->submitItemForSpellCheck(m_ArtworkMetadata->getBasicModel());
     }
