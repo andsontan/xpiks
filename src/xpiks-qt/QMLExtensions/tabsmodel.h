@@ -41,6 +41,7 @@ namespace QMLExtensions {
         enum TabsModel_Roles {
             TabIconPathRole = Qt::UserRole + 1
             ,TabComponentPathRole
+            ,ExternalTabIDRole
 #ifdef QT_DEBUG
             ,CacheTagRole
 #endif
@@ -61,6 +62,7 @@ namespace QMLExtensions {
         struct TabModel {
             QString m_TabIconPath;
             QString m_TabComponentPath;
+            int m_ExternalTabID;
             unsigned int m_CacheTag;
             bool m_IsSystemTab;
         };
@@ -77,7 +79,7 @@ namespace QMLExtensions {
 
     public:
         void addSystemTab(const QString &iconPath, const QString &componentPath);
-        void addPluginTab(const QString &iconPath, const QString &componentPath);
+        void addPluginTab(int tabID, const QString &iconPath, const QString &componentPath);
         bool removePluginTab(int index);
         bool isTabActive(int index);
         void activateTab(int index);
@@ -88,7 +90,7 @@ namespace QMLExtensions {
 
     private:
         void recacheTab(int index);
-        void addTab(const QString &iconPath, const QString &componentPath);
+        void addTab(int externalID, const QString &iconPath, const QString &componentPath);
         void rebuildCache();
         void updateActiveTabs();
 

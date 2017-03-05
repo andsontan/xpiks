@@ -1070,6 +1070,7 @@ ApplicationWindow {
                         Loader {
                             property bool isHighlighted: customTab.isSelected || customTab.hovered
                             property color parentBackground: customTab.color
+                            property var tabModel: uiManager.retrieveTabsModel(tabid)
                             anchors.centerIn: parent
                             source: tabicon
                         }

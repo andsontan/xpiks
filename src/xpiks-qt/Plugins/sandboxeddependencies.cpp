@@ -35,10 +35,10 @@ namespace Plugins {
         m_RealUIProvider->openWindow(rcPath, contextModels);
     }
 
-    int UIProviderSafe::addTab(const QString &tabIconUrl, const QString &tabComponentUrl) const {
+    int UIProviderSafe::addTab(const QString &tabIconUrl, const QString &tabComponentUrl, QObject *tabModel) const {
         auto *uiManager = m_RealUIProvider->getUIManager();
         Q_ASSERT(uiManager != nullptr);
-        int result = uiManager->addPluginTab(m_PluginID, tabIconUrl, tabComponentUrl);
+        int result = uiManager->addPluginTab(m_PluginID, tabIconUrl, tabComponentUrl, tabModel);
         return result;
     }
 
