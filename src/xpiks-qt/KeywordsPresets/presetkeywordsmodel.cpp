@@ -27,9 +27,14 @@ namespace KeywordsPresets {
     PresetKeywordsModel::PresetKeywordsModel(QObject *parent):
         QAbstractListModel(parent),
         Common::BaseEntity()
-    {}
+    {
+        m_SavingTimer.setSingleShot(true);
+        QObject::connect(&m_SavingTimer, SIGNAL(timeout()), this, SLOT(onSavingTimerTriggered()));
+    }
 
     PresetKeywordsModel::~PresetKeywordsModel() {
+        removeAllPresets();
+
         for (auto *x: m_Finalizers) {
             delete x;
         }
@@ -130,7 +135,7 @@ namespace KeywordsPresets {
         LOG_INFO << name;
 
         int existingIndex = -1;
-        if (!tryFindSinglePresetByName(name, true, existingIndex)) {
+        if (!tryFindPresetByFullName(name, false, existingIndex)) {
             int lastIndex = getPresetsCount();
 
             beginInsertRows(QModelIndex(), lastIndex, lastIndex);
@@ -138,14 +143,40 @@ namespace KeywordsPresets {
             endInsertRows();
 
             index = lastIndex;
-
-#ifndef CORE_TESTS
-            auto *presetConfig = m_CommandManager->getPresetsModelConfig();
-            presetConfig->saveFromModel(m_PresetsList);
-#endif
         } else {
             index = existingIndex;
         }
+    }
+
+    void PresetKeywordsModel::requestBackup() {
+        LOG_DEBUG << "#";
+        m_SavingTimer.start(2000);
+    }
+
+    bool PresetKeywordsModel::tryFindPresetByFullName(const QString &name, bool caseSensitive, int &index) {
+        LOG_INFO << name;
+        int foundIndex = -1;
+        size_t size = m_PresetsList.size();
+        Qt::CaseSensitivity caseSensivity = caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
+
+        for (size_t i = 0; i < size; ++i) {
+            PresetModel *preset = m_PresetsList[i];
+
+            if (QString::compare(name, preset->m_PresetName, caseSensivity) == 0) {
+                // full match always overrides
+                foundIndex = (int)i;
+                break;
+            }
+        }
+
+        bool found = foundIndex != -1;
+
+        if (found) {
+            index = foundIndex;
+            LOG_INFO << "found [" << m_PresetsList[foundIndex]->m_PresetName << "] with index" << foundIndex;
+        }
+
+        return found;
     }
 
     void PresetKeywordsModel::removeItem(int row) {
@@ -291,21 +322,37 @@ namespace KeywordsPresets {
         endResetModel();
     }
 
+    void PresetKeywordsModel::onPresetsUpdated() {
+         LOG_INFO << "loading Model";
+         loadModelFromConfig();
+         requestBackup();
+    }
+
+    void PresetKeywordsModel::onSavingTimerTriggered() {
+        LOG_DEBUG << "#";
+        saveToConfig();
+    }
+
     void PresetKeywordsModel::doLoadFromConfig() {
 #ifndef CORE_TESTS
         auto *presetConfig = m_CommandManager->getPresetsModelConfig();
         auto &presetData = presetConfig->m_PresetData;
 
-        removeAllPresets();
+        // removeAllPresets();
 
         for (auto &item: presetData) {
             auto &keywords = item.m_Keywords;
             auto &name = item.m_Name;
+            int index;
 
-            PresetModel *model = new PresetModel(name);
-            model->m_KeywordsModel.setKeywords(keywords);
-            m_PresetsList.push_back(model);
-            m_CommandManager->submitItemForSpellCheck(&model->m_KeywordsModel, Common::SpellCheckFlags::Keywords);
+            if (!tryFindPresetByFullName(name, false, index)) {
+                PresetModel *model = new PresetModel(name);
+                model->m_KeywordsModel.setKeywords(keywords);
+                m_PresetsList.push_back(model);
+                m_CommandManager->submitItemForSpellCheck(&model->m_KeywordsModel, Common::SpellCheckFlags::Keywords);
+            } else {
+                LOG_WARNING << "Preset" << name << "already exists. Skipping...";
+            }
         }
 #endif
     }

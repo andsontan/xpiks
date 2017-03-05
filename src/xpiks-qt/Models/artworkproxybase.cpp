@@ -322,6 +322,10 @@ namespace Models {
 #ifdef KEYWORDS_TAGS
             keywords = Helpers::clearTagsFromList(keywords);
 #endif
+            for (auto &keyword: keywords) {
+                keyword = keyword.toLower();
+            }
+
             success = doRemoveKeywords(keywords.toSet(), false);
         }
 

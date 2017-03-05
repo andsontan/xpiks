@@ -56,7 +56,7 @@ namespace Warnings {
     {}
 
     void WarningsSettingsModel::initializeConfigs() {
-        LOG_DEBUG << '#';
+        LOG_DEBUG << "#";
         QString localConfigPath;
 
         QString appDataPath = XPIKS_USERDATA_PATH;

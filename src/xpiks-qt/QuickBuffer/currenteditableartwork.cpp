@@ -110,6 +110,10 @@ namespace QuickBuffer {
             keywords = Helpers::clearTagsFromList(keywords);
 #endif
 
+            for (auto &keyword: keywords) {
+                keyword = keyword.toLower();
+            }
+
             std::shared_ptr<Commands::DeleteKeywordsCommand> deleteKeywordsCommand(
                         new Commands::DeleteKeywordsCommand(artworksList, keywords.toSet(), false));
             m_CommandManager->processCommand(deleteKeywordsCommand);

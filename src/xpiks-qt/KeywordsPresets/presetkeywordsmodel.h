@@ -27,6 +27,7 @@
 #include "../Common/abstractlistmodel.h"
 #include <QAbstractListModel>
 #include <QSortFilterProxyModel>
+#include <QTimer>
 #include "ipresetsmanager.h"
 
 namespace KeywordsPresets {
@@ -76,6 +77,9 @@ namespace KeywordsPresets {
         virtual bool tryFindSinglePresetByName(const QString &name, bool strictMatch, int &index) override;
         virtual void findPresetsByName(const QString &name, QVector<QPair<int, QString> > &results) override;
         virtual void findOrRegisterPreset(const QString &name, const QStringList &keywords, int &index) override;
+        virtual void requestBackup() override;
+
+        bool tryFindPresetByFullName(const QString &name, bool caseSensitive, int &index);
 
     private:
         enum PresetKeywords_Roles {
@@ -110,10 +114,15 @@ namespace KeywordsPresets {
         Q_INVOKABLE void plainTextEdit(int index, const QString &rawKeywords, bool spaceIsSeparator);
         Q_INVOKABLE QObject *getKeywordsModel(int index);
         Q_INVOKABLE void saveToConfig();
+
+    private:
         /*Q_INVOKABLE*/ void loadModelFromConfig();
 
     public slots:
-        void onPresetsUpdated() { LOG_INFO << "loading Model"; loadModelFromConfig(); }
+        void onPresetsUpdated();
+
+    private slots:
+        void onSavingTimerTriggered();
 
     private:
         void doLoadFromConfig();
@@ -122,6 +131,7 @@ namespace KeywordsPresets {
     private:
         std::vector<PresetModel *> m_PresetsList;
         std::vector<PresetModel *> m_Finalizers;
+        QTimer m_SavingTimer;
     };
 
     class FilteredPresetKeywordsModel:
