@@ -154,7 +154,7 @@ std::shared_ptr<Commands::ICommandResult> Commands::AddArtworksCommand::execute(
         accountVectors(artworksRepository, artworksToImport);
         artworksRepository->updateCountsForExistingDirectories();
 
-        std::unique_ptr<UndoRedo::IHistoryItem> addArtworksItem(new UndoRedo::AddArtworksHistoryItem(initialCount, newFilesCount));
+        std::unique_ptr<UndoRedo::IHistoryItem> addArtworksItem(new UndoRedo::AddArtworksHistoryItem(getCommandID() ,initialCount, newFilesCount));
         commandManager->recordHistoryItem(addArtworksItem);
     }
 

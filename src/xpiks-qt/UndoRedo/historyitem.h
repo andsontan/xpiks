@@ -41,14 +41,19 @@ namespace UndoRedo {
     class HistoryItem : public IHistoryItem
     {
     public:
-        HistoryItem(HistoryActionType actionType) : m_ActionType(actionType) {}
+        HistoryItem(HistoryActionType actionType, int commandID) :
+            m_ActionType(actionType),
+            m_CommandID(commandID)
+        {}
         virtual ~HistoryItem() {}
 
     public:
         virtual int getActionType() const override { return (int)m_ActionType; }
+        virtual int getCommandID() const override { return m_CommandID; }
 
     private:
         HistoryActionType m_ActionType;
+        int m_CommandID;
     };
 }
 

@@ -99,8 +99,11 @@ std::shared_ptr<Commands::ICommandResult> Commands::CombinedEditCommand::execute
         affectedItems.append(metadata);
     }
 
-    std::unique_ptr<UndoRedo::IHistoryItem> modifyArtworksItem(new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
-                                                                                                       UndoRedo::CombinedEditModificationType));
+    std::unique_ptr<UndoRedo::IHistoryItem> modifyArtworksItem(
+                new UndoRedo::ModifyArtworksHistoryItem(
+                    getCommandID(),
+                    artworksBackups, indicesToUpdate,
+                    UndoRedo::CombinedEditModificationType));
     commandManager->recordHistoryItem(modifyArtworksItem);
 
     std::shared_ptr<ICommandResult> result(new CombinedEditCommandResult(affectedItems, itemsToSave, indicesToUpdate));

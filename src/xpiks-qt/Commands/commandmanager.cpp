@@ -238,10 +238,9 @@ void Commands::CommandManager::InjectDependency(QuickBuffer::QuickBuffer *quickB
 }
 
 std::shared_ptr<Commands::ICommandResult> Commands::CommandManager::processCommand(const std::shared_ptr<ICommandBase> &command)
-#ifndef CORE_TESTS
-const
-#endif
 {
+    int id = generateNextCommandID();
+    command->assignCommandID(id);
     std::shared_ptr<Commands::ICommandResult> result = command->execute(this);
 
     result->afterExecCallback(this);
@@ -348,6 +347,10 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
 #ifdef WITH_PLUGINS
     if (m_PluginManager != NULL && m_UIManager != NULL) {
         QObject::connect(m_UIManager, SIGNAL(currentEditableChanged()), m_PluginManager, SLOT(onCurrentEditableChanged()));
+    }
+
+    if (m_PluginManager != NULL && m_UndoRedoManager) {
+        QObject::connect(m_UndoRedoManager, SIGNAL(actionUndone(int)), m_PluginManager, SLOT(onLastActionUndone(int)));
     }
 #endif
 }

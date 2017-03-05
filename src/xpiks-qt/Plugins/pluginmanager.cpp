@@ -139,6 +139,16 @@ namespace Plugins {
         }
     }
 
+    void PluginManager::onLastActionUndone(int commandID) {
+        LOG_DEBUG << "#";
+        size_t size = m_PluginsList.size();
+
+        for (size_t i = 0; i < size; ++i) {
+            std::shared_ptr<PluginWrapper> &wrapper = m_PluginsList.at(i);
+            wrapper->notifyPlugin(PluginNotificationFlags::ActionUndone, QVariant::fromValue(commandID), nullptr);
+        }
+    }
+
     QObject *PluginManager::getPluginActions(int index) const {
         LOG_DEBUG << index;
         PluginActionsModel *item = NULL;

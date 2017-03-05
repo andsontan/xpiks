@@ -57,6 +57,7 @@ namespace UndoRedo {
         void undoDescriptionChanged();
         void itemRecorded();
         void undoStackEmpty();
+        void actionUndone(int commandID);
 
     private:
         QString getUndoDescription() const { return m_HistoryStack.empty() ? "" : m_HistoryStack.top()->getDescription(); }

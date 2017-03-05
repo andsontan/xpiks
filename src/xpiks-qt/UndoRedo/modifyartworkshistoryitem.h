@@ -40,10 +40,10 @@ namespace UndoRedo {
     class ModifyArtworksHistoryItem : public HistoryItem
     {
     public:
-        ModifyArtworksHistoryItem(const std::vector<ArtworkMetadataBackup> &backups,
+        ModifyArtworksHistoryItem(int commandID, const std::vector<ArtworkMetadataBackup> &backups,
                                   const QVector<int> &indices,
                                   ModificationType modificationType) :
-            HistoryItem(HistoryActionType::ModifyArtworks),
+            HistoryItem(HistoryActionType::ModifyArtworks, commandID),
             m_ArtworksBackups(backups),
             m_Indices(indices),
             m_ModificationType(modificationType)

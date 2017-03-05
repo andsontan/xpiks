@@ -36,12 +36,7 @@ namespace Commands {
     public:
         virtual ~ICommandManager() {}
 
-        virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<ICommandBase> &command)
-#ifndef CORE_TESTS
-        const
-#endif
-        = 0;
-
+        virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<ICommandBase> &command) = 0;
         virtual void addWarningsService(Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *service) = 0;
     };
 }

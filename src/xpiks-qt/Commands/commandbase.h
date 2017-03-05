@@ -43,15 +43,19 @@ namespace Commands {
     {
     public:
         CommandBase(CommandType commandType):
-            m_CommandType(commandType)
+            m_CommandType(commandType),
+            m_CommandID(-1)
         {}
         virtual ~CommandBase() {}
 
     public:
         virtual int getCommandType() const override { return (int)m_CommandType; }
+        virtual int getCommandID() const override { return m_CommandID; }
+        virtual void assignCommandID(int commandID) override { Q_ASSERT(m_CommandID == -1); m_CommandID = commandID; }
 
     private:
         CommandType m_CommandType;
+        int m_CommandID;
     };
 
     class CommandResult : public ICommandResult {

@@ -165,7 +165,8 @@ namespace Commands {
             m_UIManager(NULL),
             m_ArtworkProxyModel(NULL),
             m_QuickBuffer(NULL),
-            m_AfterInitCalled(false)
+            m_AfterInitCalled(false),
+            m_LastCommandID(0)
         { }
 
         virtual ~CommandManager() {}
@@ -208,12 +209,11 @@ namespace Commands {
         void InjectDependency(Models::ArtworkProxyModel *artworkProxy);
         void InjectDependency(QuickBuffer::QuickBuffer *quickBuffer);
 
+    private:
+        int generateNextCommandID() { int id = m_LastCommandID++; return id; }
+
     public:
-        virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<ICommandBase> &command)
-#ifndef CORE_TESTS
-        const
-#endif
-        override;
+        virtual std::shared_ptr<Commands::ICommandResult> processCommand(const std::shared_ptr<ICommandBase> &command) override;
         virtual void addWarningsService(Common::IServiceBase<Common::IBasicArtwork, Common::WarningsCheckFlags> *service) override;
 
     public:
@@ -369,6 +369,7 @@ namespace Commands {
 #endif
 
         volatile bool m_AfterInitCalled;
+        volatile int m_LastCommandID;
     };
 }
 
