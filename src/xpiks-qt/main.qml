@@ -1062,6 +1062,11 @@ ApplicationWindow {
                         isSelected: tabsHolder.currentIndex == tabIndex
                         hovered: (!isSelected) && tabMA.containsMouse
 
+                        function activateThisTab() {
+                            var tabIndex = customTab.tabIndex;
+                            tabsHolder.currentIndex = tabIndex
+                        }
+
                         Loader {
                             property bool isHighlighted: customTab.isSelected || customTab.hovered
                             property color parentBackground: customTab.color
@@ -1069,13 +1074,31 @@ ApplicationWindow {
                             source: tabicon
                         }
 
+                        Connections {
+                            target: activeTabs
+                            onTabActivateRequested: {
+                                console.log("On tab opened " + originalTabIndex)
+                                if (activeTabs.getIndex(customTab.tabIndex) === originalTabIndex) {
+                                    customTab.activateThisTab()
+                                }
+                            }
+                        }
+
+                        StyledText {
+                            enabled: debugTabs
+                            visible: debugTabs
+                            anchors.top: parent.top
+                            anchors.right: parent.right
+                            text: cachetag
+                            isActive: false
+                        }
+
                         MouseArea {
                             id: tabMA
                             anchors.fill: parent
                             hoverEnabled: true
                             onClicked: {
-                                var tabIndex = parent.tabIndex;
-                                tabsHolder.currentIndex = tabIndex
+                                customTab.activateThisTab()
                                 activeTabs.openTab(tabIndex)
                             }
                         }
@@ -1090,12 +1113,21 @@ ApplicationWindow {
                     width: 20
                     property bool isHighlighted: isSelected || hovered
 
-                    StyledText {
+                    TriangleElement {
+                        anchors.centerIn: parent
+                        anchors.verticalCenterOffset: isFlipped ? height*0.3 : 0
+                        color: (enabled && (plusMA.containsMouse || plusTab.isHighlighted)) ? Colors.labelActiveForeground : Colors.labelInactiveForeground
+                        isFlipped: !plusTab.isSelected
+                        width: parent.width * 0.6
+                        height: width * 0.5
+                    }
+
+                    /*StyledText {
                         text: "+"
                         font.pixelSize: 20
                         anchors.centerIn: parent
-                        color: plusTab.isHighlighted ? Colors.labelActiveForeground : Colors.inactiveControlColor
-                    }
+                        color: plusTab.isHighlighted ? Colors.labelActiveForeground : Colors.artworkActiveColor
+                    }*/
 
                     MouseArea {
                         id: plusMA
@@ -1169,6 +1201,15 @@ ApplicationWindow {
                                     property color parentBackground: customInactiveTab.color
                                     anchors.centerIn: parent
                                     source: tabicon
+                                }
+
+                                StyledText {
+                                    enabled: debugTabs
+                                    visible: debugTabs
+                                    anchors.top: parent.top
+                                    anchors.right: parent.right
+                                    text: cachetag
+                                    isActive: false
                                 }
 
                                 MouseArea {

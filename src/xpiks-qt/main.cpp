@@ -467,6 +467,7 @@ int main(int argc, char *argv[]) {
     QVariant isDebug(false);
 #endif
     rootContext->setContextProperty("debug", isDebug);
+    rootContext->setContextProperty("debugTabs", isDebug);
 
     engine.addImageProvider("global", globalProvider);
     engine.addImageProvider("cached", cachingProvider);

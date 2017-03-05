@@ -115,6 +115,11 @@ namespace Models {
 
     void UIManager::initializeSystemTabs() {
         m_TabsModel.updateCache();
+
+        m_TabsModel.touchTab(0);
+        m_TabsModel.touchTab(1);
+        m_TabsModel.touchTab(2);
+
         m_TabsModel.touchTab(0);
     }
 }
