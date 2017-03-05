@@ -100,9 +100,10 @@ namespace Commands {
 
             if (!removedItemsFilepathes.empty()) {
                 std::unique_ptr<UndoRedo::IHistoryItem> removeArtworksItem(
-                        new UndoRedo::RemoveArtworksHistoryItem(removedItemsIndices,
-                                                            removedItemsFilepathes,
-                                                            removedAttachedVectors));
+                        new UndoRedo::RemoveArtworksHistoryItem(getCommandID(),
+                                                                removedItemsIndices,
+                                                                removedItemsFilepathes,
+                                                                removedAttachedVectors));
                 commandManager->recordHistoryItem(removeArtworksItem);
             }
 

@@ -63,8 +63,11 @@ namespace Commands {
         }
 
         if (!artworksBackups.empty()) {
-            std::unique_ptr<UndoRedo::IHistoryItem> modifyArtworksItem(new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
-                                                                                                               UndoRedo::CombinedEditModificationType));
+            std::unique_ptr<UndoRedo::IHistoryItem> modifyArtworksItem(
+                        new UndoRedo::ModifyArtworksHistoryItem(
+                            getCommandID(),
+                            artworksBackups, indicesToUpdate,
+                            UndoRedo::CombinedEditModificationType));
             commandManager->recordHistoryItem(modifyArtworksItem);
         }
 

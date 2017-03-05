@@ -37,6 +37,7 @@ namespace UndoRedo {
         virtual void undo(const Commands::ICommandManager *commandManager) const = 0;
         virtual QString getDescription() const = 0;
         virtual int getActionType() const = 0;
+        virtual int getCommandID() const = 0;
     };
 }
 

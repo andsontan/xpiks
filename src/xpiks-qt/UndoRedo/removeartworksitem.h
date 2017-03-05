@@ -33,10 +33,10 @@ namespace UndoRedo {
     class RemoveArtworksHistoryItem : public HistoryItem
     {
     public:
-        RemoveArtworksHistoryItem(const QVector<int> &removedArtworksIndices,
+        RemoveArtworksHistoryItem(int commandID, const QVector<int> &removedArtworksIndices,
                                   const QStringList &removedArtworksFilepathes,
                                   const QStringList &removedAttachedVectors):
-            HistoryItem(HistoryActionType::RemovedArtworks),
+            HistoryItem(HistoryActionType::RemovedArtworks, commandID),
             m_RemovedArtworksIndices(removedArtworksIndices),
             m_RemovedArtworksPathes(removedArtworksFilepathes),
             m_RemovedAttachedVectors(removedAttachedVectors)

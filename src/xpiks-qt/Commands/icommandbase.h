@@ -41,6 +41,8 @@ namespace Commands {
 
         virtual std::shared_ptr<ICommandResult> execute(const ICommandManager *commandManager) const = 0;
         virtual int getCommandType() const = 0;
+        virtual int getCommandID() const = 0;
+        virtual void assignCommandID(int commandID) = 0;
     };
 }
 

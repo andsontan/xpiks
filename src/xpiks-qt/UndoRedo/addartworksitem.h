@@ -33,15 +33,15 @@ namespace UndoRedo {
    class AddArtworksHistoryItem : public HistoryItem
     {
     public:
-        AddArtworksHistoryItem(int firstIndex, int count) :
-           HistoryItem(HistoryActionType::AddArtworks)
+        AddArtworksHistoryItem(int commandID, int firstIndex, int count) :
+           HistoryItem(HistoryActionType::AddArtworks, commandID)
         {
             Q_ASSERT(count > 0);
             m_AddedRanges.append(qMakePair(firstIndex, firstIndex + count - 1));
         }
 
-        AddArtworksHistoryItem(const QVector<QPair<int, int> > &rangesAdded) :
-           HistoryItem(HistoryActionType::AddArtworks),
+        AddArtworksHistoryItem(int commandID, const QVector<QPair<int, int> > &rangesAdded) :
+           HistoryItem(HistoryActionType::AddArtworks, commandID),
            m_AddedRanges(rangesAdded)
         {
             Q_ASSERT(!rangesAdded.empty());

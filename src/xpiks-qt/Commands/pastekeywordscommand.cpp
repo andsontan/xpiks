@@ -61,8 +61,11 @@ std::shared_ptr<Commands::ICommandResult> Commands::PasteKeywordsCommand::execut
         commandManager->submitForWarningsCheck(affectedArtworks);
         commandManager->saveArtworksBackups(affectedArtworks);
 
-        std::unique_ptr<UndoRedo::IHistoryItem> modifyArtworksItem(new UndoRedo::ModifyArtworksHistoryItem(artworksBackups, indicesToUpdate,
-                                                                                                           UndoRedo::PasteModificationType));
+        std::unique_ptr<UndoRedo::IHistoryItem> modifyArtworksItem(
+                    new UndoRedo::ModifyArtworksHistoryItem(
+                        getCommandID(),
+                        artworksBackups, indicesToUpdate,
+                        UndoRedo::PasteModificationType));
         commandManager->recordHistoryItem(modifyArtworksItem);
     } else {
         LOG_WARNING << "Pasted zero real words!";

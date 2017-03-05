@@ -63,9 +63,12 @@ namespace Commands {
             commandManager->submitForWarningsCheck(affectedArtworks);
             commandManager->saveArtworksBackups(affectedArtworks);
 
-            std::unique_ptr<UndoRedo::IHistoryItem> modifyArtworksItem(new UndoRedo::ModifyArtworksHistoryItem(artworksBackups,
-                                                                                                               QVector<int>() << indexToUpdate,
-                                                                                                               UndoRedo::PasteModificationType));
+            std::unique_ptr<UndoRedo::IHistoryItem> modifyArtworksItem(
+                        new UndoRedo::ModifyArtworksHistoryItem(
+                            getCommandID(),
+                            artworksBackups,
+                            QVector<int>() << indexToUpdate,
+                            UndoRedo::PasteModificationType));
             commandManager->recordHistoryItem(modifyArtworksItem);
         } else {
             LOG_WARNING << "Failed to expand preset";

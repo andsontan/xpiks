@@ -54,7 +54,9 @@ bool UndoRedo::UndoRedoManager::undoLastAction() {
 
         emit canUndoChanged();
         emit undoDescriptionChanged();
+        int commandID = historyItem->getCommandID();
         historyItem->undo(m_CommandManager);
+        emit actionUndone(commandID);
     } else {
         m_Mutex.unlock();
         LOG_WARNING << "No item for undo";
