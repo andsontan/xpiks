@@ -88,6 +88,7 @@ namespace Models {
         void doHandleUserDictChanged(const QStringList &keywords, bool overwritten);
         void doHandleUserDictCleared();
         void doCopyToQuickBuffer();
+        bool hasKeywords(const QStringList &keywordsList);
 
     private:
         void spellCheckEverything();

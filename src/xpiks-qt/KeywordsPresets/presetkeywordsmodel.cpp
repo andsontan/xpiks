@@ -126,10 +126,8 @@ namespace KeywordsPresets {
         }
     }
 
-    bool PresetKeywordsModel::findOrRegisterPreset(const QString &name, const QStringList &keywords, int &index) {
+    void PresetKeywordsModel::findOrRegisterPreset(const QString &name, const QStringList &keywords, int &index) {
         LOG_INFO << name;
-
-        bool found = false;
 
         int existingIndex = -1;
         if (!tryFindSinglePresetByName(name, true, existingIndex)) {
@@ -140,12 +138,12 @@ namespace KeywordsPresets {
             endInsertRows();
 
             index = lastIndex;
+
+            auto *presetConfig = m_CommandManager->getPresetsModelConfig();
+            presetConfig->saveFromModel(m_PresetsList);
         } else {
-            found = true;
             index = existingIndex;
         }
-
-        return found;
     }
 
     void PresetKeywordsModel::removeItem(int row) {

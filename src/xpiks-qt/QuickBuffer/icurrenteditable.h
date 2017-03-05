@@ -43,6 +43,8 @@ namespace QuickBuffer {
         virtual bool expandPreset(int keywordIndex, int presetIndex) = 0;
         virtual bool removePreset(int presetIndex) = 0;
 
+        virtual bool hasKeywords(const QStringList &keywordsList) = 0;
+
         virtual void spellCheck() = 0;
         virtual void update() = 0;
     };

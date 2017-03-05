@@ -75,7 +75,7 @@ namespace KeywordsPresets {
         void setName(int presetIndex, const QString &name);
         virtual bool tryFindSinglePresetByName(const QString &name, bool strictMatch, int &index) override;
         virtual void findPresetsByName(const QString &name, QVector<QPair<int, QString> > &results) override;
-        virtual bool findOrRegisterPreset(const QString &name, const QStringList &keywords, int &index) override;
+        virtual void findOrRegisterPreset(const QString &name, const QStringList &keywords, int &index) override;
 
     private:
         enum PresetKeywords_Roles {

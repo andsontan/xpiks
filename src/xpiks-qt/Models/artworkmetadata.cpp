@@ -245,4 +245,9 @@ namespace Models {
         m_MetadataModel.disconnect();
         this->disconnect();
     }
+
+    bool ArtworkMetadata::hasKeywords(const QStringList &keywordsList) {
+        bool result = m_MetadataModel.hasKeywords(keywordsList);
+        return result;
+    }
 }

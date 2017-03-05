@@ -231,6 +231,32 @@ namespace Common {
         return result;
     }
 
+    bool BasicKeywordsModel::appendPreset(const QStringList &presetList) {
+        LOG_DEBUG << "#";
+        bool result = false;
+        result = appendKeywords(presetList) > 0;
+            result = true;
+        }
+
+        return result;
+    }
+
+    bool BasicKeywordsModel::appendPreset(const QStringList &presetList) {
+        LOG_DEBUG << "#";
+        bool result = false;
+        result = appendKeywords(presetList) > 0;
+        return result;
+    }
+
+    bool BasicKeywordsModel::hasKeywords(const QStringList &keywordsList) {
+        QReadLocker readLocker(&m_KeywordsLock);
+
+        Q_UNUSED(readLocker);
+
+        bool result = hasKeywordsUnsafe(keywordsList);
+        return result;
+    }
+
     bool BasicKeywordsModel::areKeywordsEmpty() {
         QReadLocker readLocker(&m_KeywordsLock);
 
@@ -514,6 +540,19 @@ namespace Common {
 
         int addedCount = appendKeywordsUnsafe(keywordsList);
         LOG_INFO << addedCount << "new added";
+    }
+
+    bool BasicKeywordsModel::hasKeywordsUnsafe(const QStringList &keywordsList) const {
+        bool anyMissing = false;
+
+        for (auto &item: keywordsList) {
+            if (canBeAddedUnsafe(item.simplified())) {
+                anyMissing = true;
+                break;
+            }
+        }
+
+        return !anyMissing;
     }
 
     void BasicKeywordsModel::removeKeywordsAtIndicesUnsafe(const QVector<int> &indices) {
