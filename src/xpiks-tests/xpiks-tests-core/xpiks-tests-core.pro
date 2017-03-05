@@ -165,7 +165,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/QuickBuffer/currenteditableproxyartwork.cpp \
     ../../xpiks-qt/QuickBuffer/quickbuffer.cpp \
     ../../xpiks-qt/Models/artworkproxymodel.cpp \
-    ../../xpiks-qt/Models/uimanager.cpp
+    ../../xpiks-qt/Models/uimanager.cpp \
+    ../../xpiks-qt/QMLExtensions/tabsmodel.cpp
 
 HEADERS += \
     encryption_tests.h \
@@ -286,5 +287,6 @@ HEADERS += \
     ../../xpiks-qt/QuickBuffer/quickbuffer.h \
     ../../xpiks-qt/Models/artworkproxymodel.h \
     ../../xpiks-qt/Models/uimanager.h \
-    ../../xpiks-qt/KeywordsPresets/ipresetsmanager.h
+    ../../xpiks-qt/KeywordsPresets/ipresetsmanager.h \
+    ../../xpiks-qt/QMLExtensions/tabsmodel.h
 

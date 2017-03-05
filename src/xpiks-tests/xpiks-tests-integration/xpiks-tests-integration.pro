@@ -173,7 +173,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/QuickBuffer/quickbuffer.cpp \
     ../../xpiks-qt/Models/artworkproxymodel.cpp \
     ../../xpiks-qt/SpellCheck/userdicteditmodel.cpp \
-    userdictedittest.cpp
+    userdictedittest.cpp \
+    ../../xpiks-qt/QMLExtensions/tabsmodel.cpp
 
 RESOURCES +=
 
@@ -378,7 +379,8 @@ HEADERS += \
     ../../xpiks-qt/Models/artworkproxymodel.h \
     ../../xpiks-qt/KeywordsPresets/ipresetsmanager.h \
     ../../xpiks-qt/SpellCheck/userdicteditmodel.h \
-    userdictedittest.h
+    userdictedittest.h \
+    ../../xpiks-qt/QMLExtensions/tabsmodel.h
 
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
