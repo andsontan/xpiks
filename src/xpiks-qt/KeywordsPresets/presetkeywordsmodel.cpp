@@ -139,8 +139,10 @@ namespace KeywordsPresets {
 
             index = lastIndex;
 
+#ifndef CORE_TESTS
             auto *presetConfig = m_CommandManager->getPresetsModelConfig();
             presetConfig->saveFromModel(m_PresetsList);
+#endif
         } else {
             index = existingIndex;
         }
