@@ -34,7 +34,7 @@ namespace Plugins {
         virtual ~IUIProvider() {}
 
         virtual void openWindow(const QUrl &rcPath, const QHash<QString, QObject*> &contextModels = QHash<QString, QObject*>()) const = 0;
-        virtual int addTab(const QString &tabIconUrl, const QString &tabComponentUrl) const = 0;
+        virtual int addTab(const QString &tabIconUrl, const QString &tabComponentUrl, QObject *tabModel) const = 0;
         virtual bool removeTab(int tabID) const = 0;
         virtual std::shared_ptr<QuickBuffer::ICurrentEditable> getCurrentEditable() const = 0;
     };

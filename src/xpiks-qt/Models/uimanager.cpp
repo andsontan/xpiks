@@ -28,7 +28,7 @@
 namespace Models {
     UIManager::UIManager(QObject *parent) :
         QObject(parent),
-        m_TabID(0)
+        m_TabID(42)
     {
         m_ActiveTabs.setSourceModel(&m_TabsModel);
         m_InactiveTabs.setSourceModel(&m_TabsModel);
@@ -53,21 +53,37 @@ namespace Models {
         emit currentEditableChanged();
     }
 
+    QObject *UIManager::retrieveTabsModel(int tabID) {
+        QObject *model = nullptr;
+        if (m_TabIDsToModel.contains(tabID)) {
+            model = m_TabIDsToModel[tabID];
+            QQmlEngine::setObjectOwnership(model, QQmlEngine::CppOwnership);
+        }
+
+        return model;
+    }
+
     void UIManager::addSystemTab(const QString tabIconComponent, const QString &tabComponent) {
         LOG_INFO << "icon" << tabIconComponent << "contents" << tabComponent;
         m_TabsModel.addSystemTab(tabIconComponent, tabComponent);
         generateNextTabID();
     }
 
-    int UIManager::addPluginTab(int pluginID, const QString tabIconComponent, const QString &tabComponent) {
+    int UIManager::addPluginTab(int pluginID, const QString tabIconComponent, const QString &tabComponent, QObject *tabModel) {
         LOG_INFO << "plugin" << pluginID << "icon" << tabIconComponent << "contents" << tabComponent;
 
         int index = m_TabsModel.rowCount();
-        m_TabsModel.addPluginTab(tabIconComponent, tabComponent);
-
         int id = generateNextTabID();
+
+        m_TabsModel.addPluginTab(id, tabIconComponent, tabComponent);
+
         Q_ASSERT(!m_TabsIDsToIndex.contains(id));
         m_TabsIDsToIndex.insert(id, index);
+
+        if (tabModel != nullptr) {
+            Q_ASSERT(!m_TabIDsToModel.contains(id));
+            m_TabIDsToModel.insert(id, tabModel);
+        }
 
         if (!m_PluginIDToTabIDs.contains(pluginID)) {
             m_PluginIDToTabIDs.insert(pluginID, QSet<int>());
@@ -105,6 +121,8 @@ namespace Models {
 
             tabsSet.remove(tabID);
             m_TabsModel.removePluginTab(index);
+            m_TabIDsToModel.remove(tabID);
+            m_TabsIDsToIndex.remove(tabID);
 
             LOG_INFO << "Plugin's tab" << tabID << "removed";
             success = true;

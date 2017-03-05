@@ -37,7 +37,7 @@ namespace Plugins {
 
     public:
         virtual void openWindow(const QUrl &rcPath, const QHash<QString, QObject*> &contextModels = QHash<QString, QObject*>()) const override;
-        virtual int addTab(const QString &tabIconUrl, const QString &tabComponentUrl) const override;
+        virtual int addTab(const QString &tabIconUrl, const QString &tabComponentUrl, QObject *tabModel) const override;
         virtual bool removeTab(int tabID) const override;
         virtual std::shared_ptr<QuickBuffer::ICurrentEditable> getCurrentEditable() const override;
 

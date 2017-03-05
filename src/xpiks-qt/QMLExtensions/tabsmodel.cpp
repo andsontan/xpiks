@@ -49,6 +49,7 @@ namespace QMLExtensions {
         switch (role) {
         case TabIconPathRole: return tab.m_TabIconPath;
         case TabComponentPathRole: return tab.m_TabComponentPath;
+        case ExternalTabIDRole: return tab.m_ExternalTabID;
 #ifdef QT_DEBUG
         case CacheTagRole: return tab.m_CacheTag;
 #endif
@@ -60,6 +61,7 @@ namespace QMLExtensions {
         auto roles = QAbstractListModel::roleNames();
         roles[TabIconPathRole] = "tabicon";
         roles[TabComponentPathRole] = "tabcomponent";
+        roles[ExternalTabIDRole] = "tabid";
 #ifdef QT_DEBUG
         roles[CacheTagRole] = "cachetag";
 #endif
@@ -68,13 +70,13 @@ namespace QMLExtensions {
 
     void TabsModel::addSystemTab(const QString &iconPath, const QString &componentPath) {
         LOG_INFO << iconPath << componentPath;
-        addTab(iconPath, componentPath);
+        addTab(0, iconPath, componentPath);
         m_TabsList.last().m_IsSystemTab = true;
     }
 
-    void TabsModel::addPluginTab(const QString &iconPath, const QString &componentPath) {
+    void TabsModel::addPluginTab(int tabID, const QString &iconPath, const QString &componentPath) {
         LOG_INFO << iconPath << componentPath;
-        addTab(iconPath, componentPath);
+        addTab(tabID, iconPath, componentPath);
     }
 
     bool TabsModel::removePluginTab(int index) {
@@ -183,7 +185,7 @@ namespace QMLExtensions {
         }
     }
 
-    void TabsModel::addTab(const QString &iconPath, const QString &componentPath) {
+    void TabsModel::addTab(int externalID, const QString &iconPath, const QString &componentPath) {
         int lastIndex = m_TabsList.length();
         beginInsertRows(QModelIndex(), lastIndex, lastIndex);
         {
@@ -191,6 +193,7 @@ namespace QMLExtensions {
             auto &item = m_TabsList[lastIndex];
             item.m_TabIconPath = iconPath;
             item.m_TabComponentPath = componentPath;
+            item.m_ExternalTabID = externalID;
             item.m_CacheTag = 0;
             item.m_IsSystemTab = false;
         }
