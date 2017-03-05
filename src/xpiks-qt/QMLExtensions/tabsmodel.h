@@ -26,6 +26,7 @@
 #include <QSortFilterProxyModel>
 #include <QString>
 #include <QVector>
+#include <QSet>
 #include <vector>
 #include <utility>
 
@@ -38,8 +39,11 @@ namespace QMLExtensions {
 
     private:
         enum TabsModel_Roles {
-            TabIconPathRole = Qt::UserRole + 1,
-            TabComponentPathRole
+            TabIconPathRole = Qt::UserRole + 1
+            ,TabComponentPathRole
+#ifdef QT_DEBUG
+            ,CacheTagRole
+#endif
         };
 
     public:
@@ -76,19 +80,22 @@ namespace QMLExtensions {
         void addPluginTab(const QString &iconPath, const QString &componentPath);
         bool removePluginTab(int index);
         bool isTabActive(int index);
+        void activateTab(int index);
         void escalateTab(int index);
         bool touchTab(int index);
         TabModel &getTab(int index);
-        void updateCache() { rebuildCache(); }
+        void updateCache();
 
     private:
         void recacheTab(int index);
         void addTab(const QString &iconPath, const QString &componentPath);
         void rebuildCache();
+        void updateActiveTabs();
 
     private:
         QVector<TabModel> m_TabsList;
         std::vector<CachedTab> m_LRUcache;
+        QSet<int> m_ActiveTabs;
     };
 
     class DependentTabsModel: public QSortFilterProxyModel
@@ -99,6 +106,7 @@ namespace QMLExtensions {
 
     public:
         Q_INVOKABLE void openTab(int index);
+        Q_INVOKABLE int getIndex(int index) { return getOriginalIndex(index); }
 
     public slots:
         void onInvalidateRequired();
@@ -117,6 +125,9 @@ namespace QMLExtensions {
 
     public slots:
         void onInactiveTabOpened(int index);
+
+    signals:
+        void tabActivateRequested(int originalTabIndex);
 
         // QSortFilterProxyModel interface
     protected:

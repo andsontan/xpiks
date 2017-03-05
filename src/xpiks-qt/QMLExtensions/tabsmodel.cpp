@@ -21,10 +21,11 @@
 
 #include "tabsmodel.h"
 #include "../Common/defines.h"
+#include <algorithm>
 
 namespace QMLExtensions {
     bool compareCachePairs(const TabsModel::CachedTab &left, const TabsModel::CachedTab &right) {
-        return left.m_CacheTag < right.m_CacheTag;
+        return left.m_CacheTag > right.m_CacheTag;
     }
 
     TabsModel::TabsModel(QObject *parent) :
@@ -48,6 +49,9 @@ namespace QMLExtensions {
         switch (role) {
         case TabIconPathRole: return tab.m_TabIconPath;
         case TabComponentPathRole: return tab.m_TabComponentPath;
+#ifdef QT_DEBUG
+        case CacheTagRole: return tab.m_CacheTag;
+#endif
         default: return QVariant();
         }
     }
@@ -56,6 +60,9 @@ namespace QMLExtensions {
         auto roles = QAbstractListModel::roleNames();
         roles[TabIconPathRole] = "tabicon";
         roles[TabComponentPathRole] = "tabcomponent";
+#ifdef QT_DEBUG
+        roles[CacheTagRole] = "cachetag";
+#endif
         return roles;
     }
 
@@ -84,7 +91,7 @@ namespace QMLExtensions {
                 }
                 endRemoveRows();
 
-                rebuildCache();
+                updateCache();
                 emit tabRemoved();
                 success = true;
             } else {
@@ -96,40 +103,43 @@ namespace QMLExtensions {
     }
 
     bool TabsModel::isTabActive(int index) {
-        bool found = false;
-
-        size_t i = 0;
-        const size_t size = m_LRUcache.size();
-
-        while ((i < 3) && (i < size)) {
-            if (m_LRUcache[i].m_TabIndex == index) {
-                found = true;
-                break;
-            }
-
-            i++;
-        }
-
+        bool found = m_ActiveTabs.contains(index);
         return found;
+    }
+
+    void TabsModel::activateTab(int index) {
+        LOG_INFO << index;
+        if ((index < 0) || (index >= m_TabsList.size())) { return; }
+
+        auto tabsIndices = m_ActiveTabs.toList();
+        qSort(tabsIndices.begin(), tabsIndices.end(), [this](int left, int right) -> bool {
+            return this->m_TabsList[left].m_CacheTag < this->m_TabsList[right].m_CacheTag;
+        });
+
+        m_TabsList[index].m_CacheTag = m_TabsList[tabsIndices[2]].m_CacheTag;
+        touchTab(index);
     }
 
     void TabsModel::escalateTab(int index) {
         LOG_INFO << index;
         if ((index < 0) || (index >= m_TabsList.size())) { return; }
 
-        touchTab(m_LRUcache[0].m_CacheTag);
+        auto tabsIndices = m_ActiveTabs.toList();
+        qSort(tabsIndices.begin(), tabsIndices.end(), [this](int left, int right) -> bool {
+            return this->m_TabsList[left].m_CacheTag < this->m_TabsList[right].m_CacheTag;
+        });
 
         int indexToStay, indexToGo;
-        int diff = m_LRUcache[1].m_CacheTag - m_LRUcache[2].m_CacheTag;
-        if (diff < 0) { indexToGo = 1; indexToStay = 2; }
-        else if (diff > 0) { indexToGo = 2; indexToStay = 1; }
-        else { indexToGo = qrand()%2 + 1; indexToStay = 3 - indexToGo; }
+        int first = tabsIndices[0], second = tabsIndices[1];
+        int diff = m_TabsList[first].m_CacheTag - m_TabsList[second].m_CacheTag;
+        if (diff < 0) { indexToGo = first; indexToStay = second; }
+        else if (diff > 0) { indexToGo = second; indexToStay = first; }
+        else {
+            int randIndex = qrand()%2;
+            indexToGo = tabsIndices[randIndex]; indexToStay = tabsIndices[1 - randIndex];
+        }
 
-        int tabIndexToStay = m_LRUcache[indexToStay].m_TabIndex;
-        touchTab(tabIndexToStay);
-
-        int tabIndexToGo = m_LRUcache[indexToGo].m_TabIndex;
-        m_TabsList[index].m_CacheTag = m_TabsList[tabIndexToGo].m_CacheTag;
+        m_TabsList[index].m_CacheTag = m_TabsList[tabsIndices[2]].m_CacheTag;
         touchTab(index);
     }
 
@@ -141,6 +151,8 @@ namespace QMLExtensions {
             auto &tab = m_TabsList[index];
             tab.m_CacheTag++;
             recacheTab(index);
+            updateActiveTabs();
+            emit dataChanged(this->index(index), this->index(index));
             success = true;
         }
 
@@ -152,15 +164,22 @@ namespace QMLExtensions {
         return m_TabsList[index];
     }
 
+    void TabsModel::updateCache() {
+         rebuildCache();
+         updateActiveTabs();
+    }
+
     void TabsModel::recacheTab(int index) {
         Q_ASSERT((0 <= index) && (index < m_TabsList.size()));
         auto &tab = m_TabsList[index];
-        m_LRUcache.emplace_back(tab.m_CacheTag, index);
+
+        CachedTab cachedTab(tab.m_CacheTag, index);
+        m_LRUcache.insert(
+                    std::upper_bound(m_LRUcache.begin(), m_LRUcache.end(), cachedTab, compareCachePairs),
+                    cachedTab);
 
         if (m_LRUcache.size() > 10*(size_t)m_TabsList.size()) {
             rebuildCache();
-        } else {
-            std::push_heap(m_LRUcache.begin(), m_LRUcache.end(), compareCachePairs);
         }
     }
 
@@ -191,8 +210,24 @@ namespace QMLExtensions {
             m_LRUcache.emplace_back(item.m_CacheTag, i);
         }
 
-        std::make_heap(m_LRUcache.begin(), m_LRUcache.end(), compareCachePairs);
+        std::sort(m_LRUcache.begin(), m_LRUcache.end(), compareCachePairs);
         emit cacheRebuilt();
+    }
+
+    void TabsModel::updateActiveTabs() {
+        QSet<int> activeTabs;
+
+        for (auto &item: m_LRUcache) {
+            if (!activeTabs.contains(item.m_TabIndex)) {
+                activeTabs.insert(item.m_TabIndex);
+            }
+
+            if (activeTabs.count() == 3) {
+                break;
+            }
+        }
+
+        m_ActiveTabs.swap(activeTabs);
     }
 
     DependentTabsModel::DependentTabsModel(QObject *parent):
@@ -229,6 +264,7 @@ namespace QMLExtensions {
     void ActiveTabsModel::onInactiveTabOpened(int index) {
         LOG_INFO << index;
         invalidateFilter();
+        emit tabActivateRequested(index);
     }
 
     bool ActiveTabsModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const {
@@ -243,7 +279,7 @@ namespace QMLExtensions {
         int originalIndex = getOriginalIndex(index);
         auto *tabsModel = getTabsModel();
 
-        tabsModel->touchTab(originalIndex);
+        tabsModel->activateTab(originalIndex);
     }
 
     InactiveTabsModel::InactiveTabsModel(QObject *parent):
