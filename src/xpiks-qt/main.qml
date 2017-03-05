@@ -1162,6 +1162,7 @@ ApplicationWindow {
                             asynchronous: true
                             property int myIndex: index
                             property var tabModel: uiManager.retrieveTabsModel(tabid)
+                            property int selectedArtworksCount: filteredArtItemsModel.selectedArtworksCount
 
                             Connections {
                                 target: mainTabView
