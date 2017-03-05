@@ -275,6 +275,24 @@ namespace Models {
         return success;
     }
 
+    bool ArtworkProxyBase::doAppendPreset(int presetIndex) {
+        bool success = false;
+        LOG_INFO << "preset" << presetIndex;
+        auto *presetsModel = m_CommandManager->getPresetsModel();
+        QStringList keywords;
+
+        if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+            auto *metadataOperator = getMetadataOperator();
+            if (metadataOperator->appendPreset(keywords)) {
+                signalKeywordsCountChanged();
+                spellCheckKeywords();
+                success = true;
+            }
+        }
+
+        return success;
+    }
+
     bool ArtworkProxyBase::doExpandLastKeywordAsPreset() {
         LOG_DEBUG << "#";
         bool success = false;
@@ -314,6 +332,10 @@ namespace Models {
         QStringList keywords;
 
         if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+            for (auto &keyword: keywords) {
+                keyword = keyword.toLower();
+            }
+
             success = doRemoveKeywords(keywords.toSet(), false);
         }
 

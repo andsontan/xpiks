@@ -106,6 +106,10 @@ namespace QuickBuffer {
             std::vector<Models::MetadataElement> artworksList;
             artworksList.emplace_back(m_ArtworkMetadata, m_OriginalIndex);
 
+            for (auto &keyword: keywords) {
+                keyword = keyword.toLower();
+            }
+
             std::shared_ptr<Commands::DeleteKeywordsCommand> deleteKeywordsCommand(
                         new Commands::DeleteKeywordsCommand(artworksList, keywords.toSet(), false));
             m_CommandManager->processCommand(deleteKeywordsCommand);
