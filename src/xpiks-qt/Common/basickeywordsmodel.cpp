@@ -314,16 +314,39 @@ namespace Common {
 
     bool BasicKeywordsModel::appendKeywordUnsafe(const QString &keyword) {
         bool added = false;
-        const QString &sanitizedKeyword = keyword.simplified();
+        QString sanitizedKeyword = keyword.simplified();
+        QString tag = "";
+#ifdef KEYWORDS_TAGS
+        if (sanitizedKeyword.startsWith(KEYWORD_TAG_SYMBOL)) {
+            int colonPos = sanitizedKeyword.indexOf(':', 1);
+            if (colonPos != -1) {
+                tag = sanitizedKeyword.mid(0, colonPos);
+                sanitizedKeyword.remove(0, colonPos + 1);
+            }
+        }
+#endif
 
         if (canBeAddedUnsafe(sanitizedKeyword)) {
-            int keywordsCount = m_KeywordsList.length();
+            int keywordIndex = m_KeywordsList.length();
+#ifdef KEYWORDS_TAGS
+            if (!tag.isEmpty()) {
+                int insertPos = Helpers::wordInsertPos(m_KeywordsList, tag);
+                if (insertPos != -1) {
+                    keywordIndex = insertPos;
+                }
+            }
+#endif
 
             m_KeywordsSet.insert(sanitizedKeyword.toLower());
-            m_SpellCheckResults.append(true);
 
-            beginInsertRows(QModelIndex(), keywordsCount, keywordsCount);
-            m_KeywordsList.append(sanitizedKeyword);
+            beginInsertRows(QModelIndex(), keywordIndex, keywordIndex);
+            if (keywordIndex == m_KeywordsList.length()) {
+                m_KeywordsList.append(sanitizedKeyword);
+                m_SpellCheckResults.append(true);
+            } else {
+                m_KeywordsList.insert(keywordIndex, sanitizedKeyword);
+                m_SpellCheckResults.insert(keywordIndex, true);
+            }
             endInsertRows();
             added = true;
         }

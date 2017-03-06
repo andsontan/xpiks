@@ -53,6 +53,7 @@ namespace Helpers {
     QStringList mergeTaggedLists(const QStringList &list1, const QStringList &list2);
     QStringList intersectTaggedLists(const QStringList &list1, const QStringList &list2);
     QStringList clearTagsFromList(const QStringList &list);
+    int wordInsertPos(const QStringList &keywords, const QString &tag);
 #endif
 
     int levensteinDistance(const QString &s1, const QString &s2);

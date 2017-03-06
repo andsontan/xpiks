@@ -401,6 +401,34 @@ namespace Helpers {
 
         return result;
     }
+
+    int wordInsertPos(const QStringList &keywords, const QString &tag) {
+        int ourTagPosition = -1;
+        const int size = keywords.size();
+
+        for (int i = 0; i < size; ++i) {
+            auto &keyword = keywords[i];
+            if (QString::compare(keyword, tag, Qt::CaseInsensitive) == 0) {
+                ourTagPosition = i;
+                break;
+            }
+        }
+
+        int insertPos = -1;
+
+        if (ourTagPosition != -1) {
+            for (insertPos = ourTagPosition + 1; insertPos < size; ++insertPos) {
+                auto &keyword = keywords[insertPos];
+                if (keyword.startsWith(KEYWORD_TAG_SYMBOL) &&
+                        (QString::compare(keyword, tag, Qt::CaseInsensitive) != 0)) {
+                    break;
+                }
+            }
+        }
+
+        return insertPos;
+    }
+
 #endif
 
     std::string string_format(const std::string fmt, ...) {
