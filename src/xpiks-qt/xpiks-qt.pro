@@ -453,6 +453,7 @@ CONFIG(debug, debug|release)  {
     #QMAKE_CXXFLAGS += -fsanitize=thread
 } else {
     DEFINES += WITH_LOGS
+    DEFINES += WITH_PLUGINS
     message("Building release")
 }
 
