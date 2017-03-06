@@ -23,7 +23,7 @@
 #define VERSION_H
 
 // About dialog
-#define XPIKS_VERSION_SUFFIX release
+#define XPIKS_VERSION_SUFFIX tags
 
 // update.json (values from 0..9)
 #define XPIKS_MAJOR_VERSION 1
@@ -35,7 +35,7 @@
 #ifdef QT_DEBUG
 #define XPIKS_VERSION_STRING "1.4.0.dev"
 #else
-#define XPIKS_VERSION_STRING "1.4.0"
+#define XPIKS_VERSION_STRING "1.4.0 mg"
 #endif
 
 #endif // VERSION_H
