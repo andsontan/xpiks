@@ -1163,6 +1163,7 @@ ApplicationWindow {
                             property int myIndex: index
                             property var tabModel: uiManager.retrieveTabsModel(tabid)
                             property int selectedArtworksCount: filteredArtItemsModel.selectedArtworksCount
+                            property bool areActionsAllowed: mainStackView.areActionsAllowed
 
                             Connections {
                                 target: mainTabView
