@@ -1107,6 +1107,7 @@ ApplicationWindow {
 
                 CustomTab {
                     id: plusTab
+                    enabled: tabsModel.tabsCount > 3
                     tabIndex: tabsRepeater.count
                     isSelected: tabsHolder.currentIndex == tabIndex
                     hovered: (!isSelected) && plusMA.containsMouse
@@ -1120,6 +1121,7 @@ ApplicationWindow {
                         isFlipped: !plusTab.isSelected
                         width: parent.width * 0.6
                         height: width * 0.5
+                        enabled: tabsModel.tabsCount > 3
                     }
 
                     /*StyledText {

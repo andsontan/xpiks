@@ -95,6 +95,7 @@ namespace QMLExtensions {
 
                 updateCache();
                 emit tabRemoved();
+                emit tabsCountChanged();
                 success = true;
             } else {
                 LOG_WARNING << "Attempt to remove system tab";
@@ -198,6 +199,8 @@ namespace QMLExtensions {
             item.m_IsSystemTab = false;
         }
         endInsertRows();
+
+        emit tabsCountChanged();
     }
 
     void TabsModel::rebuildCache() {

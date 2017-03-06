@@ -34,6 +34,7 @@ namespace QMLExtensions {
     class TabsModel : public QAbstractListModel
     {
         Q_OBJECT
+        Q_PROPERTY(int tabsCount READ getTabsCount NOTIFY tabsCountChanged)
     public:
         explicit TabsModel(QObject *parent = 0);
 
@@ -76,8 +77,10 @@ namespace QMLExtensions {
     signals:
         void tabRemoved();
         void cacheRebuilt();
+        void tabsCountChanged();
 
     public:
+        int getTabsCount() const { return m_TabsList.size(); }
         void addSystemTab(const QString &iconPath, const QString &componentPath);
         void addPluginTab(int tabID, const QString &iconPath, const QString &componentPath);
         bool removePluginTab(int index);
