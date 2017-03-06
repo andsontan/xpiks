@@ -458,6 +458,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("quickBuffer", &quickBuffer);
     rootContext->setContextProperty("userDictEditModel", &userDictEditModel);
 
+    rootContext->setContextProperty("tabsModel", uiManager.getTabsModel());
     rootContext->setContextProperty("activeTabs", uiManager.getActiveTabs());
     rootContext->setContextProperty("inactiveTabs", uiManager.getInactiveTabs());
 
