@@ -94,7 +94,20 @@ namespace AutoComplete {
     }
 
     void AutoCompleteWorker::processOneItem(std::shared_ptr<CompletionQuery> &item) {
-        const QString &prefix = item->getPrefix();
+        QString prefix = item->getPrefix();
+        QString tag = "";
+#ifdef KEYWORDS_TAGS
+        if (prefix.startsWith(KEYWORD_TAG_SYMBOL)) {
+            int colonPos = prefix.indexOf(':', 1);
+            if (colonPos != -1) {
+                tag = prefix.mid(0, colonPos);
+                LOG_DEBUG << "Processing prefix" << prefix;
+                prefix.remove(0, colonPos + 1);
+
+                if (prefix.length() < 3) { return; }
+            }
+        }
+#endif
 
         vp_t completions = m_Soufleur->prompt(prefix.toStdString(), m_CompletionsCount);
 
@@ -110,7 +123,11 @@ namespace AutoComplete {
             QString phrase = QString::fromStdString(suggestion.phrase).trimmed();
 
             if (!completionsSet.contains(phrase)) {
-                completionsList.append(phrase);
+                if (tag.isEmpty()) {
+                    completionsList.append(phrase);
+                } else {
+                    completionsList.append(tag + ':' + phrase);
+                }
                 completionsSet.insert(phrase);
             }
         }
