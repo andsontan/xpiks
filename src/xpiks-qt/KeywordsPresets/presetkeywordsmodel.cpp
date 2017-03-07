@@ -257,6 +257,7 @@ namespace KeywordsPresets {
             auto *preset = m_PresetsList.at(index);
             auto &keywordsModel = preset->m_KeywordsModel;
             keywordsModel.appendKeywords(keywords);
+            m_CommandManager->submitItemForSpellCheck(&keywordsModel);
 
             QModelIndex indexToUpdate = this->index(index);
             emit dataChanged(indexToUpdate, indexToUpdate, QVector<int>() << KeywordsCountRole);
@@ -277,6 +278,7 @@ namespace KeywordsPresets {
             Helpers::splitKeywords(rawKeywords.trimmed(), separators, keywords);
 
             keywordsModel.setKeywords(keywords);
+            m_CommandManager->submitItemForSpellCheck(&keywordsModel);
 
             QModelIndex indexToUpdate = this->index(index);
             emit dataChanged(indexToUpdate, indexToUpdate, QVector<int>() << KeywordsCountRole);
