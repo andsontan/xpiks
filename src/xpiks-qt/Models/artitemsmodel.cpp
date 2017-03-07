@@ -64,7 +64,9 @@ namespace Models {
             }
         }
 
+#ifndef INTEGRATION_TESTS
         qDeleteAll(m_FinalizationList);
+#endif
     }
 
     ArtworkMetadata *ArtItemsModel::createMetadata(const QString &filepath) {
