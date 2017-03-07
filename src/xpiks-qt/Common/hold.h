@@ -27,18 +27,16 @@
 namespace Common {
     class Hold {
     public:
-        Hold(): m_RefCount(1)
+        Hold() : m_RefCount(1)
         {}
 
         ~Hold() {
-#if defined(QT_DEBUG) && defined(INTEGRATION_TESTS)
-            Q_ASSERT(m_RefCount.load() == 0);
-#endif
         }
 
     public:
         virtual void acquire() { int prev = m_RefCount.fetchAndAddOrdered(1); Q_ASSERT(prev > 0); }
         virtual bool release() { return m_RefCount.fetchAndSubOrdered(1) == 1; }
+        virtual int get() { return m_RefCount.load(); }
 
     private:
         QAtomicInt m_RefCount;
