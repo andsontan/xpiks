@@ -160,6 +160,9 @@ namespace SpellCheck {
     }
 
     SpellCheckItem::~SpellCheckItem() {
+        LOG_INTEGRATION_TESTS << "Actually deleting SpellCheckItem";
+
+        Q_ASSERT(m_SpellCheckable != nullptr);
         if (m_SpellCheckable->release()) {
             LOG_WARNING << "Item could have been removed";
         }
