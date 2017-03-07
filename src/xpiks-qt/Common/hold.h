@@ -31,7 +31,7 @@ namespace Common {
         {}
 
         ~Hold() {
-#ifdef QT_DEBUG
+#if defined(QT_DEBUG) && defined(INTEGRATION_TESTS)
             Q_ASSERT(m_RefCount.load() == 0);
 #endif
         }
