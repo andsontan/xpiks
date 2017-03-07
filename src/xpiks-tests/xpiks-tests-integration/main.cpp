@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
     Translation::TranslationService translationService(translationManager);
     Models::ArtworkProxyModel artworkProxy;
     // intentional memory leak to beat spellcheck lock stuff
-    QuickBuffer::QuickBuffer *quickBuffer = new QuickBuffer::QuickBuffer();
+    QuickBuffer::QuickBuffer quickBuffer;
 
     Conectivity::UpdateService updateService(&settingsModel);
 
@@ -206,7 +206,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&translationManager);
     commandManager.InjectDependency(&translationService);
     commandManager.InjectDependency(&artworkProxy);
-    commandManager.InjectDependency(quickBuffer);
+    commandManager.InjectDependency(&quickBuffer);
 
     commandManager.ensureDependenciesInjected();
 
