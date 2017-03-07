@@ -990,7 +990,7 @@ namespace Models {
         vectors.reserve(rawFilenames.length());
 
         QSet<QString> knownImageSuffixes;
-        knownImageSuffixes << "jpg" << "jpeg" << "tiff";
+        knownImageSuffixes << "jpg" << "jpeg" << "tiff" << "tif";
 
         foreach(const QString &filepath, rawFilenames) {
             QFileInfo fi(filepath);

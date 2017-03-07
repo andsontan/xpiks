@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QDebug>
+#include <QDir>
 #include "../../xpiks-qt/Commands/commandmanager.h"
 
 #define VERIFY(condition, message) \
@@ -38,6 +39,20 @@ protected:
         }
 
         return QUrl::fromLocalFile(QFileInfo(prefix).absoluteFilePath());
+    }
+
+    QUrl getDirPathForTest(const QString &prefix) {
+        QDir dir(prefix);
+        int tries = 6;
+        while (tries--) {
+            if (!dir.exists()) {
+                dir.cd("..");
+            } else {
+                return QUrl::fromLocalFile(dir.absolutePath());
+            }
+        }
+
+        return QUrl::fromLocalFile(QDir(prefix).absolutePath());
     }
 
 protected:
