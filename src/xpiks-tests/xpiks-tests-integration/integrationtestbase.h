@@ -42,11 +42,14 @@ protected:
     }
 
     QUrl getDirPathForTest(const QString &prefix) {
-        QDir dir(prefix);
+        QString path = prefix;
+        if (path.startsWith('/')) { path.remove(0, 1); }
+        QDir dir(path);
         int tries = 6;
         while (tries--) {
             if (!dir.exists()) {
-                dir.cd("..");
+                path = "../" + prefix;
+                dir.setPath(path);
             } else {
                 return QUrl::fromLocalFile(dir.absolutePath());
             }
