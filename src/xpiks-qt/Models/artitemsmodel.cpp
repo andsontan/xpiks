@@ -57,7 +57,7 @@ namespace Models {
 
     ArtItemsModel::~ArtItemsModel() {
         for (auto *artwork: m_ArtworkList) {
-            if (artwork.release()) {
+            if (artwork->release()) {
                 delete artwork;
             } else {
                 m_FinalizationList.push_back(artwork);
