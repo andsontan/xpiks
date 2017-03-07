@@ -827,7 +827,7 @@ ApplicationWindow {
         selectExisting: true
         selectMultiple: true
         folder: shortcuts.pictures
-        nameFilters: [ "Image files (*.jpg *.tiff *.eps *.ai)", "All files (*)" ]
+        nameFilters: [ "Image files (*.jpg *.tiff *.tif *.eps *.ai)", "All files (*)" ]
 
         onAccepted: {
             console.debug("You chose: " + chooseArtworksDialog.fileUrls)

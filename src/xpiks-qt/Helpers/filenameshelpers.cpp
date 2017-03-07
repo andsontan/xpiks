@@ -39,7 +39,8 @@ QStringList Helpers::convertToVectorFilenames(const QString &path) {
     QStringList result;
 
     QString base;
-    if (path.endsWith(".jpg", Qt::CaseInsensitive)) {
+    if (path.endsWith(".jpg", Qt::CaseInsensitive) ||
+            path.endsWith(".tif", Qt::CaseInsensitive)) {
         base = path.mid(0, path.size() - 4);
         result << (base + ".eps") << (base + ".ai");
     } else if (path.endsWith(".jpeg", Qt::CaseInsensitive) ||
