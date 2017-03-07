@@ -182,6 +182,7 @@ namespace Models {
         void requestFocus(int directionSign) { emit focusRequested(directionSign); }
         void requestBackup() { m_BackupTimer.start(1000); }
         virtual bool expandPreset(int keywordIndex, const QStringList &presetList) override;
+        void deepDisconnect();
 
 #ifndef CORE_TESTS
     private:

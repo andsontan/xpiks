@@ -492,6 +492,41 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
     }
 }
 
+void Commands::CommandManager::disconnectArtworkSignals(Models::ArtworkMetadata *metadata) const {
+#if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
+    if (m_ArtItemsModel)
+#else
+    Q_ASSERT(m_ArtItemsModel != nullptr);
+#endif
+    {
+        LOG_INTEGRATION_TESTS << "Disconnecting from ArtItemsModel...";
+        QObject::disconnect(metadata, 0, m_ArtItemsModel, 0);
+        QObject::disconnect(m_ArtItemsModel, 0, metadata, 0);
+    }
+
+#if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
+    if (m_FilteredItemsModel)
+#else
+    Q_ASSERT(m_FilteredItemsModel != nullptr);
+#endif
+    {
+        LOG_INTEGRATION_TESTS << "Disconnecting from FilteredItemsModel...";
+        QObject::disconnect(metadata, 0, m_FilteredItemsModel, 0);
+        QObject::disconnect(m_FilteredItemsModel, 0, metadata, 0);
+    }
+
+
+#if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
+    if (m_ArtworksRepository)
+#else
+    Q_ASSERT(m_ArtworksRepository != nullptr);
+#endif
+    {
+        // QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
+        //                 m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));
+    }
+}
+
 void Commands::CommandManager::readMetadata(const QVector<Models::ArtworkMetadata *> &artworks,
                                             const QVector<QPair<int, int> > &rangesToUpdate) const {
 #ifndef CORE_TESTS

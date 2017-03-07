@@ -30,8 +30,14 @@ namespace Common {
         Hold(): m_RefCount(1)
         {}
 
+        ~Hold() {
+#ifdef QT_DEBUG
+            Q_ASSERT(m_RefCount.load() == 0);
+#endif
+        }
+
     public:
-        virtual void acquire() { m_RefCount.fetchAndAddOrdered(1); }
+        virtual void acquire() { int prev = m_RefCount.fetchAndAddOrdered(1); Q_ASSERT(prev > 0); }
         virtual bool release() { return m_RefCount.fetchAndSubOrdered(1) == 1; }
 
     private:

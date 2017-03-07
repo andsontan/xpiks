@@ -79,6 +79,11 @@ namespace Models {
             ArtworkMetadata *metadata = artworksToDestroy.at(i);
             if (metadata->release()) {
                 LOG_INTEGRATION_TESTS << "Destroying metadata for real";
+                m_CommandManager->disconnectArtworkSignals(metadata);
+                metadata->deepDisconnect();
+#ifdef QT_DEBUG
+                m_DestroyedList.push_back(metadata);
+#endif
                 metadata->deleteLater();
             } else {
                 LOG_WARNING << "Metadata at index" << i << "is locked. Postponing destruction...";
@@ -796,6 +801,27 @@ namespace Models {
         LOG_INTEGRATION_TESTS << "#";
         ArtworkMetadata *item = qobject_cast<ArtworkMetadata *>(sender());
 
+#ifdef QT_DEBUG
+        bool found = false;
+        for (auto *existing: m_ArtworkList) {
+            if (existing == item) {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found) {
+            for (auto *existing: m_FinalizationList) {
+                if (existing == item) {
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        Q_ASSERT(found);
+#endif
+
 #ifndef QT_DEBUG
         if (item != NULL)
 #endif
@@ -1115,6 +1141,11 @@ namespace Models {
 
     void ArtItemsModel::destroyInnerItem(ArtworkMetadata *metadata) {
         if (metadata->release()) {
+            m_CommandManager->disconnectArtworkSignals(metadata);
+            metadata->deepDisconnect();
+#ifdef QT_DEBUG
+            m_DestroyedList.push_back(metadata);
+#endif
             metadata->deleteLater();
         } else {
             LOG_DEBUG << "Metadata is locked. Postponing destruction...";
@@ -1203,6 +1234,7 @@ namespace Models {
             if (!m_FinalizationList.empty()) {
                 LOG_DEBUG << "Clearing the finalization list";
                 for (auto *item: m_FinalizationList) {
+                    item->deepDisconnect();
                     item->deleteLater();
                 }
                 m_FinalizationList.clear();

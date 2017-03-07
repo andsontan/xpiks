@@ -237,4 +237,9 @@ namespace Models {
 
         return result;
     }
+
+    void ArtworkMetadata::deepDisconnect() {
+        m_MetadataModel.disconnect();
+        this->disconnect();
+    }
 }

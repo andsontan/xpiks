@@ -226,6 +226,9 @@ namespace Models {
     private:
         std::deque<ArtworkMetadata *> m_ArtworkList;
         std::deque<ArtworkMetadata *> m_FinalizationList;
+#ifdef QT_DEBUG
+        std::deque<ArtworkMetadata *> m_DestroyedList;
+#endif
         qint64 m_LastID;
     };
 }
