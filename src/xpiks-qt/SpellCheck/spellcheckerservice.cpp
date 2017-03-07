@@ -105,7 +105,11 @@ namespace SpellCheck {
         LOG_INFO << "flags:" << (int)flags;
 
         std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, flags),
-            [](SpellCheckItem *spi) { spi->deleteLater(); });
+            [](SpellCheckItem *spi) {
+            LOG_INTEGRATION_TESTS << "Single SpellCheckItem to be removed";
+            spi->disconnect();
+            spi->deleteLater();
+        });
         itemToCheck->connectSignals(item.get());
         m_SpellCheckWorker->submitItem(item);
     }
@@ -119,7 +123,11 @@ namespace SpellCheck {
         int length = itemsToCheck.length();
 
         items.reserve(length);
-        auto deleter = [](SpellCheckItem *item) { item->deleteLater(); };
+        auto deleter = [](SpellCheckItem *spi) {
+            LOG_INTEGRATION_TESTS << "Multiple SpellCheckItem to be removed";
+            spi->disconnect();
+            spi->deleteLater();
+        };
 
         for (int i = 0; i < length; ++i) {
             auto *itemToCheck = itemsToCheck.at(i);
@@ -144,7 +152,11 @@ namespace SpellCheck {
         int length = itemsToCheck.length();
 
         items.reserve(length);
-        auto deleter = [](SpellCheckItem *item) { item->deleteLater(); };
+        auto deleter = [](SpellCheckItem *spi) {
+            LOG_INTEGRATION_TESTS << "SpellCheckItem for UserDict to be removed";
+            spi->disconnect();
+            spi->deleteLater();
+        };
 
         for (int i = 0; i < length; ++i) {
             auto *itemToCheck = itemsToCheck.at(i);

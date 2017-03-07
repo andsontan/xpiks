@@ -80,6 +80,7 @@
 #include "presetstest.h"
 #include "translatorbasictest.h"
 #include "userdictedittest.h"
+#include "weirdnamesreadtest.h"
 
 #if defined(WITH_LOGS)
 #undef WITH_LOGS
@@ -250,6 +251,7 @@ int main(int argc, char *argv[]) {
     integrationTests.append(new PresetsTest(&commandManager));
     integrationTests.append(new TranslatorBasicTest(&commandManager));
     integrationTests.append(new UserDictEditTest(&commandManager));
+    integrationTests.append(new WeirdNamesReadTest(&commandManager));
 
     qDebug("\n");
     int succeededTestsCount = 0, failedTestsCount = 0;

@@ -71,10 +71,14 @@ namespace Models {
         // should be called only from beforeDestruction() !
         // will not cause sync issues on shutdown if no items
         beginResetModel();
-        size_t size = m_ArtworkList.size();
+        std::deque<ArtworkMetadata *> artworksToDestroy;
+        artworksToDestroy.swap(m_ArtworkList);
+
+        size_t size = artworksToDestroy.size();
         for (size_t i = 0; i < size; ++i) {
-            ArtworkMetadata *metadata = m_ArtworkList.at(i);
+            ArtworkMetadata *metadata = artworksToDestroy.at(i);
             if (metadata->release()) {
+                LOG_INTEGRATION_TESTS << "Destroying metadata for real";
                 metadata->deleteLater();
             } else {
                 LOG_WARNING << "Metadata at index" << i << "is locked. Postponing destruction...";
@@ -990,7 +994,7 @@ namespace Models {
         vectors.reserve(rawFilenames.length());
 
         QSet<QString> knownImageSuffixes;
-        knownImageSuffixes << "jpg" << "jpeg" << "tiff";
+        knownImageSuffixes << "jpg" << "jpeg" << "tiff" << "tif";
 
         foreach(const QString &filepath, rawFilenames) {
             QFileInfo fi(filepath);
