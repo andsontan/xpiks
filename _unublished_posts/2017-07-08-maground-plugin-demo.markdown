@@ -2,6 +2,7 @@
 layout: post
 title: "Productivity plugin overview"
 date: 2017-07-08T20:20:52+01:00
+permalink: /mg-plugin/
 ---
 
 # Locating a plugin
