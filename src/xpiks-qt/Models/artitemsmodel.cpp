@@ -56,7 +56,14 @@ namespace Models {
     {}
 
     ArtItemsModel::~ArtItemsModel() {
-        qDeleteAll(m_ArtworkList);
+        for (auto *artwork: m_ArtworkList) {
+            if (artwork.release()) {
+                delete artwork;
+            } else {
+                m_FinalizationList.push_back(artwork);
+            }
+        }
+
         qDeleteAll(m_FinalizationList);
     }
 
