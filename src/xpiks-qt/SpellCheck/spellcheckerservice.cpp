@@ -102,11 +102,12 @@ namespace SpellCheck {
             return;
         }
 
+        Q_ASSERT(itemToCheck != nullptr);
         LOG_INFO << "flags:" << (int)flags;
 
         std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, flags),
             [](SpellCheckItem *spi) {
-            LOG_INTEGRATION_TESTS << "Single SpellCheckItem to be removed";
+            LOG_INTEGRATION_TESTS << "Delete later for single spellcheck item";
             spi->disconnect();
             spi->deleteLater();
         });
@@ -124,13 +125,14 @@ namespace SpellCheck {
 
         items.reserve(length);
         auto deleter = [](SpellCheckItem *spi) {
-            LOG_INTEGRATION_TESTS << "Multiple SpellCheckItem to be removed";
+            LOG_INTEGRATION_TESTS << "Delete later for multiple spellcheck item";
             spi->disconnect();
             spi->deleteLater();
         };
 
         for (int i = 0; i < length; ++i) {
             auto *itemToCheck = itemsToCheck.at(i);
+            Q_ASSERT(itemToCheck != nullptr);
             std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckFlags::All),
                 deleter);
             itemToCheck->connectSignals(item.get());
@@ -153,7 +155,7 @@ namespace SpellCheck {
 
         items.reserve(length);
         auto deleter = [](SpellCheckItem *spi) {
-            LOG_INTEGRATION_TESTS << "SpellCheckItem for UserDict to be removed";
+            LOG_INTEGRATION_TESTS << "Delete later for UserDict spelling item";
             spi->disconnect();
             spi->deleteLater();
         };
@@ -173,13 +175,17 @@ namespace SpellCheck {
     }
 
     void SpellCheckerService::submitKeyword(Common::BasicKeywordsModel *itemToCheck, int keywordIndex) {
+        Q_ASSERT(itemToCheck != nullptr);
         LOG_INFO << "index:" << keywordIndex;
         if (m_SpellCheckWorker == NULL) {
             return;
         }
 
         std::shared_ptr<SpellCheckItem> item(new SpellCheckItem(itemToCheck, Common::SpellCheckFlags::Keywords, keywordIndex),
-            [](SpellCheckItem *spi) { spi->deleteLater(); });
+            [](SpellCheckItem *spi) {
+            LOG_INTEGRATION_TESTS << "Delete later for keyword spelling item";
+            spi->deleteLater();
+        });
         itemToCheck->connectSignals(item.get());
         m_SpellCheckWorker->submitFirst(item);
     }

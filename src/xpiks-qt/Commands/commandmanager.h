@@ -235,6 +235,7 @@ namespace Commands {
         void setArtworksForUpload(const QVector<Models::ArtworkMetadata*> &artworks) const;
         void setArtworksForZipping(const QVector<Models::ArtworkMetadata*> &artworks) const;
         virtual void connectArtworkSignals(Models::ArtworkMetadata *metadata) const;
+        void disconnectArtworkSignals(Models::ArtworkMetadata *metadata) const;
         void readMetadata(const QVector<Models::ArtworkMetadata*> &artworks,
                           const QVector<QPair<int, int> > &rangesToUpdate) const;
         void writeMetadata(const QVector<Models::ArtworkMetadata*> &artworks, bool useBackups) const;

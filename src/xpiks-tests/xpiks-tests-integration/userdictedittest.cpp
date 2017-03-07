@@ -18,15 +18,17 @@ QString UserDictEditTest::testName() {
 }
 
 void UserDictEditTest::setup() {
+    // create a memory leak just for this test because of issue with spellchecking
+    // object being destroyed before it will be properly released in SpellCheckItem's destructor
+    m_UserDictEditModel = new SpellCheck::UserDictEditModel();
+    m_UserDictEditModel->setCommandManager(m_CommandManager);
+    m_UserDictEditModel->initializeModel();
+
     Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
     settingsModel->setUseSpellCheck(true);
 }
 
 int UserDictEditTest::doTest() {
-    SpellCheck::UserDictEditModel userDictEditModel;
-    userDictEditModel.setCommandManager(m_CommandManager);
-    userDictEditModel.initializeModel();
-
     Models::ArtItemsModel *artItemsModel = m_CommandManager->getArtItemsModel();
 
     QList<QUrl> files;
@@ -79,8 +81,8 @@ int UserDictEditTest::doTest() {
     VERIFY(basicKeywordsModel->hasKeywordsSpellError(), "Keywords spell error not detected");
     VERIFY(quickBuffer->hasSpellErrors(), "Quick Buffer does not contain spelling erros");
 
-    userDictEditModel.appendKeyword(wrongWord);
-    userDictEditModel.saveUserDict();
+    m_UserDictEditModel->appendKeyword(wrongWord);
+    m_UserDictEditModel->saveUserDict();
 
     sleepWait(5, [=]() {
         return !basicKeywordsModel->hasDescriptionSpellError() &&
