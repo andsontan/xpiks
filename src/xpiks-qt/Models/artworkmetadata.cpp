@@ -49,6 +49,9 @@ namespace Models {
     }
 
     ArtworkMetadata::~ArtworkMetadata() {
+#if defined(QT_DEBUG) && defined(INTEGRATION_TESTS)
+        Q_ASSERT(m_Hold.get() == 0);
+#endif
     }
 
     bool ArtworkMetadata::initialize(const QString &title,
