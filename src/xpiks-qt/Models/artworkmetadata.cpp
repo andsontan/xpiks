@@ -241,13 +241,22 @@ namespace Models {
         return result;
     }
 
-    void ArtworkMetadata::deepDisconnect() {
-        m_MetadataModel.disconnect();
-        this->disconnect();
+    bool ArtworkMetadata::appendPreset(const QStringList &presetList) {
+        bool result = m_MetadataModel.appendPreset(presetList);
+        if (result) {
+            markModified();
+        }
+
+        return result;
     }
 
     bool ArtworkMetadata::hasKeywords(const QStringList &keywordsList) {
         bool result = m_MetadataModel.hasKeywords(keywordsList);
         return result;
+    }
+
+    void ArtworkMetadata::deepDisconnect() {
+        m_MetadataModel.disconnect();
+        this->disconnect();
     }
 }

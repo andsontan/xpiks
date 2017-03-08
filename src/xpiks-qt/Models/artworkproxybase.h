@@ -80,6 +80,7 @@ namespace Models {
         bool getHasTitleWordSpellError(const QString &word);
         bool getHasDescriptionWordSpellError(const QString &word);
         bool doExpandPreset(int keywordIndex, int presetIndex);
+        bool doAppendPreset(int presetIndex);
         bool doExpandLastKeywordAsPreset();
         bool doAddPreset(int presetIndex);
         bool doRemovePreset(int presetIndex);

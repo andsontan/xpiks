@@ -235,16 +235,6 @@ namespace Common {
         LOG_DEBUG << "#";
         bool result = false;
         result = appendKeywords(presetList) > 0;
-            result = true;
-        }
-
-        return result;
-    }
-
-    bool BasicKeywordsModel::appendPreset(const QStringList &presetList) {
-        LOG_DEBUG << "#";
-        bool result = false;
-        result = appendKeywords(presetList) > 0;
         return result;
     }
 

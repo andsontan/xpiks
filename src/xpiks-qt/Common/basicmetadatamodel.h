@@ -70,6 +70,7 @@ namespace Common {
         virtual QStringList getDescriptionWords();
         virtual QStringList getTitleWords();
         virtual bool expandPreset(int keywordIndex, const QStringList &presetList) override;
+        virtual bool appendPreset(const QStringList &presetList) override;
 
     private:
         bool replaceInDescription(const QString &replaceWhat, const QString &replaceTo,

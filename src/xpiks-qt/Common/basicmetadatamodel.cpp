@@ -179,6 +179,10 @@ namespace Common {
         return BasicKeywordsModel::expandPreset(keywordIndex, presetList);
     }
 
+    bool BasicMetadataModel::appendPreset(const QStringList &presetList) {
+        return BasicKeywordsModel::appendPreset(presetList);
+    }
+
     bool BasicMetadataModel::replaceInDescription(const QString &replaceWhat, const QString &replaceTo,
                                                   Common::SearchFlags flags) {
         LOG_DEBUG << "#";
