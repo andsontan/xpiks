@@ -582,7 +582,7 @@ Rectangle {
                                     }
 
                                     onActionRightClicked: {
-                                        var showAddToDict = artworkProxy.hasTitleWordSpellError(rowWrapper.delegateIndex, rightClickedWord)
+                                        var showAddToDict = artworkProxy.hasTitleWordSpellError(rightClickedWord)
                                         wordRightClickMenu.showAddToDict = showAddToDict
                                         wordRightClickMenu.word = rightClickedWord
                                         wordRightClickMenu.showExpandPreset = false
@@ -702,7 +702,7 @@ Rectangle {
                                     }
 
                                     onActionRightClicked: {
-                                        var showAddToDict = artworkProxy.hasDescriptionWordSpellError(rowWrapper.delegateIndex, rightClickedWord)
+                                        var showAddToDict = artworkProxy.hasDescriptionWordSpellError(rightClickedWord)
                                         wordRightClickMenu.showAddToDict = showAddToDict
                                         wordRightClickMenu.word = rightClickedWord
                                         wordRightClickMenu.showExpandPreset = false
