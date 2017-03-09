@@ -25,25 +25,15 @@ Install all recommended packages:
 - libhunspell
 - hunspell-en-us
 
-**Ubuntu**
-**Mint 17.3 (Rose)**
+**Debian stretch**
 
-List of QML plugins to be installed manually (from standard repository):
+Should work as is.
 
-- qtdeclarative5-dialogs-plugin
-- qtdeclarative5-privatewidgets-plugin
-- qtdeclarative5-qtquick2-plugin
-- qtdeclarative5-quicklayouts-plugin
-- qtdeclarative5-window-plugin
-- qtdeclarative5-controls-plugin
-- qml-module-qtgraphicaleffects
+**Ubuntu >= 16.10**
 
-Also there is an issue with application menu in Qt for Ubuntu which requires a workaround:
+!!! Will not work with Unity beacause of application menu
+Should work as is with any other desktop environment
 
-`sudo apt-get remove --purge appmenu-qt5`
+**OpenSuse Leap 42.2**
 
-**OpenSuse installation**
-
-Additional package have to be installed manually (from standard repository):
-
-- libqt5-qtquickcontrols
+Should work as is.

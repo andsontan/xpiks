@@ -1,12 +1,12 @@
 Summary: Xpiks
 Name: xpiks
-Version: 1.3.2
+Version: 1.4
 Release: 1
 License: GPLv3
 Group: Applications/Internet
 Source: xpiks-qt.tar.gz
 BuildRoot: /var/tmp/%{name}-buildroot
-BuildRequires: libqt5-qtdeclarative-devel libqt5-qtsvg-devel libqt5-qttools-devel libqt5-linguist-devel libquazip-qt5-devel libqt5-qtquick1-devel quazip-devel hunspell-devel curl-devel libexiv2-devel
+BuildRequires: libqt5-qtdeclarative-devel libqt5-qtsvg-devel libqt5-qttools-devel libqt5-linguist-devel libquazip-qt5-devel  quazip-devel hunspell-devel curl-devel libexiv2-devel
 Requires: libqt5-qtgraphicaleffects libqt5-qtquickcontrols
 
 %description
@@ -23,6 +23,11 @@ Cross-platform (X) Photo Keywording Software
 cd ../cpp-libface
 make install-lib
 cd -
+cd ../ssdll/src/ssdll
+qmake -r QMAKE_CXXFLAGS+=-std=gnu++11 -spec linux-g++-64
+make install
+cd -
+
 cd deps/translations
 make
 cd -

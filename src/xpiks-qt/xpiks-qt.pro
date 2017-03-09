@@ -435,12 +435,12 @@ INCLUDEPATH += ../ssdll/src/ssdll
 
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lhunspell
-LIBS += -lz
 LIBS += -lcurl
-LIBS += -lquazip
 LIBS += -lface
 LIBS += -lexiv2
 LIBS += -lssdll
+LIBS += -lquazip
+LIBS += -lz
 
 BUILDNO=$$system(git log -n 1 --pretty=format:"%h")
 
@@ -555,10 +555,10 @@ linux-g++-64 {
     #DEFINES += TELEMETRY_DISABLED
 
     UNAME = $$system(cat /proc/version | tr -d \'()\')
-    contains( UNAME, Debian ) {
+    contains( UNAME, Debian|Ubuntu ) {
         message("distribution : Debian")
-        LIBS -= -lquazip # temporary static link
-        LIBS += /usr/lib/x86_64-linux-gnu/libquazip-qt5.a
+        LIBS -= -lquazip
+	LIBS += -lquazip5
     }
     contains( UNAME, SUSE ) {
         message("distribution : SUSE")

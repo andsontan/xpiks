@@ -1,4 +1,40 @@
-xpiks (1.3.2) UNRELEASED; urgency=medium
+xpiks (1.4) UNRELEASED; urgency=medium
+
+    * Major features:
+
+    presets for keywords #207
+    additional quick buffer for convenient editing #367
+    support for user dictionary of misspelled words #350
+    ability to fix spelling in multiple files at once #296
+    detailed view of failed uploads
+    find and replace functionality #208
+    batch keywords removal functionality #263
+    support of StarDict dictionaries for translation #214
+    ability to show current file on disk #275
+    recombining selected artworks in multiple edit dialog #306
+    automatic updates
+
+    * And bugfixes:
+
+    unable to change case when editing a keyword #349
+    fixing spelling does not mark item as modified #325
+    order of keywords is changed in multiple edit dialog #344
+    dismiss timeout setting change didn't work as expected #301
+
+
+ -- Artiom <a.mv@gmx.fr>  Tue, 07 Mar 2017 21:36:24 +0000
+
+xpiks (1.3.4) testing; urgency=medium
+
+  *  Fix spelling does not save changes in Combined Edit dialogs #325
+  *  UI not updated when checking "Disable FTP passive mode" in the Upload dialog "Advanced" Tab
+  *  Combined Edit dialog case issue when combining keywords
+  *  Keywords count not updated in CombinedEdit-based dialogs on "Clear keywords" action
+  *  Description/Title spelling errors not updates when removing all but one in CombinedEdit-based
+
+ -- Artiom <a.mv@gmx.fr>  Mon, 26 Sep 2016 21:06:33 +0200
+
+xpiks (1.3.2) unstable; urgency=medium
 
 
 

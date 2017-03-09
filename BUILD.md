@@ -70,7 +70,7 @@ LibCurl:
 - copy build artifacts (`libexiv2.dll`, `libexiv2.lib`, `libexpat.dll`, `libexpat.lib`) to `src/libs` directory in _Xpiks_ repository
 
 ***Manual build***
-- install Qt 5.4 or later from official website (or 5.2 or later from repository in case of Linux)
+- install Qt 5.6 or later from official website (or from repository in case of Linux)
 - [linux] install development packages for `libcurl`, `hunspell`, `quazip`, `zlib`, `libexiv`
 - [linux] install `exiftool` (this **is not** necessary since Xpiks 1.3.1) and `expat` (this **is** necessary since Xpiks 1.3.1)
 - open main project in Qt Creator, execute `Run qmake`, execute `Build`
@@ -96,10 +96,11 @@ In some cases you neet to install `libcurl-devel`, `hunspell-devel`, `quazip-dev
 
 - Install rpmbuild.
 - `mkdir -p ~/rpmbuild/{RPMS,SRPMS,SPECS,BUILD,BUILDROOT,SOURCES}`
-- `tar -czf xpiks-qt.tar.gz xpiks-qt/ tiny-aes/`
-- Drop this source tarball in `~/rpmbuild/SOURCES`
-- Drop the the spec file found in `xpiks-qt/RPM` folder to `~/rpmbuild/SPECS`
+- `tar -czf xpiks-qt.tar.gz xpiks-qt/ tiny-aes/ cpp-libface/ libs/ ssdll/`
+- Copy this source tarball in `~/rpmbuild/SOURCES`
+- Copy the the spec from `xpiks-qt/RPM` folder to `~/rpmbuild/SPECS`
 - `rpmbuild -ba ~/rpmbuild/SPECS/xpiks.spec`
+- It will complain about missing dependecies, you have to install them as well
 
 ***More***
 
