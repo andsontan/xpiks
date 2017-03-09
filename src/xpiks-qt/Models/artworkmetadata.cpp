@@ -31,11 +31,14 @@
 #include "../SpellCheck/spellcheckiteminfo.h"
 #include "../Common/defines.h"
 
+#define MAX_BACKUP_TIMER_DELAYS 5
+
 namespace Models {
     ArtworkMetadata::ArtworkMetadata(const QString &filepath, qint64 ID):
         m_MetadataModel(m_Hold),
         m_FileSize(0),
         m_ArtworkFilepath(filepath),
+        m_BackupTimerDelay(0),
         m_ID(ID),
         m_MetadataFlags(0),
         m_WarningsFlags(Common::WarningFlags::None),
@@ -226,6 +229,16 @@ namespace Models {
         if (!getIsModifiedFlag()) {
             setIsModifiedFlag(true);
             emit modifiedChanged(true);
+        }
+    }
+
+    void ArtworkMetadata::requestBackup() {
+        if (m_BackupTimerDelay < MAX_BACKUP_TIMER_DELAYS) {
+            m_BackupTimer.start(1000);
+            m_BackupTimerDelay++;
+        } else {
+            LOG_INFO << "Maximum backup delays occured, forcing backup";
+            Q_ASSERT(m_BackupTimer.isActive());
         }
     }
 

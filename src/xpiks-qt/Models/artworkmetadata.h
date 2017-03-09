@@ -180,7 +180,7 @@ namespace Models {
         void setUnavailable() { setIsUnavailableFlag(true); }
         void resetModified() { setIsModifiedFlag(false); }
         void requestFocus(int directionSign) { emit focusRequested(directionSign); }
-        void requestBackup() { m_BackupTimer.start(1000); }
+        void requestBackup();
         virtual bool expandPreset(int keywordIndex, const QStringList &presetList) override;
         virtual bool appendPreset(const QStringList &presetList) override;
         virtual bool hasKeywords(const QStringList &keywordsList) override;
@@ -203,7 +203,7 @@ namespace Models {
         void spellCheckErrorsChanged();
 
     private slots:
-        void backupTimerTriggered() { emit backupRequired(); }
+        void backupTimerTriggered() { m_BackupTimerDelay = 0; emit backupRequired(); }
 
     private:
         Common::Hold m_Hold;
@@ -212,6 +212,7 @@ namespace Models {
         qint64 m_FileSize;  // in bytes
         QString m_ArtworkFilepath;
         QTimer m_BackupTimer;
+        int m_BackupTimerDelay;
         qint64 m_ID;
         volatile int m_MetadataFlags;
         volatile Common::WarningFlags m_WarningsFlags;
