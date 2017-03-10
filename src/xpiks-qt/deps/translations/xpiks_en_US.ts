@@ -621,12 +621,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/KeywordsSuggestion.qml" line="602"/>
-        <source>Cancel</source>
+        <location filename="../../Dialogs/KeywordsSuggestion.qml" line="615"/>
+        <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../Dialogs/KeywordsSuggestion.qml" line="613"/>
+        <location filename="../../Dialogs/KeywordsSuggestion.qml" line="626"/>
         <source>Add suggested</source>
         <translation type="unfinished"></translation>
     </message>
@@ -980,7 +980,7 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../KeywordsPresets/presetkeywordsmodel.cpp" line="409"/>
+        <location filename="../../KeywordsPresets/presetkeywordsmodel.cpp" line="411"/>
         <location filename="../../KeywordsPresets/presetkeywordsmodel.h" line="36"/>
         <location filename="../../Models/uploadinfo.h" line="60"/>
         <location filename="../../Models/uploadinfo.h" line="68"/>
@@ -1133,27 +1133,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CollapserTabs/QuickBufferTab.qml" line="61"/>
+        <location filename="../../CollapserTabs/QuickBufferTab.qml" line="70"/>
         <source>Title:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CollapserTabs/QuickBufferTab.qml" line="171"/>
+        <location filename="../../CollapserTabs/QuickBufferTab.qml" line="180"/>
         <source>Description:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CollapserTabs/QuickBufferTab.qml" line="290"/>
+        <location filename="../../CollapserTabs/QuickBufferTab.qml" line="299"/>
         <source>Keywords:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CollapserTabs/QuickBufferTab.qml" line="402"/>
+        <location filename="../../CollapserTabs/QuickBufferTab.qml" line="411"/>
         <source>Copy</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../CollapserTabs/QuickBufferTab.qml" line="421"/>
+        <location filename="../../CollapserTabs/QuickBufferTab.qml" line="430"/>
         <source>Clear</source>
         <translation type="unfinished"></translation>
     </message>
