@@ -232,6 +232,28 @@ namespace Suggestion {
         }
     }
 
+    void KeywordsSuggestor::resetSelection() {
+        LOG_DEBUG << "#";
+        m_SelectedArtworksCount = 0;
+        m_KeywordsHash.clear();
+        m_SuggestedKeywords.clearKeywords();
+        m_AllOtherKeywords.clearKeywords();
+        m_ExistingKeywords.clear();
+
+        beginResetModel();
+        {
+            for (auto &item: m_Suggestions) {
+                item->setIsSelected(false);
+            }
+        }
+        endResetModel();
+
+        unsetInProgress();
+        emit suggestedKeywordsCountChanged();
+        emit otherKeywordsCountChanged();
+        emit selectedArtworksCountChanged();
+    }
+
     int KeywordsSuggestor::rowCount(const QModelIndex &parent) const {
         Q_UNUSED(parent);
         return (int)m_Suggestions.size();
