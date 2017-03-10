@@ -432,6 +432,7 @@ SOURCES += *.qml \
 INCLUDEPATH += ../tiny-aes
 INCLUDEPATH += ../cpp-libface
 INCLUDEPATH += ../ssdll/src/ssdll
+INCLUDEPATH += ../hunspell-1.6.0/src
 
 LIBS += -L"$$PWD/../libs/"
 LIBS += -lhunspell
@@ -457,7 +458,6 @@ macx {
     LIBS += -liconv
     LIBS += -lexpat
 
-    INCLUDEPATH += "../hunspell-1.6.0/src"
     INCLUDEPATH += "../quazip"
     INCLUDEPATH += "../../libcurl/include"
     INCLUDEPATH += ../exiv2-0.25/include
@@ -492,7 +492,6 @@ win32 {
     DEFINES += ZLIB_WINAPI \
                ZLIB_DLL
     INCLUDEPATH += "../zlib-1.2.11"
-    INCLUDEPATH += "../hunspell-1.6.0/src"
     INCLUDEPATH += "../quazip"
     INCLUDEPATH += "../libcurl/include"
     INCLUDEPATH += "../exiv2-0.25/include"

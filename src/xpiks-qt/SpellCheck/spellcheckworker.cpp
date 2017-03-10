@@ -203,22 +203,21 @@ namespace SpellCheck {
 
     QStringList SpellCheckWorker::suggestCorrections(const QString &word) {
         QStringList suggestions;
-        char **suggestWordList = NULL;
+        std::vector<std::string> suggestWordList;
 
         try {
             // Encode from Unicode to the encoding used by current dictionary
-            int count = m_Hunspell->suggest(&suggestWordList, m_Codec->fromUnicode(word).constData());
-            LOG_INTEGRATION_TESTS << "Found" << count << "suggestions for" << word;
+            std::string encodedWord = m_Codec->fromUnicode(word).toStdString();
+            suggestWordList = m_Hunspell->suggest(encodedWord);
+            LOG_INTEGRATION_TESTS << "Found" << suggestWordList.size() << "suggestions for" << word;
             QString lowerWord = word.toLower();
 
-            for (int i = 0; i < count; ++i) {
-                QString suggestion = m_Codec->toUnicode(suggestWordList[i]);
+            for (size_t i = 0; i < suggestWordList.size(); ++i) {
+                QString suggestion = m_Codec->toUnicode(QByteArray::fromStdString(suggestWordList[i]));
 
                 if (suggestion.toLower() != lowerWord) {
                     suggestions << suggestion;
                 }
-
-                free(suggestWordList[i]);
             }
         } catch (...) {
             LOG_WARNING << "Error for keyword:" << word;
@@ -267,7 +266,8 @@ namespace SpellCheck {
         bool isOk = false;
 
         try {
-            isOk = m_Hunspell->spell(m_Codec->fromUnicode(word).constData()) != 0;
+            std::string encodedWord = m_Codec->fromUnicode(word).toStdString();
+            isOk = m_Hunspell->spell(encodedWord) != 0;
         } catch (...) {
             isOk = false;
         }

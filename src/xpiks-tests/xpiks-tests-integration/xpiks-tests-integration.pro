@@ -387,6 +387,7 @@ HEADERS += \
 INCLUDEPATH += ../../tiny-aes
 INCLUDEPATH += ../../cpp-libface
 INCLUDEPATH += ../../ssdll/src/ssdll
+INCLUDEPATH += ../../hunspell-1.6.0/src
 
 LIBS += -L"$$PWD/../../libs/"
 LIBS += -lhunspell
@@ -397,7 +398,6 @@ LIBS += -lface
 LIBS += -lssdll
 
 macx {
-    INCLUDEPATH += "../../hunspell-1.6.0/src"
     INCLUDEPATH += "../../quazip"
     INCLUDEPATH += "../../../libcurl/include"
     INCLUDEPATH += "../../exiv2-0.25/include"
@@ -413,7 +413,6 @@ win32 {
     DEFINES += QT_NO_PROCESS_COMBINED_ARGUMENT_START
     QT += winextras
     INCLUDEPATH += "../../zlib-1.2.11"
-    INCLUDEPATH += "../../hunspell-1.6.0/src"
     INCLUDEPATH += "../../quazip"
     INCLUDEPATH += "../../libcurl/include"
     INCLUDEPATH += "../../exiv2-0.25/include"

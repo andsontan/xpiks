@@ -19,7 +19,7 @@ win32:QT += winextras
 
 INCLUDEPATH += ../../tiny-aes
 win32:INCLUDEPATH += ../../xpiks-qt/Encryption
-INCLUDEPATH += "../../hunspell-1.6.0/src/hunspell"
+INCLUDEPATH += "../../hunspell-1.6.0/src"
 DEFINES += HUNSPELL_STATIC
 DEFINES += CORE_TESTS
 
@@ -31,14 +31,12 @@ LIBS += -L"$$PWD/../../libs/"
 LIBS += -lhunspell
 
 macx {
-    INCLUDEPATH += "../../hunspell-1.6.0/src"
     #INCLUDEPATH += "../quazip"
     #INCLUDEPATH += "../../libcurl/include"
 }
 
 win32 {
     INCLUDEPATH += "../../zlib-1.2.8"
-    INCLUDEPATH += "../../hunspell-1.6.0/src"
     #INCLUDEPATH += "../quazip"
     #INCLUDEPATH += "../libcurl/include"
     #LIBS -= -lcurl
