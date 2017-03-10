@@ -597,9 +597,22 @@ Item {
                         Layout.fillWidth: true
                     }
 
+                    Timer {
+                        id: suggestedAddedTimer
+                        property int iterations: 0
+                        interval: 1000
+                        repeat: false
+                        running: false
+                        onTriggered: {
+                            keywordsSuggestor.resetSelection()
+                            addKeywordsButton.enabled = true
+                            console.log("Add suggested reenabled")
+                        }
+                    }
+
                     StyledButton {
                         width: 100
-                        text: i18.n + qsTr("Cancel")
+                        text: i18.n + qsTr("Close")
                         onClicked: closePopup()
                     }
 
@@ -614,8 +627,10 @@ Item {
                         enabled: !keywordsSuggestor.isInProgress && (keywordsSuggestor.suggestedKeywordsCount > 0)
                         width: 150
                         onClicked: {
+                            console.log("Add suggested clicked")
+                            addKeywordsButton.enabled = false
                             callbackObject.promoteKeywords(keywordsSuggestor.getSuggestedKeywords())
-                            closePopup()
+                            suggestedAddedTimer.start()
                         }
                     }
                 }

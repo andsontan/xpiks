@@ -110,6 +110,7 @@ namespace Suggestion {
         Q_INVOKABLE QStringList getEngineNames() const { return m_QueryEnginesNames; }
         Q_INVOKABLE QString getSuggestedKeywordsString() { return m_SuggestedKeywords.getKeywordsString(); }
         Q_INVOKABLE void clearSuggested();
+        Q_INVOKABLE void resetSelection();
 
         Q_INVOKABLE QObject *getSuggestedKeywordsModel() {
             QObject *item = &m_SuggestedKeywords;
