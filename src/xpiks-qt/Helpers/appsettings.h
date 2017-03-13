@@ -89,6 +89,9 @@ namespace Helpers {
         Q_PROPERTY(QString recentDirectoriesKey READ getRecentDirectoriesKey CONSTANT)
         QString getRecentDirectoriesKey() const { return QLatin1String(Constants::RECENT_DIRECTORIES); }
 
+        Q_PROPERTY(QString recentFilesKey READ getRecentFilesKey CONSTANT)
+        QString getRecentFilesKey() const { return QLatin1String(Constants::RECENT_FILES); }
+
         Q_PROPERTY(QString dismissDurationKey READ getDismissDurationKey CONSTANT)
         QString getDismissDurationKey() const { return QLatin1String(Constants::DISMISS_DURATION); }
 

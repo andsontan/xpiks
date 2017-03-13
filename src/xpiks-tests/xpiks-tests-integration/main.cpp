@@ -14,6 +14,7 @@
 #include "../../xpiks-qt/Translation/translationmanager.h"
 #include "../../xpiks-qt/Translation/translationservice.h"
 #include "../../xpiks-qt/Models/recentdirectoriesmodel.h"
+#include "../../xpiks-qt/Models/recentfilesmodel.h"
 #include "../../xpiks-qt/MetadataIO/backupsaverservice.h"
 #include "../../xpiks-qt/Suggestion/keywordssuggestor.h"
 #include "../../xpiks-qt/Models/combinedartworksmodel.h"
@@ -147,6 +148,7 @@ int main(int argc, char *argv[]) {
     Models::FilteredArtItemsProxyModel filteredArtItemsModel;
     filteredArtItemsModel.setSourceModel(&artItemsModel);
     Models::RecentDirectoriesModel recentDirectorieModel;
+    Models::RecentFilesModel recentFileModel;
     Conectivity::FtpCoordinator *ftpCoordinator = new Conectivity::FtpCoordinator(settingsModel.getMaxParallelUploads());
     Models::ArtworkUploader artworkUploader(ftpCoordinator);
     SpellCheck::SpellCheckerService spellCheckerService;
@@ -186,6 +188,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&keywordsSuggestor);
     commandManager.InjectDependency(&settingsModel);
     commandManager.InjectDependency(&recentDirectorieModel);
+    commandManager.InjectDependency(&recentFileModel);
     commandManager.InjectDependency(&spellCheckerService);
     commandManager.InjectDependency(&spellCheckSuggestionModel);
     commandManager.InjectDependency(&metadataSaverService);
@@ -215,6 +218,7 @@ int main(int argc, char *argv[]) {
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
     recentDirectorieModel.deserializeFromSettings(appSettings.value(Constants::RECENT_DIRECTORIES, "").toString());
+    recentFileModel.deserializeFromSettings(appSettings.value(Constants::RECENT_FILES, "").toString());
 
 #if defined(APPVEYOR)
     settingsModel.setExifToolPath("c:/projects/xpiks-deps/windows-3rd-party-bin/exiftool.exe");

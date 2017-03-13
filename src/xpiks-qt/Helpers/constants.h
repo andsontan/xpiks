@@ -64,6 +64,7 @@ namespace Constants {
     const char ONE_UPLOAD_SECONDS_TIMEMOUT[] = "ONE_UPLOAD_SECONDS_TIMEMOUT";
     const char USE_CONFIRMATION_DIALOGS[] = "USE_CONFIRMATION_DIALOGS";
     const char RECENT_DIRECTORIES[] = "RECENT_DIRECTORIES";
+    const char RECENT_FILES[] = "RECENT_FILES";
     const char MAX_PARALLEL_UPLOADS[] = "MAX_PARALLEL_UPLOADS";
     const char USE_SPELL_CHECK[] = "USE_SPELL_CHECK";
     const char LIBRARY_FILENAME[] = "xpiks.v14.library";
@@ -119,6 +120,7 @@ namespace Constants {
     const char USE_MASTER_PASSWORD[] = "INTEGRATION_USE_MASTER_PASSWORD";
     const char MASTER_PASSWORD_HASH[] = "INTEGRATION_MASTER_PASSWORD_HASH";
     const char RECENT_DIRECTORIES[] = "INTEGRATION_RECENT_DIRECTORIES";
+    const char RECENT_FILES[] = "INTEGRATION_RECENT_FILES";
     const char CACHE_IMAGES_AUTOMATICALLY[] = "INTEGRATION_CACHE_IMAGES_AUTOMATICALLY";
     const char USER_DICT_FILENAME[] = "userdict_debug_tests.dic";
 #else
@@ -127,6 +129,7 @@ namespace Constants {
     const char USE_MASTER_PASSWORD[] = "DEBUG_USE_MASTER_PASSWORD";
     const char MASTER_PASSWORD_HASH[] = "DEBUG_MASTER_PASSWORD_HASH";
     const char RECENT_DIRECTORIES[] = "DEBUG_RECENT_DIRECTORIES";
+    const char RECENT_FILES[] = "DEBUG_RECENT_FILES";
     const char CACHE_IMAGES_AUTOMATICALLY[] = "DEBUG_CACHE_IMAGES_AUTOMATICALLY";
     const char USER_DICT_FILENAME[] = "userdict_debug.dic";
 #endif

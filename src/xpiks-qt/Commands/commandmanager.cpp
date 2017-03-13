@@ -35,6 +35,7 @@
 #include "../Commands/addartworkscommand.h"
 #include "../Models/filteredartitemsproxymodel.h"
 #include "../Models/recentdirectoriesmodel.h"
+#include "../Models/recentfilesmodel.h"
 #include "../Models/metadataelement.h"
 #include "../SpellCheck/spellcheckerservice.h"
 #include "../Models/settingsmodel.h"
@@ -131,6 +132,10 @@ void Commands::CommandManager::InjectDependency(Models::SettingsModel *settingsM
 
 void Commands::CommandManager::InjectDependency(Models::RecentDirectoriesModel *recentDirectories) {
     Q_ASSERT(recentDirectories != NULL); m_RecentDirectories = recentDirectories;
+}
+
+void Commands::CommandManager::InjectDependency(Models::RecentFilesModel *recentFiles) {
+    Q_ASSERT(recentFiles != NULL); m_RecentFiles = recentFiles;
 }
 
 void Commands::CommandManager::InjectDependency(SpellCheck::SpellCheckerService *spellCheckerService) {
@@ -369,6 +374,7 @@ void Commands::CommandManager::ensureDependenciesInjected() {
     Q_ASSERT(m_KeywordsSuggestor != NULL);
     Q_ASSERT(m_SettingsModel != NULL);
     Q_ASSERT(m_RecentDirectories != NULL);
+    Q_ASSERT(m_RecentFiles != NULL);
     Q_ASSERT(m_SpellCheckerService != NULL);
     Q_ASSERT(m_SpellCheckSuggestionModel != NULL);
     Q_ASSERT(m_MetadataSaverService != NULL);
@@ -591,7 +597,13 @@ void Commands::CommandManager::updateArtworks(const QVector<QPair<int, int> > &r
 
 void Commands::CommandManager::addToRecentDirectories(const QString &path) const {
     if (m_RecentDirectories) {
-        m_RecentDirectories->pushDirectory(path);
+        m_RecentDirectories->pushItem(path);
+    }
+}
+
+void Commands::CommandManager::addToRecentFiles(const QString &path) const {
+    if (m_RecentFiles) {
+        m_RecentFiles->pushItem(path);
     }
 }
 

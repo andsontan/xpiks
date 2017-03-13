@@ -65,6 +65,7 @@ namespace Models {
     class ZipArchiver;
     class SettingsModel;
     class RecentDirectoriesModel;
+    class RecentFilesModel;
     class LogsModel;
     class LanguagesModel;
     class FindAndReplaceModel;
@@ -142,6 +143,7 @@ namespace Commands {
             m_KeywordsSuggestor(NULL),
             m_SettingsModel(NULL),
             m_RecentDirectories(NULL),
+            m_RecentFiles(NULL),
             m_SpellCheckerService(NULL),
             m_SpellCheckSuggestionModel(NULL),
             m_MetadataSaverService(NULL),
@@ -185,6 +187,7 @@ namespace Commands {
         void InjectDependency(Suggestion::KeywordsSuggestor *keywordsSuggestor);
         void InjectDependency(Models::SettingsModel *settingsModel);
         void InjectDependency(Models::RecentDirectoriesModel *recentDirectories);
+        void InjectDependency(Models::RecentFilesModel *recentFiles);
         void InjectDependency(SpellCheck::SpellCheckerService *spellCheckerService);
         void InjectDependency(SpellCheck::SpellCheckSuggestionModel *spellCheckSuggestionModel);
         void InjectDependency(MetadataIO::BackupSaverService *backupSaverService);
@@ -243,6 +246,7 @@ namespace Commands {
         void updateArtworks(const QVector<int> &indices) const;
         void updateArtworks(const QVector<QPair<int, int> > &rangesToUpdate) const;
         void addToRecentDirectories(const QString &path) const;
+        void addToRecentFiles(const QString &path) const;
         void autoDiscoverExiftool() const;
 #ifdef QT_DEBUG
     private:
@@ -338,6 +342,7 @@ namespace Commands {
         Suggestion::KeywordsSuggestor *m_KeywordsSuggestor;
         Models::SettingsModel *m_SettingsModel;
         Models::RecentDirectoriesModel *m_RecentDirectories;
+        Models::RecentFilesModel *m_RecentFiles;
         SpellCheck::SpellCheckerService *m_SpellCheckerService;
         SpellCheck::SpellCheckSuggestionModel *m_SpellCheckSuggestionModel;
         MetadataIO::BackupSaverService *m_MetadataSaverService;

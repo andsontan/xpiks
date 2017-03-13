@@ -122,6 +122,7 @@ namespace Models {
         Q_INVOKABLE QString getArtworkDateTaken(int metadataIndex) const;
 
         Q_INVOKABLE int addRecentDirectory(const QString &directory);
+        Q_INVOKABLE int addRecentFile(const QString &file);
         Q_INVOKABLE void initDescriptionHighlighting(int metadataIndex, QQuickTextDocument *document);
         Q_INVOKABLE void initTitleHighlighting(int metadataIndex, QQuickTextDocument *document);
 

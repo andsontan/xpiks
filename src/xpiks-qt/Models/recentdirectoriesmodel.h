@@ -22,46 +22,14 @@
 #ifndef RECENTDIRECTORIESMODEL_H
 #define RECENTDIRECTORIESMODEL_H
 
-#include <QAbstractListModel>
-#include <QQueue>
-#include <QString>
-#include <QSet>
-#include <QHash>
-#include <QUrl>
+#include "recentitemsmodel.h"
 
 namespace Models {
-    class RecentDirectoriesModel : public QAbstractListModel
+    class RecentDirectoriesModel : public RecentItemsModel
     {
         Q_OBJECT
     public:
         RecentDirectoriesModel();
-
-    public:
-        Q_INVOKABLE QString serializeForSettings();
-        void deserializeFromSettings(const QString &serialized);
-        void pushDirectory(const QString &directoryPath);
-        Q_INVOKABLE QUrl getLatestDirectory() const;
-        int getMaxRecentDirectories() const { return m_MaxRecentDirectories; }
-
-#ifdef CORE_TESTS
-        QString getLatestUsedDirectory() const { return m_LatestUsedDirectory; }
-#endif
-
-    private:
-        bool doPushDirectory(const QString &directoryPath);
-
-    public:
-        int rowCount(const QModelIndex & parent = QModelIndex()) const override { Q_UNUSED(parent); return m_RecentDirectories.length(); }
-        QVariant data(const QModelIndex & index, int role = Qt::DisplayRole) const override;
-
-    protected:
-        virtual QHash<int, QByteArray> roleNames() const override { return QAbstractListModel::roleNames(); }
-
-    private:
-        QSet<QString> m_DirectoriesSet;
-        QQueue<QString> m_RecentDirectories;
-        int m_MaxRecentDirectories;
-        QString m_LatestUsedDirectory;
     };
 }
 

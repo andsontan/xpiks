@@ -69,7 +69,9 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Models/filteredartitemsproxymodel.cpp \
     ../../xpiks-qt/Models/languagesmodel.cpp \
     ../../xpiks-qt/Models/logsmodel.cpp \
+    ../../xpiks-qt/Models/recentitemsmodel.cpp \
     ../../xpiks-qt/Models/recentdirectoriesmodel.cpp \
+    ../../xpiks-qt/Models/recentfilesmodel.cpp \
     ../../xpiks-qt/Models/settingsmodel.cpp \
     ../../xpiks-qt/Models/ziparchiver.cpp \
     ../../xpiks-qt/Models/uploadinforepository.cpp \
@@ -252,7 +254,9 @@ HEADERS += \
     ../../xpiks-qt/Models/filteredartitemsproxymodel.h \
     ../../xpiks-qt/Models/languagesmodel.h \
     ../../xpiks-qt/Models/logsmodel.h \
+    ../../xpiks-qt/Models/recentitemsmodel.h \
     ../../xpiks-qt/Models/recentdirectoriesmodel.h \
+    ../../xpiks-qt/Models/recentfilesmodel.h \
     ../../xpiks-qt/Models/settingsmodel.h \
     ../../xpiks-qt/Models/ziparchiver.h \
     ../../xpiks-qt/Models/uploadinfo.h \

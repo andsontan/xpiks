@@ -97,7 +97,9 @@ SOURCES += main.cpp \
     vectorfilenames_tests.cpp \
     ../../xpiks-qt/Helpers/filenameshelpers.cpp \
     ../../xpiks-qt/Helpers/helpersqmlwrapper.cpp \
+    ../../xpiks-qt/Models/recentitemsmodel.cpp \
     ../../xpiks-qt/Models/recentdirectoriesmodel.cpp \
+    ../../xpiks-qt/Models/recentfilesmodel.cpp \
     ../../xpiks-qt/Helpers/keywordshelpers.cpp \
     ../../xpiks-qt/SpellCheck/spellcheckerservice.cpp \
     ../../xpiks-qt/SpellCheck/spellcheckitem.cpp \
@@ -134,7 +136,7 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Helpers/jsonhelper.cpp \
     ../../xpiks-qt/AutoComplete/stringfilterproxymodel.cpp \
     ../../xpiks-qt/Models/imageartwork.cpp \
-    recentdirectories_tests.cpp \
+    recentitems_tests.cpp \
     artitemsmodel_tests.cpp \
     ../../xpiks-qt/Common/flags.cpp \
     fixspelling_tests.cpp \
@@ -200,7 +202,9 @@ HEADERS += \
     vectorfilenames_tests.h \
     ../../xpiks-qt/Helpers/filenameshelpers.h \
     ../../xpiks-qt/Helpers/helpersqmlwrapper.h \
+    ../../xpiks-qt/Models/recentitemsmodel.h \
     ../../xpiks-qt/Models/recentdirectoriesmodel.h \
+    ../../xpiks-qt/Models/recentfilesmodel.h \
     ../../xpiks-qt/Helpers/keywordshelpers.h \
     ../../xpiks-qt/Common/flags.h \
     ../../xpiks-qt/SpellCheck/spellcheckerservice.h \
@@ -252,7 +256,7 @@ HEADERS += \
     ../../xpiks-qt/Models/imageartwork.h \
     deleteoldlogstest.h \
     ../../xpiks-qt/Common/hold.h \
-    recentdirectories_tests.h \
+    recentitems_tests.h \
     removefilesfs_tests.h \
     artitemsmodel_tests.h \
     fixspelling_tests.h \

@@ -19,14 +19,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "recentdirectoriesmodel.h"
+#ifndef RECENTFILESMODEL_H
+#define RECENTFILESMODEL_H
 
-#define MAX_RECENT_DIRECTORIES 5
+#include "recentitemsmodel.h"
 
 namespace Models {
-    RecentDirectoriesModel::RecentDirectoriesModel():
-        RecentItemsModel(MAX_RECENT_DIRECTORIES)
+    class RecentFilesModel : public RecentItemsModel
     {
-    }
+        Q_OBJECT
+    public:
+        RecentFilesModel();
+    };
 }
 
+#endif // RECENTFILESMODEL_H

@@ -505,8 +505,14 @@ namespace Models {
     }
 
     int ArtItemsModel::addRecentDirectory(const QString &directory) {
-        LOG_DEBUG << directory;
+        LOG_INFO << directory;
         int filesAdded = addDirectories(QStringList() << directory);
+        return filesAdded;
+    }
+
+    int ArtItemsModel::addRecentFile(const QString &file) {
+        LOG_INFO << file;
+        int filesAdded = addFiles(QStringList() << file);
         return filesAdded;
     }
 

@@ -52,6 +52,7 @@
 #include "Translation/translationmanager.h"
 #include "Translation/translationservice.h"
 #include "Models/recentdirectoriesmodel.h"
+#include "Models/recentfilesmodel.h"
 #include "MetadataIO/backupsaverservice.h"
 #include "QMLExtensions/triangleelement.h"
 #include "Suggestion/keywordssuggestor.h"
@@ -322,6 +323,7 @@ int main(int argc, char *argv[]) {
     Models::FilteredArtItemsProxyModel filteredArtItemsModel;
     filteredArtItemsModel.setSourceModel(&artItemsModel);
     Models::RecentDirectoriesModel recentDirectorieModel;
+    Models::RecentFilesModel recentFileModel;
     Conectivity::FtpCoordinator *ftpCoordinator = new Conectivity::FtpCoordinator(settingsModel.getMaxParallelUploads());
     Models::ArtworkUploader artworkUploader(ftpCoordinator);
     SpellCheck::SpellCheckerService spellCheckerService;
@@ -376,6 +378,7 @@ int main(int argc, char *argv[]) {
     commandManager.InjectDependency(&keywordsSuggestor);
     commandManager.InjectDependency(&settingsModel);
     commandManager.InjectDependency(&recentDirectorieModel);
+    commandManager.InjectDependency(&recentFileModel);
     commandManager.InjectDependency(&spellCheckerService);
     commandManager.InjectDependency(&spellCheckSuggestionModel);
     commandManager.InjectDependency(&metadataSaverService);
@@ -411,6 +414,7 @@ int main(int argc, char *argv[]) {
     secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
     uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
     recentDirectorieModel.deserializeFromSettings(appSettings.value(Constants::RECENT_DIRECTORIES, "").toString());
+    recentFileModel.deserializeFromSettings(appSettings.value(Constants::RECENT_FILES, "").toString());
 
     commandManager.connectEntitiesSignalsSlots();
 
@@ -441,6 +445,7 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("filteredArtItemsModel", &filteredArtItemsModel);
     rootContext->setContextProperty("helpersWrapper", &helpersQmlWrapper);
     rootContext->setContextProperty("recentDirectories", &recentDirectorieModel);
+    rootContext->setContextProperty("recentFiles", &recentFileModel);
     rootContext->setContextProperty("metadataIOCoordinator", &metadataIOCoordinator);
     rootContext->setContextProperty("pluginManager", &pluginManager);
     rootContext->setContextProperty("pluginsWithActions", &pluginsWithActions);

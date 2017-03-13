@@ -61,9 +61,14 @@ ApplicationWindow {
         appSettings.setValue(appSettings.recentDirectoriesKey, recentDirectories.serializeForSettings())
     }
 
+    function saveRecentFiles() {
+        appSettings.setValue(appSettings.recentFilesKey, recentFiles.serializeForSettings())
+    }
+
     function closeHandler(close) {
         console.info("closeHandler")
         saveRecentDirectories()
+        saveRecentFiles()
 
         if (artItemsModel.modifiedArtworksCount > 0) {
             close.accepted = false
@@ -381,6 +386,28 @@ ApplicationWindow {
                         text: display
                         onTriggered: {
                             var filesAdded = artItemsModel.addRecentDirectory(display)
+                            if (filesAdded === 0) {
+                                noNewFilesDialog.open()
+                            }
+                        }
+                    }
+                }
+            }
+
+            Menu {
+                id: recentFilesMenu
+                title: i18.n + qsTr("&Recent files")
+                enabled: applicationWindow.openedDialogsCount == 0
+
+                Instantiator {
+                    model: recentFiles
+                    onObjectAdded: recentFilesMenu.insertItem( index, object )
+                    onObjectRemoved: recentFilesMenu.removeItem( object )
+
+                    delegate: MenuItem {
+                        text: display
+                        onTriggered: {
+                            var filesAdded = artItemsModel.addRecentFile(display)
                             if (filesAdded === 0) {
                                 noNewFilesDialog.open()
                             }
@@ -834,6 +861,7 @@ ApplicationWindow {
             var filesAdded = artItemsModel.addLocalArtworks(chooseArtworksDialog.fileUrls)
             if (filesAdded > 0) {
                 saveRecentDirectories()
+                saveRecentFiles()
                 console.debug("" + filesAdded + ' files via Open File(s)')
             } else {
                 noNewFilesDialog.open()
@@ -858,6 +886,7 @@ ApplicationWindow {
             var filesAdded = artItemsModel.addLocalDirectories(chooseDirectoryDialog.fileUrls)
             if (filesAdded > 0) {
                 saveRecentDirectories()
+                saveRecentFiles()
                 console.debug("" + filesAdded + ' files via Open Directory')
             } else {
                 noNewFilesDialog.open()
@@ -947,7 +976,7 @@ ApplicationWindow {
                 return;
             }
 
-            var latestDir = recentDirectories.getLatestDirectory()
+            var latestDir = recentDirectories.getLatestItem()
             chooseArtworksDialog.folder = latestDir
             chooseDirectoryDialog.folder = latestDir
 
@@ -1010,6 +1039,7 @@ ApplicationWindow {
                     var filesCount = artItemsModel.dropFiles(drop.urls)
                     if (filesCount > 0) {
                         saveRecentDirectories()
+                        saveRecentFiles()
                         console.debug(filesCount + ' files added via drag&drop')
                     }
                 }

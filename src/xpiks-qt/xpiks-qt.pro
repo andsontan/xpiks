@@ -141,7 +141,9 @@ SOURCES += main.cpp \
     QuickBuffer/currenteditableproxyartwork.cpp \
     QuickBuffer/quickbuffer.cpp \
     SpellCheck/userdicteditmodel.cpp \
-    QMLExtensions/tabsmodel.cpp
+    QMLExtensions/tabsmodel.cpp \
+    Models/recentitemsmodel.cpp \
+    Models/recentfilesmodel.cpp
 
 RESOURCES += qml.qrc
 
@@ -336,7 +338,9 @@ HEADERS += \
     QuickBuffer/quickbuffer.h \
     KeywordsPresets/ipresetsmanager.h \
     SpellCheck/userdicteditmodel.h \
-    QMLExtensions/tabsmodel.h
+    QMLExtensions/tabsmodel.h \
+    Models/recentitemsmodel.h \
+    Models/recentfilesmodel.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
