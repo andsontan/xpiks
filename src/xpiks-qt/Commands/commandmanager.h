@@ -247,6 +247,7 @@ namespace Commands {
         void updateArtworks(const QVector<QPair<int, int> > &rangesToUpdate) const;
         void addToRecentDirectories(const QString &path) const;
         void addToRecentFiles(const QString &path) const;
+        void addToRecentFiles(const QStringList &filenames) const;
         void autoDiscoverExiftool() const;
 #ifdef QT_DEBUG
     private:

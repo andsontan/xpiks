@@ -119,8 +119,6 @@ std::shared_ptr<Commands::ICommandResult> Commands::AddArtworksCommand::execute(
                 artItemsModel->appendMetadata(metadata);
                 artworksToImport.append(metadata);
                 filesToWatch.append(filename);
-
-                commandManager->addToRecentFiles(filename);
             } else {
                 LOG_INFO << "Rejected file:" << filename;
             }
@@ -158,6 +156,8 @@ std::shared_ptr<Commands::ICommandResult> Commands::AddArtworksCommand::execute(
 
         std::unique_ptr<UndoRedo::IHistoryItem> addArtworksItem(new UndoRedo::AddArtworksHistoryItem(getCommandID() ,initialCount, newFilesCount));
         commandManager->recordHistoryItem(addArtworksItem);
+
+        commandManager->addToRecentFiles(filesToWatch);
     }
 
     artItemsModel->raiseArtworksAdded(newFilesCount, attachedCount);

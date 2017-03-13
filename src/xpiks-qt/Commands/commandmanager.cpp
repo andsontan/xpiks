@@ -607,6 +607,18 @@ void Commands::CommandManager::addToRecentFiles(const QString &path) const {
     }
 }
 
+void Commands::CommandManager::addToRecentFiles(const QStringList &filenames) const {
+    if (m_RecentFiles) {
+        int maxFiles = m_RecentFiles->getMaxRecentItems();
+        const int length = filenames.length();
+        int first = qMax(0, length - maxFiles);
+
+        for (; first < length; ++first) {
+            m_RecentFiles->pushItem(filenames[first]);
+        }
+    }
+}
+
 void Commands::CommandManager::autoDiscoverExiftool() const {
     if (m_MetadataIOCoordinator) {
         m_MetadataIOCoordinator->autoDiscoverExiftool();
