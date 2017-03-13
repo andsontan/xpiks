@@ -3,7 +3,7 @@
 #include "../../xpiks-qt/Models/recentdirectoriesmodel.h"
 #include "../../xpiks-qt/Models/recentfilesmodel.h"
 
-void doPushMoreThan(Models::RecentItemsModel &recentItems) {
+void checkCannotPushMoreThan(Models::RecentItemsModel &recentItems) {
     int maxRecent = recentItems.getMaxRecentItems();
 
     for (int i = 0; i < maxRecent*2; ++i) {
@@ -13,15 +13,19 @@ void doPushMoreThan(Models::RecentItemsModel &recentItems) {
     QCOMPARE(recentItems.rowCount(), maxRecent);
 }
 
-void RecentItemsTests::pushMoreThanTest() {
-    Models::RecentDirectoriesModel recentDirectories;
+void RecentItemsTests::pushMoreThanXFilesTest() {
     Models::RecentFilesModel recentFiles;
 
-    doPushMoreThan(recentDirectories);
-    doPushMoreThan(recentFiles);
+    checkCannotPushMoreThan(recentFiles);
 }
 
-void doLastPushedIsMostRecent(Models::RecentItemsModel &recentItems) {
+void RecentItemsTests::pushMoreThanXDirectoriesTest() {
+    Models::RecentDirectoriesModel recentDirectories;
+
+    checkCannotPushMoreThan(recentDirectories);
+}
+
+void checkLastPushedIsMostRecent(Models::RecentItemsModel &recentItems) {
     QString item = "/path/to/test/dir";
     recentItems.pushItem(item);
 
@@ -33,10 +37,14 @@ void doLastPushedIsMostRecent(Models::RecentItemsModel &recentItems) {
     QCOMPARE(recentItems.getLatestUsedItem(), item2);
 }
 
-void RecentItemsTests::lastPushedIsMostRecent() {
-    Models::RecentDirectoriesModel recentDirectories;
+void RecentItemsTests::lastPushedIsMostRecentFileTest() {
     Models::RecentFilesModel recentFiles;
 
-    doLastPushedIsMostRecent(recentDirectories);
-    doLastPushedIsMostRecent(recentFiles);
+    checkLastPushedIsMostRecent(recentFiles);
+}
+
+void RecentItemsTests::lastPushedIsMostRecentDirectoryTest() {
+    Models::RecentDirectoriesModel recentDirectories;
+
+    checkLastPushedIsMostRecent(recentDirectories);
 }

@@ -8,8 +8,10 @@ class RecentItemsTests : public QObject
 {
     Q_OBJECT
 private slots:
-    void pushMoreThanTest();
-    void lastPushedIsMostRecent();
+    void pushMoreThanXFilesTest();
+    void pushMoreThanXDirectoriesTest();
+    void lastPushedIsMostRecentFileTest();
+    void lastPushedIsMostRecentDirectoryTest();
 };
 
 #endif // RECENTITEMSTESTS_H
