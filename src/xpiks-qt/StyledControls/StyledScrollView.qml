@@ -27,6 +27,8 @@ import QtQuick.Controls.Styles 1.1
 import "../Constants"
 
 ScrollView {
+    activeFocusOnTab: false
+
     style: ScrollViewStyle {
         //transientScrollBars: true
         minimumHandleLength: 20

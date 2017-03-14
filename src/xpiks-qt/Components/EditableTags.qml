@@ -19,7 +19,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.2
+import QtQuick 2.6
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import xpiks 1.0
@@ -266,10 +266,10 @@ Flickable {
             width: 100
             height: 20*settingsModel.keywordSizeScale
 
-            TextInput {
+            TextEdit {
                 id: nextTagTextInput
                 objectName: "nextTagTextInput"
-                maximumLength: 30
+                property int maximumTextLength: 30
                 selectedTextColor: Colors.inputForegroundColor
                 selectionColor: Colors.defaultControlColor
                 selectByMouse: true
@@ -281,7 +281,30 @@ Flickable {
                 font.pixelSize: UIConfig.fontPixelSize*settingsModel.keywordSizeScale
                 verticalAlignment: TextInput.AlignVCenter
                 renderType: TextInput.NativeRendering
+                wrapMode: TextEdit.NoWrap
                 focus: true
+                activeFocusOnTab: false
+                property string previousText: text
+                onTextChanged: {
+                    if ((text.indexOf('\n') !== -1) ||
+                            (text.indexOf('\r') !== -1)) {
+                        // only for drag'n'drop stuff since pasting should be handled in Keys.onPressed
+                        var replacementText = text.replace(/(\r\n|\n|\r)/gm, ' ');
+                        text = replacementText
+                    }
+
+                    if (text.length > maximumTextLength) {
+                        var cursor = cursorPosition;
+                        text = previousText;
+                        if (cursor > text.length) {
+                            cursorPosition = text.length;
+                        } else {
+                            cursorPosition = cursor-1;
+                        }
+                    }
+
+                    previousText = text
+                }
 
                 function getCurrentWordStart() {
                     var pos = nextTagTextInput.cursorPosition
@@ -389,8 +412,12 @@ Flickable {
 
                             if (keywordsToAdd.length > 1) {
                                 tagsPasted(keywordsToAdd);
-                                event.accepted = true;
+                            } else {
+                                insert(cursorPosition, clipboardText)
                             }
+
+                            completionCancel()
+                            event.accepted = true;
                         }
                     }
                     else if (event.matches(StandardKey.Copy)) {
@@ -451,6 +478,10 @@ Flickable {
                                (nextTagTextInput.cursorPosition == nextTagTextInput.length)) {
                         event.accepted = true
                     } else if ((event.key === Qt.Key_Up) || (event.key === Qt.Key_Down)) {
+                        event.accepted = true
+                    } else if ((event.key === Qt.Key_Return) || (event.key === Qt.Key_Enter)) {
+                        submitCurrentKeyword()
+                        completionCancel()
                         event.accepted = true
                     }
 

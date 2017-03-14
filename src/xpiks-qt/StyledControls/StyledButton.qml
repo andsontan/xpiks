@@ -27,6 +27,7 @@ import "../Constants"
 Button {
     property bool isDefault: false
     clip: true
+    activeFocusOnTab: false
 
     style: ButtonStyle {
         background: Rectangle {
