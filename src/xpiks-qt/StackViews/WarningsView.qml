@@ -38,7 +38,7 @@ Rectangle {
     property bool isRestricted: false
 
     function closePopup() {
-        mainStackView.pop(/*{immediate: true}*/)
+        mainStackView.pop({immediate: true})
         restoreLeftPane()
     }
 
