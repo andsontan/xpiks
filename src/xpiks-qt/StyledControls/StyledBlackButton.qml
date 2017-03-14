@@ -25,6 +25,8 @@ import QtQuick.Controls.Styles 1.1
 import "../Constants"
 
 Button {
+    activeFocusOnTab: false
+
     style: ButtonStyle {
         background: Rectangle {
             color: {
