@@ -383,7 +383,7 @@ Rectangle {
                                 id: titleTextInput
                                 objectName: "titleTextInput"
                                 focus: true
-                                width: titleFlick.width
+                                width: paintedWidth > titleFlick.width ? paintedWidth : titleFlick.width
                                 height: titleFlick.height
                                 text: combinedArtworks.title
                                 userDictEnabled: true
@@ -552,7 +552,7 @@ Rectangle {
                                 id: descriptionTextInput
                                 objectName: "descriptionTextInput"
                                 width: descriptionFlick.width
-                                height: descriptionFlick.height
+                                height: paintedHeight > descriptionFlick.height ? paintedHeight : descriptionFlick.height
                                 text: combinedArtworks.description
                                 focus: true
                                 userDictEnabled: true
