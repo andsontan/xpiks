@@ -35,6 +35,7 @@ ColumnLayout {
     anchors.topMargin: 15
     anchors.bottomMargin: 10
     spacing: 0
+    enabled: mainStackView.areActionsAllowed
 
     StyledBlackButton {
         implicitHeight: 30
