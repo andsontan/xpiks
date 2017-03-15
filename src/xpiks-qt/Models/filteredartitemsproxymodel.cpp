@@ -43,6 +43,17 @@ namespace Models {
         m_SortingEnabled(false) {
         // m_SortingEnabled = true;
         // this->sort(0);
+        m_SearchFlags = Common::SearchFlags::AnyTermsEverything;
+    }
+
+    void FilteredArtItemsProxyModel::updateSearchFlags() {
+        SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
+        bool searchUsingAnd = settingsModel->getSearchUsingAnd();
+        bool searchByFilepath = settingsModel->getSearchByFilepath();
+        // default search is not case sensitive
+        m_SearchFlags = searchUsingAnd ? Common::SearchFlags::AllTermsEverything :
+                                    Common::SearchFlags::AnyTermsEverything;
+        Common::ApplyFlag(m_SearchFlags, searchByFilepath, Common::SearchFlags::Filepath);
     }
 
     void FilteredArtItemsProxyModel::setSearchTerm(const QString &value) {
@@ -53,6 +64,8 @@ namespace Models {
             m_SearchTerm = value;
             emit searchTermChanged(value);
         }
+
+        updateSearchFlags();
 
         invalidateFilter();
         emit afterInvalidateFilter();
@@ -466,6 +479,12 @@ namespace Models {
         }
     }
 
+    void FilteredArtItemsProxyModel::onSettingsUpdated() {
+        LOG_DEBUG << "#";
+        updateSearchFlags();
+        invalidateFilter();
+    }
+
     void FilteredArtItemsProxyModel::removeMetadataInItems(std::vector<MetadataElement> &itemsToClear, Common::CombinedEditFlags flags) const {
         LOG_INFO << itemsToClear.size() << "item(s) with flags =" << (int)flags;
         std::shared_ptr<Commands::CombinedEditCommand> combinedEditCommand(new Commands::CombinedEditCommand(
@@ -637,10 +656,7 @@ namespace Models {
         bool hasMatch = false;
 
         if (metadata != NULL) {
-            SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
-            bool searchUsingAnd = settingsModel->getSearchUsingAnd();
-
-            hasMatch = Helpers::containsPartsSearch(m_SearchTerm, metadata, searchUsingAnd);
+            hasMatch = Helpers::hasSearchMatch(m_SearchTerm, metadata, m_SearchFlags);
         }
 
         return hasMatch;

@@ -1,65 +1,70 @@
 #include "artworkfilter_tests.h"
 #include "Mocks/artworkmetadatamock.h"
 #include "../../xpiks-qt/Helpers/filterhelpers.h"
-#include "../../xpiks-qt/Common/flags.h"
 
 void ArtworkFilterTests::searchImageVectorTest() {
     Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
-    QVERIFY(Helpers::containsPartsSearch("x:image", &metadata, false));
-    QVERIFY(!Helpers::containsPartsSearch("x:vector", &metadata, false));
+    QVERIFY(Helpers::hasSearchMatch("x:image", &metadata, flagsAnyTermWithFilepath()));
+    QVERIFY(!Helpers::hasSearchMatch("x:vector", &metadata, flagsAnyTermWithFilepath()));
 
     metadata.attachVector("/path/to/file.eps");
-    QVERIFY(!Helpers::containsPartsSearch("x:image", &metadata, false));
-    QVERIFY(Helpers::containsPartsSearch("x:vector", &metadata, false));
+    QVERIFY(!Helpers::hasSearchMatch("x:image", &metadata, flagsAnyTermWithFilepath()));
+    QVERIFY(Helpers::hasSearchMatch("x:vector", &metadata, flagsAnyTermWithFilepath()));
 }
 
 void ArtworkFilterTests::searchByKeywordsTest() {
     Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
     metadata.setKeywords(QStringList() << "keyword" << "another" << "test");
-    QVERIFY(Helpers::containsPartsSearch("keyw TSTS", &metadata, false));
-    QVERIFY(!Helpers::containsPartsSearch("!keyw", &metadata, false));
-    QVERIFY(Helpers::containsPartsSearch("!keyword", &metadata, false));
+    QVERIFY(Helpers::hasSearchMatch("keyw TSTS", &metadata, flagsAnyTermWithFilepath()));
+    QVERIFY(!Helpers::hasSearchMatch("!keyw", &metadata, flagsAnyTermWithFilepath()));
+    QVERIFY(Helpers::hasSearchMatch("!keyword", &metadata, flagsAnyTermWithFilepath()));
 
-    QVERIFY(Helpers::containsPartsSearch("keyword super", &metadata, false));
-    QVERIFY(!Helpers::containsPartsSearch("keyword super", &metadata, true));
+    QVERIFY(Helpers::hasSearchMatch("keyword super", &metadata, flagsAnyTermWithFilepath()));
+    QVERIFY(!Helpers::hasSearchMatch("keyword super", &metadata, flagsAllTermsWithoutFilepath()));
 }
 
 void ArtworkFilterTests::searchByTitleTest() {
     Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
     metadata.setTitle("my long title here");
-    QVERIFY(Helpers::containsPartsSearch("tit", &metadata, false));
-    QVERIFY(!Helpers::containsPartsSearch("!tit", &metadata, false));
+    QVERIFY(Helpers::hasSearchMatch("tit", &metadata, flagsAnyTermWithFilepath()));
+    QVERIFY(!Helpers::hasSearchMatch("!tit", &metadata, flagsAnyTermWithFilepath()));
     // strict search works only for keywords
-    QVERIFY(!Helpers::containsPartsSearch("!title", &metadata, false));
+    QVERIFY(!Helpers::hasSearchMatch("!title", &metadata, flagsAnyTermWithFilepath()));
 
-    QVERIFY(!Helpers::containsPartsSearch("keyword super", &metadata, false));
-    QVERIFY(Helpers::containsPartsSearch("here my", &metadata, true));
+    QVERIFY(!Helpers::hasSearchMatch("keyword super", &metadata, flagsAnyTermWithFilepath()));
+    QVERIFY(Helpers::hasSearchMatch("here my", &metadata, flagsAllTermsWithoutFilepath()));
 }
 
 void ArtworkFilterTests::searchByDescriptionTest() {
     Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
     metadata.setDescription("my long desciption john");
-    QVERIFY(Helpers::containsPartsSearch("o", &metadata, false));
-    QVERIFY(!Helpers::containsPartsSearch("!o", &metadata, false));
+    QVERIFY(Helpers::hasSearchMatch("o", &metadata, flagsAnyTermWithFilepath()));
+    QVERIFY(!Helpers::hasSearchMatch("!o", &metadata, flagsAnyTermWithFilepath()));
     // strict search works only for keywords
-    QVERIFY(!Helpers::containsPartsSearch("!description", &metadata, false));
+    QVERIFY(!Helpers::hasSearchMatch("!description", &metadata, flagsAnyTermWithFilepath()));
 
-    QVERIFY(!Helpers::containsPartsSearch("myjohn", &metadata, false));
-    QVERIFY(!Helpers::containsPartsSearch("descriptionmy", &metadata, true));
+    QVERIFY(!Helpers::hasSearchMatch("myjohn", &metadata, flagsAnyTermWithFilepath()));
+    QVERIFY(!Helpers::hasSearchMatch("descriptionmy", &metadata, flagsAllTermsWithoutFilepath()));
+}
+
+void ArtworkFilterTests::searchByFilepathTest() {
+    Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
+    QVERIFY(Helpers::hasSearchMatch("file.jpg", &metadata, flagsAnyTermWithFilepath()));
+    QVERIFY(!Helpers::hasSearchMatch("file.jpg", &metadata, flagsAllTermsWithoutFilepath()));
 }
 
 void ArtworkFilterTests::strictSearchTest() {
     Mocks::ArtworkMetadataMock metadata("/path/to/file.jpg");
     metadata.setKeywords(QStringList() << "keyword" << "ano!ther" << "test" << "k");
-    QVERIFY(Helpers::containsPartsSearch("keyw", &metadata, false));
-    QVERIFY(!Helpers::containsPartsSearch("!keyw", &metadata, false));
-    QVERIFY(Helpers::containsPartsSearch("!keyword", &metadata, false));
+    QVERIFY(Helpers::hasSearchMatch("keyw", &metadata, flagsAnyTermWithFilepath()));
+    QVERIFY(!Helpers::hasSearchMatch("!keyw", &metadata, flagsAnyTermWithFilepath()));
+    QVERIFY(Helpers::hasSearchMatch("!keyword", &metadata, flagsAnyTermWithFilepath()));
 
-    QVERIFY(!Helpers::containsPartsSearch("!!", &metadata, false));
-    QVERIFY(Helpers::containsPartsSearch("!k", &metadata, true));
+    QVERIFY(!Helpers::hasSearchMatch("!!", &metadata, flagsAnyTermWithFilepath()));
+    QVERIFY(Helpers::hasSearchMatch("!k", &metadata, flagsAllTermsWithoutFilepath()));
 
     metadata.appendKeyword("!");
-    QVERIFY(Helpers::containsPartsSearch("!", &metadata, false));
+    QVERIFY(Helpers::hasSearchMatch("!", &metadata, flagsAnyTermWithFilepath()));
 }
 
 void ArtworkFilterTests::searchWithSpaceTest() {

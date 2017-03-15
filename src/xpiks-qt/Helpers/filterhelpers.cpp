@@ -194,14 +194,6 @@ namespace Helpers {
         return hasMatch;
     }
 
-    bool containsPartsSearch(const QString &mainSearchTerm, Models::ArtworkMetadata *metadata, bool searchUsingAnd) {
-        // default search is not case sensitive
-        Common::SearchFlags searchFlags = searchUsingAnd ? Common::SearchFlags::AllTermsEverything :
-                                           Common::SearchFlags::AnyTermsEverything;
-        bool hasMatch = hasSearchMatch(mainSearchTerm, metadata, searchFlags);
-        return hasMatch;
-    }
-
     bool hasSearchMatch(const QString &searchTerm, Models::ArtworkMetadata *metadata, Common::SearchFlags searchFlags) {
         bool hasMatch = false;
 

@@ -301,6 +301,21 @@ ApplicationWindow {
                             }
                         }
 
+                        StyledCheckbox {
+                            id: searchByFilepathCheckbox
+                            text: i18.n + qsTr("Search by path")
+                            onCheckedChanged: {
+                                settingsModel.searchByFilepath = checked
+                            }
+                            function onResetRequested() {
+                                checked = settingsModel.searchByFilepath
+                            }
+                            Component.onCompleted: {
+                                checked = settingsModel.searchByFilepath
+                                behaviorTab.resetRequested.connect(searchByFilepathCheckbox.onResetRequested)
+                            }
+                        }
+
                         Item {
                             Layout.fillHeight: true
                         }

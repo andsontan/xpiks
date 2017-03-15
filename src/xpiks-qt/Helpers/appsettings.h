@@ -104,6 +104,9 @@ namespace Helpers {
         Q_PROPERTY(QString searchUsingAndKey READ getSearchUsingAndKey CONSTANT)
         QString getSearchUsingAndKey() const { return QLatin1String(Constants::SEARCH_USING_AND); }
 
+        Q_PROPERTY(QString searchByFilepathKey READ getSearchByFilepathKey CONSTANT)
+        QString getSearchByFilepathKey() const { return QLatin1String(Constants::SEARCH_BY_FILEPATH); }
+
         Q_PROPERTY(QString scrollSpeedScaleKey READ getScrollSpeedScaleKey CONSTANT)
         QString getScrollSpeedScaleKey() const { return QLatin1String(Constants::SCROLL_SPEED_SENSIVITY); }
 

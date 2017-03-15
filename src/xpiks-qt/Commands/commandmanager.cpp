@@ -284,6 +284,11 @@ void Commands::CommandManager::connectEntitiesSignalsSlots() const {
                          m_TelemetryService, SLOT(changeReporting(bool)));
     }
 
+    if (m_SettingsModel != NULL && m_FilteredItemsModel != NULL) {
+        QObject::connect(m_SettingsModel, SIGNAL(settingsUpdated()),
+                         m_FilteredItemsModel, SLOT(onSettingsUpdated()));
+    }
+
     if (m_SpellCheckerService != NULL && m_FilteredItemsModel != NULL) {
         QObject::connect(m_SpellCheckerService, SIGNAL(serviceAvailable(bool)),
                          m_FilteredItemsModel, SLOT(onSpellCheckerAvailable(bool)));
