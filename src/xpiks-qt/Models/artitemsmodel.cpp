@@ -371,6 +371,7 @@ namespace Models {
         }
 
         m_CommandManager->writeMetadata(modifiedSelectedArtworks, useBackups);
+        m_CommandManager->saveArtworksBackups(modifiedSelectedArtworks);
     }
 
     ArtworkMetadata *ArtItemsModel::getArtworkMetadata(int index) const {

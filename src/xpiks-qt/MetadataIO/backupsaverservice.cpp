@@ -55,6 +55,7 @@ namespace MetadataIO {
     }
 
     void BackupSaverService::saveArtwork(Models::ArtworkMetadata *metadata) const {
+        LOG_INFO << metadata->getFilepath();
         std::shared_ptr<SaverWorkerJobItem> jobItem(new SaverWorkerJobItem(metadata));
         m_BackupWorker->submitItem(jobItem);
     }
