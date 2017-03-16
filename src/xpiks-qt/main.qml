@@ -1072,12 +1072,14 @@ ApplicationWindow {
                 }
             }
 
-            RowLayout {
+            Row {
                 id: tabsHolder
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: parent.top
                 property int currentIndex: 0
+                property bool moreTabsAvailable: tabsModel.tabsCount > 3
+                property real expanderWidth: tabsHolder.moreTabsAvailable ? plusTab.width : 0
                 height: 45
                 spacing: 0
 
@@ -1088,7 +1090,7 @@ ApplicationWindow {
                     delegate: CustomTab {
                         id: customTab
                         tabIndex: index
-                        width: (tabsHolder.width - plusTab.width) / tabsRepeater.count
+                        width: (tabsHolder.width - tabsHolder.expanderWidth) / tabsRepeater.count
                         isSelected: tabsHolder.currentIndex == tabIndex
                         hovered: (!isSelected) && tabMA.containsMouse
 
@@ -1137,7 +1139,8 @@ ApplicationWindow {
 
                 CustomTab {
                     id: plusTab
-                    enabled: tabsModel.tabsCount > 3
+                    enabled: tabsHolder.moreTabsAvailable
+                    visible: tabsHolder.moreTabsAvailable
                     tabIndex: tabsRepeater.count
                     isSelected: tabsHolder.currentIndex == tabIndex
                     hovered: (!isSelected) && plusMA.containsMouse
@@ -1151,15 +1154,8 @@ ApplicationWindow {
                         isFlipped: !plusTab.isSelected
                         width: parent.width * 0.6
                         height: width * 0.5
-                        enabled: tabsModel.tabsCount > 3
+                        enabled: tabsHolder.moreTabsAvailable
                     }
-
-                    /*StyledText {
-                        text: "+"
-                        font.pixelSize: 20
-                        anchors.centerIn: parent
-                        color: plusTab.isHighlighted ? Colors.labelActiveForeground : Colors.artworkActiveColor
-                    }*/
 
                     MouseArea {
                         id: plusMA
