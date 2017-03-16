@@ -41,7 +41,7 @@ namespace MetadataIO {
         QString path = filepath + QLatin1String(Constants::METADATA_BACKUP_EXTENSION);
         const QHash<QString, QString> &dict = m_MetadataInfo;
         QFile file(path);
-        if (file.open(QIODevice::WriteOnly)) {
+        if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             QDataStream out(&file);   // write the data
             out << dict;
             file.close();
