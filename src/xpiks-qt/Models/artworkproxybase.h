@@ -90,6 +90,7 @@ namespace Models {
         void doHandleUserDictCleared();
         void doCopyToQuickBuffer();
         bool hasKeywords(const QStringList &keywordsList);
+        void doRequestBackup();
 
     private:
         void spellCheckEverything();

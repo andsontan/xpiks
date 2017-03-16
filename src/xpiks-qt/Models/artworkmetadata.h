@@ -180,7 +180,7 @@ namespace Models {
         void setUnavailable() { setIsUnavailableFlag(true); }
         void resetModified() { setIsModifiedFlag(false); }
         void requestFocus(int directionSign) { emit focusRequested(directionSign); }
-        void requestBackup();
+        virtual void requestBackup() override;
         virtual bool expandPreset(int keywordIndex, const QStringList &presetList) override;
         virtual bool appendPreset(const QStringList &presetList) override;
         virtual bool hasKeywords(const QStringList &keywordsList) override;
