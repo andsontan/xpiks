@@ -559,7 +559,7 @@ Rectangle {
                                 StyledTextEdit {
                                     id: titleTextInput
                                     focus: true
-                                    width: titleFlick.width
+                                    width: paintedWidth > titleFlick.width ? paintedWidth : titleFlick.width
                                     height: titleFlick.height
                                     text: artworkProxy.title
                                     userDictEnabled: true
@@ -678,7 +678,7 @@ Rectangle {
                                 StyledTextEdit {
                                     id: descriptionTextInput
                                     width: descriptionFlick.width
-                                    height: descriptionFlick.height
+                                    height: paintedHeight > descriptionFlick.height ? paintedHeight : descriptionFlick.height
                                     text: artworkProxy.description
                                     focus: true
                                     userDictEnabled: true

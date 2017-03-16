@@ -109,6 +109,7 @@ namespace Models {
         void itemSelectedChanged(bool value);
         void onSelectedArtworksRemoved(int value);
         void onSpellCheckerAvailable(bool afterRestart);
+        void onSettingsUpdated();
 
     signals:
         void searchTermChanged(const QString &searchTerm);
@@ -140,6 +141,8 @@ namespace Models {
         void forceUnselectAllItems();
         ArtItemsModel *getArtItemsModel() const;
 
+        void updateSearchFlags();
+
     protected:
         virtual bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
         virtual bool lessThan(const QModelIndex &sourceLeft, const QModelIndex &sourceRight) const override;
@@ -147,6 +150,7 @@ namespace Models {
     private:
         // ignore default regexp from proxymodel
         QString m_SearchTerm;
+        Common::SearchFlags m_SearchFlags;
         volatile int m_SelectedArtworksCount;
         volatile bool m_SortingEnabled;
     };

@@ -37,6 +37,7 @@ namespace Constants {
     const char DISMISS_DURATION[] = "DISMISS_DURATION";
     const char FIT_SMALL_PREVIEW[] = "FIT_SMALL_PREVIEW";
     const char SEARCH_USING_AND[] = "SEARCH_USING_AND";
+    const char SEARCH_BY_FILEPATH[] = "SEARCH_BY_FILEPATH";
     const char WHATS_NEW_FILENAME[] = "whatsnew.txt";
     const char TERMS_AND_CONDITIONS_FILENAME[] = "terms_and_conditions.txt";
     const char DICT_PATH[] = "DICT_PATH";

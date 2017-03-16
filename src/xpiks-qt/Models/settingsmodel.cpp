@@ -43,6 +43,7 @@
 #define DEFAULT_MAX_PARALLEL_UPLOADS 2
 #define DEFAULT_FIT_SMALL_PREVIEW false
 #define DEFAULT_SEARCH_USING_AND true
+#define DEFAULT_SEARCH_BY_FILEPATH true
 #define DEFAULT_SCROLL_SPEED_SCALE 1.0
 #define DEFAULT_USE_SPELL_CHECK true
 #define DEFAULT_HAVE_USER_CONSENT false
@@ -86,6 +87,7 @@ namespace Models {
         m_SaveBackups(DEFAULT_SAVE_BACKUPS),
         m_FitSmallPreview(DEFAULT_FIT_SMALL_PREVIEW),
         m_SearchUsingAnd(DEFAULT_SEARCH_USING_AND),
+        m_SearchByFilepath(DEFAULT_SEARCH_BY_FILEPATH),
         m_UseSpellCheck(DEFAULT_USE_SPELL_CHECK),
         m_UserStatistics(DEFAULT_COLLECT_USER_STATISTICS),
         m_CheckForUpdates(DEFAULT_CHECK_FOR_UPDATES),
@@ -143,6 +145,7 @@ namespace Models {
         appSettings.setValue(appSettings.getMaxParallelUploadsKey(), m_MaxParallelUploads);
         appSettings.setValue(appSettings.getFitSmallPreviewKey(), m_FitSmallPreview);
         appSettings.setValue(appSettings.getSearchUsingAndKey(), m_SearchUsingAnd);
+        appSettings.setValue(appSettings.getSearchByFilepathKey(), m_SearchByFilepath);
         appSettings.setValue(appSettings.getScrollSpeedScaleKey(), m_ScrollSpeedScale);
         appSettings.setValue(appSettings.getUseSpellCheckKey(), m_UseSpellCheck);
         appSettings.setValue(appSettings.getUserStatisticsKey(), m_UserStatistics);
@@ -176,6 +179,8 @@ namespace Models {
             m_CommandManager->autoDiscoverExiftool();
         }
 #endif
+
+        emit settingsUpdated();
     }
 
     void SettingsModel::clearMasterPasswordSettings() {
@@ -208,6 +213,7 @@ namespace Models {
         setMaxParallelUploads(appSettings.value(appSettings.getMaxParallelUploadsKey(), DEFAULT_MAX_PARALLEL_UPLOADS).toInt());
         setFitSmallPreview(appSettings.boolValue(appSettings.getFitSmallPreviewKey(), DEFAULT_FIT_SMALL_PREVIEW));
         setSearchUsingAnd(appSettings.boolValue(appSettings.getSearchUsingAndKey(), DEFAULT_SEARCH_USING_AND));
+        setSearchByFilepath(appSettings.boolValue(appSettings.getSearchByFilepathKey(), DEFAULT_SEARCH_BY_FILEPATH));
         setScrollSpeedScale(appSettings.doubleValue(appSettings.getScrollSpeedScaleKey(), DEFAULT_SCROLL_SPEED_SCALE));
         setUseSpellCheck(appSettings.boolValue(appSettings.getUseSpellCheckKey(), DEFAULT_USE_SPELL_CHECK));
         setUserStatistics(appSettings.boolValue(appSettings.getUserStatisticsKey(), DEFAULT_COLLECT_USER_STATISTICS));
@@ -242,6 +248,7 @@ namespace Models {
         setMaxParallelUploads(DEFAULT_MAX_PARALLEL_UPLOADS);
         setFitSmallPreview(DEFAULT_FIT_SMALL_PREVIEW);
         setSearchUsingAnd(DEFAULT_SEARCH_USING_AND);
+        setSearchByFilepath(DEFAULT_SEARCH_BY_FILEPATH);
         setScrollSpeedScale(DEFAULT_SCROLL_SPEED_SCALE);
         setUseSpellCheck(DEFAULT_USE_SPELL_CHECK);
         setUserStatistics(DEFAULT_COLLECT_USER_STATISTICS);

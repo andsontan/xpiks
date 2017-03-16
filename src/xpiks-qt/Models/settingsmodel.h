@@ -48,6 +48,7 @@ namespace Models {
         Q_PROPERTY(int maxParallelUploads READ getMaxParallelUploads WRITE setMaxParallelUploads NOTIFY maxParallelUploadsChanged)
         Q_PROPERTY(bool fitSmallPreview READ getFitSmallPreview WRITE setFitSmallPreview NOTIFY fitSmallPreviewChanged)
         Q_PROPERTY(bool searchUsingAnd READ getSearchUsingAnd WRITE setSearchUsingAnd NOTIFY searchUsingAndChanged)
+        Q_PROPERTY(bool searchByFilepath READ getSearchByFilepath WRITE setSearchByFilepath NOTIFY searchByFilepathChanged)
         Q_PROPERTY(double scrollSpeedScale READ getScrollSpeedScale WRITE setScrollSpeedScale NOTIFY scrollSpeedScaleChanged)
         Q_PROPERTY(bool useSpellCheck READ getUseSpellCheck WRITE setUseSpellCheck NOTIFY useSpellCheckChanged)
         Q_PROPERTY(bool userStatistics READ getUserStatistics WRITE setUserStatistics NOTIFY userStatisticsChanged)
@@ -101,6 +102,7 @@ namespace Models {
         int getMaxParallelUploads() const { return m_MaxParallelUploads; }
         bool getFitSmallPreview() const { return m_FitSmallPreview; }
         bool getSearchUsingAnd() const { return m_SearchUsingAnd; }
+        bool getSearchByFilepath() const { return m_SearchByFilepath; }
         double getScrollSpeedScale() const { return m_ScrollSpeedScale; }
         bool getUseSpellCheck() const { return m_UseSpellCheck; }
         bool getUserStatistics() const { return m_UserStatistics; }
@@ -124,6 +126,7 @@ namespace Models {
 
     signals:
         void settingsReset();
+        void settingsUpdated();
         void exifToolPathChanged(QString exifToolPath);
         void uploadTimeoutChanged(int uploadTimeout);
         void mustUseMasterPasswordChanged(bool mustUseMasterPassword);
@@ -134,6 +137,7 @@ namespace Models {
         void maxParallelUploadsChanged(int value);
         void fitSmallPreviewChanged(bool value);
         void searchUsingAndChanged(bool value);
+        void searchByFilepathChanged(bool value);
         void scrollSpeedScaleChanged(double value);
         void useSpellCheckChanged(bool value);
         void userStatisticsChanged(bool value);
@@ -233,6 +237,14 @@ namespace Models {
 
             m_SearchUsingAnd = value;
             emit searchUsingAndChanged(value);
+        }
+
+        void setSearchByFilepath(bool value) {
+            if (m_SearchByFilepath == value)
+                return;
+
+            m_SearchByFilepath = value;
+            emit searchByFilepathChanged(value);
         }
 
         void setScrollSpeedScale(double value) {
@@ -373,6 +385,7 @@ namespace Models {
         bool m_SaveBackups;
         bool m_FitSmallPreview;
         bool m_SearchUsingAnd;
+        bool m_SearchByFilepath;
         bool m_UseSpellCheck;
         bool m_UserStatistics;
         bool m_CheckForUpdates;
