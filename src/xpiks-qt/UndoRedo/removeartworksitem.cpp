@@ -103,6 +103,7 @@ void UndoRedo::RemoveArtworksHistoryItem::undo(const Commands::ICommandManager *
 
     artworksRepository->endAccountingFiles(filesWereAccounted);
     artworksRepository->watchFilePaths(watchList);
+    artworksRepository->updateFilesCounts();
 
     std::unique_ptr<IHistoryItem> addArtworksItem(new AddArtworksHistoryItem(getCommandID(), ranges));
     commandManager->recordHistoryItem(addArtworksItem);
