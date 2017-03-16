@@ -239,6 +239,12 @@ namespace Models {
 #endif
     }
 
+    void ArtworksRepository::updateFilesCounts() {
+        auto first = this->index(0);
+        auto last = this->index(rowCount() - 1);
+        emit dataChanged(first, last, QVector<int>() << UsedImagesCountRole);
+    }
+
     void ArtworksRepository::watchFilePath(const QString &filepath) {
 #ifndef CORE_TESTS
         m_FilesWatcher.addPath(filepath);

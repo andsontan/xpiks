@@ -129,6 +129,7 @@ std::shared_ptr<Commands::ICommandResult> Commands::AddArtworksCommand::execute(
 
     artworksRepository->endAccountingFiles(filesWereAccounted);
     artworksRepository->watchFilePaths(filesToWatch);
+    artworksRepository->updateFilesCounts();
 
     QHash<QString, QHash<QString, QString> > vectorsHash;
     decomposeVectors(vectorsHash);

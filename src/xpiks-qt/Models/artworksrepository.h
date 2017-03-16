@@ -90,6 +90,7 @@ namespace Models {
         void purgeUnavailableFiles();
         void watchFilePaths(const QStringList &filePaths);
         void unwatchFilePaths(const QStringList &filePaths);
+        void updateFilesCounts();
 
     private:
         void watchFilePath(const QString &filepath);
