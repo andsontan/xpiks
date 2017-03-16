@@ -49,18 +49,21 @@ namespace Models {
     void ArtworkProxyBase::setDescription(const QString &description) {
         if (doSetDescription(description)) {
             signalDescriptionChanged();
+            doRequestBackup();
         }
     }
 
     void ArtworkProxyBase::setTitle(const QString &title) {
         if (doSetTitle(title)) {
             signalTitleChanged();
+            doRequestBackup();
         }
     }
 
     void ArtworkProxyBase::setKeywords(const QStringList &keywords) {
         doSetKeywords(keywords);
         signalKeywordsCountChanged();
+        doRequestBackup();
     }
 
     bool ArtworkProxyBase::doSetDescription(const QString &description) {
@@ -87,6 +90,7 @@ namespace Models {
         if (result) {
             auto *basicModel = getBasicMetadataModel();
             m_CommandManager->submitKeywordForSpellCheck(basicModel, index);
+            doRequestBackup();
         } else {
             LOG_INFO << "Failed to edit to" << replacement;
         }
@@ -101,6 +105,7 @@ namespace Models {
         if (result) {
             signalKeywordsCountChanged();
             LOG_INFO << "Removed keyword:" << keyword << "keywords count:" << getKeywordsCount();
+            doRequestBackup();
         }
 
         return result;
@@ -113,6 +118,7 @@ namespace Models {
         if (result) {
             signalKeywordsCountChanged();
             LOG_INFO << "Removed keyword:" << keyword << "keywords count:" << getKeywordsCount();
+            doRequestBackup();
         }
 
         return result;
@@ -126,6 +132,7 @@ namespace Models {
             signalKeywordsCountChanged();
             auto *basicModel = getBasicMetadataModel();
             m_CommandManager->submitKeywordForSpellCheck(basicModel, basicModel->rowCount() - 1);
+            doRequestBackup();
         } else {
             LOG_INFO << "Failed to append:" << keyword;
         }
@@ -144,6 +151,7 @@ namespace Models {
 
             auto *basicModel = getBasicMetadataModel();
             m_CommandManager->submitItemForSpellCheck(basicModel, Common::SpellCheckFlags::Keywords);
+            doRequestBackup();
         }
 
         return appendedCount;
@@ -158,6 +166,7 @@ namespace Models {
 
             // to update fix spelling link
             spellCheckKeywords();
+            doRequestBackup();
         }
 
         return result;
@@ -173,6 +182,8 @@ namespace Models {
 
         // to update fix spelling link
         spellCheckKeywords();
+
+        // do not request backup
 
         return result;
     }
@@ -241,6 +252,7 @@ namespace Models {
         spellCheckKeywords();
 
         signalKeywordsCountChanged();
+        doRequestBackup();
     }
 
     bool ArtworkProxyBase::getHasTitleWordSpellError(const QString &word) {
@@ -264,6 +276,7 @@ namespace Models {
             if (metadataOperator->expandPreset(keywordIndex, keywords)) {
                 signalKeywordsCountChanged();
                 spellCheckKeywords();
+                doRequestBackup();
                 success = true;
             }
         }
@@ -310,6 +323,10 @@ namespace Models {
         QStringList keywords;
 
         if (presetsModel->tryGetPreset(presetIndex, keywords)) {
+            for (auto &keyword: keywords) {
+                keyword = keyword.toLower();
+            }
+
             success = doRemoveKeywords(keywords.toSet(), false);
         }
 
@@ -359,6 +376,11 @@ namespace Models {
         auto *metadataModel = getBasicMetadataModel();
         auto *quickBuffer = m_CommandManager->getQuickBuffer();
         quickBuffer->setFromBasicModel(metadataModel);
+    }
+
+    void ArtworkProxyBase::doRequestBackup() {
+        auto *metadataOperator = getMetadataOperator();
+        metadataOperator->requestBackup();
     }
 
     void ArtworkProxyBase::spellCheckEverything() {
