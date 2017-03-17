@@ -118,9 +118,12 @@ namespace Suggestion {
             if (!id.isDouble()) { continue; }
             QString externalUrl = QString("https://fotolia.com/id/%1").arg((int)id.toDouble());
 
+            QJsonValue title = object["title"];
+            if (!title.isString()) { continue; }
+
             QStringList keywordsList = keywords.toString().split(',');
 
-            suggestionArtworks.emplace_back(new SuggestionArtwork(url.toString(), externalUrl, keywordsList));
+            suggestionArtworks.emplace_back(new SuggestionArtwork(url.toString(), externalUrl, title.toString(), QString(""), keywordsList));
         }
     }
 

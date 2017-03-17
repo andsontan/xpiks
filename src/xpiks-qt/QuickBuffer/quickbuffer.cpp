@@ -205,4 +205,19 @@ namespace QuickBuffer {
 
         emit isEmptyChanged();
     }
+
+    void QuickBuffer::setFromSuggestionArtwork(const std::shared_ptr<Suggestion::SuggestionArtwork> &from) {
+        LOG_DEBUG << "#";
+        Q_ASSERT(from != nullptr);
+
+        auto title = from->getTitle();
+        auto description = from->getDescription();
+        auto keywords = from->getKeywordsSet().toList();
+
+        this->setTitle(title);
+        this->setDescription(description);
+        if (!keywords.empty()) { this->setKeywords(keywords); }
+
+        emit isEmptyChanged();
+    }
 }

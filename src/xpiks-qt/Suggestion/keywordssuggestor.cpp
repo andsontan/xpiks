@@ -26,6 +26,7 @@
 #include "suggestionartwork.h"
 #include "../Commands/commandmanager.h"
 #include "../Common/defines.h"
+#include "../QuickBuffer/quickbuffer.h"
 #include "suggestionqueryenginebase.h"
 #include "shutterstockqueryengine.h"
 #include "locallibraryqueryengine.h"
@@ -196,6 +197,17 @@ namespace Suggestion {
         QModelIndex qIndex = this->index(index);
         emit dataChanged(qIndex, qIndex, QVector<int>() << IsSelectedRole);
         updateSuggestedKeywords();
+    }
+
+    void KeywordsSuggestor::copyToQuickBuffer(int index) const {
+        if (index < 0 || (size_t)index >= m_Suggestions.size()) {
+            LOG_WARNING << "Index is out of bounds: " << index;
+            return;
+        }
+
+        auto &suggestionArtwork = m_Suggestions.at(index);
+        auto *quickBuffer = m_CommandManager->getQuickBuffer();
+        quickBuffer->setFromSuggestionArtwork(suggestionArtwork);
     }
 
     void KeywordsSuggestor::searchArtworks(const QString &searchTerm, int resultsType) {

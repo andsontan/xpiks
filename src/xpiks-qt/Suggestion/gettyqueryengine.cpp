@@ -127,8 +127,25 @@ namespace Suggestion {
                     parseKeywords(item["keywords"], keywords);
                 }
 
+                QString title;
+                QString description;
+
+                if (item.contains("title")) {
+                    QJsonValue value = item["title"];
+                    if (value.isString()) {
+                         title = value.toString();
+                    }
+                }
+
+                if (item.contains("caption")) {
+                    QJsonValue value = item["caption"];
+                    if (value.isString()) {
+                         description = value.toString();
+                    }
+                }
+
                 // TODO: parse external url from istock
-                suggestionArtworks.emplace_back(new SuggestionArtwork(url, keywords, false));
+                suggestionArtworks.emplace_back(new SuggestionArtwork(url, title, description, keywords, false));
             }
         }
     }
@@ -178,7 +195,7 @@ namespace Suggestion {
     QUrl GettyQueryEngine::buildQuery(const QStringList &queryKeywords, QueryResultsType resultsType) const {
         QUrlQuery urlQuery;
 
-        urlQuery.addQueryItem("fields", "keywords,preview,title,id");
+        urlQuery.addQueryItem("fields", "keywords,preview,title,id,caption");
         urlQuery.addQueryItem("phrase", queryKeywords.join(' '));
         urlQuery.addQueryItem("page", "1");
         urlQuery.addQueryItem("page_size", "100");

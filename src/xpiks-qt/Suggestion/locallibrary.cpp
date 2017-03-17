@@ -156,7 +156,7 @@ namespace Suggestion {
             auto &filepath = pair.second;
             Q_ASSERT(m_LocalArtworks.contains(filepath));
             auto &localData = m_LocalArtworks[filepath];
-            searchResults.emplace_back(new SuggestionArtwork(filepath, localData.m_Keywords));
+            searchResults.emplace_back(new SuggestionArtwork(filepath, localData.m_Title, localData.m_Description, localData.m_Keywords));
         }
     }
 

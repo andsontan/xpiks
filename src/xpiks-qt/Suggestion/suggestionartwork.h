@@ -31,8 +31,10 @@ namespace Suggestion {
     class SuggestionArtwork
     {
     public:
-        SuggestionArtwork(const QString &url, const QStringList &keywords, bool isLocal = true) :
+        SuggestionArtwork(const QString &url, const QString &title, const QString &description, const QStringList &keywords, bool isLocal = true) :
             m_KeywordsSet(keywords.toSet()),
+            m_Title(title),
+            m_Description(description),
             m_ExternalUrl(""),
             m_IsSelected(false)
         {
@@ -43,8 +45,10 @@ namespace Suggestion {
             }
         }
 
-        SuggestionArtwork(const QString &url, const QString &externalUrl, const QStringList &keywords) :
+        SuggestionArtwork(const QString &url, const QString &externalUrl, const QString &title, const QString &description, const QStringList &keywords) :
             m_KeywordsSet(keywords.toSet()),
+            m_Title(title),
+            m_Description(description),
             m_Url(url),
             m_ExternalUrl(externalUrl),
             m_IsSelected(false)
@@ -54,6 +58,8 @@ namespace Suggestion {
     public:
         const QString &getUrl() const { return m_Url; }
         const QSet<QString> &getKeywordsSet() const { return m_KeywordsSet; }
+        const QString &getTitle() const { return m_Title; }
+        const QString &getDescription() const { return m_Description; }
         bool getIsSelected() const { return m_IsSelected; }
         const QString &getExternalUrl() const { return m_ExternalUrl; }
 
@@ -62,6 +68,8 @@ namespace Suggestion {
 
     private:
         QSet<QString> m_KeywordsSet;
+        QString m_Title;
+        QString m_Description;
         QString m_Url;
         QString m_ExternalUrl;
         bool m_IsSelected;

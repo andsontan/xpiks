@@ -76,11 +76,23 @@ Item {
     Menu {
         id: contextMenu
         property string externalUrl
+        property int delegateIndex
 
         MenuItem {
             text: i18.n + qsTr("Open in browser")
             onTriggered: {
-                Qt.openUrlExternally(contextMenu.externalUrl)
+                if (contextMenu.externalUrl != "") {
+                    Qt.openUrlExternally(contextMenu.externalUrl)
+                } else {
+                    console.log("Got no URL")
+                }
+            }
+        }
+
+        MenuItem {
+            text: i18.n + qsTr("Copy to Quick Buffer");
+            onTriggered: {
+                keywordsSuggestor.copyToQuickBuffer(contextMenu.delegateIndex)
             }
         }
     }
@@ -292,10 +304,9 @@ Item {
                                         acceptedButtons: Qt.LeftButton | Qt.RightButton
                                         onClicked: {
                                             if (mouse.button == Qt.RightButton) {
-                                                if (imageWrapper.realUrl != "") {
-                                                    contextMenu.externalUrl = imageWrapper.realUrl
-                                                    contextMenu.popup()
-                                                }
+                                                contextMenu.externalUrl = imageWrapper.realUrl
+                                                contextMenu.delegateIndex = imageWrapper.delegateIndex
+                                                contextMenu.popup()
                                             } else {
                                                 keywordsSuggestor.setArtworkSelected(delegateIndex, !isselected)
                                                 searchTypeCombobox.closePopup()

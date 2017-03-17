@@ -27,6 +27,7 @@
 #include "../Models/artworkproxybase.h"
 #include "../Common/basicmetadatamodel.h"
 #include "../SpellCheck/spellcheckiteminfo.h"
+#include "../Suggestion/suggestionartwork.h"
 
 namespace QuickBuffer {
     class QuickBuffer : public QObject, public Models::ArtworkProxyBase
@@ -89,6 +90,7 @@ namespace QuickBuffer {
         bool getIsEmpty();
         void setFromCurrentEditable();
         void setFromBasicModel(Common::BasicMetadataModel *model);
+        void setFromSuggestionArtwork(const std::shared_ptr<Suggestion::SuggestionArtwork> &from);
 
     protected:
         virtual Common::BasicMetadataModel *getBasicMetadataModel() override { return &m_BasicModel; }
