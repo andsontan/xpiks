@@ -27,7 +27,6 @@
         <file>Components/AddIcon.qml</file>
         <file>Dialogs/KeywordsSuggestion.qml</file>
         <file>Components/LargeAddIcon.qml</file>
-        <file>StyledControls/StyledBusyIndicator.qml</file>
         <file>StyledControls/StyledTabView.qml</file>
         <file>Components/CustomBorder.qml</file>
         <file>StyledControls/StyledBlackButton.qml</file>
@@ -79,5 +78,6 @@
         <file>CollapserTabs/QuickBufferIcon.qml</file>
         <file>CollapserTabs/QuickBufferTab.qml</file>
         <file>Dialogs/UserDictEditDialog.qml</file>
+        <file>Components/LoaderIcon.qml</file>
     </qresource>
 </RCC>
