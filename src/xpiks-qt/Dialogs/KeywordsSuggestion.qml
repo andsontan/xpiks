@@ -341,7 +341,7 @@ Item {
                         }
                     }
 
-                    StyledBusyIndicator {
+                    LoaderIcon {
                         width: parent.width/2
                         height: parent.width/2
                         anchors.centerIn: parent
