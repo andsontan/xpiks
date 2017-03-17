@@ -210,8 +210,8 @@ namespace QuickBuffer {
         LOG_DEBUG << "#";
         Q_ASSERT(from != nullptr);
 
-        auto title = from->getTitle();
-        auto description = from->getDescription();
+        auto &title = from->getTitle();
+        auto &description = from->getDescription();
         auto keywords = from->getKeywordsSet().toList();
 
         this->setTitle(title);
