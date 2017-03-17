@@ -192,7 +192,7 @@ Item {
                     }
                 }
 
-                StyledBusyIndicator {
+                LoaderIcon {
                     id: spinner
                     width: 150
                     height: 0

@@ -362,7 +362,6 @@ DISTFILES += \
     Components/AddIcon.qml \
     Dialogs/KeywordsSuggestion.qml \
     Components/LargeAddIcon.qml \
-    StyledControls/StyledBusyIndicator.qml \
     StyledControls/StyledTabView.qml \
     Components/CustomBorder.qml \
     StyledControls/StyledBlackButton.qml \
@@ -415,7 +414,8 @@ DISTFILES += \
     CollapserTabs/TranslatorIcon.qml \
     CollapserTabs/QuickBufferIcon.qml \
     CollapserTabs/QuickBufferTab.qml \
-    Dialogs/UserDictEditDialog.qml
+    Dialogs/UserDictEditDialog.qml \
+    Components/LoaderIcon.qml
 
 lupdate_only {
 SOURCES += *.qml \
