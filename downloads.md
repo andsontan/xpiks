@@ -10,7 +10,7 @@ permalink: /downloads/
 <h2><strong>OS X instructions</strong></h2>
 
 <div class="download-package">
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.4.0/xpiks-qt-v1.4.dmg">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.4.1/xpiks-qt-v1.4.1.dmg">
 <div>
 <img src="{{site.url}}/images/os_x_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Package for OS X</span>
@@ -25,7 +25,7 @@ permalink: /downloads/
 <h2><strong>Windows instructions</strong></h2>
 
 <div class="download-package">
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.4.0/xpiks-qt-v1.4.zip">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.4.1/xpiks-qt-v1.4.1.zip">
 <div><img src="{{site.url}}/images/windows_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Archive for Win 64-bit</span>
 </div>
@@ -37,7 +37,7 @@ permalink: /downloads/
 <div style="clear:both;">&nbsp;</div>
 
 <div class="download-package">
-<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.4.0/xpiks-qt-32-v1.4.zip">
+<a href="https://github.com/Ribtoks/xpiks/releases/download/v1.4.1/xpiks-qt-32-v1.4.1.zip">
 <div><img src="{{site.url}}/images/windows_installer.jpg" style="vertical-align: middle;width:70px;" />
 <span style="vertical-align: middle;">Archive for Win 32-bit</span>
 </div>
