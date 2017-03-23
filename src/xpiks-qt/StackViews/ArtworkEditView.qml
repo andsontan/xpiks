@@ -449,7 +449,7 @@ Rectangle {
                 spacing: 0
 
                 Repeater {
-                    model: [qsTr("Edit"), qsTr("Info")]
+                    model: [i18.n + qsTr("Edit"), i18.n + qsTr("Info")]
                     delegate: CustomTab {
                         width: rightPane.width/2
                         property int delegateIndex: index
@@ -460,7 +460,7 @@ Rectangle {
 
                         StyledText {
                             color: parent.isSelected ? Colors.artworkActiveColor : (parent.hovered ? Colors.labelActiveForeground : Colors.labelInactiveForeground)
-                            text: i18.n + modelData
+                            text: modelData
                             anchors.centerIn: parent
                         }
 
