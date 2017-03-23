@@ -1,0 +1,9 @@
+{
+    "major_version": 1,
+    "minor_version": 3,
+    "fix_version": 2,
+    "osx_link": "https://github.com/Ribtoks/xpiks/releases/download/v1.3.4/xpiks-qt-v1.3.4.dmg",
+    "windows_link": "https://github.com/Ribtoks/xpiks/releases/download/v1.3.4/xpiks-qt-v1.3.4.zip",
+    "linux_link": "https://github.com/Ribtoks/xpiks/releases/download/v1.3.4/xpiks_1.3.4-1_amd64.deb",
+    "unknown_link": "http://ribtoks.github.io/xpiks/downloads/"
+}
