@@ -61,18 +61,22 @@ QString fileChecksum(const QString &fileName, QCryptographicHash::Algorithm hash
 }
 
 bool moveFile(const QString &from, const QString &to) {
+    LOG_INFO << from << "->" << to;
     bool success = false;
 
     QFile destination(to);
     if (destination.exists()) {
         if (!destination.remove()) {
+            LOG_WARNING << "Failed to remove exising file";
             return success;
         }
     }
 
     QFile source(from);
     if (source.exists()) {
-        success = source.rename(to);
+        success = source.copy(to);
+    } else {
+        LOG_WARNING << "Source does not exist";
     }
 
     return success;
@@ -129,6 +133,8 @@ namespace Conectivity {
                 QString pathToUpdate;
                 if (downloadUpdate(updateCheckResult, pathToUpdate)) {
                     emit updateDownloaded(pathToUpdate, updateCheckResult.m_Version);
+                } else {
+                    emit updateAvailable(updateCheckResult.m_UpdateURL);
                 }
             } else
 #endif
