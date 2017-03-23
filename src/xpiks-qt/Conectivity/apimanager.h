@@ -71,7 +71,7 @@ namespace Conectivity {
 #ifdef QT_DEBUG
             m_BaseUrl = "https://ribtoks.github.io/xpiks/api/dev/";
 #else
-            m_BaseUrl = "https://ribtoks.github.io/xpiks/api/v1/";
+            m_BaseUrl = "https://ribtoks.github.io/xpiks/api/brand-tk/";
 #endif
         }
 
