@@ -120,7 +120,9 @@ namespace Conectivity {
     }
 
     SimpleCurlDownloader::~SimpleCurlDownloader() {
-        m_TempFile.remove();
+        if (m_TempFile.exists()) {
+            m_TempFile.remove();
+        }
     }
 
     bool SimpleCurlDownloader::downloadFileSync() {
