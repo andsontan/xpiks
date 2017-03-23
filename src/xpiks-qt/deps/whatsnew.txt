@@ -1,3 +1,23 @@
+This is Xpiks 1.4.1 bugfix release.
+
+In this release:
+
+- decreased CPU load when idle
+- fixed issue with backups not saved for one item editing mode
+- fixed issue with not updating file counts for directories
+- fixed issue with wrong Description and Title fields size
+- reverted old closing behavior for keywords suggestion
+- fixed issue with focus jumps when using up/down keys
+- fixed issue with adding separated words to user dictionary
+- added presets spellchecking after plain text editing
+- fixed issue with being unable to add .tif files besides .tiff
+- fixed issue with QuickBuffer being disabled in multiple edit mode
+
+
+
+
+Previous releases:
+
 Xpiks 1.4 release.
 
 It provides following features:
@@ -21,10 +41,6 @@ And bugfixes:
 - order of keywords is changed in multiple edit dialog
 - dismiss timeout setting change didn't work as expected
 
-
-
-
-Previous releases:
 
 This is Xpiks 1.3.2 bugfix release.
 
@@ -50,7 +66,7 @@ Bugfixes:
 - uploading of file with unicode path via curl
 - fix for selecting and double-clickin an image
 
-Xpiks 1.3 release. 
+Xpiks 1.3 release.
 
 It provides following features:
 
