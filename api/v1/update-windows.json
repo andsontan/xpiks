@@ -1,7 +1,7 @@
 {
     "major_version": 1,
     "minor_version": 4,
-    "fix_version": 0,
-    "checksum": "d0eab16aca5563f395cd18914a2c853e086a4db3",
-    "update_link": "https://github.com/Ribtoks/xpiks/releases/download/v1.4.0/xpiks-qt-v1.4.zip"
+    "fix_version": 1,
+    "checksum": "c1a305cd7aa7f86412a2c7c6ac66eb03bb67256e",
+    "update_link": "https://github.com/Ribtoks/xpiks/releases/download/v1.4.1/xpiks-qt-v1.4.1.zip"
 }
