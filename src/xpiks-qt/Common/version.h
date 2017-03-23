@@ -28,14 +28,14 @@
 // update.json (values from 0..9)
 #define XPIKS_MAJOR_VERSION 1
 #define XPIKS_MINOR_VERSION 4
-#define XPIKS_FIX_VERSION 0
+#define XPIKS_FIX_VERSION 1
 
 #define XPIKS_VERSION_INT (XPIKS_MAJOR_VERSION*100 + XPIKS_MINOR_VERSION*10 + XPIKS_FIX_VERSION)
 
 #ifdef QT_DEBUG
-#define XPIKS_VERSION_STRING "1.4.0.dev"
+#define XPIKS_VERSION_STRING "1.4.1.dev"
 #else
-#define XPIKS_VERSION_STRING "1.4.0"
+#define XPIKS_VERSION_STRING "1.4.1"
 #endif
 
 #endif // VERSION_H
