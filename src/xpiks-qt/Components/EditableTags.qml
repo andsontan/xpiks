@@ -456,6 +456,8 @@ Flickable {
 
                         if (hasSelectedCompletion()) {
                             event.accepted = true
+                        } else {
+                            submitCurrentKeyword()
                         }
                     } else if (autoCompleteActive && (event.key === Qt.Key_Up)) {
                         moveSelectionUp()
