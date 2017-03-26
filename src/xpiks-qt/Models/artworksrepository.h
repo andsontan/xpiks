@@ -155,7 +155,7 @@ namespace Models {
             { }
             RepoDir() = default;
 
-            QString m_AbsolutePath = "";
+            QString m_AbsolutePath = QString("");
             qint64 m_Id = 0;
             int m_FilesCount = 0;
             bool m_IsSelected = true;

@@ -349,5 +349,4 @@ void ArtworkRepositoryTests::selectFolderTest() {
     repository.accountFile(filename4, dirID);
     dirIDs.push_back(dirID);
     QCOMPARE(repository.isDirectoryIncluded(dirIDs[3]), true);
-
 }
