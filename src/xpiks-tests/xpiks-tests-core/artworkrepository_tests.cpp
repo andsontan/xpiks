@@ -307,47 +307,47 @@ void ArtworkRepositoryTests::selectFolderTest() {
     }
 
     // Initially all directories are selected.
-    QCOMPARE(repository.isDirSelected(dirIDs[0]), true);
-    QCOMPARE(repository.isDirSelected(dirIDs[1]), true);
-    QCOMPARE(repository.isDirSelected(dirIDs[2]), true);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[0]), true);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[1]), true);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[2]), true);
 
     //If All are selected and you click on 1, you select it and deselect others.
-    repository.setDirSelected(0);
-    QCOMPARE(repository.isDirSelected(dirIDs[0]), true);
-    QCOMPARE(repository.isDirSelected(dirIDs[1]), false);
-    QCOMPARE(repository.isDirSelected(dirIDs[2]), false);
+    repository.selectDirectory(0);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[0]), true);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[1]), false);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[2]), false);
 
     //If not all are selected and you click on 1, you add it to the selection.
-    repository.setDirSelected(2);
-    QCOMPARE(repository.isDirSelected(dirIDs[0]), true);
-    QCOMPARE(repository.isDirSelected(dirIDs[1]), false);
-    QCOMPARE(repository.isDirSelected(dirIDs[2]), true);
+    repository.selectDirectory(2);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[0]), true);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[1]), false);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[2]), true);
 
-    repository.setDirSelected(0);
-    QCOMPARE(repository.isDirSelected(dirIDs[0]), false);
-    QCOMPARE(repository.isDirSelected(dirIDs[1]), false);
-    QCOMPARE(repository.isDirSelected(dirIDs[2]), true);
+    repository.selectDirectory(0);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[0]), false);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[1]), false);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[2]), true);
 
     //If you unselect last selected, all get selected.
-    repository.setDirSelected(2);
-    QCOMPARE(repository.isDirSelected(dirIDs[0]), true);
-    QCOMPARE(repository.isDirSelected(dirIDs[1]), true);
-    QCOMPARE(repository.isDirSelected(dirIDs[2]), true);
+    repository.selectDirectory(2);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[0]), true);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[1]), true);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[2]), true);
 
-    repository.setDirSelected(2);
-    QCOMPARE(repository.isDirSelected(dirIDs[0]), false);
-    QCOMPARE(repository.isDirSelected(dirIDs[1]), false);
-    QCOMPARE(repository.isDirSelected(dirIDs[2]), true);
+    repository.selectDirectory(2);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[0]), false);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[1]), false);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[2]), true);
 
     //If you remove last selected directory, all get selected.
     repository.removeItem(2);
-    QCOMPARE(repository.isDirSelected(dirIDs[0]), true);
-    QCOMPARE(repository.isDirSelected(dirIDs[1]), true);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[0]), true);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[1]), true);
 
     //If you add a new directory, it gets selected by default.
     qint64 dirID;
     repository.accountFile(filename4, dirID);
     dirIDs.push_back(dirID);
-    QCOMPARE(repository.isDirSelected(dirIDs[3]), true);
+    QCOMPARE(repository.isDirectoryIncluded(dirIDs[3]), true);
 
 }
