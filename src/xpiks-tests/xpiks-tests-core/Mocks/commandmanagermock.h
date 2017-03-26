@@ -41,9 +41,10 @@ namespace Mocks {
             while (i < count) {
                 QString filename = QString(ARTWORK_PATH).arg(i%2).arg(i);
                 QString vectorname = QString(VECTOR_PATH).arg(i%2).arg(i);
+                qint64 directoryID;
 
-                if (artworksRepository->accountFile(filename)) {
-                    Models::ArtworkMetadata *metadata = artItemsModel->createMetadata(filename);
+                if (artworksRepository->accountFile(filename, directoryID)) {
+                    Models::ArtworkMetadata *metadata = artItemsModel->createMetadata(filename, directoryID);
                     Models::ImageArtwork *image = dynamic_cast<Models::ImageArtwork*>(metadata);
 
                     this->connectArtworkSignals(metadata);

@@ -646,17 +646,25 @@ namespace Models {
     bool FilteredArtItemsProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const {
         Q_UNUSED(sourceParent);
 
-        if (m_SearchTerm.trimmed().isEmpty()) {
-            return true;
-        }
-
         ArtItemsModel *artItemsModel = getArtItemsModel();
         ArtworkMetadata *metadata = artItemsModel->getArtwork(sourceRow);
 
         bool hasMatch = false;
 
         if (metadata != NULL) {
-            hasMatch = Helpers::hasSearchMatch(m_SearchTerm, metadata, m_SearchFlags);
+            ArtworksRepository *repository = m_CommandManager->getArtworksRepository();
+            Q_ASSERT(repository != NULL);
+            qint64 directoryID = metadata->getdirectoryID();
+            bool directoryIsSelected = repository->isDirSelected(directoryID);
+            bool searchHit = true;
+            hasMatch = directoryIsSelected;
+            if (hasMatch) {
+                if (!m_SearchTerm.trimmed().isEmpty()) {
+                    searchHit = Helpers::hasSearchMatch(m_SearchTerm, metadata, m_SearchFlags);
+                }
+
+                hasMatch = searchHit;
+            }
         }
 
         return hasMatch;

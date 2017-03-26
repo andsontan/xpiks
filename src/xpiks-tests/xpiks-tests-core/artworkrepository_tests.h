@@ -19,6 +19,7 @@ private slots:
     void noNewFilesCountTest();
     void endAccountingWithNoNewFilesTest();
     void startAccountingNewFilesEmitsTest();
+    void selectFolderTest();
 };
 
 #endif // ARTWORKREPOSITORYTESTS_H

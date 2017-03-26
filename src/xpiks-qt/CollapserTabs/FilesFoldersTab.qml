@@ -108,6 +108,13 @@ ColumnLayout {
                         }
                     }*/
 
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            artworkRepository.setDirSelected(sourceWrapper.delegateIndex)
+                        }
+                    }
+
                     RowLayout {
                         spacing: 10
                         anchors.fill: parent
@@ -125,6 +132,7 @@ ColumnLayout {
                             color: Colors.itemsSourceForeground
                             text: path + " (" + usedimagescount + ")"
                             elide: Text.ElideMiddle
+                            font.bold: isselected
                         }
 
                         CloseIcon {

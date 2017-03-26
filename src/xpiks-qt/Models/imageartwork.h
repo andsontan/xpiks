@@ -33,7 +33,7 @@ namespace Models {
     {
         Q_OBJECT
     public:
-        ImageArtwork(const QString &filepath, qint64 ID);
+        ImageArtwork(const QString &filepath, qint64 ID, qint64 directoryID);
 
     private:
         enum ImageArtworkFlags {

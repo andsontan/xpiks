@@ -34,12 +34,13 @@
 #define MAX_BACKUP_TIMER_DELAYS 5
 
 namespace Models {
-    ArtworkMetadata::ArtworkMetadata(const QString &filepath, qint64 ID):
+    ArtworkMetadata::ArtworkMetadata(const QString &filepath, qint64 ID, qint64 directoryID):
         m_MetadataModel(m_Hold),
         m_FileSize(0),
         m_ArtworkFilepath(filepath),
         m_BackupTimerDelay(0),
         m_ID(ID),
+        m_DirectoryID(directoryID),
         m_MetadataFlags(0),
         m_WarningsFlags(Common::WarningFlags::None),
         m_IsLockedForEditing(false)

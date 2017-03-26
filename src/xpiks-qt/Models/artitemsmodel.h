@@ -77,7 +77,7 @@ namespace Models {
         };
 
     public:
-        virtual ArtworkMetadata *createMetadata(const QString &filepath);
+        virtual ArtworkMetadata *createMetadata(const QString &filepath, qint64 directoryID);
         void deleteAllItems();
 
     public:
