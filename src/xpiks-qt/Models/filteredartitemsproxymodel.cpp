@@ -655,15 +655,14 @@ namespace Models {
             ArtworksRepository *repository = m_CommandManager->getArtworksRepository();
             Q_ASSERT(repository != NULL);
             qint64 directoryID = metadata->getdirectoryID();
-            bool directoryIsSelected = repository->isDirSelected(directoryID);
-            bool searchHit = true;
-            hasMatch = directoryIsSelected;
-            if (hasMatch) {
-                if (!m_SearchTerm.trimmed().isEmpty()) {
-                    searchHit = Helpers::hasSearchMatch(m_SearchTerm, metadata, m_SearchFlags);
-                }
 
-                hasMatch = searchHit;
+            bool directoryIsIncluded = repository->isDirectoryIncluded(directoryID);
+            if (directoryIsIncluded) {
+                hasMatch = true;
+
+                if (!m_SearchTerm.trimmed().isEmpty()) {
+                    hasMatch = Helpers::hasSearchMatch(m_SearchTerm, metadata, m_SearchFlags);
+                }
             }
         }
 

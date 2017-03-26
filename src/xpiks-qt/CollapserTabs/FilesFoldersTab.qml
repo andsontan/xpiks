@@ -108,13 +108,6 @@ ColumnLayout {
                         }
                     }*/
 
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            artworkRepository.setDirSelected(sourceWrapper.delegateIndex)
-                        }
-                    }
-
                     RowLayout {
                         spacing: 10
                         anchors.fill: parent
@@ -133,6 +126,16 @@ ColumnLayout {
                             text: path + " (" + usedimagescount + ")"
                             elide: Text.ElideMiddle
                             font.bold: isselected
+
+                            MouseArea {
+                                id: selectionMA
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                hoverEnabled: true
+                                onClicked: {
+                                    artworkRepository.selectDirectory(sourceWrapper.delegateIndex)
+                                }
+                            }
                         }
 
                         CloseIcon {
