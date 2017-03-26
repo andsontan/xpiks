@@ -105,8 +105,8 @@ namespace Models {
     public:
         const QString &getDirectory(int index) const { return m_DirectoriesList[index].m_AbsolutePath; }
 #ifdef CORE_TESTS
-        int getFilesCountForDirectory(const QString &directory) const { return m_DirectoriesHash[directory].m_FilesCount; }
-        int getFilesCountForDirectory(int index) const { return m_DirectoriesHash[m_DirectoriesList[index]].m_FilesCount; }
+        int getFilesCountForDirectory(const QString &directory) const { size_t index; tryFindDirectory(directory, index); return m_DirectoriesList[index].m_FilesCount; }
+        int getFilesCountForDirectory(int index) const { return m_DirectoriesList[index].m_FilesCount; }
 #endif
         bool isFileUnavailable(const QString &filepath) const;
 
