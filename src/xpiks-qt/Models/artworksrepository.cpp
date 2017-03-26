@@ -280,10 +280,9 @@ namespace Models {
 
 #ifdef INTEGRATION_TESTS
     void ArtworksRepository::resetEverything() {
-        m_DirectoriesHash.clear();
         m_DirectoriesList.clear();
-        m_DirectoriesSelectedHash.clear();
         m_FilesSet.clear();
+        m_DirectoryIdToIndex.clear();
     }
 #endif
 
@@ -323,7 +322,14 @@ namespace Models {
 
         bool oldValue = directory.m_IsSelected;
         bool newValue = !oldValue;
-        changeSelectedState(row, newValue, oldValue);
+        if (changeSelectedState(row, newValue, oldValue)) {
+#ifndef CORE_TESTS
+            LOG_DEBUG << "Updating artworks";
+            auto *filteredArtItemsModel = m_CommandManager->getFilteredArtItemsModel();
+            Q_ASSERT(filteredArtItemsModel != NULL);
+            filteredArtItemsModel->updateFilter();
+#endif
+        }
     }
 
     bool ArtworksRepository::setDirectorySelected(int index, bool newValue) {
@@ -339,7 +345,7 @@ namespace Models {
         return changed;
     }
 
-    void ArtworksRepository::changeSelectedState(int row, bool newValue, bool oldValue) {
+    bool ArtworksRepository::changeSelectedState(int row, bool newValue, bool oldValue) {
         if (oldValue == newValue) { return; }
 
         const int count = m_DirectoriesList.size();
@@ -370,15 +376,7 @@ namespace Models {
         }
 
         updateSelectedState();
-
-#ifndef CORE_TESTS
-        if (anySelectionChanged) {
-            LOG_DEBUG << "Updating artworks";
-            auto *filteredArtItemsModel = m_CommandManager->getFilteredArtItemsModel();
-            Q_ASSERT(filteredArtItemsModel != NULL);
-            filteredArtItemsModel->updateFilter();
-        }
-#endif
+        return anySelectionChanged;
     }
 
     bool ArtworksRepository::setAllSelected(bool value) {

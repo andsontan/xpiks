@@ -140,7 +140,7 @@ namespace Models {
 
     private:
         bool setDirectorySelected(int index, bool newValue);
-        void changeSelectedState(int row, bool newValue, bool oldValue);
+        bool changeSelectedState(int row, bool newValue, bool oldValue);
         bool unselectAllDirectories() { return setAllSelected(false); }
         bool selectAllDirectories() { return setAllSelected(true); }
         bool setAllSelected(bool value);
