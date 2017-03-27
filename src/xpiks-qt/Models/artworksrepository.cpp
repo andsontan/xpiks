@@ -146,8 +146,9 @@ namespace Models {
 
     bool ArtworksRepository::isDirectoryIncluded(qint64 directoryID) const {
         bool isSelected = false;
-        size_t index = m_DirectoryIdToIndex.value(directoryID, m_DirectoriesList.size() + 1);
-        if (index < m_DirectoriesList.size()) {
+        const size_t size = m_DirectoriesList.size();
+        size_t index = m_DirectoryIdToIndex.value(directoryID, size);
+        if (index < size) {
             isSelected = m_DirectoriesList[index].m_IsSelected;
         }
 
