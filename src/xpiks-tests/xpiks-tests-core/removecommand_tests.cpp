@@ -102,8 +102,8 @@ void RemoveCommandTests::removeAllArtworksFromRepository() {
     QCOMPARE(repositoriesRemovedFinishedSpyArguments.at(1).toInt(), 0);
     QCOMPARE(repositoriesRemovedFinishedSpyArguments.at(2).toInt(), dirsCount - 1);
 
-    // we get additional signal, because before deleting the direcory, we unselect it
-    QCOMPARE(dataChangedInRepository.count(), 2);
+    // we get additional signals, because before deleting the direcory, we unselect it
+    QCOMPARE(dataChangedInRepository.count(), 3);
     QList<QVariant> dataChangedSpyArguments = dataChangedInRepository.takeFirst();
     QCOMPARE(dataChangedSpyArguments.at(1).toInt(), 0);
     // no more directories and rowCount() == 0 in event raising
