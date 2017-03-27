@@ -346,16 +346,16 @@ namespace Models {
     }
 
     bool ArtworksRepository::changeSelectedState(int row, bool newValue, bool oldValue) {
-        if (oldValue == newValue) { return; }
+        if (oldValue == newValue) { return false; }
+
+        bool anySelectionChanged = false;
 
         const int count = m_DirectoriesList.size();
         if (count == 1) {
             Q_ASSERT(row == 0);
-            setDirectorySelected(row, true);
-            return;
+            anySelectionChanged = setDirectorySelected(row, true);
+            return anySelectionChanged;
         }
-
-        bool anySelectionChanged = false;
 
         const int selectedCount = retrieveSelectedDirsCount();
         const bool allAreSelected = selectedCount == count;
