@@ -1108,7 +1108,7 @@ namespace Models {
         ArtworkMetadata *metadata = m_ArtworkList.at(row);
         m_ArtworkList.erase(m_ArtworkList.begin() + row);
         ArtworksRepository *artworksRepository = m_CommandManager->getArtworksRepository();
-        artworksRepository->removeFile(metadata->getFilepath(), metadata->getDirectory());
+        artworksRepository->removeFile(metadata->getFilepath(), metadata->getDirectoryID());
 
         ImageArtwork *image = dynamic_cast<ImageArtwork*>(metadata);
         if ((image != nullptr) && image->hasVectorAttached()) {
@@ -1143,7 +1143,7 @@ namespace Models {
         for (; it < itemsEnd; it++) {
             ArtworkMetadata *metadata = *it;
 
-            artworkRepository->removeFile(metadata->getFilepath(), metadata->getDirectory());
+            artworkRepository->removeFile(metadata->getFilepath(), metadata->getDirectoryID());
             if (metadata->isSelected()) {
                 selectedItems++;
             }

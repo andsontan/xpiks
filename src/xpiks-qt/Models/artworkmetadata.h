@@ -176,7 +176,7 @@ namespace Models {
         virtual QString getTitle() override { return m_MetadataModel.getTitle(); }
 
    public:
-        virtual qint64 getdirectoryID() const { return m_DirectoryID; }
+        virtual qint64 getDirectoryID() const { return m_DirectoryID; }
 
     public:
         void markModified();

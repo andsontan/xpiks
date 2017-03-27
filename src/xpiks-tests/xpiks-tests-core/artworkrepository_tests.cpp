@@ -93,7 +93,7 @@ void ArtworkRepositoryTests::addAndRemoveSameFileTest() {
     bool status = repository.accountFile(filename, dirID);
     QCOMPARE(status, true);
 
-    bool removeResult = repository.removeFile(filename, directory);
+    bool removeResult = repository.removeFile(filename, dirID);
     repository.cleanupEmptyDirectories();
 
     QCOMPARE(repository.getArtworksSourcesCount(), 0);
@@ -120,7 +120,7 @@ void ArtworkRepositoryTests::removeNotExistingFileTest() {
     QCOMPARE(status, true);
     QCOMPARE(repository.getArtworksSourcesCount(), 1);
 
-    bool removeResult = repository.removeFile(filename2, directory);
+    bool removeResult = repository.removeFile(filename2, dirID);
     repository.cleanupEmptyDirectories();
 
     QCOMPARE(removeResult, false);

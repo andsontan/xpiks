@@ -196,11 +196,12 @@ namespace Models {
         watchFilePath(vectorPath);
     }
 
-    bool ArtworksRepository::removeFile(const QString &filepath, const QString &fileDirectory) {
+    bool ArtworksRepository::removeFile(const QString &filepath, qint64 directoryID) {
         bool result = false;
-        size_t existingIndex;
 
-        if (m_FilesSet.contains(filepath) && tryFindDirectory(fileDirectory, existingIndex)) {
+        if (m_FilesSet.contains(filepath)) {
+            Q_ASSERT(m_DirectoryIdToIndex.contains(directoryID));
+            int existingIndex = m_DirectoryIdToIndex[directoryID];
             auto &item = m_DirectoriesList[existingIndex];
             item.m_FilesCount--;
             m_FilesWatcher.removePath(filepath);
@@ -242,12 +243,16 @@ namespace Models {
     }
 
     void ArtworksRepository::updateFilesCounts() {
+        if (m_DirectoriesList.empty()) { return; }
+
         auto first = this->index(0);
         auto last = this->index(rowCount() - 1);
         emit dataChanged(first, last, QVector<int>() << UsedImagesCountRole);
     }
 
     void ArtworksRepository::updateSelectedState() {
+        if (m_DirectoriesList.empty()) { return; }
+
         auto first = this->index(0);
         auto last = this->index(rowCount() - 1);
         emit dataChanged(first, last, QVector<int>() << IsSelectedRole);

@@ -654,7 +654,7 @@ namespace Models {
         if (metadata != NULL) {
             ArtworksRepository *repository = m_CommandManager->getArtworksRepository();
             Q_ASSERT(repository != NULL);
-            qint64 directoryID = metadata->getdirectoryID();
+            qint64 directoryID = metadata->getDirectoryID();
 
             bool directoryIsIncluded = repository->isDirectoryIncluded(directoryID);
             if (directoryIsIncluded) {
