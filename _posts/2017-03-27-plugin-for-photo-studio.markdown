@@ -22,4 +22,4 @@ This plugin operates on currently active artwork and fills in specific presets c
 
 <br />
 
-or get a quote writing to _xpiks(at)outlook(dot)com_ about how Xpiks can be useful for your organization
+or get a quote writing to _xpiks(at)outlook(dot)com_ about how Xpiks can be useful for you or your organization.
