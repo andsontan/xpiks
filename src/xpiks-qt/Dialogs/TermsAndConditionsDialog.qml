@@ -149,7 +149,7 @@ Item {
                     text: i18.n + qsTr("Agree")
                     width: 100
                     onClicked: {
-                        appSettings.userAgreeHandler()
+                        settingsModel.userAgreeHandler()
                         helpersWrapper.reportOpen()
                         closePopup()
                     }

@@ -37,8 +37,8 @@ import "Constants/UIConfig.js" as UIConfig
 ApplicationWindow {
     id: applicationWindow
     visible: true
-    width: appSettings.getAppWidth(930)
-    height: appSettings.getAppHeight(725)
+    width: settingsModel.getAppWidth(930)
+    height: settingsModel.getAppHeight(725)
     minimumHeight: 725
     minimumWidth: 930
     title: i18.n + (debug ? "Xpiks (Devel)" : qsTr("Xpiks"))
@@ -52,23 +52,15 @@ ApplicationWindow {
     onVisibleChanged: {
         if (needToCenter) {
             needToCenter = false
-            applicationWindow.x = appSettings.getAppPosX((Screen.width - applicationWindow.width) / 2)
-            applicationWindow.y = appSettings.getAppPosY((Screen.height - applicationWindow.height) / 2)
+            applicationWindow.x = settingsModel.getAppPosX((Screen.width - applicationWindow.width) / 2)
+            applicationWindow.y = settingsModel.getAppPosY((Screen.height - applicationWindow.height) / 2)
         }
-    }
-
-    function saveRecentDirectories() {
-        appSettings.setValue(appSettings.recentDirectoriesKey, recentDirectories.serializeForSettings())
-    }
-
-    function saveRecentFiles() {
-        appSettings.setValue(appSettings.recentFilesKey, recentFiles.serializeForSettings())
     }
 
     function closeHandler(close) {
         console.info("closeHandler")
-        saveRecentDirectories()
-        saveRecentFiles()
+        settingsModel.saveRecentDirectories()
+        settingsModel.saveRecentFiles()
 
         if (artItemsModel.modifiedArtworksCount > 0) {
             close.accepted = false
@@ -83,17 +75,17 @@ ApplicationWindow {
     function shutdownEverything() {
         applicationWindow.visibility = "Minimized"
         helpersWrapper.beforeDestruction();
-        appSettings.protectTelemetry();
+        settingsModel.protectTelemetry();
         saveAppGeometry()
         closingTimer.start()
     }
 
     function saveAppGeometry() {
         console.debug("Saving application geometry")
-        appSettings.setAppWidth(applicationWindow.width)
-        appSettings.setAppHeight(applicationWindow.height)
-        appSettings.setAppPosX(applicationWindow.x)
-        appSettings.setAppPosY(applicationWindow.y)
+        settingsModel.setAppWidth(applicationWindow.width)
+        settingsModel.setAppHeight(applicationWindow.height)
+        settingsModel.setAppPosX(applicationWindow.x)
+        settingsModel.setAppPosY(applicationWindow.y)
     }
 
     onClosing: closeHandler(close)
@@ -115,10 +107,10 @@ ApplicationWindow {
             console.debug("Delayed onOpen timer triggered");
             helpersWrapper.setProgressIndicator(applicationWindow)
 
-            if (appSettings.needToShowWhatsNew()) {
+            if (settingsModel.needToShowWhatsNew()) {
                 Common.launchDialog("Dialogs/WhatsNewDialog.qml", applicationWindow, {})
-            } else if (appSettings.needToShowTextWhatsNew()) {
-                var text = appSettings.whatsNewText;
+            } else if (settingsModel.needToShowTextWhatsNew()) {
+                var text = settingsModel.whatsNewText;
                 if (text.length > 0) {
                     Common.launchDialog("Dialogs/WhatsNewMinorDialog.qml",
                                         applicationWindow,
@@ -128,8 +120,8 @@ ApplicationWindow {
                 }
             }
 
-            if (appSettings.needToShowTermsAndConditions()) {
-                var licenseText = appSettings.termsAndConditionsText;
+            if (settingsModel.needToShowTermsAndConditions()) {
+                var licenseText = settingsModel.termsAndConditionsText;
                 if (licenseText.length > 0) {
                     Common.launchDialog("Dialogs/TermsAndConditionsDialog.qml",
                                         applicationWindow,
@@ -149,7 +141,7 @@ ApplicationWindow {
     }
 
     function mustUseConfirmation() {
-        var mustUse = appSettings.boolValue(appSettings.useConfirmationDialogsKey, true)
+        var mustUse = settingsModel.getMustUseConfirmationDialogs();
         return mustUse
     }
 
@@ -722,7 +714,7 @@ ApplicationWindow {
             MenuItem {
                 text: "Legacy what's new dialog"
                 onTriggered: {
-                    var text = appSettings.whatsNewText;
+                    var text = settingsModel.whatsNewText;
                     if (text.length > 0) {
                         Common.launchDialog("Dialogs/WhatsNewMinorDialog.qml",
                                             applicationWindow,
@@ -860,8 +852,8 @@ ApplicationWindow {
             console.debug("You chose: " + chooseArtworksDialog.fileUrls)
             var filesAdded = artItemsModel.addLocalArtworks(chooseArtworksDialog.fileUrls)
             if (filesAdded > 0) {
-                saveRecentDirectories()
-                saveRecentFiles()
+                settingsModel.saveRecentDirectories()
+                settingsModel.saveRecentFiles()
                 console.debug("" + filesAdded + ' files via Open File(s)')
             } else {
                 noNewFilesDialog.open()
@@ -885,8 +877,8 @@ ApplicationWindow {
             console.debug("You chose: " + chooseDirectoryDialog.fileUrls)
             var filesAdded = artItemsModel.addLocalDirectories(chooseDirectoryDialog.fileUrls)
             if (filesAdded > 0) {
-                saveRecentDirectories()
-                saveRecentFiles()
+                settingsModel.saveRecentDirectories()
+                settingsModel.saveRecentFiles()
                 console.debug("" + filesAdded + ' files via Open Directory')
             } else {
                 noNewFilesDialog.open()
@@ -1038,8 +1030,8 @@ ApplicationWindow {
                 if (drop.hasUrls) {
                     var filesCount = artItemsModel.dropFiles(drop.urls)
                     if (filesCount > 0) {
-                        saveRecentDirectories()
-                        saveRecentFiles()
+                        settingsModel.saveRecentDirectories()
+                        settingsModel.saveRecentFiles()
                         console.debug(filesCount + ' files added via drag&drop')
                     }
                 }

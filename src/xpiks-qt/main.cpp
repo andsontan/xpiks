@@ -83,7 +83,6 @@
 #include "Models/languagesmodel.h"
 #include "Models/artitemsmodel.h"
 #include "Models/settingsmodel.h"
-#include "Helpers/appsettings.h"
 #include "Models/ziparchiver.h"
 #include "Helpers/constants.h"
 #include "Helpers/runguard.h"
@@ -154,12 +153,10 @@ void initQSettings() {
                                             appVersion.left(10));
 }
 
-void ensureUserIdExists(Helpers::AppSettings *settings) {
-    QLatin1String userIdKey = QLatin1String(Constants::USER_AGENT_ID);
-
-    if (!settings->contains(userIdKey)) {
+void ensureUserIdExists(Models::SettingsModel *settings) {
+    if (settings->getUserAgentId().isEmpty()) {
         QUuid uuid = QUuid::createUuid();
-        settings->setValue(userIdKey, uuid.toString());
+        settings->setUserAgentId(uuid.toString());
     }
 }
 
@@ -231,8 +228,9 @@ int main(int argc, char *argv[]) {
     qRegisterMetaTypeStreamOperators<Suggestion::LocalArtworkData>("LocalArtworkData");
     qRegisterMetaType<Common::SpellCheckFlags>("Common::SpellCheckFlags");
     initQSettings();
-    Helpers::AppSettings appSettings;
-    ensureUserIdExists(&appSettings);
+    Models::SettingsModel settingsModel;
+    settingsModel.initializeConfigs();
+    ensureUserIdExists(&settingsModel);
 
     Suggestion::LocalLibrary localLibrary;
 
@@ -302,7 +300,7 @@ int main(int argc, char *argv[]) {
 
     localLibrary.loadLibraryAsync();
 
-    QString userId = appSettings.value(QLatin1String(Constants::USER_AGENT_ID)).toString();
+    QString userId = settingsModel.getUserAgentId();
     userId.remove(QRegExp("[{}-]."));
 
     Models::ArtworksRepository artworkRepository;
@@ -314,7 +312,6 @@ int main(int argc, char *argv[]) {
     KeywordsPresets::FilteredPresetKeywordsModel filteredPresetsModel;
     filteredPresetsModel.setSourceModel(&presetsModel);
     Warnings::WarningsService warningsService;
-    Models::SettingsModel settingsModel;
     settingsModel.readAllValues();
     Encryption::SecretsManager secretsManager;
     UndoRedo::UndoRedoManager undoRedoManager;
@@ -326,7 +323,7 @@ int main(int argc, char *argv[]) {
     Models::RecentFilesModel recentFileModel;
     Conectivity::FtpCoordinator *ftpCoordinator = new Conectivity::FtpCoordinator(settingsModel.getMaxParallelUploads());
     Models::ArtworkUploader artworkUploader(ftpCoordinator);
-    SpellCheck::SpellCheckerService spellCheckerService;
+    SpellCheck::SpellCheckerService spellCheckerService(&settingsModel);
     SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
     SpellCheck::UserDictEditModel userDictEditModel;
     MetadataIO::BackupSaverService metadataSaverService;
@@ -350,7 +347,7 @@ int main(int argc, char *argv[]) {
     MetadataIO::MetadataIOCoordinator metadataIOCoordinator;
 
 #if defined(QT_NO_DEBUG) && !defined(TELEMETRY_DISABLED)
-    const bool telemetryEnabled = appSettings.value(Constants::USER_STATISTICS, true).toBool();
+    const bool telemetryEnabled = settingsModel.value(Constants::userStatistics, true).toBool();
 #else
     const bool telemetryEnabled = false;
 #endif
@@ -411,10 +408,10 @@ int main(int argc, char *argv[]) {
     keywordsSuggestor.initSuggestionEngines();
 
     // other initializations
-    secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
-    uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
-    recentDirectorieModel.deserializeFromSettings(appSettings.value(Constants::RECENT_DIRECTORIES, "").toString());
-    recentFileModel.deserializeFromSettings(appSettings.value(Constants::RECENT_FILES, "").toString());
+    secretsManager.setMasterPasswordHash(settingsModel.getMasterPasswordHash());
+    uploadInfoRepository.initFromString(settingsModel.getUploadHosts());
+    recentDirectorieModel.deserializeFromSettings(settingsModel.getRecentDirectories());
+    recentFileModel.deserializeFromSettings(settingsModel.getRecentFiles());
 
     commandManager.connectEntitiesSignalsSlots();
 
@@ -437,7 +434,6 @@ int main(int argc, char *argv[]) {
     rootContext->setContextProperty("artItemsModel", &artItemsModel);
     rootContext->setContextProperty("artworkRepository", &artworkRepository);
     rootContext->setContextProperty("combinedArtworks", &combinedArtworksModel);
-    rootContext->setContextProperty("appSettings", &appSettings);
     rootContext->setContextProperty("secretsManager", &secretsManager);
     rootContext->setContextProperty("undoRedoManager", &undoRedoManager);
     rootContext->setContextProperty("keywordsSuggestor", &keywordsSuggestor);

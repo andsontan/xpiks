@@ -173,7 +173,6 @@ HEADERS += \
     Models/combinedartworksmodel.h \
     Common/abstractlistmodel.h \
     Helpers/constants.h \
-    Helpers/appsettings.h \
     Models/artworkuploader.h \
     Models/artworksprocessor.h \
     Models/uploadinfo.h \

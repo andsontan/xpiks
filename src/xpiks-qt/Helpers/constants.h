@@ -135,6 +135,51 @@ namespace Constants {
     const char USER_DICT_FILENAME[] = "userdict_debug.dic";
 #endif
 #endif // QT_NO_DEBUG
+
+    const char pathToExifTool[] = "pathToExifTool";
+    const char saveBackups[] = "saveBackups";
+    const char keywordSizeScale[] = "keywordSizeScale";
+    const char dismissDuration[] = "dismissDuration";
+    const char fitSmallPreview[] = "fitSmallPreview";
+    const char searchUsingAnd[] = "searchUsingAnd";
+    const char searchByFilepath[] = "searchByFilepath";
+    const char dictPath[] = "dictPath";
+    const char userStatistics[] = "userStatistics";
+    const char checkForUpdates[] = "checkForUpdates";
+    const char numberOfLaunches[] = "numberOfLaunches";
+    const char appWindowWidth []  = "appWindowWidth";
+    const char appWindowHeight [] = "appWindowHeight";
+    const char appWindowX[] = "appWindowX";
+    const char appWindowY[] = "appWindowY";
+    const char autoFindVectors[] = "autoFindVectors";
+    const char useProxy[] = "useProxy";
+    const char proxyHost[] = "proxyHostHash";
+    const char uploadHosts[] = "uploadHostsHash";
+    const char maxKeywordCount[] = "maxKeywordCount";
+    const char maxDescriptionLength[] = "maxDescriptionLength";
+    const char minMegapixelCount[] = "minMegapixelCount";
+    const char useMasterPassword[] = "useMasterPassword";
+    const char masterPasswordHash[] = "masterPasswordHash";
+    const char oneUploadSecondsTimeout[] = "oneUploadSecondsTimeout";
+    const char useConfirmationDialogs[] = "useConfirmationDialogs";
+    const char recentDirectories[] = "recentDirectories";
+    const char recentFiles[] = "recentFiles";
+    const char maxParallelUploads[] = "maxParallelUploads";
+    const char useSpellCheck[] = "useSpellCheck";
+    const char userAgentId[] = "userAgentId";
+    const char installedVersion[] = "installedVersion";
+    const char userConsent[] = "userConsent10";
+    const char selectedLocale[] = "selectedLocale";
+    const char selectedThemeIndex[] = "selectedThemeIndex";
+    const char useAutoComplete[] = "useAutoComplete";
+    const char useExifTool[] = "useExifTool";
+    const char cacheImagesAutomatically[] = "cacheImagesAutomatically";
+    const char scrollSpeedSensivity[] = "scrollSpeedSensivity";
+    const char autoDownloadUpdates[] = "autoDownloadUpdates";
+    const char pathToUpdate[] = "pathToUpdate";
+    const char availableUpdateVersion[] = "availableUpdateVersion";
+    const char artworkEditRightPaneWidth[] = "artworkEditRightPaneWidth";
+    const char translatorSelectedDictIndex[] = "TranslatorSelectedDictIndex";
 }
 
 #endif // CONSTANTS

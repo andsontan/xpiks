@@ -141,7 +141,7 @@ Item {
                     text: i18.n + qsTr("Ok")
                     width: 100
                     onClicked: {
-                        appSettings.saveCurrentVersion()
+                        settingsModel.saveCurrentVersion()
                         closePopup()
                     }
                 }

@@ -44,7 +44,6 @@
 #include "../../xpiks-qt/Models/languagesmodel.h"
 #include "../../xpiks-qt/Models/artitemsmodel.h"
 #include "../../xpiks-qt/Models/settingsmodel.h"
-#include "../../xpiks-qt/Helpers/appsettings.h"
 #include "../../xpiks-qt/Models/ziparchiver.h"
 #include "../../xpiks-qt/Helpers/constants.h"
 #include "../../xpiks-qt/Helpers/runguard.h"
@@ -109,7 +108,6 @@ int main(int argc, char *argv[]) {
     qRegisterMetaType<Common::SpellCheckFlags>("Common::SpellCheckFlags");
     qRegisterMetaTypeStreamOperators<Suggestion::LocalArtworkData>("LocalArtworkData");
 
-    Helpers::AppSettings appSettings;
     Suggestion::LocalLibrary localLibrary;
 
 #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
@@ -140,6 +138,7 @@ int main(int argc, char *argv[]) {
     KeywordsPresets::PresetKeywordsModelConfig presetsModelConfig;
     Warnings::WarningsService warningsService;
     Models::SettingsModel settingsModel;
+    settingsModel.initializeConfigs();
     settingsModel.readAllValues();
     Encryption::SecretsManager secretsManager;
     UndoRedo::UndoRedoManager undoRedoManager;
@@ -151,7 +150,7 @@ int main(int argc, char *argv[]) {
     Models::RecentFilesModel recentFileModel;
     Conectivity::FtpCoordinator *ftpCoordinator = new Conectivity::FtpCoordinator(settingsModel.getMaxParallelUploads());
     Models::ArtworkUploader artworkUploader(ftpCoordinator);
-    SpellCheck::SpellCheckerService spellCheckerService;
+    SpellCheck::SpellCheckerService spellCheckerService(&settingsModel);
     SpellCheck::SpellCheckSuggestionModel spellCheckSuggestionModel;
     MetadataIO::BackupSaverService metadataSaverService;
     Warnings::WarningsModel warningsModel;
@@ -215,10 +214,10 @@ int main(int argc, char *argv[]) {
 
     keywordsSuggestor.initSuggestionEngines();
 
-    secretsManager.setMasterPasswordHash(appSettings.value(Constants::MASTER_PASSWORD_HASH, "").toString());
-    uploadInfoRepository.initFromString(appSettings.value(Constants::UPLOAD_HOSTS, "").toString());
-    recentDirectorieModel.deserializeFromSettings(appSettings.value(Constants::RECENT_DIRECTORIES, "").toString());
-    recentFileModel.deserializeFromSettings(appSettings.value(Constants::RECENT_FILES, "").toString());
+    secretsManager.setMasterPasswordHash(settingsModel.getMasterPasswordHash());
+    uploadInfoRepository.initFromString(settingsModel.getUploadHosts());
+    recentDirectorieModel.deserializeFromSettings(settingsModel.getRecentDirectories());
+    recentFileModel.deserializeFromSettings(settingsModel.getRecentFiles());
 
 #if defined(APPVEYOR)
     settingsModel.setExifToolPath("c:/projects/xpiks-deps/windows-3rd-party-bin/exiftool.exe");

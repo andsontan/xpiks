@@ -27,8 +27,9 @@
 #include "../Common/flags.h"
 
 namespace SpellCheck {
-    SpellCheckerService::SpellCheckerService():
+    SpellCheckerService::SpellCheckerService(Models::SettingsModel *settingsModel):
         m_SpellCheckWorker(NULL),
+        m_SettingsModel(settingsModel),
         m_RestartRequired(false)
     {}
 
@@ -42,7 +43,7 @@ namespace SpellCheck {
             return;
         }
 
-        m_SpellCheckWorker = new SpellCheckWorker();
+        m_SpellCheckWorker = new SpellCheckWorker(m_SettingsModel);
 
         QThread *thread = new QThread();
         m_SpellCheckWorker->moveToThread(thread);

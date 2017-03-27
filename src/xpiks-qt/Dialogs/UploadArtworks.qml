@@ -35,7 +35,6 @@ Item {
     id: uploadArtworksComponent
     anchors.fill: parent
 
-    property string uploadhostskey: appSettings.uploadHostsKey
     // if MasterPassword wasn't entered do not show passwords
     property bool emptyPasswords: false
     property bool skipUploadItems: false
@@ -65,13 +64,9 @@ Item {
         secretsManager.purgeMasterPassword()
         warningsModel.resetShowSelected()
         uploadInfos.finalizeAccounts()
-        saveSettings()
+        settingsModel.saveUploadHosts()
         uploadArtworksComponent.destroy()
         uploadWatcher.resetModel()
-    }
-
-    function saveSettings() {
-        appSettings.setValue(uploadhostskey, uploadInfos.getInfoString())
     }
 
     function mainAction() {

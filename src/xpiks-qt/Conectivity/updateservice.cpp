@@ -25,7 +25,6 @@
 #include <QString>
 #include "../Common/defines.h"
 #include "../Models/settingsmodel.h"
-#include "../Helpers/appsettings.h"
 #include "../Common/version.h"
 
 namespace Conectivity {
@@ -83,17 +82,17 @@ namespace Conectivity {
 
     void UpdateService::updateSettings() {
         LOG_DEBUG << "#";
-        Helpers::AppSettings appSettings;
 
-        int availableValue = appSettings.intValue(appSettings.getAvailableUpdateVersionKey(), 0);
+        int availableValue = m_SettingsModel->getAvailableUpdateVersion();
 
         if ((0 < availableValue) && (availableValue <= XPIKS_VERSION_INT)) {
             LOG_DEBUG << "Flushing available update settings values";
-            appSettings.setValue(appSettings.getPathToUpdateKey(), "");
-            appSettings.setValue(appSettings.getAvailableUpdateVersionKey(), 0);
+            m_SettingsModel->setPathToUpdate("");
+            m_SettingsModel->setAvailableUpdateVersion(0);
+            m_SettingsModel->syncronizeSettings();
         } else {
-            m_PathToUpdate = appSettings.value(appSettings.getPathToUpdateKey()).toString();
-            m_AvailableVersion = appSettings.intValue(appSettings.getAvailableUpdateVersionKey(), 0);
+            m_PathToUpdate = m_SettingsModel->getPathToUpdate();
+            m_AvailableVersion = m_SettingsModel->getAvailableUpdateVersion();
             LOG_INFO << "Available:" << m_PathToUpdate << "version:" << m_AvailableVersion;
         }
     }
@@ -116,8 +115,7 @@ namespace Conectivity {
     void UpdateService::saveUpdateInfo() const {
         Q_ASSERT(m_UpdateAvailable);
 
-        Helpers::AppSettings appSettings;
-        appSettings.setValue(appSettings.getAvailableUpdateVersionKey(), m_AvailableVersion);
-        appSettings.setValue(appSettings.getPathToUpdateKey(), m_PathToUpdate);
+        m_SettingsModel->setAvailableUpdateVersion(m_AvailableVersion);
+        m_SettingsModel->setPathToUpdate(m_PathToUpdate);
     }
 }

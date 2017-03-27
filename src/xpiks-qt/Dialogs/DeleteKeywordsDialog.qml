@@ -50,7 +50,7 @@ Item {
     }
 
     function mustUseConfirmation() {
-        return appSettings.boolValue(appSettings.useConfirmationDialogsKey, true)
+        return settingsModel.getMustUseConfirmationDialogs();
     }
 
     Connections {

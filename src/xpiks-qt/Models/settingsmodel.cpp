@@ -21,9 +21,7 @@
 
 #include "settingsmodel.h"
 #include <QQmlEngine>
-#include "../Helpers/appsettings.h"
 #include "../Common/defines.h"
-#include "../Commands/commandmanager.h"
 
 #ifdef Q_OS_MAC
 #  define DEFAULT_EXIFTOOL "/usr/bin/exiftool"
@@ -31,6 +29,13 @@
 #  define DEFAULT_EXIFTOOL "c:/projects/xpiks-deps/windows-3rd-party-bin/exiftool.exe"
 #else
 #  define DEFAULT_EXIFTOOL "exiftool"
+#endif
+#ifdef QT_DEBUG
+#define SETTINGS_FILE "debug_settings.json"
+#elif INTEGRATION_TESTS
+#define SETTINGS_FILE "integration_settings.json"
+#else
+#define SETTINGS_FILE "settings.json"
 #endif
 
 #define DEFAULT_DICT_PATH ""
@@ -59,6 +64,7 @@
 #define DEFAULT_USE_AUTO_COMPLETE true
 #define DEFAULT_USE_EXIFTOOL false
 #define DEFAULT_USE_PROXY false
+#define DEFAULT_PROXY_HOST ""
 #define DEFAULT_ARTWORK_EDIT_RIGHT_PANE_WIDTH 300
 #define DEFAULT_SELECTED_DICT_INDEX -1
 
@@ -101,16 +107,49 @@ namespace Models {
     {
     }
 
+    void SettingsModel::initializeConfigs() {
+        LOG_DEBUG << "#";
+
+        QString localConfigPath;
+
+        QString appDataPath = XPIKS_USERDATA_PATH;
+        if (!appDataPath.isEmpty()) {
+            QDir appDataDir(appDataPath);
+            localConfigPath = appDataDir.filePath(SETTINGS_FILE);
+        } else {
+            localConfigPath = SETTINGS_FILE;
+        }
+
+        m_Config.initConfig(localConfigPath);
+
+        QJsonDocument &doc = m_Config.getConfig();
+        if (doc.isObject()) {
+            m_Settings = doc.object();
+        } else {
+            LOG_WARNING << "JSON document doesn't contain an object";
+        }
+    }
+
+    void SettingsModel::sync() {
+        LOG_DEBUG << "Syncing settings";
+
+        QJsonDocument doc;
+        doc.setObject(m_Settings);
+
+        m_Config.setConfig(doc);
+        m_Config.saveToFile();
+    }
+
     void SettingsModel::saveExiftool() {
         LOG_DEBUG << "#";
-        Helpers::AppSettings appSettings;
-        appSettings.setValue(appSettings.getExifToolPathKey(), m_ExifToolPath);
+        setValue(Constants::pathToExifTool, m_ExifToolPath);
+        sync();
     }
 
     void SettingsModel::saveLocale() {
         LOG_DEBUG << "#";
-        Helpers::AppSettings appSettings;
-        appSettings.setValue(appSettings.getSelectedLocaleKey(), m_SelectedLocale);
+        setValue(Constants::selectedLocale, m_SelectedLocale);
+        sync();
     }
 
     ProxySettings *SettingsModel::retrieveProxySettings() {
@@ -123,6 +162,15 @@ namespace Models {
         return result;
     }
 
+    void SettingsModel::deserializeProxyFromSettings(const QString &serialized) {
+        QByteArray originalData;
+        originalData.append(serialized.toLatin1());
+        QByteArray serializedBA = QByteArray::fromBase64(originalData);
+
+        QDataStream ds(&serializedBA, QIODevice::ReadOnly);
+        ds >> m_ProxySettings;
+    }
+
     void SettingsModel::resetAllValues() {
         LOG_DEBUG << "#";
         resetToDefault();
@@ -133,35 +181,36 @@ namespace Models {
     void SettingsModel::saveAllValues() {
         LOG_INFO << "#";
 
-        Helpers::AppSettings appSettings;
-        appSettings.setValue(appSettings.getExifToolPathKey(), m_ExifToolPath);
-        appSettings.setValue(appSettings.getDictionaryPathKey(), m_DictPath);
-        appSettings.setValue(appSettings.getOneUploadSecondsTimeoutKey(), m_UploadTimeout);
-        appSettings.setValue(appSettings.getMustUseMasterPasswordKey(), m_MustUseMasterPassword);
-        appSettings.setValue(appSettings.getUseConfirmationDialogsKey(), m_MustUseConfirmations);
-        appSettings.setValue(appSettings.getSaveBackupsKey(), m_SaveBackups);
-        appSettings.setValue(appSettings.getKeywordSizeScaleKey(), m_KeywordSizeScale);
-        appSettings.setValue(appSettings.getDismissDurationKey(), m_DismissDuration);
-        appSettings.setValue(appSettings.getMaxParallelUploadsKey(), m_MaxParallelUploads);
-        appSettings.setValue(appSettings.getFitSmallPreviewKey(), m_FitSmallPreview);
-        appSettings.setValue(appSettings.getSearchUsingAndKey(), m_SearchUsingAnd);
-        appSettings.setValue(appSettings.getSearchByFilepathKey(), m_SearchByFilepath);
-        appSettings.setValue(appSettings.getScrollSpeedScaleKey(), m_ScrollSpeedScale);
-        appSettings.setValue(appSettings.getUseSpellCheckKey(), m_UseSpellCheck);
-        appSettings.setValue(appSettings.getUserStatisticsKey(), m_UserStatistics);
-        appSettings.setValue(appSettings.getCheckForUpdatesKey(), m_CheckForUpdates);
-        appSettings.setValue(appSettings.getAutoDownloadUpdatesKey(), m_AutoDownloadUpdates);
-        appSettings.setValue(appSettings.getAutoFindVectorsKey(), m_AutoFindVectors);
-        appSettings.setValue(appSettings.getSelectedThemeIndexKey(), m_SelectedThemeIndex);
-        appSettings.setValue(appSettings.getUseAutoCompleteKey(), m_UseAutoComplete);
-        appSettings.setValue(appSettings.getUseExifToolKey(), m_UseExifTool);
-        appSettings.setValue(appSettings.getUseProxyKey(), m_UseProxy);
-        appSettings.setValue(appSettings.getProxyHashKey(),QVariant::fromValue(m_ProxySettings));
-        appSettings.setValue(appSettings.getCacheImagesKey(), m_AutoCacheImages);
-        appSettings.setValue(appSettings.getArtworkEditRightPaneWidthKey(), m_ArtworkEditRightPaneWidth);
+        using namespace Constants;
+
+        setValue(pathToExifTool, m_ExifToolPath);
+        setValue(dictPath, m_DictPath);
+        setValue(oneUploadSecondsTimeout, m_UploadTimeout);
+        setValue(useMasterPassword, m_MustUseMasterPassword);
+        setValue(useConfirmationDialogs, m_MustUseConfirmations);
+        setValue(saveBackups, m_SaveBackups);
+        setValue(keywordSizeScale, m_KeywordSizeScale);
+        setValue(dismissDuration, m_DismissDuration);
+        setValue(maxParallelUploads, m_MaxParallelUploads);
+        setValue(fitSmallPreview, m_FitSmallPreview);
+        setValue(searchUsingAnd, m_SearchUsingAnd);
+        setValue(searchByFilepath, m_SearchByFilepath);
+        setValue(scrollSpeedSensivity, m_ScrollSpeedScale);
+        setValue(useSpellCheck, m_UseSpellCheck);
+        setValue(userStatistics, m_UserStatistics);
+        setValue(checkForUpdates, m_CheckForUpdates);
+        setValue(autoDownloadUpdates, m_AutoDownloadUpdates);
+        setValue(autoFindVectors, m_AutoFindVectors);
+        setValue(selectedThemeIndex, m_SelectedThemeIndex);
+        setValue(useAutoComplete, m_UseAutoComplete);
+        setValue(useExifTool, m_UseExifTool);
+        setValue(useProxy, m_UseProxy);
+        setValue(proxyHost, serializeProxyForSettings(m_ProxySettings));
+        setValue(cacheImagesAutomatically, m_AutoCacheImages);
+        setValue(artworkEditRightPaneWidth, m_ArtworkEditRightPaneWidth);
 
         if (!m_MustUseMasterPassword) {
-            appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
+            setValue(masterPasswordHash, "");
         }
 
         emit keywordSizeScaleChanged(m_KeywordSizeScale);
@@ -180,14 +229,15 @@ namespace Models {
         }
 #endif
 
+        sync();
         emit settingsUpdated();
     }
 
     void SettingsModel::clearMasterPasswordSettings() {
         setMustUseMasterPassword(false);
-        Helpers::AppSettings appSettings;
-        appSettings.setValue(appSettings.getMasterPasswordHashKey(), "");
-        appSettings.setValue(appSettings.getMustUseMasterPasswordKey(), false);
+        setValue(Constants::masterPasswordHash, "");
+        setValue(Constants::useMasterPassword, false);
+        sync();
     }
 
     void SettingsModel::resetExifTool() {
@@ -201,37 +251,40 @@ namespace Models {
     void SettingsModel::readAllValues() {
         LOG_INFO << "#";
 
-        Helpers::AppSettings appSettings;
-        setExifToolPath(appSettings.value(appSettings.getExifToolPathKey(), DEFAULT_EXIFTOOL).toString());
-        setDictionaryPath(appSettings.value(appSettings.getDictionaryPathKey(), DEFAULT_DICT_PATH).toString());
-        setUploadTimeout(appSettings.value(appSettings.getOneUploadSecondsTimeoutKey(), DEFAULT_UPLOAD_TIMEOUT).toInt());
-        setMustUseMasterPassword(appSettings.boolValue(appSettings.getMustUseMasterPasswordKey(), DEFAULT_USE_MASTERPASSWORD));
-        setMustUseConfirmations(appSettings.boolValue(appSettings.getUseConfirmationDialogsKey(), DEFAULT_USE_CONFIRMATIONS));
-        setSaveBackups(appSettings.boolValue(appSettings.getSaveBackupsKey(), DEFAULT_SAVE_BACKUPS));
-        setKeywordSizeScale(appSettings.doubleValue(appSettings.getKeywordSizeScaleKey(), DEFAULT_KEYWORD_SIZE_SCALE));
-        setDismissDuration(appSettings.value(appSettings.getDismissDurationKey(), DEFAULT_DISMISS_DURATION).toInt());
-        setMaxParallelUploads(appSettings.value(appSettings.getMaxParallelUploadsKey(), DEFAULT_MAX_PARALLEL_UPLOADS).toInt());
-        setFitSmallPreview(appSettings.boolValue(appSettings.getFitSmallPreviewKey(), DEFAULT_FIT_SMALL_PREVIEW));
-        setSearchUsingAnd(appSettings.boolValue(appSettings.getSearchUsingAndKey(), DEFAULT_SEARCH_USING_AND));
-        setSearchByFilepath(appSettings.boolValue(appSettings.getSearchByFilepathKey(), DEFAULT_SEARCH_BY_FILEPATH));
-        setScrollSpeedScale(appSettings.doubleValue(appSettings.getScrollSpeedScaleKey(), DEFAULT_SCROLL_SPEED_SCALE));
-        setUseSpellCheck(appSettings.boolValue(appSettings.getUseSpellCheckKey(), DEFAULT_USE_SPELL_CHECK));
-        setUserStatistics(appSettings.boolValue(appSettings.getUserStatisticsKey(), DEFAULT_COLLECT_USER_STATISTICS));
-        setCheckForUpdates(appSettings.boolValue(appSettings.getCheckForUpdatesKey(), DEFAULT_CHECK_FOR_UPDATES));
-        setAutoDownloadUpdates(appSettings.boolValue(appSettings.getAutoDownloadUpdatesKey(), DEFAULT_AUTO_DOWNLOAD_UPDATES));
-        setAutoFindVectors(appSettings.boolValue(appSettings.getAutoFindVectorsKey(), DEFAULT_AUTO_FIND_VECTORS));
-        setSelectedLocale(appSettings.value(appSettings.getSelectedLocaleKey(), DEFAULT_LOCALE).toString());
-        setSelectedThemeIndex(appSettings.value(appSettings.getSelectedThemeIndexKey(), DEFAULT_SELECTED_THEME_INDEX).toInt());
-        setUseAutoComplete(appSettings.boolValue(appSettings.getUseAutoCompleteKey(), DEFAULT_USE_AUTO_COMPLETE));
-        setUseExifTool(appSettings.boolValue(appSettings.getUseExifToolKey(), DEFAULT_USE_EXIFTOOL));
-        setUseProxy(appSettings.boolValue(appSettings.getUseProxyKey(), DEFAULT_USE_PROXY));
+        using namespace Constants;
 
-        QVariant qvalue = appSettings.value(Constants::PROXY_HOST, "");
-        m_ProxySettings = qvalue.value<ProxySettings>();
-        setAutoCacheImages(appSettings.boolValue(appSettings.getCacheImagesKey(), DEFAULT_AUTO_CACHE_IMAGES));
+        setExifToolPath(stringValue(pathToExifTool, DEFAULT_EXIFTOOL));
+        setDictionaryPath(stringValue(dictPath, DEFAULT_DICT_PATH));
+        setUploadTimeout(intValue(oneUploadSecondsTimeout, DEFAULT_UPLOAD_TIMEOUT));
+        setMustUseMasterPassword(boolValue(useMasterPassword, DEFAULT_USE_MASTERPASSWORD));
+        setMustUseConfirmations(boolValue(useConfirmationDialogs, DEFAULT_USE_CONFIRMATIONS));
+        setSaveBackups(boolValue(saveBackups, DEFAULT_SAVE_BACKUPS));
+        setKeywordSizeScale(doubleValue(keywordSizeScale, DEFAULT_KEYWORD_SIZE_SCALE));
+        setDismissDuration(intValue(dismissDuration, DEFAULT_DISMISS_DURATION));
+        setMaxParallelUploads(intValue(maxParallelUploads, DEFAULT_MAX_PARALLEL_UPLOADS));
+        setFitSmallPreview(boolValue(fitSmallPreview, DEFAULT_FIT_SMALL_PREVIEW));
+        setSearchUsingAnd(boolValue(searchUsingAnd, DEFAULT_SEARCH_USING_AND));
+        setSearchByFilepath(boolValue(searchByFilepath, DEFAULT_SEARCH_BY_FILEPATH));
+        setScrollSpeedScale(doubleValue(scrollSpeedSensivity, DEFAULT_SCROLL_SPEED_SCALE));
+        setUseSpellCheck(boolValue(useSpellCheck, DEFAULT_USE_SPELL_CHECK));
+        setUserStatistics(boolValue(userStatistics, DEFAULT_COLLECT_USER_STATISTICS));
+        setCheckForUpdates(boolValue(checkForUpdates, DEFAULT_CHECK_FOR_UPDATES));
+        setAutoDownloadUpdates(boolValue(autoDownloadUpdates, DEFAULT_AUTO_DOWNLOAD_UPDATES));
+        setAutoFindVectors(boolValue(autoFindVectors, DEFAULT_AUTO_FIND_VECTORS));
+        setSelectedLocale(stringValue(selectedLocale, DEFAULT_LOCALE));
+        setSelectedThemeIndex(intValue(selectedThemeIndex, DEFAULT_SELECTED_THEME_INDEX));
+        setUseAutoComplete(boolValue(useAutoComplete, DEFAULT_USE_AUTO_COMPLETE));
+        setUseExifTool(boolValue(useExifTool, DEFAULT_USE_EXIFTOOL));
+        setUseProxy(boolValue(useProxy, DEFAULT_USE_PROXY));
 
-        setArtworkEditRightPaneWidth(appSettings.intValue(appSettings.getArtworkEditRightPaneWidthKey(), DEFAULT_ARTWORK_EDIT_RIGHT_PANE_WIDTH));
-        setSelectedDictIndex(appSettings.intValue(appSettings.getSelectedDictIndexKey(), DEFAULT_SELECTED_DICT_INDEX));
+        deserializeProxyFromSettings(stringValue(proxyHost, DEFAULT_PROXY_HOST));
+
+        setAutoCacheImages(boolValue(cacheImagesAutomatically, DEFAULT_AUTO_CACHE_IMAGES));
+
+        setArtworkEditRightPaneWidth(intValue(artworkEditRightPaneWidth, DEFAULT_ARTWORK_EDIT_RIGHT_PANE_WIDTH));
+        setSelectedDictIndex(intValue(translatorSelectedDictIndex, DEFAULT_SELECTED_DICT_INDEX));
+
+        sync();
     }
 
     void SettingsModel::resetToDefault() {
@@ -265,18 +318,19 @@ namespace Models {
         setArtworkEditRightPaneWidth(DEFAULT_ARTWORK_EDIT_RIGHT_PANE_WIDTH);
         setSelectedDictIndex(DEFAULT_SELECTED_DICT_INDEX);
 
-        Helpers::AppSettings appSettings;
 #if defined(QT_DEBUG)
-        appSettings.setValue(appSettings.getUserConsentKey(), DEFAULT_HAVE_USER_CONSENT);
-        appSettings.setValue(appSettings.getInstalledVersionKey(), 0);
+        setValue(Constants::userConsent, DEFAULT_HAVE_USER_CONSENT);
+        setValue(Constants::installedVersion, 0);
 #endif
 
         // resetting position in settings is pretty useless because
         // we will overwrite them on Xpiks exit. But anyway for the future...
-        appSettings.setValue(appSettings.getAppHeightKey(), DEFAULT_APP_HEIGHT);
-        appSettings.setValue(appSettings.getAppWidthKey(), DEFAULT_APP_WIDTH);
-        appSettings.setValue(appSettings.getAppPosXKey(), DEFAULT_APP_POSITION);
-        appSettings.setValue(appSettings.getAppPosYKey(), DEFAULT_APP_POSITION);
+        setValue(Constants::appWindowHeight, DEFAULT_APP_HEIGHT);
+        setValue(Constants::appWindowWidth, DEFAULT_APP_WIDTH);
+        setValue(Constants::appWindowX, DEFAULT_APP_POSITION);
+        setValue(Constants::appWindowY, DEFAULT_APP_POSITION);
+
+        sync();
     }
 
     int ensureInBounds(int value, int boundA, int boundB) {
@@ -340,14 +394,21 @@ namespace Models {
         }
     }
 
+    QString SettingsModel::serializeProxyForSettings(ProxySettings &settings) {
+        QByteArray raw;
+        QDataStream ds(&raw, QIODevice::WriteOnly);
+        ds << settings;
+        return QString::fromLatin1(raw.toBase64());
+    }
+
     void SettingsModel::saveArtworkEditUISettings() {
-        Helpers::AppSettings appSettings;
-        appSettings.setValue(appSettings.getArtworkEditRightPaneWidthKey(), m_ArtworkEditRightPaneWidth);
+        setValue(Constants::artworkEditRightPaneWidth, m_ArtworkEditRightPaneWidth);
+        sync();
     }
 
     void SettingsModel::saveSelectedDictionaryIndex() {
-        Helpers::AppSettings appSettings;
-        appSettings.setValue(appSettings.getSelectedDictIndexKey(), m_SelectedDictIndex);
+        setValue(Constants::translatorSelectedDictIndex, m_SelectedDictIndex);
+        sync();
     }
 
     void SettingsModel::resetProxySetting() {

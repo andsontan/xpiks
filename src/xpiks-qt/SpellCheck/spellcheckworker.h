@@ -28,6 +28,7 @@
 #include <QHash>
 #include <QSet>
 #include "../Common/itemprocessingworker.h"
+#include "../Models/settingsmodel.h"
 #include "spellcheckitem.h"
 
 class Hunspell;
@@ -73,7 +74,7 @@ namespace SpellCheck {
         Q_OBJECT
 
     public:
-        SpellCheckWorker(QObject *parent=0);
+        SpellCheckWorker(Models::SettingsModel *settingsModel, QObject *parent=0);
         virtual ~SpellCheckWorker();
 
     public:
@@ -123,6 +124,7 @@ namespace SpellCheck {
         void signalUserDictWordsCount();
 
     private:
+        Models::SettingsModel *m_SettingsModel;
         QHash<QString, QStringList> m_Suggestions;
         QSet<QString> m_WrongWords;
         UserDictionary m_UserDictionary;

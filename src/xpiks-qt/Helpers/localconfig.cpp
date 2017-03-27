@@ -43,6 +43,8 @@ namespace Helpers {
     void LocalConfig::saveToFile() {
         QFile file(m_FilePath);
 
+        Q_ASSERT(!m_FilePath.isEmpty());
+
         if (file.open(QIODevice::WriteOnly)) {
             file.write(m_Config.toJson(QJsonDocument::Indented));
             file.close();

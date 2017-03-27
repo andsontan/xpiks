@@ -25,6 +25,7 @@ void freeArtworks(std::vector<Models::MetadataElement> &items) {
 }
 
 void CombinedModelTests::initTestCase() {
+    m_SettingsModel.initializeConfigs();
     m_SettingsModel.setUseSpellCheck(false);
     m_CommandManagerMock.InjectDependency(&m_SettingsModel);
     m_CommandManagerMock.disableCommands();

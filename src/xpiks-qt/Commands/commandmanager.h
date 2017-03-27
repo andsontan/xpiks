@@ -319,6 +319,8 @@ namespace Commands {
         virtual Translation::TranslationService *getTranslationService() const { return m_TranslationService; }
         virtual Models::UIManager *getUIManager() const { return m_UIManager; }
         virtual QuickBuffer::QuickBuffer *getQuickBuffer() const { return m_QuickBuffer; }
+        virtual Models::RecentDirectoriesModel *getRecentDirectories() const { return m_RecentDirectories; }
+        virtual Models::RecentFilesModel *getRecentFiles() const { return m_RecentFiles; }
 
 #ifdef INTEGRATION_TESTS
         virtual Translation::TranslationManager *getTranslationManager() const { return m_TranslationManager; }

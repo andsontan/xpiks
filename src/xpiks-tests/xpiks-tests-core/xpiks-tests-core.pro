@@ -114,6 +114,9 @@ SOURCES += main.cpp \
     ../../xpiks-qt/SpellCheck/spellcheckerrorshighlighter.cpp \
     artworkmetadata_tests.cpp \
     combinedmodel_tests.cpp \
+    ../../xpiks-qt/Helpers/localconfig.cpp \
+    ../../xpiks-qt/Models/proxysettings.cpp \
+    ../../xpiks-qt/Models/uploadinforepository.cpp \
     ../../xpiks-qt/Models/settingsmodel.cpp \
     stringhelpers_tests.cpp \
     ../../xpiks-qt/Helpers/stringhelper.cpp \
@@ -219,8 +222,11 @@ HEADERS += \
     ../../xpiks-qt/SpellCheck/spellcheckerrorshighlighter.h \
     artworkmetadata_tests.h \
     combinedmodel_tests.h \
+    ../../xpiks-qt/Helpers/localconfig.h \
+    ../../xpiks-qt/Models/proxysettings.h \
+    ../../xpiks-qt/Models/uploadinfo.h \
+    ../../xpiks-qt/Models/uploadinforepository.h \
     ../../xpiks-qt/Models/settingsmodel.h \
-    ../../xpiks-qt/Helpers/appsettings.h \
     stringhelpers_tests.h \
     keywordvalidation_tests.h \
     artworkrepository_tests.h \

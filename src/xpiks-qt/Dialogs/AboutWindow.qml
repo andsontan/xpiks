@@ -65,7 +65,7 @@ ApplicationWindow {
             StyledText {
                 color: Colors.inputForegroundColor
                 anchors.horizontalCenter: parent.horizontalCenter
-                text: i18.n + qsTr("Version: %1").arg(appSettings.appVersion)
+                text: i18.n + qsTr("Version: %1").arg(settingsModel.appVersion)
             }
 
             StyledText {

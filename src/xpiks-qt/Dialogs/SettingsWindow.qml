@@ -51,15 +51,11 @@ ApplicationWindow {
     }
 
     function onCancelMP(firstTime) {
-        settingsModel.mustUseMasterPassword = !firstTime
-        settingsModel.raiseMasterPasswordSignal()
+        settingsModel.doUnsetMasterPassword();
     }
 
     function onMasterPasswordSet() {
-        console.log('UI:SettingsWindow # Master password changed')
-        appSettings.setValue(appSettings.masterPasswordHashKey, secretsManager.getMasterPasswordHash())
-        appSettings.setValue(appSettings.mustUseMasterPasswordKey, true)
-        settingsModel.mustUseMasterPassword = true
+        settingsModel.doSetMasterPassword();
     }
 
     function onProxySettingsSet() {

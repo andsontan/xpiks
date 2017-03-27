@@ -72,6 +72,7 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Models/recentitemsmodel.cpp \
     ../../xpiks-qt/Models/recentdirectoriesmodel.cpp \
     ../../xpiks-qt/Models/recentfilesmodel.cpp \
+    ../../xpiks-qt/Models/proxysettings.cpp \
     ../../xpiks-qt/Models/settingsmodel.cpp \
     ../../xpiks-qt/Models/ziparchiver.cpp \
     ../../xpiks-qt/Models/uploadinforepository.cpp \
@@ -220,7 +221,6 @@ HEADERS += \
     ../../xpiks-qt/Conectivity/uploadcontext.h \
     ../../xpiks-qt/Encryption/aes-qt.h \
     ../../xpiks-qt/Encryption/secretsmanager.h \
-    ../../xpiks-qt/Helpers/appsettings.h \
     ../../xpiks-qt/Helpers/clipboardhelper.h \
     ../../xpiks-qt/Helpers/constants.h \
     ../../xpiks-qt/Helpers/filenameshelpers.h \
@@ -257,6 +257,7 @@ HEADERS += \
     ../../xpiks-qt/Models/recentitemsmodel.h \
     ../../xpiks-qt/Models/recentdirectoriesmodel.h \
     ../../xpiks-qt/Models/recentfilesmodel.h \
+    ../../xpiks-qt/Models/proxysettings.h \
     ../../xpiks-qt/Models/settingsmodel.h \
     ../../xpiks-qt/Models/ziparchiver.h \
     ../../xpiks-qt/Models/uploadinfo.h \

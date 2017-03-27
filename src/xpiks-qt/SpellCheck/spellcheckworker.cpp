@@ -29,7 +29,6 @@
 #include <QCoreApplication>
 #include <QStandardPaths>
 #include <QThread>
-#include "../Helpers/appsettings.h"
 #include "spellcheckitem.h"
 #include "../Common/defines.h"
 #include <hunspell/hunspell.hxx>
@@ -38,12 +37,15 @@
 #define EN_HUNSPELL_AFF "en_US.aff"
 
 namespace SpellCheck {
-    SpellCheckWorker::SpellCheckWorker(QObject *parent):
+    SpellCheckWorker::SpellCheckWorker(Models::SettingsModel *settingsModel, QObject *parent):
         QObject(parent),
+        m_SettingsModel(settingsModel),
         m_Hunspell(NULL),
         m_Codec(NULL),
         m_UserDictionaryPath("")
-    {}
+    {
+        Q_ASSERT(settingsModel);
+    }
 
     SpellCheckWorker::~SpellCheckWorker() {
         if (m_Hunspell != NULL) {
@@ -77,8 +79,10 @@ namespace SpellCheck {
         dicPath = resourcesDir.absoluteFilePath(EN_HUNSPELL_DIC);
 
 #else
-        Helpers::AppSettings appSettings;
-        resourcesPath = appSettings.value(Constants::DICT_PATH, "").toString();
+        if (m_SettingsModel) {
+            resourcesPath = m_SettingsModel->getDictPath();
+        }
+
         if (resourcesPath.isEmpty()) {
             resourcesPath = "hunspell/";
             dicPath = QStandardPaths::locate(QStandardPaths::GenericDataLocation, resourcesPath + EN_HUNSPELL_DIC);

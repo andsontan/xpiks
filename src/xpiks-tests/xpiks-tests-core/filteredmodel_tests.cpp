@@ -16,7 +16,11 @@
     commandManagerMock.InjectDependency(&artItemsModelMock);\
     filteredItemsModel.setSourceModel(&artItemsModelMock);\
     commandManagerMock.InjectDependency(&filteredItemsModel);\
-    commandManagerMock.generateAndAddArtworks(count);
+    commandManagerMock.generateAndAddArtworks(count);\
+    Models::SettingsModel settingsModel; \
+    settingsModel.initializeConfigs(); \
+    settingsModel.setSearchUsingAnd(false); \
+    commandManagerMock.InjectDependency(&settingsModel);
 
 void FilteredModelTests::invertSelectionForEmptyTest(){
     DECLARE_MODELS_AND_GENERATE(10);
@@ -197,9 +201,6 @@ void FilteredModelTests::setSelectedForZippingTest() {
 
 void FilteredModelTests::filterModifiedItemsTest() {
     DECLARE_MODELS_AND_GENERATE(10);
-    Models::SettingsModel settingsModel;
-    settingsModel.setSearchUsingAnd(false);
-    commandManagerMock.InjectDependency(&settingsModel);
 
     for (int i = 0; i < 10; ++i) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
@@ -216,9 +217,6 @@ void FilteredModelTests::filterModifiedItemsTest() {
 
 void FilteredModelTests::filterEmptyItemsTest() {
     DECLARE_MODELS_AND_GENERATE(10);
-    Models::SettingsModel settingsModel;
-    settingsModel.setSearchUsingAnd(false);
-    commandManagerMock.InjectDependency(&settingsModel);
 
     for (int i = 0; i < 10; ++i) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
@@ -236,9 +234,7 @@ void FilteredModelTests::filterEmptyItemsTest() {
 
 void FilteredModelTests::filterKeywordsUsingAndTest() {
     DECLARE_MODELS_AND_GENERATE(10);
-    Models::SettingsModel settingsModel;
     settingsModel.setSearchUsingAnd(true);
-    commandManagerMock.InjectDependency(&settingsModel);
 
     for (int i = 0; i < 10; ++i) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
@@ -262,9 +258,6 @@ void FilteredModelTests::filterKeywordsUsingAndTest() {
 
 void FilteredModelTests::filterKeywordsUsingOrTest() {
     DECLARE_MODELS_AND_GENERATE(10);
-    Models::SettingsModel settingsModel;
-    settingsModel.setSearchUsingAnd(false);
-    commandManagerMock.InjectDependency(&settingsModel);
 
     for (int i = 0; i < 10; ++i) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
@@ -285,9 +278,6 @@ void FilteredModelTests::filterKeywordsUsingOrTest() {
 
 void FilteredModelTests::filterStrictKeywordTest() {
     DECLARE_MODELS_AND_GENERATE(10);
-    Models::SettingsModel settingsModel;
-    settingsModel.setSearchUsingAnd(false);
-    commandManagerMock.InjectDependency(&settingsModel);
 
     for (int i = 0; i < 10; ++i) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
@@ -312,9 +302,6 @@ void FilteredModelTests::filterStrictKeywordTest() {
 
 void FilteredModelTests::filterDescriptionTest() {
     DECLARE_MODELS_AND_GENERATE(10);
-    Models::SettingsModel settingsModel;
-    settingsModel.setSearchUsingAnd(false);
-    commandManagerMock.InjectDependency(&settingsModel);
 
     for (int i = 0; i < 10; ++i) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
@@ -342,9 +329,6 @@ void FilteredModelTests::filterDescriptionTest() {
 
 void FilteredModelTests::filterTitleTest() {
     DECLARE_MODELS_AND_GENERATE(10);
-    Models::SettingsModel settingsModel;
-    settingsModel.setSearchUsingAnd(false);
-    commandManagerMock.InjectDependency(&settingsModel);
 
     for (int i = 0; i < 10; ++i) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
@@ -372,9 +356,6 @@ void FilteredModelTests::filterTitleTest() {
 
 void FilteredModelTests::filterDescriptionAndKeywordsTest() {
     DECLARE_MODELS_AND_GENERATE(10);
-    Models::SettingsModel settingsModel;
-    settingsModel.setSearchUsingAnd(false);
-    commandManagerMock.InjectDependency(&settingsModel);
 
     for (int i = 0; i < 10; ++i) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);
@@ -403,9 +384,6 @@ void FilteredModelTests::filterDescriptionAndKeywordsTest() {
 
 void FilteredModelTests::filterTitleAndKeywordsTest() {
     DECLARE_MODELS_AND_GENERATE(10);
-    Models::SettingsModel settingsModel;
-    settingsModel.setSearchUsingAnd(false);
-    commandManagerMock.InjectDependency(&settingsModel);
 
     for (int i = 0; i < 10; ++i) {
         Models::ArtworkMetadata *metadata = artItemsModelMock.getArtwork(i);

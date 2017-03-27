@@ -230,7 +230,7 @@ Item {
                         anchors.fill: parent
                         cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
                         onClicked: {
-                            appSettings.saveCurrentVersion()
+                            settingsModel.saveCurrentVersion()
                             closePopup()
                         }
                     }
@@ -262,7 +262,7 @@ Item {
                     width: 100
                     onClicked: {
                         if (slidesHost.isFinished()) {
-                            appSettings.saveCurrentVersion()
+                            settingsModel.saveCurrentVersion()
                             closePopup()
                         } else {
                             slidesHost.swipeForward()
