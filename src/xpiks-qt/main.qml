@@ -141,8 +141,7 @@ ApplicationWindow {
     }
 
     function mustUseConfirmation() {
-        var mustUse = settingsModel.getMustUseConfirmationDialogs();
-        return mustUse
+        return settingsModel.mustUseConfirmations
     }
 
     function openUploadDialog(skipUploadItems) {

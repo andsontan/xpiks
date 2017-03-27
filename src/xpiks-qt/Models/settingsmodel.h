@@ -261,7 +261,6 @@ namespace Models {
         Q_INVOKABLE QString getUploadHosts() { return stringValue(Constants::uploadHosts); }
         Q_INVOKABLE QString getMasterPasswordHash() { return stringValue(Constants::masterPasswordHash); }
         Q_INVOKABLE QString getDictPath() { return stringValue(Constants::dictPath); }
-        Q_INVOKABLE bool getMustUseConfirmationDialogs() { return boolValue(Constants::useConfirmationDialogs, true); }
         Q_INVOKABLE int getAvailableUpdateVersion() { return intValue(Constants::availableUpdateVersion); }
 
         Q_INVOKABLE void setMasterPasswordHash() {

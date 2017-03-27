@@ -50,7 +50,7 @@ Item {
     }
 
     function mustUseConfirmation() {
-        return settingsModel.getMustUseConfirmationDialogs();
+        return settingsModel.mustUseConfirmations
     }
 
     Connections {
