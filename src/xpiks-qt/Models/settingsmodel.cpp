@@ -124,7 +124,7 @@ namespace Models {
 
         QJsonDocument &doc = m_Config.getConfig();
         if (doc.isObject()) {
-            m_Settings = doc.object();
+            m_SettingsJson = doc.object();
         } else {
             LOG_WARNING << "JSON document doesn't contain an object";
         }
@@ -134,7 +134,7 @@ namespace Models {
         LOG_DEBUG << "Syncing settings";
 
         QJsonDocument doc;
-        doc.setObject(m_Settings);
+        doc.setObject(m_SettingsJson);
 
         m_Config.setConfig(doc);
         m_Config.saveToFile();

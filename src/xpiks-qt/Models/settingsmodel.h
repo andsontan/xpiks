@@ -109,11 +109,11 @@ namespace Models {
 
     private:
         inline void setValue(const char *key, const QJsonValue &value) {
-            m_Settings.insert(QLatin1String(key), value);
+            m_SettingsJson.insert(QLatin1String(key), value);
         }
 
         inline QJsonValue value(const char *key, const QJsonValue &defaultValue = QJsonValue()) const {
-            QJsonValue value = m_Settings.value(QLatin1String(key));
+            QJsonValue value = m_SettingsJson.value(QLatin1String(key));
 
             if (value.isUndefined()) {
                 return defaultValue;
@@ -123,19 +123,19 @@ namespace Models {
         }
 
         inline bool boolValue(const char *key, const bool defaultValue = false) const {
-            return m_Settings.value(QLatin1String(key)).toBool(defaultValue);
+            return m_SettingsJson.value(QLatin1String(key)).toBool(defaultValue);
         }
 
         inline double doubleValue(const char *key, const double defaultValue = 0) const {
-            return m_Settings.value(QLatin1String(key)).toDouble(defaultValue);
+            return m_SettingsJson.value(QLatin1String(key)).toDouble(defaultValue);
         }
 
         inline int intValue(const char *key, const int defaultValue = 0) const {
-            return m_Settings.value(QLatin1String(key)).toInt(defaultValue);
+            return m_SettingsJson.value(QLatin1String(key)).toInt(defaultValue);
         }
 
         inline QString stringValue(const char *key, const QString defaultValue = QString("")) const {
-            return m_Settings.value(QLatin1String(key)).toString(defaultValue);
+            return m_SettingsJson.value(QLatin1String(key)).toString(defaultValue);
         }
 
     public:
@@ -203,7 +203,6 @@ namespace Models {
 
         Q_INVOKABLE void userAgreeHandler() {
             LOG_DEBUG << "#";
-
             setValue(Constants::userConsent, true);
         }
 
@@ -247,100 +246,61 @@ namespace Models {
 
         Q_INVOKABLE void setAppPosY(int y) {
             LOG_DEBUG << "#";
-
             setValue(Constants::appWindowY, y);
         }
 
         Q_INVOKABLE void setUseMasterPassword(bool value) {
             LOG_DEBUG << "#";
-
             setValue(Constants::useMasterPassword, value);
         }
 
-        Q_INVOKABLE QString getMasterPasswordHash() {
-            return stringValue(Constants::masterPasswordHash);
-        }
+        Q_INVOKABLE QString getRecentDirectories() { return stringValue(Constants::recentDirectories); }
+        Q_INVOKABLE QString getRecentFiles() { return stringValue(Constants::recentFiles); }
+        Q_INVOKABLE QString getUserAgentId() { return stringValue(Constants::userAgentId); }
+        Q_INVOKABLE QString getPathToUpdate() { return stringValue(Constants::pathToUpdate); }
+        Q_INVOKABLE QString getUploadHosts() { return stringValue(Constants::uploadHosts); }
+        Q_INVOKABLE QString getMasterPasswordHash() { return stringValue(Constants::masterPasswordHash); }
+        Q_INVOKABLE QString getDictPath() { return stringValue(Constants::dictPath); }
+        Q_INVOKABLE bool getMustUseConfirmationDialogs() { return boolValue(Constants::useConfirmationDialogs, true); }
+        Q_INVOKABLE int getAvailableUpdateVersion() { return intValue(Constants::availableUpdateVersion); }
 
         Q_INVOKABLE void setMasterPasswordHash() {
             LOG_DEBUG << "#";
-
             Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
-
             setValue(Constants::masterPasswordHash, secretsManager->getMasterPasswordHash());
-        }
-
-        Q_INVOKABLE QString getUploadHosts() {
-            return stringValue(Constants::uploadHosts);
         }
 
         Q_INVOKABLE void saveUploadHosts() {
             LOG_DEBUG << "#";
-
             UploadInfoRepository *uploadInfoRepository = m_CommandManager->getUploadInfoRepository();
-
             setValue(Constants::uploadHosts, uploadInfoRepository->getInfoString());
-        }
-
-        Q_INVOKABLE QString getRecentDirectories() {
-            return stringValue(Constants::recentDirectories);
         }
 
         Q_INVOKABLE void saveRecentDirectories() {
             LOG_DEBUG << "#";
-
             Models::RecentDirectoriesModel *recentDirectories = m_CommandManager->getRecentDirectories();
-
             setValue(Constants::recentDirectories, recentDirectories->serializeForSettings());
-        }
-
-        Q_INVOKABLE QString getRecentFiles() {
-            return stringValue(Constants::recentFiles);
         }
 
         Q_INVOKABLE void saveRecentFiles() {
             LOG_DEBUG << "#";
-
             Models::RecentFilesModel *recentFiles = m_CommandManager->getRecentFiles();
-
             setValue(Constants::recentFiles, recentFiles->serializeForSettings());
-        }
-
-        Q_INVOKABLE void getMustUseConfirmationDialogs() {
-            boolValue(Constants::useConfirmationDialogs, true);
         }
 
         Q_INVOKABLE void setUserAgentId(const QString &id) {
             LOG_DEBUG << "#";
-
             setValue(Constants::userAgentId, id);
-        }
-
-        Q_INVOKABLE QString getUserAgentId() {
-            return stringValue(Constants::userAgentId);
-        }
-
-        Q_INVOKABLE int getAvailableUpdateVersion() {
-            return intValue(Constants::availableUpdateVersion);
         }
 
         Q_INVOKABLE void setAvailableUpdateVersion(int version) {
             LOG_DEBUG << "#";
-
             setValue(Constants::availableUpdateVersion, version);
-        }
-
-        Q_INVOKABLE QString getPathToUpdate() {
-            return stringValue(Constants::pathToUpdate);
         }
 
         Q_INVOKABLE void setPathToUpdate(QString path) {
             LOG_DEBUG << "#";
-
             setValue(Constants::pathToUpdate, path);
-        }
-
-        Q_INVOKABLE QString getDictPath() {
-            return stringValue(Constants::dictPath);
         }
 
         Q_INVOKABLE void protectTelemetry() {
@@ -399,7 +359,7 @@ namespace Models {
             return text;
         }
 
-        Q_INVOKABLE void doSetMasterPassword() {
+        Q_INVOKABLE void onMasterPasswordSet() {
             LOG_INFO << "Master password changed";
 
             setMasterPasswordHash();
@@ -407,7 +367,7 @@ namespace Models {
             setMustUseMasterPassword(true);
         }
 
-        Q_INVOKABLE void doUnsetMasterPassword(bool firstTime) {
+        Q_INVOKABLE void onMasterPasswordUnset(bool firstTime) {
             setMustUseMasterPassword(!firstTime);
             raiseMasterPasswordSignal();
         }
@@ -696,7 +656,7 @@ namespace Models {
 
     private:
         Helpers::LocalConfig m_Config;
-        QJsonObject m_Settings;
+        QJsonObject m_SettingsJson;
         QString m_ExifToolPath;
         QString m_DictPath;
         QString m_SelectedLocale;

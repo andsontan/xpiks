@@ -51,11 +51,11 @@ ApplicationWindow {
     }
 
     function onCancelMP(firstTime) {
-        settingsModel.doUnsetMasterPassword();
+        settingsModel.onMasterPasswordUnset(firstTime);
     }
 
     function onMasterPasswordSet() {
-        settingsModel.doSetMasterPassword();
+        settingsModel.onMasterPasswordSet();
     }
 
     function onProxySettingsSet() {
