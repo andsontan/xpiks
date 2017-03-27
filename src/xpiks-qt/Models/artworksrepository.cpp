@@ -204,7 +204,7 @@ namespace Models {
 
         if (m_FilesSet.contains(filepath)) {
             Q_ASSERT(m_DirectoryIdToIndex.contains(directoryID));
-            int existingIndex = m_DirectoryIdToIndex[directoryID];
+            auto existingIndex = m_DirectoryIdToIndex[directoryID];
             auto &item = m_DirectoriesList[existingIndex];
             item.m_FilesCount--;
             m_FilesWatcher.removePath(filepath);
