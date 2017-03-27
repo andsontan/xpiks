@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Plugin for Xpiks made for photo studio"
+title: "Plugin for Xpiks helps photo studio"
 date: 2017-03-27T22:25:09+01:00
 ---
 
@@ -22,4 +22,4 @@ This plugin operates on currently active artwork and fills in specific presets c
 
 <br />
 
-or get a quote writing to xpiks(at)outlook(dot)com about customizations or plugins.
+or get a quote writing to _xpiks(at)outlook(dot)com_ about how Xpiks can be useful for your organization
