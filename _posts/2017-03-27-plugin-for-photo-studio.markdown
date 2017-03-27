@@ -14,8 +14,12 @@ This plugin operates on currently active artwork and fills in specific presets c
 
 <img alt="Multiple editing" src="{{site.url}}/images/posts/maground-demo/multiple-file-editing.gif" class="small-12 large-8" />
 
+<br />
+
 **Have you already tried Xpiks?** If not, try it out
 
 <div class="download-link"><a href="{{ site.url }}/downloads">Download</a></div>
+
+<br />
 
 or get a quote writing to xpiks(at)outlook(dot)com about customizations or plugins.
