@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Xpiks plugin for photo studio"
+title: "Plugin for Xpiks made for photo studio"
 date: 2017-03-27T22:25:09+01:00
 ---
 
