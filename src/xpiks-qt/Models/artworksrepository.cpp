@@ -66,6 +66,8 @@ namespace Models {
             QVector<QPair<int, int> > rangesToRemove;
             Helpers::indicesToRanges(indicesToRemove, rangesToRemove);
             removeItemsAtIndices(rangesToRemove);
+
+            updateSelectedState();
         }
     }
 
@@ -328,6 +330,7 @@ namespace Models {
         bool oldValue = directory.m_IsSelected;
         bool newValue = !oldValue;
         if (changeSelectedState(row, newValue, oldValue)) {
+            updateSelectedState();
 #ifndef CORE_TESTS
             LOG_DEBUG << "Updating artworks";
             auto *filteredArtItemsModel = m_CommandManager->getFilteredArtItemsModel();
@@ -337,15 +340,10 @@ namespace Models {
         }
     }
 
-    bool ArtworksRepository::setDirectorySelected(int index, bool newValue) {
-        bool changed = false;
+    bool ArtworksRepository::setDirectorySelected(int index, bool value) {
         auto &directory = m_DirectoriesList[index];
-        bool oldValue = directory.m_IsSelected;
-
-        if (newValue != oldValue) {
-            directory.m_IsSelected = newValue;
-            changed = true;
-        }
+        bool changed = directory.m_IsSelected != value;
+        directory.m_IsSelected = value;
 
         return changed;
     }
@@ -380,7 +378,6 @@ namespace Models {
             anySelectionChanged = setDirectorySelected(row, newValue);
         }
 
-        updateSelectedState();
         return anySelectionChanged;
     }
 
@@ -411,6 +408,19 @@ namespace Models {
         }
 
         return count;
+    }
+
+    bool ArtworksRepository::allAreSelected() const {
+        bool anyUnselected = false;
+
+        for (auto &item: m_DirectoriesList) {
+            if (!item.m_IsSelected) {
+                anyUnselected = true;
+                break;
+            }
+        }
+
+        return !anyUnselected;
     }
 
     bool ArtworksRepository::tryFindDirectory(const QString &directoryPath, size_t &index) const {

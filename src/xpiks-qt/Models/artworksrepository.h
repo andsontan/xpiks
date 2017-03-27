@@ -139,13 +139,13 @@ namespace Models {
         virtual bool checkFileExists(const QString &filename, QString &directory) const;
 
     private:
-        bool setDirectorySelected(int index, bool newValue);
+        bool setDirectorySelected(int index, bool value);
         bool changeSelectedState(int row, bool newValue, bool oldValue);
         bool unselectAllDirectories() { return setAllSelected(false); }
         bool selectAllDirectories() { return setAllSelected(true); }
         bool setAllSelected(bool value);
         size_t retrieveSelectedDirsCount() const;
-        bool allAreSelected() const { return retrieveSelectedDirsCount() == m_DirectoriesList.size(); }
+        bool allAreSelected() const;
         bool tryFindDirectory(const QString &directoryPath, size_t &index) const;
 
     private:
