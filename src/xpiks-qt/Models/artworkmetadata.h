@@ -137,7 +137,6 @@ namespace Models {
         void resetSelected() {
             if (getIsSelectedFlag()) {
                 setIsSelectedFlag(false);
-                // emit fileSelectedChanged(m_ArtworkFilepath, false);
             }
         }
 
@@ -200,7 +199,6 @@ namespace Models {
     signals:
         void modifiedChanged(bool newValue);
         void selectedChanged(bool newValue);
-        void fileSelectedChanged(const QString &filepath, bool newValue);
         void focusRequested(int directionSign);
         void backupRequired();
         void aboutToBeRemoved();

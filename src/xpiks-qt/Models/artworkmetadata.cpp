@@ -134,7 +134,6 @@ namespace Models {
         bool result = getIsSelectedFlag() != value;
         if (result) {
             setIsSelectedFlag(value);
-            //emit fileSelectedChanged(m_ArtworkFilepath, value);
             emit selectedChanged(value);
         }
 

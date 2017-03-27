@@ -498,18 +498,6 @@ void Commands::CommandManager::connectArtworkSignals(Models::ArtworkMetadata *me
         QObject::connect(metadata, SIGNAL(selectedChanged(bool)),
                          m_FilteredItemsModel, SLOT(itemSelectedChanged(bool)));
     }
-
-
-#if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
-    if (m_ArtworksRepository)
-#else
-    Q_ASSERT(m_ArtworksRepository != nullptr);
-#endif
-    {
-        LOG_INTEGRATION_TESTS << "Connecting to ArtworksRepository...";
-        // QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
-        //                 m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));
-    }
 }
 
 void Commands::CommandManager::disconnectArtworkSignals(Models::ArtworkMetadata *metadata) const {
@@ -533,17 +521,6 @@ void Commands::CommandManager::disconnectArtworkSignals(Models::ArtworkMetadata 
         LOG_INTEGRATION_TESTS << "Disconnecting from FilteredItemsModel...";
         QObject::disconnect(metadata, 0, m_FilteredItemsModel, 0);
         QObject::disconnect(m_FilteredItemsModel, 0, metadata, 0);
-    }
-
-
-#if defined(CORE_TESTS) || defined(INTEGRATION_TESTS)
-    if (m_ArtworksRepository)
-#else
-    Q_ASSERT(m_ArtworksRepository != nullptr);
-#endif
-    {
-        // QObject::connect(metadata, SIGNAL(fileSelectedChanged(QString,bool)),
-        //                 m_ArtworksRepository, SLOT(fileSelectedChanged(QString,bool)));
     }
 }
 

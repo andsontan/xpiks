@@ -80,9 +80,6 @@ namespace Models {
         const QSet<QString> &getFilesSet() const { return m_FilesSet; }
 #endif
 
-    public slots:
-        void fileSelectedChanged(const QString &, bool) { /*BUMP*/ }
-
     private slots:
         void checkFileUnavailable(const QString & path);
         void onAvailabilityTimer();
