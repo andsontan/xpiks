@@ -80,7 +80,9 @@ namespace Models {
         Q_PROPERTY(int artworkEditRightPaneWidth READ getArtworkEditRightPaneWidth WRITE setArtworkEditRightPaneWidth NOTIFY artworkEditRightPaneWidthChanged)
 
         Q_PROPERTY(QString appVersion READ getAppVersion CONSTANT)
-        QString getAppVersion() const { return QCoreApplication::applicationVersion(); }
+
+        Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
+        Q_PROPERTY(QString termsAndConditionsText READ getTermsAndConditionsText CONSTANT)
 
     public:
         explicit SettingsModel(QObject *parent = 0);
@@ -94,6 +96,7 @@ namespace Models {
 
     public:
         ProxySettings *retrieveProxySettings();
+        bool getIsTelemetryEnabled() const { return boolValue(Constants::userStatistics, true); }
 
     public:
         Q_INVOKABLE void resetAllValues();
@@ -138,42 +141,23 @@ namespace Models {
             return m_SettingsJson.value(QLatin1String(key)).toString(defaultValue);
         }
 
+    private:
+        QString getAppVersion() const { return QCoreApplication::applicationVersion(); }
+        QString getWhatsNewText() const;
+        QString getTermsAndConditionsText() const;
+
     public:
-        Q_PROPERTY(QString whatsNewText READ getWhatsNewText CONSTANT)
-        QString getWhatsNewText() const {
-            QString text;
-            QString path;
+        Q_INVOKABLE QString getRecentDirectories() { return stringValue(Constants::recentDirectories); }
+        Q_INVOKABLE QString getRecentFiles() { return stringValue(Constants::recentFiles); }
+        Q_INVOKABLE QString getUserAgentId() { return stringValue(Constants::userAgentId); }
+        Q_INVOKABLE QString getPathToUpdate() { return stringValue(Constants::pathToUpdate); }
+        Q_INVOKABLE QString getUploadHosts() { return stringValue(Constants::uploadHosts); }
+        Q_INVOKABLE QString getMasterPasswordHash() { return stringValue(Constants::masterPasswordHash); }
+        Q_INVOKABLE QString getDictPath() { return stringValue(Constants::dictPath); }
+        Q_INVOKABLE bool getMustUseConfirmationDialogs() { return boolValue(Constants::useConfirmationDialogs, true); }
+        Q_INVOKABLE int getAvailableUpdateVersion() { return intValue(Constants::availableUpdateVersion); }
 
-#if !defined(Q_OS_LINUX)
-            path = QCoreApplication::applicationDirPath();
-
-#if defined(Q_OS_MAC)
-            path += "/../Resources/";
-#endif
-
-            path += QDir::separator() + QLatin1String(Constants::WHATS_NEW_FILENAME);
-            path = QDir::cleanPath(path);
-#else
-            path = QStandardPaths::locate(XPIKS_DATA_LOCATION_TYPE, Constants::WHATS_NEW_FILENAME);
-#endif
-            QFile file(path);
-            if (file.open(QIODevice::ReadOnly)) {
-                text = QString::fromUtf8(file.readAll());
-                file.close();
-            } else {
-                LOG_WARNING << "whatsnew.txt file is not found on path" << path;
-
-                path = QDir::current().absoluteFilePath(QLatin1String(Constants::WHATS_NEW_FILENAME));
-
-                QFile currDirFile(path);
-                if (currDirFile.open(QIODevice::ReadOnly)) {
-                    text = QString::fromUtf8(currDirFile.readAll());
-                    currDirFile.close();
-                }
-            }
-            return text;
-        }
-
+    public:
         Q_INVOKABLE bool needToShowWhatsNew() {
             int lastVersion = intValue(Constants::installedVersion, 0);
             int installedMajorPart = lastVersion / 10;
@@ -254,16 +238,6 @@ namespace Models {
             setValue(Constants::useMasterPassword, value);
         }
 
-        Q_INVOKABLE QString getRecentDirectories() { return stringValue(Constants::recentDirectories); }
-        Q_INVOKABLE QString getRecentFiles() { return stringValue(Constants::recentFiles); }
-        Q_INVOKABLE QString getUserAgentId() { return stringValue(Constants::userAgentId); }
-        Q_INVOKABLE QString getPathToUpdate() { return stringValue(Constants::pathToUpdate); }
-        Q_INVOKABLE QString getUploadHosts() { return stringValue(Constants::uploadHosts); }
-        Q_INVOKABLE QString getMasterPasswordHash() { return stringValue(Constants::masterPasswordHash); }
-        Q_INVOKABLE QString getDictPath() { return stringValue(Constants::dictPath); }
-        Q_INVOKABLE bool getMustUseConfirmationDialogs() { return boolValue(Constants::useConfirmationDialogs, true); }
-        Q_INVOKABLE int getAvailableUpdateVersion() { return intValue(Constants::availableUpdateVersion); }
-
         Q_INVOKABLE void setMasterPasswordHash() {
             LOG_DEBUG << "#";
             Encryption::SecretsManager *secretsManager = m_CommandManager->getSecretsManager();
@@ -303,61 +277,7 @@ namespace Models {
             setValue(Constants::pathToUpdate, path);
         }
 
-        Q_INVOKABLE void protectTelemetry() {
-            bool telemetryEnabled = this->boolValue(Constants::userStatistics, false);
-
-            if (telemetryEnabled) {
-                this->setValue(Constants::numberOfLaunches, 0);
-            } else {
-                int numberOfLaunches = this->intValue(Constants::numberOfLaunches, 0);
-                numberOfLaunches++;
-
-                if (numberOfLaunches >= 31) {
-                    this->setValue(Constants::userStatistics, true);
-                    this->setValue(Constants::numberOfLaunches, 0);
-                    LOG_DEBUG << "Resetting telemetry to ON";
-                } else {
-                    this->setValue(Constants::numberOfLaunches, numberOfLaunches);
-                    LOG_DEBUG << numberOfLaunches << "launches of Xpiks with Telemetry OFF";
-                }
-            }
-        }
-
-        Q_PROPERTY(QString termsAndConditionsText READ getTermsAndConditionsText CONSTANT)
-        QString getTermsAndConditionsText() const {
-            QString text;
-            QString path;
-
-#if !defined(Q_OS_LINUX)
-            path = QCoreApplication::applicationDirPath();
-
-#if defined(Q_OS_MAC)
-            path += "/../Resources/";
-#endif
-
-            path += QDir::separator() + QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME);
-            path = QDir::cleanPath(path);
-#else
-            path = QStandardPaths::locate(XPIKS_DATA_LOCATION_TYPE, Constants::TERMS_AND_CONDITIONS_FILENAME);
-#endif
-            QFile file(path);
-            if (file.open(QIODevice::ReadOnly)) {
-                text = QString::fromUtf8(file.readAll());
-                file.close();
-            } else {
-                LOG_WARNING << "terms_and_conditions.txt file is not found on path" << path;
-
-                path = QDir::current().absoluteFilePath(QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME));
-
-                QFile currDirFile(path);
-                if (currDirFile.open(QIODevice::ReadOnly)) {
-                    text = QString::fromUtf8(currDirFile.readAll());
-                    currDirFile.close();
-                }
-            }
-
-            return text;
-        }
+        Q_INVOKABLE void protectTelemetry();
 
         Q_INVOKABLE void onMasterPasswordSet() {
             LOG_INFO << "Master password changed";
