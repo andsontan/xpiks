@@ -180,6 +180,7 @@ namespace Constants {
     const char availableUpdateVersion[] = "availableUpdateVersion";
     const char artworkEditRightPaneWidth[] = "artworkEditRightPaneWidth";
     const char translatorSelectedDictIndex[] = "TranslatorSelectedDictIndex";
+    const char verboseUpload[] = "verboseUpload";
 }
 
 #endif // CONSTANTS

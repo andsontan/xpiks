@@ -70,8 +70,10 @@
 
 #ifndef INTEGRATION_TESTS
 #define DEFAULT_AUTO_CACHE_IMAGES true
+#define DEFAULT_VERBOSE_UPLOAD true
 #else
 #define DEFAULT_AUTO_CACHE_IMAGES false
+#define DEFAULT_VERBOSE_UPLOAD false
 #endif
 
 namespace Models {
@@ -103,7 +105,8 @@ namespace Models {
         m_UseAutoComplete(DEFAULT_USE_AUTO_COMPLETE),
         m_UseExifTool(DEFAULT_USE_EXIFTOOL),
         m_UseProxy(DEFAULT_USE_PROXY),
-        m_AutoCacheImages(DEFAULT_AUTO_CACHE_IMAGES)
+        m_AutoCacheImages(DEFAULT_AUTO_CACHE_IMAGES),
+        m_VerboseUpload(DEFAULT_VERBOSE_UPLOAD)
     {
     }
 
@@ -208,6 +211,7 @@ namespace Models {
         setValue(proxyHost, serializeProxyForSettings(m_ProxySettings));
         setValue(cacheImagesAutomatically, m_AutoCacheImages);
         setValue(artworkEditRightPaneWidth, m_ArtworkEditRightPaneWidth);
+        setValue(verboseUpload, m_VerboseUpload);
 
         if (!m_MustUseMasterPassword) {
             setValue(masterPasswordHash, "");
@@ -276,6 +280,7 @@ namespace Models {
         setUseAutoComplete(boolValue(useAutoComplete, DEFAULT_USE_AUTO_COMPLETE));
         setUseExifTool(boolValue(useExifTool, DEFAULT_USE_EXIFTOOL));
         setUseProxy(boolValue(useProxy, DEFAULT_USE_PROXY));
+        setVerboseUpload(boolValue(verboseUpload, DEFAULT_VERBOSE_UPLOAD));
 
         deserializeProxyFromSettings(stringValue(proxyHost, DEFAULT_PROXY_HOST));
 
@@ -317,6 +322,7 @@ namespace Models {
         setAutoCacheImages(DEFAULT_AUTO_CACHE_IMAGES);
         setArtworkEditRightPaneWidth(DEFAULT_ARTWORK_EDIT_RIGHT_PANE_WIDTH);
         setSelectedDictIndex(DEFAULT_SELECTED_DICT_INDEX);
+        setVerboseUpload(DEFAULT_VERBOSE_UPLOAD);
 
 #if defined(QT_DEBUG)
         setValue(Constants::userConsent, DEFAULT_HAVE_USER_CONSENT);

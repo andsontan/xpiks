@@ -132,6 +132,7 @@ namespace Models {
         Models::SettingsModel *settingsModel = m_CommandManager->getSettingsModel();
         context->m_UseProxy = settingsModel->getUseProxy();
         context->m_ProxySettings = settingsModel->getProxySettings();
+        context->m_VerboseLogging = settingsModel->getVerboseUpload();
 
         m_TestingCredentialWatcher->setFuture(QtConcurrent::run(Conectivity::isContextValid, context));
     }

@@ -152,9 +152,9 @@ namespace Conectivity {
                              (curl_off_t)fsize);
         curl_easy_setopt(curlHandle, CURLOPT_HEADERDATA, &uploaded_len);
 
-#ifdef QT_DEBUG
-        curl_easy_setopt(curlHandle, CURLOPT_VERBOSE, 1L);
-#endif
+        if (context->m_VerboseLogging) {
+            curl_easy_setopt(curlHandle, CURLOPT_VERBOSE, 1L);
+        }
 
         for (c = 0; (r != CURLE_OK) && (c < context->m_RetriesCount); c++) {
             QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);

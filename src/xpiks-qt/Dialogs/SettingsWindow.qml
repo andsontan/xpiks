@@ -980,6 +980,21 @@ ApplicationWindow {
                         }
                     }
 
+                    StyledCheckbox {
+                        id: verboseUploadCheckbox
+                        text: i18.n + qsTr("Detailed logging")
+                        onCheckedChanged: {
+                            settingsModel.verboseUpload = checked
+                        }
+                        function onResetRequested() {
+                            checked = settingsModel.verboseUpload
+                        }
+                        Component.onCompleted: {
+                            checked = settingsModel.verboseUpload
+                            uploadTab.resetRequested.connect(verboseUploadCheckbox.onResetRequested)
+                        }
+                    }
+
                     Item {
                         Layout.fillHeight: true
                     }

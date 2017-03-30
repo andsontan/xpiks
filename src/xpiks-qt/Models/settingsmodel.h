@@ -78,6 +78,7 @@ namespace Models {
         Q_PROPERTY(QString proxyPort READ getProxyPort NOTIFY proxyPortChanged)
         Q_PROPERTY(bool autoCacheImages READ getAutoCacheImages WRITE setAutoCacheImages NOTIFY autoCacheImagesChanged)
         Q_PROPERTY(int artworkEditRightPaneWidth READ getArtworkEditRightPaneWidth WRITE setArtworkEditRightPaneWidth NOTIFY artworkEditRightPaneWidthChanged)
+        Q_PROPERTY(bool verboseUpload READ getVerboseUpload WRITE setVerboseUpload NOTIFY verboseUploadChanged)
 
         Q_PROPERTY(QString appVersion READ getAppVersion CONSTANT)
         QString getAppVersion() const { return QCoreApplication::applicationVersion(); }
@@ -403,6 +404,7 @@ namespace Models {
         bool getAutoCacheImages() const { return m_AutoCacheImages; }
         int getArtworkEditRightPaneWidth() const { return m_ArtworkEditRightPaneWidth; }
         int getSelectedDictIndex() const { return m_SelectedDictIndex; }
+        bool getVerboseUpload() const { return m_VerboseUpload; }
 
     signals:
         void settingsReset();
@@ -436,7 +438,8 @@ namespace Models {
         void proxyPortChanged(QString value);
         void autoCacheImagesChanged(bool value);
         void artworkEditRightPaneWidthChanged(int value);
-        void selectedDictIndexChanged(int value);
+        void selectedDictIndexChanged(int value);        
+        void verboseUploadChanged(bool verboseUpload);
 
     public:
         void setExifToolPath(QString exifToolPath) {
@@ -638,6 +641,17 @@ namespace Models {
             }
         }
 
+        void setVerboseUpload(bool verboseUpload)
+        {
+            if (m_VerboseUpload == verboseUpload)
+                return;
+
+            m_VerboseUpload = verboseUpload;
+            emit verboseUploadChanged(verboseUpload);
+        }
+
+    public:
+
 #ifndef INTEGRATION_TESTS
     private:
 #else
@@ -684,6 +698,7 @@ namespace Models {
         bool m_UseProxy;
         ProxySettings m_ProxySettings;
         bool m_AutoCacheImages;
+        bool m_VerboseUpload;
     };
 }
 

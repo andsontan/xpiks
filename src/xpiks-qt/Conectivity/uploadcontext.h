@@ -47,6 +47,7 @@ namespace Conectivity {
         int m_RetriesCount;
         int m_TimeoutSeconds;
         bool m_UseProxy;
+        bool m_VerboseLogging;
         Models::ProxySettings *m_ProxySettings;
     };
 }
