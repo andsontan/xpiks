@@ -179,7 +179,7 @@ namespace Constants {
     const char pathToUpdate[] = "pathToUpdate";
     const char availableUpdateVersion[] = "availableUpdateVersion";
     const char artworkEditRightPaneWidth[] = "artworkEditRightPaneWidth";
-    const char translatorSelectedDictIndex[] = "TranslatorSelectedDictIndex";
+    const char translatorSelectedDictIndex[] = "translatorSelectedDictIndex";
     const char verboseUpload[] = "verboseUpload";
 }
 
