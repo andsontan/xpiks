@@ -417,6 +417,95 @@ namespace Models {
         sync();
     }
 
+    QString SettingsModel::getWhatsNewText() const {
+        QString text;
+        QString path;
+
+#if !defined(Q_OS_LINUX)
+        path = QCoreApplication::applicationDirPath();
+
+#if defined(Q_OS_MAC)
+        path += "/../Resources/";
+#endif
+
+        path += QDir::separator() + QLatin1String(Constants::WHATS_NEW_FILENAME);
+        path = QDir::cleanPath(path);
+#else
+        path = QStandardPaths::locate(XPIKS_DATA_LOCATION_TYPE, Constants::WHATS_NEW_FILENAME);
+#endif
+        QFile file(path);
+        if (file.open(QIODevice::ReadOnly)) {
+            text = QString::fromUtf8(file.readAll());
+            file.close();
+        } else {
+            LOG_WARNING << "whatsnew.txt file is not found on path" << path;
+
+            path = QDir::current().absoluteFilePath(QLatin1String(Constants::WHATS_NEW_FILENAME));
+
+            QFile currDirFile(path);
+            if (currDirFile.open(QIODevice::ReadOnly)) {
+                text = QString::fromUtf8(currDirFile.readAll());
+                currDirFile.close();
+            }
+        }
+        return text;
+    }
+
+    QString SettingsModel::getTermsAndConditionsText() const {
+        QString text;
+        QString path;
+
+#if !defined(Q_OS_LINUX)
+        path = QCoreApplication::applicationDirPath();
+
+#if defined(Q_OS_MAC)
+        path += "/../Resources/";
+#endif
+
+        path += QDir::separator() + QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME);
+        path = QDir::cleanPath(path);
+#else
+        path = QStandardPaths::locate(XPIKS_DATA_LOCATION_TYPE, Constants::TERMS_AND_CONDITIONS_FILENAME);
+#endif
+        QFile file(path);
+        if (file.open(QIODevice::ReadOnly)) {
+            text = QString::fromUtf8(file.readAll());
+            file.close();
+        } else {
+            LOG_WARNING << "terms_and_conditions.txt file is not found on path" << path;
+
+            path = QDir::current().absoluteFilePath(QLatin1String(Constants::TERMS_AND_CONDITIONS_FILENAME));
+
+            QFile currDirFile(path);
+            if (currDirFile.open(QIODevice::ReadOnly)) {
+                text = QString::fromUtf8(currDirFile.readAll());
+                currDirFile.close();
+            }
+        }
+
+        return text;
+    }
+
+    void SettingsModel::protectTelemetry() {
+        bool telemetryEnabled = this->boolValue(Constants::userStatistics, false);
+
+        if (telemetryEnabled) {
+            this->setValue(Constants::numberOfLaunches, 0);
+        } else {
+            int numberOfLaunches = this->intValue(Constants::numberOfLaunches, 0);
+            numberOfLaunches++;
+
+            if (numberOfLaunches >= 31) {
+                this->setValue(Constants::userStatistics, true);
+                this->setValue(Constants::numberOfLaunches, 0);
+                LOG_DEBUG << "Resetting telemetry to ON";
+            } else {
+                this->setValue(Constants::numberOfLaunches, numberOfLaunches);
+                LOG_DEBUG << numberOfLaunches << "launches of Xpiks with Telemetry OFF";
+            }
+        }
+    }
+
     void SettingsModel::resetProxySetting() {
         QString empty = "";
         SettingsModel::saveProxySetting(empty, empty, empty, empty);
