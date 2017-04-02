@@ -52,12 +52,12 @@ install:
 
 before_build:
   - cmd: 'echo %cd%'
-  - cmd: 'xcopy /s c:\projects\xpiks-deps\windows-libs\%configuration%-x64 c:\projects\xpiks\src\libs'
+  - cmd: 'xcopy /s c:\projects\xpiks-deps\windows-libs\%configuration%-x64 c:\projects\xpiks\libs'
   - cmd: 'move c:\projects\xpiks-deps\hunspell-1.6.0 c:\projects\xpiks\src'
   - cmd: 'move c:\projects\xpiks-deps\zlib-1.2.11 c:\projects\xpiks\src'
   - cmd: 'cd c:\projects\xpiks'
   - cmd: 'ren src\tiny-aes\aes.c aes.cpp'
-  - cmd: 'copy src\libs\mman.* src\cpp-libface\libs'
+  - cmd: 'copy libs\mman.* src\cpp-libface\libs'
   - cmd: 'call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %ARCH%'
 
 build_script:
@@ -66,12 +66,12 @@ build_script:
   - cmd: 'cd cpp-libface\libface-project'
   - qmake "CONFIG+=%configuration%" libface.pro
   - nmake.exe
-  - cmd: 'copy %configuration%\face.* ..\..\libs'
+  - cmd: 'copy %configuration%\face.* ..\..\..\libs'
   - cmd: 'cd ..\..'
   - cmd: 'cd ssdll\src\ssdll'
   - qmake "CONFIG+=%configuration% appveyor" ssdll.pro
   - nmake.exe
-  - cmd: 'copy %configuration%\ssdll.* ..\..\..\libs'
+  - cmd: 'copy %configuration%\ssdll.* ..\..\..\..\libs'
   - cmd: 'cd ..\..\..'
   - if defined XPIKS_BINARY cd xpiks-qt
   - if defined CORE_TESTS cd xpiks-tests\xpiks-tests-core
@@ -86,14 +86,14 @@ after_build:
   - if defined XPIKS_BINARY cd %configuration%
   - if defined XPIKS_BINARY windeployqt.exe --debug --qmldir=../../xpiks-qt/CollapserTabs/ --qmldir=../../xpiks-qt/Components/ --qmldir=../../xpiks-qt/Constants/ --qmldir=../../xpiks-qt/Dialogs/ --qmldir=../../xpiks-qt/StackViews/ --qmldir=../../xpiks-qt/StyledControls/ --qmldir=../../xpiks-qt/ xpiks-qt.exe
   - if defined XPIKS_BINARY xcopy /Y /s c:\projects\xpiks\src\xpiks-qt\deps .
-  - if defined XPIKS_BINARY copy /Y ..\..\libs\libexiv2.dll .
-  - if defined XPIKS_BINARY copy /Y ..\..\libs\libcurl*.dll .
-  - if defined XPIKS_BINARY copy /Y ..\..\libs\quazip*.dll .
-  - if defined XPIKS_BINARY copy /Y ..\..\libs\ssdll.dll .
-  - if defined XPIKS_BINARY copy /Y ..\..\libs\mman.dll .
-  - if defined XPIKS_BINARY copy /Y ..\..\libs\face.dll .
-  - if defined XPIKS_BINARY copy /Y ..\..\libs\libexpat.dll .
-  - if defined XPIKS_BINARY copy /Y ..\..\libs\z.dll .
+  - if defined XPIKS_BINARY copy /Y ..\..\..\libs\libexiv2.dll .
+  - if defined XPIKS_BINARY copy /Y ..\..\..\libs\libcurl*.dll .
+  - if defined XPIKS_BINARY copy /Y ..\..\..\libs\quazip*.dll .
+  - if defined XPIKS_BINARY copy /Y ..\..\..\libs\ssdll.dll .
+  - if defined XPIKS_BINARY copy /Y ..\..\..\libs\mman.dll .
+  - if defined XPIKS_BINARY copy /Y ..\..\..\libs\face.dll .
+  - if defined XPIKS_BINARY copy /Y ..\..\..\libs\libexpat.dll .
+  - if defined XPIKS_BINARY copy /Y ..\..\..\libs\z.dll .
   - if defined XPIKS_BINARY del *.obj
   - if defined XPIKS_BINARY del *.cpp
   - if defined XPIKS_BINARY cd ..
@@ -102,8 +102,8 @@ after_build:
 
 before_test:
   - cmd: 'echo %cd%'
-  - if defined CORE_TESTS copy ..\..\libs\*.dll .
-  - if defined INTEGRATION_TESTS copy ..\..\libs\*.dll .
+  - if defined CORE_TESTS copy ..\..\..\libs\*.dll .
+  - if defined INTEGRATION_TESTS copy ..\..\..\libs\*.dll .
 
 test_script:
   - cmd: 'echo %cd%'

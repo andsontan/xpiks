@@ -437,7 +437,7 @@ INCLUDEPATH += ../cpp-libface
 INCLUDEPATH += ../ssdll/src/ssdll
 INCLUDEPATH += ../hunspell-1.6.0/src
 
-LIBS += -L"$$PWD/../libs/"
+LIBS += -L"$$PWD/../../libs/"
 LIBS += -lhunspell
 LIBS += -lcurl
 LIBS += -lface
