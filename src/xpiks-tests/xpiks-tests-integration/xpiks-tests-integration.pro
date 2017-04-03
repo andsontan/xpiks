@@ -178,7 +178,8 @@ SOURCES += main.cpp \
     ../../xpiks-qt/SpellCheck/userdicteditmodel.cpp \
     userdictedittest.cpp \
     weirdnamesreadtest.cpp \
-    ../../xpiks-qt/QMLExtensions/tabsmodel.cpp
+    ../../xpiks-qt/QMLExtensions/tabsmodel.cpp \
+    ../../xpiks-qt/Models/videoartwork.cpp
 
 RESOURCES +=
 
@@ -387,7 +388,8 @@ HEADERS += \
     ../../xpiks-qt/SpellCheck/userdicteditmodel.h \
     userdictedittest.h \
     weirdnamesreadtest.h \
-    ../../xpiks-qt/QMLExtensions/tabsmodel.h
+    ../../xpiks-qt/QMLExtensions/tabsmodel.h \
+    ../../xpiks-qt/Models/videoartwork.h
 
 INCLUDEPATH += ../../../vendors/tiny-aes
 INCLUDEPATH += ../../../vendors/cpp-libface
