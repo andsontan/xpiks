@@ -143,7 +143,8 @@ SOURCES += main.cpp \
     SpellCheck/userdicteditmodel.cpp \
     QMLExtensions/tabsmodel.cpp \
     Models/recentitemsmodel.cpp \
-    Models/recentfilesmodel.cpp
+    Models/recentfilesmodel.cpp \
+    Models/videoartwork.cpp
 
 RESOURCES += qml.qrc
 
@@ -339,7 +340,8 @@ HEADERS += \
     SpellCheck/userdicteditmodel.h \
     QMLExtensions/tabsmodel.h \
     Models/recentitemsmodel.h \
-    Models/recentfilesmodel.h
+    Models/recentfilesmodel.h \
+    Models/videoartwork.h
 
 DISTFILES += \
     Components/CloseIcon.qml \
