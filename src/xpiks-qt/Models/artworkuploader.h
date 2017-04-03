@@ -100,7 +100,7 @@ namespace Models {
     protected:
         virtual void cancelProcessing() override;
 
-        virtual void innerResetModel() override { m_Percent = 0; }
+        virtual void innerResetModel() override { m_Percent = 0; m_UploadWatcher.resetModel(); }
 
     private:
         Conectivity::UploadWatcher m_UploadWatcher;
