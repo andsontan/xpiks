@@ -99,7 +99,7 @@ SOURCES += main.cpp \
     ../../xpiks-qt/Warnings/warningscheckingworker.cpp \
     ../../xpiks-qt/Warnings/warningsmodel.cpp \
     ../../xpiks-qt/Warnings/warningsservice.cpp \
-    ../../tiny-aes/aes.cpp \
+    ../../../vendors/tiny-aes/aes.cpp \
     addfilesbasictest.cpp \
     autoattachvectorstest.cpp \
     savefilebasictest.cpp \
@@ -293,7 +293,7 @@ HEADERS += \
     ../../xpiks-qt/Warnings/warningsitem.h \
     ../../xpiks-qt/Warnings/warningsmodel.h \
     ../../xpiks-qt/Warnings/warningsservice.h \
-    ../../tiny-aes/aes.h \
+    ../../../vendors/tiny-aes/aes.h \
     integrationtestbase.h \
     addfilesbasictest.h \
     signalwaiter.h \
@@ -389,10 +389,10 @@ HEADERS += \
     weirdnamesreadtest.h \
     ../../xpiks-qt/QMLExtensions/tabsmodel.h
 
-INCLUDEPATH += ../../tiny-aes
-INCLUDEPATH += ../../cpp-libface
-INCLUDEPATH += ../../ssdll/src/ssdll
-INCLUDEPATH += ../../hunspell-1.6.0/src
+INCLUDEPATH += ../../../vendors/tiny-aes
+INCLUDEPATH += ../../../vendors/cpp-libface
+INCLUDEPATH += ../../../vendors/ssdll/src/ssdll
+INCLUDEPATH += ../../../vendors/hunspell-1.6.0/src
 
 LIBS += -L"$$PWD/../../../libs/"
 LIBS += -lhunspell
@@ -403,9 +403,9 @@ LIBS += -lface
 LIBS += -lssdll
 
 macx {
-    INCLUDEPATH += "../../quazip"
-    INCLUDEPATH += "../../../libcurl/include"
-    INCLUDEPATH += "../../exiv2-0.25/include"
+    INCLUDEPATH += "../../../vendors/quazip"
+    INCLUDEPATH += "../../../../vendors/libcurl/include"
+    INCLUDEPATH += "../../../vendors/exiv2-0.25/include"
 
     LIBS += -liconv
     LIBS += -lexpat
@@ -417,10 +417,10 @@ macx {
 win32 {
     DEFINES += QT_NO_PROCESS_COMBINED_ARGUMENT_START
     QT += winextras
-    INCLUDEPATH += "../../zlib-1.2.11"
-    INCLUDEPATH += "../../quazip"
-    INCLUDEPATH += "../../libcurl/include"
-    INCLUDEPATH += "../../exiv2-0.25/include"
+    INCLUDEPATH += "../../../vendors/zlib-1.2.11"
+    INCLUDEPATH += "../../../vendors/quazip"
+    INCLUDEPATH += "../../../vendors/libcurl/include"
+    INCLUDEPATH += "../../../vendors/exiv2-0.25/include"
     LIBS -= -lcurl
     LIBS += -lmman
 
@@ -461,7 +461,7 @@ linux-g++-64 {
 
 travis-ci {
     message("for Travis CI")
-    INCLUDEPATH += "../../quazip"
+    INCLUDEPATH += "../../../vendors/quazip"
     LIBS -= -lz
     LIBS += /usr/lib/x86_64-linux-gnu/libz.so
     LIBS += -lexiv2

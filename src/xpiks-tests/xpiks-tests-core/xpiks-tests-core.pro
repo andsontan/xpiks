@@ -17,9 +17,9 @@ CONFIG   += c++11
 
 win32:QT += winextras
 
-INCLUDEPATH += ../../tiny-aes
+INCLUDEPATH += ../../../vendors/tiny-aes
 win32:INCLUDEPATH += ../../xpiks-qt/Encryption
-INCLUDEPATH += "../../hunspell-1.6.0/src"
+INCLUDEPATH += "../../../vendors/hunspell-1.6.0/src"
 DEFINES += HUNSPELL_STATIC
 DEFINES += CORE_TESTS
 
@@ -36,7 +36,7 @@ macx {
 }
 
 win32 {
-    INCLUDEPATH += "../../zlib-1.2.8"
+    INCLUDEPATH += "../../../vendors/zlib-1.2.8"
     #INCLUDEPATH += "../quazip"
     #INCLUDEPATH += "../libcurl/include"
     #LIBS -= -lcurl
@@ -70,7 +70,7 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     encryption_tests.cpp \
-    ../../tiny-aes/aes.cpp \
+    ../../../vendors/tiny-aes/aes.cpp \
     indicestoranges_tests.cpp \
     ../../xpiks-qt/Helpers/indiceshelper.cpp \
     ../../xpiks-qt/Commands/commandmanager.cpp \
@@ -170,7 +170,7 @@ SOURCES += main.cpp \
 
 HEADERS += \
     encryption_tests.h \
-    ../../tiny-aes/aes.h \
+    ../../../vendors/tiny-aes/aes.h \
     ../../xpiks-qt/Encryption/aes-qt.h \
     indicestoranges_tests.h \
     ../../xpiks-qt/Helpers/indiceshelper.h \
