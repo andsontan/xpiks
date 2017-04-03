@@ -1,5 +1,5 @@
 #include "preset_tests.h"
-#include "../xpiks-qt/KeywordsPresets/presetkeywordsmodel.h"
+#include "../../xpiks-qt/KeywordsPresets/presetkeywordsmodel.h"
 #include "Mocks/artitemsmodelmock.h"
 #include "Mocks/commandmanagermock.h"
 #include "../../xpiks-qt/Models/filteredartitemsproxymodel.h"

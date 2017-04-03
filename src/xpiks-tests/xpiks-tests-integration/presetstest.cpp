@@ -1,6 +1,6 @@
 #include "presetstest.h"
-#include "../xpiks-qt/KeywordsPresets/presetkeywordsmodel.h"
-#include "../xpiks-qt/KeywordsPresets/presetkeywordsmodelconfig.h"
+#include "../../xpiks-qt/KeywordsPresets/presetkeywordsmodel.h"
+#include "../../xpiks-qt/KeywordsPresets/presetkeywordsmodelconfig.h"
 #include "../../xpiks-qt/Commands/commandmanager.h"
 #include <QDir>
 

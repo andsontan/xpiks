@@ -3,7 +3,7 @@
 
 #include <QObject>
 #include <QtTest/QtTest>
-#include "../xpiks-qt/Helpers/deletelogshelper.h"
+#include "../../xpiks-qt/Helpers/deletelogshelper.h"
 
 class DeleteOldLogsTest: public QObject
 {

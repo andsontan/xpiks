@@ -3,7 +3,7 @@
 
 #include <QVector>
 #include <QPair>
-#include "../xpiks-qt/Models/artworksrepository.h"
+#include "../../xpiks-qt/Models/artworksrepository.h"
 
 namespace Mocks {
     class ArtworksRepositoryMock : public Models::ArtworksRepository {
