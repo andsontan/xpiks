@@ -47,6 +47,7 @@
 #include "../Helpers/constants.h"
 #include "../Helpers/stringhelper.h"
 #include "../QuickBuffer/quickbuffer.h"
+#include "videoartwork.h"
 
 namespace Models {
     ArtItemsModel::ArtItemsModel(QObject *parent):
@@ -72,6 +73,7 @@ namespace Models {
 
     ArtworkMetadata *ArtItemsModel::createMetadata(const QString &filepath, qint64 directoryID) {
         int id = m_LastID++;
+
         return new ImageArtwork(filepath, id, directoryID);
     }
 
@@ -722,6 +724,10 @@ namespace Models {
             }
             case BaseFilenameRole:
                 return metadata->getBaseFilename();
+            case IsVideoRole: {
+                bool isVideo = dynamic_cast<VideoArtwork*>(metadata) != nullptr;
+                return isVideo;
+            }
             default:
                 return QVariant();
         }
@@ -1035,14 +1041,15 @@ namespace Models {
         filenames.reserve(rawFilenames.length());
         vectors.reserve(rawFilenames.length());
 
-        QSet<QString> knownImageSuffixes;
-        knownImageSuffixes << "jpg" << "jpeg" << "tiff" << "tif";
+        QSet<QString> knownSuffixes;
+        knownSuffixes << "jpg" << "jpeg" << "tiff" << "tif";
+        knownSuffixes << "avi" << "mpeg" << "mpg" << "mpe" << "vob" << "qt" << "mov" << "asf" << "asx" << "wm" << "wmv" << "mp4" << "webm" << "flv";
 
         foreach(const QString &filepath, rawFilenames) {
             QFileInfo fi(filepath);
             QString suffix = fi.suffix().toLower();
 
-            if (knownImageSuffixes.contains(suffix)) {
+            if (knownSuffixes.contains(suffix)) {
                 filenames.append(filepath);
             } else if (suffix == QLatin1String("png")) {
                 LOG_WARNING << "PNG is unsupported file format";

@@ -29,6 +29,7 @@
 
 namespace Models {
     class ArtworkMetadata;
+    class ImageArtwork;
 }
 
 namespace MetadataIO {
@@ -56,6 +57,7 @@ namespace MetadataIO {
 
     private:
         bool readMetadata(Models::ArtworkMetadata *artwork, ImportDataResult &importResult);
+        bool readImageMetadata(Models::ImageArtwork *imageArtwork, ImportDataResult &importResult);
 
     private:
         QVector<Models::ArtworkMetadata *> m_ItemsToRead;

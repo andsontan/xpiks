@@ -555,11 +555,31 @@ namespace MetadataIO {
 
     bool Exiv2ReadingWorker::readMetadata(Models::ArtworkMetadata *artwork, ImportDataResult &importResult) {
         const QString &filepath = artwork->getFilepath();
+        Models::ImageArtwork *imageArtwork = dynamic_cast<Models::ImageArtwork*>(artwork);
+
+        if (imageArtwork != nullptr) {
+            readImageMetadata(imageArtwork, importResult);
+        }
+
+        MetadataSavingCopy copy;
+        if (copy.readFromFile(filepath)) {
+            importResult.BackupDict = copy.getInfo();
+        }
+
+        QFileInfo fi(filepath);
+        importResult.FileSize = fi.size();
+
+        return true;
+    }
+
+    bool Exiv2ReadingWorker::readImageMetadata(Models::ImageArtwork *imageArtwork, ImportDataResult &importResult) {
+        const QString &filepath = imageArtwork->getFilepath();
+        Q_UNUSED(imageArtwork);
 
         QImageReader imageReader(filepath);
         QString format = QString::fromLatin1(imageReader.format().toLower());
         if (format != QLatin1String("jpeg") &&
-            format != QLatin1String("tiff")) {
+                format != QLatin1String("tiff")) {
             return false;
         }
 
@@ -584,18 +604,7 @@ namespace MetadataIO {
         importResult.Keywords = retrieveKeywords(xmpData, exifData, iptcData, isIptcUtf8);
         importResult.DateTimeOriginal = retrieveDateTime(xmpData, exifData, iptcData, isIptcUtf8);
 
-        MetadataSavingCopy copy;
-        if (copy.readFromFile(filepath)) {
-            importResult.BackupDict = copy.getInfo();
-        }
-
-        QFileInfo fi(filepath);
-        importResult.FileSize = fi.size();
-
-        Models::ImageArtwork *imageArtwork = dynamic_cast<Models::ImageArtwork*>(artwork);
-        if (imageArtwork != NULL) {            
-            importResult.ImageSize = imageReader.size();
-        }
+        importResult.ImageSize = imageReader.size();
 
         return true;
     }

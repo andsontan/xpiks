@@ -73,7 +73,8 @@ namespace Models {
             IsSelectedRole,
             EditIsSelectedRole,
             HasVectorAttachedRole,
-            BaseFilenameRole
+            BaseFilenameRole,
+            IsVideoRole
         };
 
     public:

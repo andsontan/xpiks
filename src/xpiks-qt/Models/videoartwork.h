@@ -19,18 +19,18 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef FILENAMESHELPERS
-#define FILENAMESHELPERS
+#ifndef VIDEOARTWORK_H
+#define VIDEOARTWORK_H
 
-#include <QStringList>
+#include "artworkmetadata.h"
 
-namespace Helpers {
-    QStringList convertToVectorFilenames(const QStringList &items);
-    QStringList convertToVectorFilenames(const QString &path);
-    QString getImagePath(const QString &path);
-    QString getArchivePath(const QString &artworkPath);
-    bool couldBeVideo(const QString &artworkPath);
+namespace Models {
+    class VideoArtwork: public ArtworkMetadata
+    {
+        Q_OBJECT
+    public:
+        VideoArtwork(const QString &filepath, qint64 ID, qint64 directoryID);
+    };
 }
 
-#endif // FILENAMESHELPERS
-
+#endif // VIDEOARTWORK_H
