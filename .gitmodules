@@ -1,9 +1,9 @@
 [submodule "src/tiny-aes"]
-	path = src/tiny-aes
+	path = vendors/tiny-aes
 	url = https://github.com/kokke/tiny-AES128-C.git
 [submodule "src/cpp-libface"]
-	path = src/cpp-libface
+	path = vendors/cpp-libface
 	url = https://github.com/Ribtoks/cpp-libface.git
 [submodule "src/ssdll"]
-	path = src/ssdll
+	path = vendors/ssdll
 	url = https://github.com/Ribtoks/ssdll.git

@@ -53,16 +53,16 @@ install:
 before_build:
   - cmd: 'echo %cd%'
   - cmd: 'xcopy /s c:\projects\xpiks-deps\windows-libs\%configuration%-x64 c:\projects\xpiks\libs'
-  - cmd: 'move c:\projects\xpiks-deps\hunspell-1.6.0 c:\projects\xpiks\src'
-  - cmd: 'move c:\projects\xpiks-deps\zlib-1.2.11 c:\projects\xpiks\src'
+  - cmd: 'move c:\projects\xpiks-deps\hunspell-1.6.0 c:\projects\xpiks\vendors'
+  - cmd: 'move c:\projects\xpiks-deps\zlib-1.2.11 c:\projects\xpiks\vendors'
   - cmd: 'cd c:\projects\xpiks'
-  - cmd: 'ren src\tiny-aes\aes.c aes.cpp'
-  - cmd: 'copy libs\mman.* src\cpp-libface\libs'
+  - cmd: 'ren vendors\tiny-aes\aes.c aes.cpp'
+  - cmd: 'copy libs\mman.* vendors\cpp-libface\libs'
   - cmd: 'call "C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" %ARCH%'
 
 build_script:
   - cmd: 'echo %cd%'
-  - cmd: 'cd src'
+  - cmd: 'cd vendors'
   - cmd: 'cd cpp-libface\libface-project'
   - qmake "CONFIG+=%configuration%" libface.pro
   - nmake.exe
@@ -72,7 +72,7 @@ build_script:
   - qmake "CONFIG+=%configuration% appveyor" ssdll.pro
   - nmake.exe
   - cmd: 'copy %configuration%\ssdll.* ..\..\..\..\libs'
-  - cmd: 'cd ..\..\..'
+  - cmd: 'cd ..\..\..\..\src'
   - if defined XPIKS_BINARY cd xpiks-qt
   - if defined CORE_TESTS cd xpiks-tests\xpiks-tests-core
   - if defined INTEGRATION_TESTS cd xpiks-tests\xpiks-tests-integration

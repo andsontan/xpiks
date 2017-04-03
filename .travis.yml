@@ -42,7 +42,7 @@ before_script:
   - ulimit -c unlimited -S       # enable core dumps
 
 script:
-  - cd src/
+  - cd vendors/
   - tar xzf /tmp/hunspell.tar.gz
   - cd hunspell/
   - qmake "CONFIG+=debug" hunspell.pro
@@ -57,7 +57,7 @@ script:
   - ln -s libquazip.so.1.0.0 libquazip.so
   - ln -s libquazip.so.1.0.0 libquazip.so.1
   - ln -s libquazip.so.1.0.0 libquazip.so.1.0
-  - cd ../src/
+  - cd ../vendors/
   - mv tiny-aes/aes.c tiny-aes/aes.cpp
   - cd cpp-libface
   - make lib-face
