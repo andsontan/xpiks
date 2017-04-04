@@ -7,3 +7,6 @@
 [submodule "src/ssdll"]
 	path = vendors/ssdll
 	url = https://github.com/Ribtoks/ssdll.git
+[submodule "vendors/libavthumbnailer"]
+	path = vendors/libavthumbnailer
+	url = https://github.com/Ribtoks/libavthumbnailer.git
