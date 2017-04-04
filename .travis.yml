@@ -71,7 +71,7 @@ script:
   - ln -s libssdll.so.1.0.0 libssdll.so
   - ln -s libssdll.so.1.0.0 libssdll.so.1
   - ln -s libssdll.so.1.0.0 libssdll.so.1.0
-  - cd libavthumbnailer/src/libavthumbnailer
+  - cd ../vendors/libavthumbnailer/src/libavthumbnailer
   - qmake "CONFIG+=debug" libavthumbnailer.pro
   - make
   - cp libavthumbnailer.so.1.0.0 ../../../libs
