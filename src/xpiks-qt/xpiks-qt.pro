@@ -447,6 +447,7 @@ LIBS += -lexiv2
 LIBS += -lssdll
 LIBS += -lquazip
 LIBS += -lz
+LIBS += -lavthumbnailer
 
 BUILDNO=$$system(git log -n 1 --pretty=format:"%h")
 
