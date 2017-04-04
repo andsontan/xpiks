@@ -30,7 +30,7 @@ before_install:
 
 install:
   - sudo apt-get install -qq qt55base; source /opt/qt55/bin/qt55-env.sh
-  - sudo apt-get install qt55base qt55quickcontrols qt55svg qt55declarative libcurl4-openssl-dev hunspell-en-us zlib1g-dev libimage-exiftool-perl
+  - sudo apt-get install qt55base qt55quickcontrols qt55svg qt55declarative libcurl4-openssl-dev hunspell-en-us zlib1g-dev libimage-exiftool-perl libavcoded-dev libavformat-dev libavfilter-dev libavutil-dev libswscale-dev
   - sudo apt-get install -y gdb
   - sudo apt-get install -y libexiv2-dev expat
   - sudo unlink /usr/bin/g++ && sudo ln -s /usr/bin/g++-5 /usr/bin/g++
@@ -71,6 +71,14 @@ script:
   - ln -s libssdll.so.1.0.0 libssdll.so
   - ln -s libssdll.so.1.0.0 libssdll.so.1
   - ln -s libssdll.so.1.0.0 libssdll.so.1.0
+  - cd libavthumbnailer/src/libavthumbnailer
+  - qmake "CONFIG+=debug" libavthumbnailer.pro
+  - make
+  - cp libavthumbnailer.so.1.0.0 ../../../libs
+  - cd ../../../libs/
+  - ln -s libavthumbnailer.so.1.0.0 libavthumbnailer.so
+  - ln -s libavthumbnailer.so.1.0.0 libavthumbnailer.so.1
+  - ln -s libavthumbnailer.so.1.0.0 libavthumbnailer.so.1.0
   - cd ../src
   - ls -la ../libs/
   - if [ -n "$XPIKS_BINARY" ]; then cd xpiks-qt/; fi

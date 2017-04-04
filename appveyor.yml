@@ -53,6 +53,7 @@ install:
 before_build:
   - cmd: 'echo %cd%'
   - cmd: 'xcopy /s c:\projects\xpiks-deps\windows-libs\%configuration%-x64 c:\projects\xpiks\libs'
+  - cmd: 'xcopy /s c:\projects\xpiks-deps\windows-libs\ffmpeg-x64\%configuration% c:\projects\xpiks\libs'
   - cmd: 'move c:\projects\xpiks-deps\hunspell-1.6.0 c:\projects\xpiks\vendors'
   - cmd: 'move c:\projects\xpiks-deps\zlib-1.2.11 c:\projects\xpiks\vendors'
   - cmd: 'cd c:\projects\xpiks'
@@ -72,7 +73,12 @@ build_script:
   - qmake "CONFIG+=%configuration% appveyor" ssdll.pro
   - nmake.exe
   - cmd: 'copy %configuration%\ssdll.* ..\..\..\..\libs'
-  - cmd: 'cd ..\..\..\..\src'
+  - cmd: 'cd ..\..\..\'
+  - cmd: 'cd libavthumbnailer\src\libavthumbnailer'
+  - qmake "CONFIG+=%configuration%" libavthumbnailer.pro
+  - nmake.exe
+  - cmd: 'copy %configuration%\libavthumbnailer.* ..\..\..\libs'
+  - cmd: 'cd ..\..\..\src'
   - if defined XPIKS_BINARY cd xpiks-qt
   - if defined CORE_TESTS cd xpiks-tests\xpiks-tests-core
   - if defined INTEGRATION_TESTS cd xpiks-tests\xpiks-tests-integration
