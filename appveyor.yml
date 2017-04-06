@@ -75,7 +75,7 @@ build_script:
   - cmd: 'copy %configuration%\ssdll.* ..\..\..\..\libs'
   - cmd: 'cd ..\..\..\'
   - cmd: 'cd libavthumbnailer\src\libavthumbnailer'
-  - qmake "CONFIG+=%configuration%" libavthumbnailer.pro
+  - qmake "CONFIG+=%configuration% appveyor" libavthumbnailer.pro
   - nmake.exe
   - cmd: 'copy %configuration%\libavthumbnailer.* ..\..\..\libs'
   - cmd: 'cd ..\..\..\src'
